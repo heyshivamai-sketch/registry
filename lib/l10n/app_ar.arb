@@ -1,0 +1,22 @@
+{
+  "@@locale": "ar",
+  "onboardingSkip": "تخطي",
+  "onboardingContinue": "متابعة",
+  "onboardingGetStarted": "ابدأ",
+  "onboardingPage1Title": "لا تفوّت موعدًا مهمًا",
+  "onboardingPage1Subtitle": "تتبّع تواريخ انتهاء صلاحية المستندات واعرف متى يحين وقت التجديد.",
+  "onboardingPage2Title": "ابقَ سابقًا لكل دفعة",
+  "onboardingPage2Subtitle": "نظّم اشتراكاتك واتخذ قرارك قبل الدفعة التالية.",
+  "onboardingPage3Title": "معلوماتك تبقى معك",
+  "onboardingPage3Subtitle": "ابدأ بدون حساب. تبقى سجلاتك خاصة على جهازك.",
+  "onboardingPage1IllustrationLabel": "تذكير بانتهاء صلاحية مستند",
+  "onboardingPage2IllustrationLabel": "دفعة اشتراك قادمة",
+  "onboardingPage3IllustrationLabel": "سجلات خاصة محفوظة على هذا الجهاز",
+  "onboardingDocumentName": "جواز السفر",
+  "onboardingDocumentExpiry": "ينتهي في 12 يونيو",
+  "onboardingReminder": "تم ضبط التذكير",
+  "onboardingSubscriptionName": "البث",
+  "onboardingUpcomingCharge": "الدفعة خلال 5 أيام",
+  "onboardingDecisionDate": "قرّر قبل الجمعة",
+  "onboardingPrivacyLock": "على الجهاز فقط"
+}

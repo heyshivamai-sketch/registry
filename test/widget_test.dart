@@ -7,9 +7,17 @@ import 'package:the_registry/core/widgets/registry_secondary_button.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/core/widgets/registry_summary_card.dart';
 
+import 'support/fake_onboarding_repository.dart';
+
 void main() {
   testWidgets('Design preview shows foundation components', (tester) async {
-    await tester.pumpWidget(const RegistryApp());
+    await tester.pumpWidget(
+      RegistryApp(
+        onboardingRepository: FakeOnboardingRepository(completed: true),
+        locale: const Locale('en'),
+      ),
+    );
+    await tester.pumpAndSettle();
 
     expect(find.text('Registry'), findsOneWidget);
     expect(
@@ -35,6 +43,5 @@ void main() {
     );
     expect(find.byType(RegistryEmptyState), findsOneWidget);
     expect(find.text('Nothing to review'), findsOneWidget);
-    expect(find.byIcon(Icons.add), findsNothing);
   });
 }

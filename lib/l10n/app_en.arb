@@ -1,0 +1,31 @@
+{
+  "@@locale": "en",
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Skips remaining onboarding pages and enters the app."
+  },
+  "onboardingContinue": "Continue",
+  "@onboardingContinue": {
+    "description": "Advances to the next onboarding page."
+  },
+  "onboardingGetStarted": "Get started",
+  "@onboardingGetStarted": {
+    "description": "Completes onboarding from the last page."
+  },
+  "onboardingPage1Title": "Never miss an important date",
+  "onboardingPage1Subtitle": "Track document expiry dates and know when it is time to start renewing.",
+  "onboardingPage2Title": "Stay ahead of every charge",
+  "onboardingPage2Subtitle": "Keep subscriptions organised and decide before the next payment.",
+  "onboardingPage3Title": "Your information stays with you",
+  "onboardingPage3Subtitle": "Start without an account. Your records remain private on your device.",
+  "onboardingPage1IllustrationLabel": "Document expiry reminder",
+  "onboardingPage2IllustrationLabel": "Upcoming subscription charge",
+  "onboardingPage3IllustrationLabel": "Private records stored on this device",
+  "onboardingDocumentName": "Passport",
+  "onboardingDocumentExpiry": "Expires 12 Jun",
+  "onboardingReminder": "Reminder set",
+  "onboardingSubscriptionName": "Streaming",
+  "onboardingUpcomingCharge": "Charge in 5 days",
+  "onboardingDecisionDate": "Decide by Friday",
+  "onboardingPrivacyLock": "On-device only"
+}

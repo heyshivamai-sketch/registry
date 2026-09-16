@@ -1,0 +1,22 @@
+{
+  "@@locale": "fr",
+  "onboardingSkip": "Ignorer",
+  "onboardingContinue": "Continuer",
+  "onboardingGetStarted": "Commencer",
+  "onboardingPage1Title": "Ne manquez plus une date importante",
+  "onboardingPage1Subtitle": "Suivez les dates d’expiration de vos documents et sachez quand commencer le renouvellement.",
+  "onboardingPage2Title": "Anticipez chaque prélèvement",
+  "onboardingPage2Subtitle": "Gardez vos abonnements organisés et décidez avant le prochain paiement.",
+  "onboardingPage3Title": "Vos informations restent les vôtres",
+  "onboardingPage3Subtitle": "Commencez sans compte. Vos dossiers restent privés sur votre appareil.",
+  "onboardingPage1IllustrationLabel": "Rappel d’expiration d’un document",
+  "onboardingPage2IllustrationLabel": "Prélèvement d’abonnement à venir",
+  "onboardingPage3IllustrationLabel": "Dossiers privés enregistrés sur cet appareil",
+  "onboardingDocumentName": "Passeport",
+  "onboardingDocumentExpiry": "Expire le 12 juin",
+  "onboardingReminder": "Rappel activé",
+  "onboardingSubscriptionName": "Streaming",
+  "onboardingUpcomingCharge": "Prélèvement dans 5 jours",
+  "onboardingDecisionDate": "Décider avant vendredi",
+  "onboardingPrivacyLock": "Sur l’appareil uniquement"
+}
