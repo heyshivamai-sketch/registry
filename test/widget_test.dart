@@ -1,30 +1,40 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:the_registry/main.dart';
+import 'package:the_registry/app/app.dart';
+import 'package:the_registry/core/widgets/registry_empty_state.dart';
+import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import 'package:the_registry/core/widgets/registry_secondary_button.dart';
+import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/core/widgets/registry_summary_card.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Design preview shows foundation components', (tester) async {
+    await tester.pumpWidget(const RegistryApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Registry'), findsOneWidget);
+    expect(
+      find.text(
+        'A calm place to track documents and subscriptions before they expire.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(RegistrySummaryCard), findsOneWidget);
+    expect(find.text('Upcoming actions'), findsOneWidget);
+    expect(find.byType(RegistryStatusChip), findsNWidgets(4));
+    expect(find.text('Urgent'), findsOneWidget);
+    expect(find.text('Upcoming'), findsOneWidget);
+    expect(find.text('Active'), findsOneWidget);
+    expect(find.text('Expired'), findsOneWidget);
+    expect(find.byType(RegistryPrimaryButton), findsOneWidget);
+    expect(find.byType(RegistrySecondaryButton), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byType(RegistryEmptyState),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
+    expect(find.byType(RegistryEmptyState), findsOneWidget);
+    expect(find.text('Nothing to review'), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsNothing);
   });
 }
