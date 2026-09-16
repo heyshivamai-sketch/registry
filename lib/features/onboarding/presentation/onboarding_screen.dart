@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/design_preview/presentation/design_preview_screen.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/widgets/onboarding_illustrations.dart';
 import 'package:the_registry/features/onboarding/widgets/onboarding_page_content.dart';
@@ -49,7 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return;
     }
     await Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const DesignPreviewScreen()),
+      MaterialPageRoute<void>(builder: (_) => const AppShell()),
     );
   }
 

@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/l10n/app_localizations.dart';
+
+enum RegistryItemType { document, subscription }
+
+enum RegistryImpact { high, medium, low }
+
+class RegistryItem {
+  const RegistryItem({
+    required this.id,
+    required this.type,
+    required this.status,
+    required this.impact,
+    required this.impactScore,
+    required this.actionDate,
+    required this.dueDate,
+    required this.isHero,
+    required this.needsAttention,
+  });
+
+  final String id;
+  final RegistryItemType type;
+  final RegistryStatus status;
+  final RegistryImpact impact;
+  final int impactScore;
+  final DateTime actionDate;
+  final DateTime dueDate;
+  final bool isHero;
+  final bool needsAttention;
+
+  String title(AppLocalizations l10n) {
+    return switch (id) {
+      'car_insurance' => l10n.itemCarInsurance,
+      'passport' => l10n.itemPassport,
+      'streaming' => l10n.itemStreaming,
+      'driving_licence' => l10n.itemDrivingLicence,
+      'gym' => l10n.itemGym,
+      _ => id,
+    };
+  }
+
+  String heroTitle(AppLocalizations l10n) {
+    return switch (id) {
+      'car_insurance' => l10n.heroCarInsurance,
+      _ => title(l10n),
+    };
+  }
+
+  String actionLabel(AppLocalizations l10n) {
+    return switch (id) {
+      'car_insurance' => l10n.actionStartRenewalSoon,
+      'passport' => l10n.actionUpcomingExpiry,
+      'streaming' => l10n.actionDecideBeforeCharge,
+      'driving_licence' => l10n.actionPrepareRenewal,
+      'gym' => l10n.actionReviewMembership,
+      _ => title(l10n),
+    };
+  }
+
+  String typeLabel(AppLocalizations l10n) {
+    return type == RegistryItemType.document
+        ? l10n.typeDocument
+        : l10n.typeSubscription;
+  }
+
+  String statusLabel(AppLocalizations l10n) {
+    return switch (status) {
+      RegistryStatus.urgent => l10n.statusUrgent,
+      RegistryStatus.upcoming => l10n.statusUpcoming,
+      RegistryStatus.active => l10n.statusActive,
+      RegistryStatus.expired => l10n.statusUrgent,
+    };
+  }
+
+  String actionDateLabel(AppLocalizations l10n, String formattedDate) {
+    return type == RegistryItemType.subscription
+        ? l10n.decideByDate(formattedDate)
+        : l10n.startByDate(formattedDate);
+  }
+
+  String dueDateLabel(AppLocalizations l10n, String formattedDate) {
+    return type == RegistryItemType.subscription
+        ? l10n.nextChargeDate(formattedDate)
+        : l10n.expiresDate(formattedDate);
+  }
+
+  IconData get icon {
+    return switch (id) {
+      'car_insurance' => Icons.directions_car_outlined,
+      'passport' => Icons.badge_outlined,
+      'streaming' => Icons.subscriptions_outlined,
+      'driving_licence' => Icons.credit_card_outlined,
+      'gym' => Icons.fitness_center_outlined,
+      _ =>
+        type == RegistryItemType.document
+            ? Icons.description_outlined
+            : Icons.subscriptions_outlined,
+    };
+  }
+}

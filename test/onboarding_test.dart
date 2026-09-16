@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_registry/app/app.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_summary_card.dart';
-import 'package:the_registry/features/design_preview/presentation/design_preview_screen.dart';
+import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/features/onboarding/data/shared_preferences_onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -27,7 +25,7 @@ void main() {
 
     expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(find.text('Never miss an important date'), findsOneWidget);
-    expect(find.byType(DesignPreviewScreen), findsNothing);
+    expect(find.byType(AppShell), findsNothing);
   });
 
   testWidgets('Continue changes pages', (tester) async {
@@ -50,7 +48,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repository.completed, isTrue);
-    expect(find.byType(DesignPreviewScreen), findsOneWidget);
+    expect(find.byType(AppShell), findsOneWidget);
     expect(find.byType(OnboardingScreen), findsNothing);
   });
 
@@ -73,26 +71,18 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repository.completed, isTrue);
-    expect(find.byType(DesignPreviewScreen), findsOneWidget);
+    expect(find.byType(AppShell), findsOneWidget);
   });
 
-  testWidgets('Completed onboarding opens DesignPreviewScreen', (tester) async {
+  testWidgets('Completed onboarding opens Home', (tester) async {
     await tester.pumpWidget(
       _app(repository: FakeOnboardingRepository(completed: true)),
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(DesignPreviewScreen), findsOneWidget);
+    expect(find.byType(AppShell), findsOneWidget);
     expect(find.byType(OnboardingScreen), findsNothing);
-    expect(find.byType(RegistrySummaryCard), findsOneWidget);
-    expect(find.text('Registry'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.byType(RegistryEmptyState),
-      200,
-      scrollable: find.byType(Scrollable),
-    );
-    expect(find.byType(RegistryEmptyState), findsOneWidget);
+    expect(find.text('Your Registry'), findsOneWidget);
   });
 
   testWidgets('Arabic locale renders RTL', (tester) async {

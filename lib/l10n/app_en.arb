@@ -27,5 +27,81 @@
   "onboardingSubscriptionName": "Streaming",
   "onboardingUpcomingCharge": "Charge in 5 days",
   "onboardingDecisionDate": "Decide by Friday",
-  "onboardingPrivacyLock": "On-device only"
+  "onboardingPrivacyLock": "On-device only",
+  "navHome": "Home",
+  "navDocuments": "Documents",
+  "navSubscriptions": "Subscriptions",
+  "homeGreeting": "Stay ahead of what matters",
+  "homeTitle": "Your Registry",
+  "searchPlaceholder": "Search documents and subscriptions",
+  "searchClear": "Clear search",
+  "filterTooltip": "Filter",
+  "filtersComingSoon": "Filters will be available in a later version.",
+  "reviewAction": "Review",
+  "highImpactLabel": "High impact",
+  "summaryDocuments": "Documents",
+  "summarySubscriptions": "Subscriptions",
+  "summaryNeedsAttention": "Needs attention",
+  "sectionNeedsAttention": "Needs your attention",
+  "sectionComingUp": "Coming up",
+  "startByDate": "Start by {date}",
+  "@startByDate": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "expiresDate": "Expires {date}",
+  "@expiresDate": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "nextChargeDate": "Next charge {date}",
+  "@nextChargeDate": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "decideByDate": "Decide by {date}",
+  "@decideByDate": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "typeDocument": "Document",
+  "typeSubscription": "Subscription",
+  "statusUrgent": "Urgent",
+  "statusUpcoming": "Upcoming",
+  "statusActive": "Active",
+  "itemCarInsurance": "Car insurance",
+  "heroCarInsurance": "Start insurance renewal",
+  "actionStartRenewalSoon": "Start renewal soon",
+  "itemPassport": "Passport",
+  "actionUpcomingExpiry": "Upcoming expiry",
+  "itemStreaming": "Streaming subscription",
+  "actionDecideBeforeCharge": "Decide before next charge",
+  "itemDrivingLicence": "Driving licence",
+  "actionPrepareRenewal": "Prepare renewal",
+  "itemGym": "Gym membership",
+  "actionReviewMembership": "Review before renewal",
+  "addDocument": "Add Document",
+  "addSubscription": "Add Subscription",
+  "addSheetTitle": "Add to Registry",
+  "addSheetSubtitle": "Choose what you want to keep on track.",
+  "addFabTooltip": "Add",
+  "documentsTitle": "Documents",
+  "documentsEmptyTitle": "No documents yet",
+  "documentsEmptyMessage": "Add passports, insurance and other records to see renewal dates here.",
+  "subscriptionsTitle": "Subscriptions",
+  "subscriptionsEmptyTitle": "No subscriptions yet",
+  "subscriptionsEmptyMessage": "Add streaming, gym and other recurring charges to stay ahead of payments.",
+  "profileTitle": "Profile",
+  "profileMessage": "There is no account in this version. Registry will keep your records private on this device.",
+  "profileButton": "Open profile",
+  "addDocumentTitle": "Add document",
+  "addDocumentMessage": "The document form, optional scan and on-device storage will be built next. You can go back and keep exploring Home.",
+  "addSubscriptionTitle": "Add subscription",
+  "addSubscriptionMessage": "The subscription form and payment reminders will be built next. You can go back and keep exploring Home.",
+  "searchNoResultsTitle": "No matching items",
+  "searchNoResultsMessage": "Try a different name, or clear search to see everything that needs attention."
 }

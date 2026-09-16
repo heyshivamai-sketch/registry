@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/features/design_preview/presentation/design_preview_screen.dart';
+import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/presentation/onboarding_screen.dart';
 
@@ -27,7 +27,7 @@ class _OnboardingGateState extends State<OnboardingGate> {
         }
 
         if (snapshot.data ?? false) {
-          return const DesignPreviewScreen();
+          return const AppShell();
         }
 
         return OnboardingScreen(repository: widget.repository);
