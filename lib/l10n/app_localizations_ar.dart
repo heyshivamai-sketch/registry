@@ -250,4 +250,209 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get searchNoResultsMessage =>
       'جرّب اسمًا آخر، أو امسح البحث لعرض كل ما يحتاج انتباهك.';
+
+  @override
+  String get addDocumentHeadline => 'إضافة مستند';
+
+  @override
+  String get addDocumentSubtitle => 'امسح أو أدخل التفاصيل يدويًا.';
+
+  @override
+  String get attachmentSectionTitle => 'مرفق';
+
+  @override
+  String get attachmentEmptyLabel => 'أضف صورة لهذا المستند';
+
+  @override
+  String get attachmentTakePhoto => 'التقاط صورة';
+
+  @override
+  String get attachmentChooseGallery => 'اختيار من المعرض';
+
+  @override
+  String get attachmentReplace => 'استبدال';
+
+  @override
+  String get attachmentRemove => 'إزالة';
+
+  @override
+  String get attachmentPrivacy => 'تبقى صورتك على هذا الجهاز ولا يتم رفعها.';
+
+  @override
+  String get replaceAttachmentTitle => 'استبدال الصورة';
+
+  @override
+  String get attachmentPickerFailed =>
+      'تعذّر إضافة الصورة. تحقق من إذن الكاميرا أو المكتبة ثم أعد المحاولة.';
+
+  @override
+  String get sectionBasicInfo => 'معلومات أساسية';
+
+  @override
+  String get fieldDocumentName => 'اسم المستند';
+
+  @override
+  String get fieldDocumentType => 'نوع المستند';
+
+  @override
+  String get fieldOwnerName => 'اسم المالك أو الملف';
+
+  @override
+  String get fieldIssuingAuthority => 'البلد أو الجهة المُصدِرة';
+
+  @override
+  String get fieldDocumentNumber => 'رقم المستند';
+
+  @override
+  String get showDocumentNumber => 'إظهار رقم المستند';
+
+  @override
+  String get hideDocumentNumber => 'إخفاء رقم المستند';
+
+  @override
+  String get sectionImportantDates => 'تواريخ مهمة';
+
+  @override
+  String get fieldIssueDate => 'تاريخ الإصدار';
+
+  @override
+  String get fieldExpiryDate => 'تاريخ الانتهاء';
+
+  @override
+  String get fieldActionDate => 'تاريخ بدء التجديد';
+
+  @override
+  String get actionDateHelper =>
+      'التاريخ الذي ينبغي أن تبدأ فيه الإجراء، وقد يكون قبل تاريخ الانتهاء.';
+
+  @override
+  String get sectionPriorityRenewal => 'الأولوية والتجديد';
+
+  @override
+  String get fieldImpact => 'الأثر عند انتهاء الصلاحية';
+
+  @override
+  String get fieldRenewalEffort => 'جهد التجديد';
+
+  @override
+  String get fieldCostOfLapsing => 'تكلفة انتهاء الصلاحية';
+
+  @override
+  String get fieldCostHelper => 'مبلغ أو وصف قصير. لا يُطلب رمز عملة.';
+
+  @override
+  String get fieldDependency => 'الاعتماد';
+
+  @override
+  String get fieldDependencyHelper =>
+      'ما الذي يعتمد على بقاء هذا المستند صالحًا؟';
+
+  @override
+  String get fieldExpectedChanges => 'التغييرات المتوقعة عند التجديد';
+
+  @override
+  String get fieldNotes => 'ملاحظات';
+
+  @override
+  String get sectionReminders => 'تفضيل التذكير';
+
+  @override
+  String get remindersHelper =>
+      'تُحفظ هذه الخيارات مع المستند. لن تُجدول الإشعارات بعد.';
+
+  @override
+  String get reminderOnActionDate => 'في تاريخ الإجراء';
+
+  @override
+  String get reminder7Days => 'قبل 7 أيام';
+
+  @override
+  String get reminder30Days => 'قبل 30 يومًا';
+
+  @override
+  String get saveDocument => 'حفظ المستند';
+
+  @override
+  String get documentSaved => 'تم حفظ المستند لهذه الجلسة.';
+
+  @override
+  String get discardDraftTitle => 'تجاهل هذه المسودة؟';
+
+  @override
+  String get discardDraftMessage =>
+      'لن تُحفظ التفاصيل المدخلة والصورة المحددة.';
+
+  @override
+  String get discardDraftConfirm => 'تجاهل';
+
+  @override
+  String get discardDraftKeep => 'متابعة التعديل';
+
+  @override
+  String get errorRequired => 'هذا الحقل مطلوب.';
+
+  @override
+  String get errorIssueAfterExpiry =>
+      'لا يمكن أن يكون تاريخ الإصدار بعد تاريخ الانتهاء.';
+
+  @override
+  String get errorActionAfterExpiry =>
+      'لا يمكن أن يكون تاريخ بدء التجديد بعد تاريخ الانتهاء.';
+
+  @override
+  String get categoryPassport => 'جواز السفر';
+
+  @override
+  String get categoryIdCard => 'بطاقة الهوية';
+
+  @override
+  String get categoryDrivingLicence => 'رخصة القيادة';
+
+  @override
+  String get categoryInsurance => 'تأمين';
+
+  @override
+  String get categoryVisa => 'تأشيرة / إقامة';
+
+  @override
+  String get categoryCertificate => 'شهادة';
+
+  @override
+  String get categoryWarranty => 'ضمان';
+
+  @override
+  String get categoryOther => 'أخرى';
+
+  @override
+  String get impactLow => 'منخفض';
+
+  @override
+  String get impactMedium => 'متوسط';
+
+  @override
+  String get impactHigh => 'مرتفع';
+
+  @override
+  String get impactCritical => 'حرج';
+
+  @override
+  String get effortEasy => 'سهل';
+
+  @override
+  String get effortModerate => 'متوسط';
+
+  @override
+  String get effortDifficult => 'صعب';
+
+  @override
+  String get requiredMarker => 'مطلوب';
+
+  @override
+  String get optionalMarker => 'اختياري';
+
+  @override
+  String get hasAttachment => 'يوجد مرفق';
+
+  @override
+  String get selectDate => 'اختر تاريخًا';
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
-import 'package:the_registry/features/documents/presentation/add_document_placeholder_screen.dart';
+import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_placeholder_screen.dart';
@@ -142,7 +142,7 @@ void main() {
     );
   });
 
-  testWidgets('Add Document opens its placeholder', (tester) async {
+  testWidgets('Add Document opens its form', (tester) async {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
@@ -151,11 +151,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('add-document')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AddDocumentPlaceholderScreen), findsOneWidget);
-    expect(
-      find.textContaining('The document form, optional scan'),
-      findsOneWidget,
-    );
+    expect(find.byType(AddDocumentScreen), findsOneWidget);
+    expect(find.text('Add a document'), findsOneWidget);
   });
 
   testWidgets('Add Subscription opens its placeholder', (tester) async {

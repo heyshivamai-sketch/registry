@@ -549,6 +549,402 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a different name, or clear search to see everything that needs attention.'**
   String get searchNoResultsMessage;
+
+  /// No description provided for @addDocumentHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a document'**
+  String get addDocumentHeadline;
+
+  /// No description provided for @addDocumentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or enter the details manually.'**
+  String get addDocumentSubtitle;
+
+  /// No description provided for @attachmentSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment'**
+  String get attachmentSectionTitle;
+
+  /// No description provided for @attachmentEmptyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of this document'**
+  String get attachmentEmptyLabel;
+
+  /// No description provided for @attachmentTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get attachmentTakePhoto;
+
+  /// No description provided for @attachmentChooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get attachmentChooseGallery;
+
+  /// No description provided for @attachmentReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get attachmentReplace;
+
+  /// No description provided for @attachmentRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get attachmentRemove;
+
+  /// No description provided for @attachmentPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your image stays on this device and is not uploaded.'**
+  String get attachmentPrivacy;
+
+  /// No description provided for @replaceAttachmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace photo'**
+  String get replaceAttachmentTitle;
+
+  /// No description provided for @attachmentPickerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo could not be added. Check camera or library permission and try again.'**
+  String get attachmentPickerFailed;
+
+  /// No description provided for @sectionBasicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic information'**
+  String get sectionBasicInfo;
+
+  /// No description provided for @fieldDocumentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Document name'**
+  String get fieldDocumentName;
+
+  /// No description provided for @fieldDocumentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Document type'**
+  String get fieldDocumentType;
+
+  /// No description provided for @fieldOwnerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner or profile name'**
+  String get fieldOwnerName;
+
+  /// No description provided for @fieldIssuingAuthority.
+  ///
+  /// In en, this message translates to:
+  /// **'Issuing country or authority'**
+  String get fieldIssuingAuthority;
+
+  /// No description provided for @fieldDocumentNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Document number'**
+  String get fieldDocumentNumber;
+
+  /// No description provided for @showDocumentNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Show document number'**
+  String get showDocumentNumber;
+
+  /// No description provided for @hideDocumentNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide document number'**
+  String get hideDocumentNumber;
+
+  /// No description provided for @sectionImportantDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Important dates'**
+  String get sectionImportantDates;
+
+  /// No description provided for @fieldIssueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue date'**
+  String get fieldIssueDate;
+
+  /// No description provided for @fieldExpiryDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry date'**
+  String get fieldExpiryDate;
+
+  /// No description provided for @fieldActionDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal start date'**
+  String get fieldActionDate;
+
+  /// No description provided for @actionDateHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'The date you should start taking action, which may be earlier than the expiry date.'**
+  String get actionDateHelper;
+
+  /// No description provided for @sectionPriorityRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority and renewal'**
+  String get sectionPriorityRenewal;
+
+  /// No description provided for @fieldImpact.
+  ///
+  /// In en, this message translates to:
+  /// **'Impact if lapsed'**
+  String get fieldImpact;
+
+  /// No description provided for @fieldRenewalEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal effort'**
+  String get fieldRenewalEffort;
+
+  /// No description provided for @fieldCostOfLapsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost of lapsing'**
+  String get fieldCostOfLapsing;
+
+  /// No description provided for @fieldCostHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount or a short description. No currency is required.'**
+  String get fieldCostHelper;
+
+  /// No description provided for @fieldDependency.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependency'**
+  String get fieldDependency;
+
+  /// No description provided for @fieldDependencyHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'What depends on this document remaining valid?'**
+  String get fieldDependencyHelper;
+
+  /// No description provided for @fieldExpectedChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected changes at renewal'**
+  String get fieldExpectedChanges;
+
+  /// No description provided for @fieldNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get fieldNotes;
+
+  /// No description provided for @sectionReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder preference'**
+  String get sectionReminders;
+
+  /// No description provided for @remindersHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'These options are saved with the document. Notifications are not scheduled yet.'**
+  String get remindersHelper;
+
+  /// No description provided for @reminderOnActionDate.
+  ///
+  /// In en, this message translates to:
+  /// **'On action date'**
+  String get reminderOnActionDate;
+
+  /// No description provided for @reminder7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days before'**
+  String get reminder7Days;
+
+  /// No description provided for @reminder30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'30 days before'**
+  String get reminder30Days;
+
+  /// No description provided for @saveDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Save document'**
+  String get saveDocument;
+
+  /// No description provided for @documentSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Document saved to this session.'**
+  String get documentSaved;
+
+  /// No description provided for @discardDraftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this draft?'**
+  String get discardDraftTitle;
+
+  /// No description provided for @discardDraftMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your entered details and selected image will not be kept.'**
+  String get discardDraftMessage;
+
+  /// No description provided for @discardDraftConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardDraftConfirm;
+
+  /// No description provided for @discardDraftKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get discardDraftKeep;
+
+  /// No description provided for @errorRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required.'**
+  String get errorRequired;
+
+  /// No description provided for @errorIssueAfterExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue date cannot be after the expiry date.'**
+  String get errorIssueAfterExpiry;
+
+  /// No description provided for @errorActionAfterExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal start date cannot be after the expiry date.'**
+  String get errorActionAfterExpiry;
+
+  /// No description provided for @categoryPassport.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport'**
+  String get categoryPassport;
+
+  /// No description provided for @categoryIdCard.
+  ///
+  /// In en, this message translates to:
+  /// **'ID card'**
+  String get categoryIdCard;
+
+  /// No description provided for @categoryDrivingLicence.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving licence'**
+  String get categoryDrivingLicence;
+
+  /// No description provided for @categoryInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get categoryInsurance;
+
+  /// No description provided for @categoryVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa / residence permit'**
+  String get categoryVisa;
+
+  /// No description provided for @categoryCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate'**
+  String get categoryCertificate;
+
+  /// No description provided for @categoryWarranty.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty'**
+  String get categoryWarranty;
+
+  /// No description provided for @categoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// No description provided for @impactLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get impactLow;
+
+  /// No description provided for @impactMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get impactMedium;
+
+  /// No description provided for @impactHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get impactHigh;
+
+  /// No description provided for @impactCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get impactCritical;
+
+  /// No description provided for @effortEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get effortEasy;
+
+  /// No description provided for @effortModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get effortModerate;
+
+  /// No description provided for @effortDifficult.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficult'**
+  String get effortDifficult;
+
+  /// No description provided for @requiredMarker.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredMarker;
+
+  /// No description provided for @optionalMarker.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optionalMarker;
+
+  /// No description provided for @hasAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Has attachment'**
+  String get hasAttachment;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get selectDate;
 }
 
 class _AppLocalizationsDelegate

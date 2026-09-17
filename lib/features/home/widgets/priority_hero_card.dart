@@ -17,8 +17,11 @@ class PriorityHeroCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final locale = l10n.localeName;
-    final startDate = RegistryDateFormatter.dayMonth(item.actionDate, locale);
-    final expiryDate = RegistryDateFormatter.dayMonth(item.dueDate, locale);
+    final startDate = RegistryDateFormatter.dayMonthYear(
+      item.actionDate,
+      locale,
+    );
+    final expiryDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
     final accent = Color.lerp(
       colorScheme.primary,
       colorScheme.secondary,

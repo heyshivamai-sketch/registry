@@ -18,8 +18,11 @@ class RegistryItemCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final locale = l10n.localeName;
-    final actionDate = RegistryDateFormatter.dayMonth(item.actionDate, locale);
-    final dueDate = RegistryDateFormatter.dayMonth(item.dueDate, locale);
+    final actionDate = RegistryDateFormatter.dayMonthYear(
+      item.actionDate,
+      locale,
+    );
+    final dueDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
 
     return Card(
       clipBehavior: Clip.antiAlias,

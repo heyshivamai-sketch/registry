@@ -4,7 +4,10 @@ import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 abstract final class AddItemSheet {
-  static Future<void> show(BuildContext context) {
+  static Future<void> show(
+    BuildContext context, {
+    VoidCallback? onDocumentSaved,
+  }) {
     final l10n = AppLocalizations.of(context);
     return showModalBottomSheet<void>(
       context: context,
@@ -38,9 +41,12 @@ abstract final class AddItemSheet {
                 leading: const Icon(Icons.description_outlined),
                 title: Text(l10n.addDocument),
                 minVerticalPadding: AppSpacing.md,
-                onTap: () {
+                onTap: () async {
                   Navigator.of(sheetContext).pop();
-                  AppRoutes.openAddDocument(context);
+                  final saved = await AppRoutes.openAddDocument(context);
+                  if (saved) {
+                    onDocumentSaved?.call();
+                  }
                 },
               ),
               ListTile(

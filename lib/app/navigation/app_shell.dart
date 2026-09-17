@@ -31,7 +31,14 @@ class _AppShellState extends State<AppShell> {
       floatingActionButton: FloatingActionButton(
         key: const ValueKey<String>('home-fab'),
         tooltip: l10n.addFabTooltip,
-        onPressed: () => AddItemSheet.show(context),
+        onPressed: () => AddItemSheet.show(
+          context,
+          onDocumentSaved: () {
+            if (mounted) {
+              setState(() => _index = 1);
+            }
+          },
+        ),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: NavigationBar(

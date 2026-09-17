@@ -254,4 +254,212 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get searchNoResultsMessage =>
       'Essayez un autre nom, ou effacez la recherche pour tout afficher.';
+
+  @override
+  String get addDocumentHeadline => 'Ajouter un document';
+
+  @override
+  String get addDocumentSubtitle =>
+      'Scannez ou saisissez les informations manuellement.';
+
+  @override
+  String get attachmentSectionTitle => 'Pièce jointe';
+
+  @override
+  String get attachmentEmptyLabel => 'Ajoutez une photo de ce document';
+
+  @override
+  String get attachmentTakePhoto => 'Prendre une photo';
+
+  @override
+  String get attachmentChooseGallery => 'Choisir depuis la galerie';
+
+  @override
+  String get attachmentReplace => 'Remplacer';
+
+  @override
+  String get attachmentRemove => 'Retirer';
+
+  @override
+  String get attachmentPrivacy =>
+      'Votre image reste sur cet appareil et n’est pas téléversée.';
+
+  @override
+  String get replaceAttachmentTitle => 'Remplacer la photo';
+
+  @override
+  String get attachmentPickerFailed =>
+      'La photo n’a pas pu être ajoutée. Vérifiez l’autorisation de l’appareil photo ou de la bibliothèque, puis réessayez.';
+
+  @override
+  String get sectionBasicInfo => 'Informations de base';
+
+  @override
+  String get fieldDocumentName => 'Nom du document';
+
+  @override
+  String get fieldDocumentType => 'Type de document';
+
+  @override
+  String get fieldOwnerName => 'Nom du titulaire ou du profil';
+
+  @override
+  String get fieldIssuingAuthority => 'Pays ou autorité émettrice';
+
+  @override
+  String get fieldDocumentNumber => 'Numéro du document';
+
+  @override
+  String get showDocumentNumber => 'Afficher le numéro du document';
+
+  @override
+  String get hideDocumentNumber => 'Masquer le numéro du document';
+
+  @override
+  String get sectionImportantDates => 'Dates importantes';
+
+  @override
+  String get fieldIssueDate => 'Date d’émission';
+
+  @override
+  String get fieldExpiryDate => 'Date d’expiration';
+
+  @override
+  String get fieldActionDate => 'Date de début de renouvellement';
+
+  @override
+  String get actionDateHelper =>
+      'La date à laquelle vous devriez commencer à agir, éventuellement avant l’expiration.';
+
+  @override
+  String get sectionPriorityRenewal => 'Priorité et renouvellement';
+
+  @override
+  String get fieldImpact => 'Impact en cas de péremption';
+
+  @override
+  String get fieldRenewalEffort => 'Effort de renouvellement';
+
+  @override
+  String get fieldCostOfLapsing => 'Coût de la péremption';
+
+  @override
+  String get fieldCostHelper =>
+      'Montant ou courte description. Aucune devise n’est exigée.';
+
+  @override
+  String get fieldDependency => 'Dépendance';
+
+  @override
+  String get fieldDependencyHelper =>
+      'Qu’est-ce qui dépend de la validité de ce document ?';
+
+  @override
+  String get fieldExpectedChanges => 'Changements attendus au renouvellement';
+
+  @override
+  String get fieldNotes => 'Notes';
+
+  @override
+  String get sectionReminders => 'Préférence de rappel';
+
+  @override
+  String get remindersHelper =>
+      'Ces options sont enregistrées avec le document. Les notifications ne sont pas encore planifiées.';
+
+  @override
+  String get reminderOnActionDate => 'Le jour de l’action';
+
+  @override
+  String get reminder7Days => '7 jours avant';
+
+  @override
+  String get reminder30Days => '30 jours avant';
+
+  @override
+  String get saveDocument => 'Enregistrer le document';
+
+  @override
+  String get documentSaved => 'Document enregistré pour cette session.';
+
+  @override
+  String get discardDraftTitle => 'Abandonner ce brouillon ?';
+
+  @override
+  String get discardDraftMessage =>
+      'Les informations saisies et l’image sélectionnée ne seront pas conservées.';
+
+  @override
+  String get discardDraftConfirm => 'Abandonner';
+
+  @override
+  String get discardDraftKeep => 'Continuer';
+
+  @override
+  String get errorRequired => 'Ce champ est obligatoire.';
+
+  @override
+  String get errorIssueAfterExpiry =>
+      'La date d’émission ne peut pas être postérieure à la date d’expiration.';
+
+  @override
+  String get errorActionAfterExpiry =>
+      'La date de début de renouvellement ne peut pas être postérieure à la date d’expiration.';
+
+  @override
+  String get categoryPassport => 'Passeport';
+
+  @override
+  String get categoryIdCard => 'Carte d’identité';
+
+  @override
+  String get categoryDrivingLicence => 'Permis de conduire';
+
+  @override
+  String get categoryInsurance => 'Assurance';
+
+  @override
+  String get categoryVisa => 'Visa / titre de séjour';
+
+  @override
+  String get categoryCertificate => 'Certificat';
+
+  @override
+  String get categoryWarranty => 'Garantie';
+
+  @override
+  String get categoryOther => 'Autre';
+
+  @override
+  String get impactLow => 'Faible';
+
+  @override
+  String get impactMedium => 'Moyen';
+
+  @override
+  String get impactHigh => 'Élevé';
+
+  @override
+  String get impactCritical => 'Critique';
+
+  @override
+  String get effortEasy => 'Facile';
+
+  @override
+  String get effortModerate => 'Modéré';
+
+  @override
+  String get effortDifficult => 'Difficile';
+
+  @override
+  String get requiredMarker => 'Obligatoire';
+
+  @override
+  String get optionalMarker => 'Facultatif';
+
+  @override
+  String get hasAttachment => 'Pièce jointe';
+
+  @override
+  String get selectDate => 'Choisir une date';
 }
