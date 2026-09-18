@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -23,23 +22,21 @@ class HomeUpcomingItem extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final status = AppStatusColors.of(context);
     final locale = l10n.localeName;
     final dueDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
-    final marker = item.status.accent(status);
+    final aqua = AppBrandColors.of(context).aqua;
 
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            width: AppSpacing.xxl + AppSpacing.xs,
+            width: 34,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   RegistryDateFormatter.dayNumber(item.actionDate, locale),
-                  style: theme.textTheme.titleMedium,
+                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 14),
                 ),
                 Text(
                   RegistryDateFormatter.monthYear(item.actionDate, locale),
@@ -48,6 +45,8 @@ class HomeUpcomingItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
+                    letterSpacing: 0,
+                    fontSize: 11,
                   ),
                 ),
               ],
@@ -58,25 +57,23 @@ class HomeUpcomingItem extends StatelessWidget {
             width: AppSpacing.md,
             child: Column(
               children: [
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: 14),
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    color: marker,
+                    color: aqua,
                     shape: BoxShape.circle,
                     border: Border.all(color: colorScheme.surface, width: 3),
                   ),
-                  child: const SizedBox(width: 10, height: 10),
+                  child: const SizedBox(width: 9, height: 9),
                 ),
                 if (!isLast)
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xxs,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Align(
                         child: SizedBox(
-                          width: 2,
-                          child: ColoredBox(color: colorScheme.outlineVariant),
+                          width: 1,
+                          child: ColoredBox(color: const Color(0xFFD8DBE6)),
                         ),
                       ),
                     ),
@@ -87,7 +84,7 @@ class HomeUpcomingItem extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.sm),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 9),
               child: Material(
                 color: colorScheme.surfaceContainerLowest,
                 shape: RoundedRectangleBorder(
@@ -98,7 +95,7 @@ class HomeUpcomingItem extends StatelessWidget {
                   onTap: onTap,
                   borderRadius: BorderRadius.circular(15),
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    padding: const EdgeInsets.all(11),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -106,15 +103,13 @@ class HomeUpcomingItem extends StatelessWidget {
                           item.title(l10n),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleSmall,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontSize: 13,
+                          ),
                         ),
-                        const SizedBox(height: AppSpacing.xxs),
-                        Text(dueDate, style: theme.textTheme.bodySmall),
-                        const SizedBox(height: AppSpacing.xxs),
+                        const SizedBox(height: 4),
                         Text(
-                          item.actionLabel(l10n),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          '${item.actionLabel(l10n)} · $dueDate',
                           style: theme.textTheme.bodySmall,
                         ),
                       ],

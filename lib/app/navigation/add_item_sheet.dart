@@ -24,7 +24,7 @@ abstract final class AddItemSheet {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(
               AppSpacing.screenPadding,
-              0,
+              AppSpacing.sm,
               AppSpacing.screenPadding,
               AppSpacing.lg,
             ),
@@ -36,7 +36,6 @@ abstract final class AddItemSheet {
                   l10n.addSheetTitle,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: Theme.of(context).colorScheme.tertiary,
-                    letterSpacing: 1.4,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),

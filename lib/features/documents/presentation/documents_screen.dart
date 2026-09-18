@@ -7,7 +7,6 @@ import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_search_field.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/features/documents/domain/document_status.dart';
 import 'package:the_registry/features/documents/domain/document_wallet.dart';
 import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
@@ -65,19 +64,18 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             visible,
             featuredDocument: featured,
           );
-          final attentionCount = DocumentStatus.attentionCount(items);
 
           return ListView(
             padding: const EdgeInsetsDirectional.fromSTEB(
               AppSpacing.screenPadding,
-              AppSpacing.screenPadding,
+              AppSpacing.pageTop,
               AppSpacing.screenPadding,
               AppSpacing.scrollDockClearance,
             ),
             children: [
               _DocumentsHeader(
                 savedCount: items.length,
-                attentionCount: attentionCount,
+                attentionCount: DocumentStatus.attentionCount(items),
               ),
               const SizedBox(height: AppSpacing.sm),
               RegistryAuraSearchField(
@@ -90,6 +88,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 _DocumentsFilters(
                   selected: _filter,
+                  totalCount: items.length,
                   onSelected: (filter) => setState(() => _filter = filter),
                 ),
               ],
@@ -133,7 +132,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 if (remaining.isNotEmpty) ...[
                   RegistryAuraSectionHeader(
                     title: l10n.documentsRemainingHeader,
-                    count: remaining.length,
+                    actionLabel: l10n.documentsSummary(items.length),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   for (final document in remaining) ...[
@@ -151,10 +150,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 const SizedBox(height: AppSpacing.md),
                 SizedBox(
                   width: double.infinity,
-                  child: RegistryPrimaryButton(
+                  child: OutlinedButton(
                     key: const ValueKey<String>('documents-add'),
-                    label: l10n.addDocument,
                     onPressed: () => AppRoutes.openAddDocument(context),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(AppSpacing.minTapTarget, 45),
+                      side: const BorderSide(color: Color(0xFFA9AFC2)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text(l10n.addDocument),
                   ),
                 ),
               ],
@@ -181,26 +187,23 @@ class _DocumentsHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          l10n.documentsEyebrow,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: colorScheme.tertiary,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xxs),
-        Text(l10n.documentsTitle, style: theme.textTheme.headlineMedium),
-        if (savedCount > 0) ...[
-          const SizedBox(height: AppSpacing.xs),
-          RegistrySurface(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            child: Wrap(
-              spacing: AppSpacing.md,
-              runSpacing: AppSpacing.xs,
-              children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.documentsEyebrow,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.tertiary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xxs),
+              Text(l10n.documentsTitle, style: theme.textTheme.headlineMedium),
+              if (savedCount > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   l10n.documentsSummary(savedCount),
                   style: theme.textTheme.titleSmall,
@@ -210,18 +213,46 @@ class _DocumentsHeader extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 ),
               ],
+            ],
+          ),
+        ),
+        Semantics(
+          button: true,
+          label: l10n.notificationsButton,
+          child: Material(
+            color: colorScheme.surfaceContainerLowest,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              side: BorderSide(color: colorScheme.outlineVariant),
+            ),
+            child: InkWell(
+              onTap: () => AppRoutes.openNotifications(context),
+              borderRadius: BorderRadius.circular(15),
+              child: SizedBox(
+                width: AppSpacing.minTapTarget,
+                height: AppSpacing.minTapTarget,
+                child: Icon(
+                  Icons.notifications_none_rounded,
+                  color: colorScheme.onSurface,
+                ),
+              ),
             ),
           ),
-        ],
+        ),
       ],
     );
   }
 }
 
 class _DocumentsFilters extends StatelessWidget {
-  const _DocumentsFilters({required this.selected, required this.onSelected});
+  const _DocumentsFilters({
+    required this.selected,
+    required this.totalCount,
+    required this.onSelected,
+  });
 
   final DocumentWalletFilter selected;
+  final int totalCount;
   final ValueChanged<DocumentWalletFilter> onSelected;
 
   @override
@@ -230,7 +261,7 @@ class _DocumentsFilters extends StatelessWidget {
     final filters = <(DocumentWalletFilter, String, Key)>[
       (
         DocumentWalletFilter.all,
-        l10n.documentsFilterAll,
+        '${l10n.documentsFilterAll} $totalCount',
         const ValueKey<String>('filter-all'),
       ),
       (

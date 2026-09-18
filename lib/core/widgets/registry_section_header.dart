@@ -30,7 +30,10 @@ class RegistrySectionHeader extends StatelessWidget {
       final l10n = AppLocalizations.of(context);
       trailing = Text(
         l10n.sectionItemCount(count!),
-        style: textTheme.labelSmall?.copyWith(color: colorScheme.tertiary),
+        style: textTheme.labelSmall?.copyWith(
+          color: colorScheme.tertiary,
+          letterSpacing: 0,
+        ),
       );
     } else if (actionLabel != null) {
       trailing = onAction == null
@@ -57,13 +60,14 @@ class RegistrySectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            if (icon != null) ...[
+            if (icon != null)
               Icon(icon, color: colorScheme.primary, size: AppSpacing.iconMd),
-              const SizedBox(width: AppSpacing.xs),
-            ],
-            Expanded(child: titleWidget),
+            titleWidget,
             ?trailing,
           ],
         ),

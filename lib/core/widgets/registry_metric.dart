@@ -26,12 +26,16 @@ class RegistryMetric extends StatelessWidget {
     final valueColor = color ?? colorScheme.onSurface;
     final valueStyle = theme.textTheme.headlineMedium?.copyWith(
       color: valueColor,
+      fontSize: 22,
+      height: 1.1,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    final labelStyle = theme.textTheme.labelMedium?.copyWith(
+    final labelStyle = theme.textTheme.labelSmall?.copyWith(
       color: colorScheme.onSurface,
+      letterSpacing: 0,
+      fontSize: 12,
     );
-    final supportStyle = theme.textTheme.bodySmall;
+    final supportStyle = theme.textTheme.bodySmall?.copyWith(fontSize: 12);
 
     final semantics = [label, value, ?supportingText].join(' ');
 

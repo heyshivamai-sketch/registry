@@ -15,8 +15,13 @@ Future<void> saveScreenshot(
   WidgetTester tester,
   String filename, {
   String folder = 'add_document',
+  bool settle = true,
 }) async {
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+  }
   final boundary = tester.renderObject<RenderRepaintBoundary>(
     find.byKey(screenshotRootKey),
   );

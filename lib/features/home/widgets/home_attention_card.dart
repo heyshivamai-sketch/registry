@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_radius.dart';
+import 'package:the_registry/app/theme/app_shadows.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
@@ -23,31 +24,21 @@ class HomeAttentionCard extends StatelessWidget {
     final locale = l10n.localeName;
     final dueDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
     final accent = item.status.accent(status);
-    final fill = Color.lerp(
-      item.status.container(status, colorScheme),
-      colorScheme.surfaceContainerLowest,
-      item.status == RegistryStatus.urgent ||
-              item.status == RegistryStatus.expired
-          ? 0.15
-          : 0.55,
-    )!;
+    final fill = item.status == RegistryStatus.urgent
+        ? const Color(0xFFFFF8F7)
+        : colorScheme.surfaceContainerLowest;
 
     final content = Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(
-        AppSpacing.md,
-        AppSpacing.sm,
-        AppSpacing.sm,
-        AppSpacing.sm,
-      ),
+      padding: const EdgeInsets.all(12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RegistryAuraIconTile(
             icon: item.icon,
-            background: item.status.container(status, colorScheme),
-            foreground: item.status.onContainer(status, colorScheme),
+            size: 43,
+            background: const Color(0xFFF0EFFF),
+            foreground: colorScheme.tertiary,
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,14 +47,18 @@ class HomeAttentionCard extends StatelessWidget {
                   item.title(l10n),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleSmall,
+                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
                 ),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(dueDate, style: theme.textTheme.bodySmall),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: 4),
+                Text(
+                  '${item.actionLabel(l10n)} · $dueDate',
+                  style: theme.textTheme.bodySmall,
+                ),
+                const SizedBox(height: 4),
                 RegistryAuraStatusPill(
                   status: item.status,
                   label: item.statusLabel(l10n),
+                  compact: true,
                 ),
               ],
             ),
@@ -73,37 +68,37 @@ class HomeAttentionCard extends StatelessWidget {
               Directionality.of(context) == TextDirection.rtl
                   ? Icons.chevron_left_rounded
                   : Icons.chevron_right_rounded,
-              color: colorScheme.onSurfaceVariant,
+              color: const Color(0xFF737B91),
             ),
         ],
       ),
     );
 
-    return Material(
-      color: fill,
-      borderRadius: AppRadius.cardBorder,
-      child: InkWell(
-        onTap: onTap,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: fill,
         borderRadius: AppRadius.cardBorder,
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.cardBorder,
-            border: BorderDirectional(
-              start: BorderSide(
-                color: accent,
-                width:
-                    item.status == RegistryStatus.urgent ||
-                        item.status == RegistryStatus.expired
-                    ? 4
-                    : 3,
+        border: Border.all(color: colorScheme.outlineVariant),
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.cardBorder,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: AppRadius.cardBorder,
+              border: BorderDirectional(
+                start: BorderSide(color: accent, width: 3),
               ),
             ),
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: AppSpacing.minTapTarget,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: AppSpacing.minTapTarget,
+              ),
+              child: content,
             ),
-            child: content,
           ),
         ),
       ),

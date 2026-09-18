@@ -7,11 +7,21 @@ abstract final class AppShadows {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return [
       BoxShadow(
-        color: (isDark ? Colors.black : AppColors.deepNavy).withValues(
-          alpha: isDark ? 0.28 : 0.07,
+        color: (isDark ? Colors.black : const Color(0xFF222B5B)).withValues(
+          alpha: isDark ? 0.28 : 0.075,
         ),
-        blurRadius: 18,
-        offset: const Offset(0, 8),
+        blurRadius: 34,
+        offset: const Offset(0, 12),
+      ),
+    ];
+  }
+
+  static List<BoxShadow> pulse(BuildContext context) {
+    return [
+      BoxShadow(
+        color: const Color(0xFF202B65).withValues(alpha: 0.25),
+        blurRadius: 36,
+        offset: const Offset(0, 18),
       ),
     ];
   }
@@ -19,9 +29,9 @@ abstract final class AppShadows {
   static List<BoxShadow> dock(BuildContext context) {
     return [
       BoxShadow(
-        color: AppColors.midnight.withValues(alpha: 0.28),
-        blurRadius: 24,
-        offset: const Offset(0, 10),
+        color: AppColors.midnight.withValues(alpha: 0.3),
+        blurRadius: 30,
+        offset: const Offset(0, 14),
       ),
     ];
   }

@@ -472,7 +472,9 @@ void main() {
     expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
   });
 
-  testWidgets('Status pills use icon and text together', (tester) async {
+  testWidgets('Status pills use a colour dot and text together', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(412, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -484,7 +486,7 @@ void main() {
     expect(find.byType(RegistryStatusChip), findsWidgets);
     final chips = find.byType(RegistryStatusChip);
     expect(
-      find.descendant(of: chips, matching: find.byType(Icon)),
+      find.descendant(of: chips, matching: find.byType(DecoratedBox)),
       findsWidgets,
     );
     expect(

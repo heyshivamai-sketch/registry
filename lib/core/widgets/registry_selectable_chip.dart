@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 
-/// Material 3 selectable chip with a clear unselected border and checkmark.
+/// Compact Aura filter/choice chip. Selected state uses the ink surface.
 class RegistrySelectableChip extends StatelessWidget {
   const RegistrySelectableChip({
     super.key,
@@ -25,34 +25,33 @@ class RegistrySelectableChip extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final background = selected
-        ? (selectedColor ?? colorScheme.primaryContainer)
-        : colorScheme.surface;
+        ? (selectedColor ?? colorScheme.primary)
+        : colorScheme.surfaceContainerLowest;
     final foreground = selected
-        ? (selectedForegroundColor ?? colorScheme.onPrimaryContainer)
-        : colorScheme.onSurface;
-    final border = selected
-        ? (checkmarkColor ?? colorScheme.primary)
-        : colorScheme.outline;
+        ? (selectedForegroundColor ?? colorScheme.onPrimary)
+        : colorScheme.onSurfaceVariant;
 
     return FilterChip(
       label: Text(label),
       selected: selected,
       showCheckmark: true,
-      checkmarkColor: checkmarkColor ?? colorScheme.primary,
       onSelected: onSelected,
-      visualDensity: VisualDensity.standard,
+      visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
+        horizontal: AppSpacing.xs,
+        vertical: AppSpacing.xxs,
       ),
       labelPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-      side: BorderSide(color: border, width: selected ? 1.5 : 1),
+      side: BorderSide(
+        color: selected ? background : colorScheme.outlineVariant,
+      ),
       backgroundColor: background,
       selectedColor: background,
-      labelStyle: theme.textTheme.labelLarge?.copyWith(
+      labelStyle: theme.textTheme.labelSmall?.copyWith(
         color: foreground,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+        letterSpacing: 0.1,
+        fontSize: 12,
       ),
     );
   }

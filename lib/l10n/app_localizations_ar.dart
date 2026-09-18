@@ -428,6 +428,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fieldDocumentType => 'نوع المستند';
 
   @override
+  String get fieldCategory => 'الفئة';
+
+  @override
   String get fieldOwnerName => 'اسم المالك أو الملف';
 
   @override
@@ -779,4 +782,311 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get renewalHistoryEmptyTitle => 'لا توجد تجديدات بعد';
+
+  @override
+  String wizardStepOf(int current, int total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get wizardContinue => 'متابعة';
+
+  @override
+  String get wizardBack => 'رجوع';
+
+  @override
+  String get stepSourceTitle => 'مسح أو إدخال يدوي';
+
+  @override
+  String get stepIdentityTitle => 'هوية المستند';
+
+  @override
+  String get stepDatesTitle => 'التواريخ المهمة';
+
+  @override
+  String get stepRenewalTitle => 'تخطيط التجديد';
+
+  @override
+  String get stepReviewTitle => 'مراجعة وحفظ';
+
+  @override
+  String get howToAddTitle => 'كيف تريد إضافته؟';
+
+  @override
+  String get scanDocumentTitle => 'مسح المستند';
+
+  @override
+  String get scanDocumentRecommended => 'موصى به';
+
+  @override
+  String get scanDocumentSubtitle =>
+      'التقط صورة أو اختر صورة، ثم راجع التفاصيل المستخرجة.';
+
+  @override
+  String get enterManuallyTitle => 'إدخال يدوي';
+
+  @override
+  String get enterManuallySubtitle => 'أدخل التفاصيل بنفسك خطوة بخطوة.';
+
+  @override
+  String get ocrPrivacy =>
+      'تتم معالجة المسح على هذا الجهاز. لا يُحفظ شيء حتى تؤكد.';
+
+  @override
+  String get ocrReviewPrivacy =>
+      'تتم معالجة المسح على هذا الجهاز. راجع كل التفاصيل المستخرجة قبل الحفظ.';
+
+  @override
+  String get scanAgain => 'مسح مرة أخرى';
+
+  @override
+  String get ocrProcessingTitle => 'جارٍ قراءة هذا المستند';
+
+  @override
+  String get ocrProcessingMessage =>
+      'يتم التعرف على النص على هذا الجهاز. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
+
+  @override
+  String get ocrCancel => 'إلغاء المسح';
+
+  @override
+  String get ocrFailedTitle => 'تعذر قراءة هذا المسح';
+
+  @override
+  String get ocrFailedMessage =>
+      'احتفظ بالصورة وأدخل التفاصيل يدويًا، أو جرّب صورة أخرى.';
+
+  @override
+  String get ocrRetry => 'إعادة المحاولة';
+
+  @override
+  String get ocrReviewTitle => 'مراجعة المسح';
+
+  @override
+  String ocrFieldsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تم العثور على $count حقلًا',
+      few: 'تم العثور على $count حقول',
+      two: 'تم العثور على حقلين',
+      one: 'تم العثور على حقل واحد',
+      zero: 'لم يتم العثور على حقول',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ocrConfidenceHigh => 'ثقة عالية';
+
+  @override
+  String get ocrConfidenceReview => 'راجع';
+
+  @override
+  String get ocrConfidenceMissing => 'غير مكتشَف';
+
+  @override
+  String get ocrReviewField => 'راجع هذا الحقل';
+
+  @override
+  String get ocrSuggestedCountry => 'البلد المقترح';
+
+  @override
+  String get ocrSuggestedType => 'نوع المستند المقترح';
+
+  @override
+  String get ocrAddMissingField => 'إضافة حقل ناقص';
+
+  @override
+  String get ocrConfirmContinue => 'تأكيد ومتابعة';
+
+  @override
+  String get ocrRetake => 'إعادة الالتقاط أو الاستبدال';
+
+  @override
+  String get fieldCountry => 'البلد أو المنطقة';
+
+  @override
+  String get schemaChangeTitle => 'تغيير نوع المستند؟';
+
+  @override
+  String get schemaChangeMessage =>
+      'بعض التفاصيل التي أدخلتها لا تنتمي إلى النوع الجديد وسيتم حذفها.';
+
+  @override
+  String get schemaChangeConfirm => 'تغيير النوع';
+
+  @override
+  String get schemaChangeCancel => 'الإبقاء على النوع الحالي';
+
+  @override
+  String get addCustomField => 'إضافة حقل مخصص';
+
+  @override
+  String get customFieldLabel => 'اسم الحقل';
+
+  @override
+  String get customFieldValue => 'القيمة';
+
+  @override
+  String get removeCustomField => 'إزالة الحقل';
+
+  @override
+  String get markFieldSensitive => 'إخفاء هذه القيمة خارج المراجعة';
+
+  @override
+  String get reviewJumpIdentity => 'تعديل الهوية';
+
+  @override
+  String get reviewJumpDates => 'تعديل التواريخ';
+
+  @override
+  String get reviewJumpRenewal => 'تعديل خطة التجديد';
+
+  @override
+  String get reviewJumpScan => 'تعديل المسح';
+
+  @override
+  String get reviewAttachmentYes => 'توجد صورة مرفقة';
+
+  @override
+  String get reviewAttachmentNo => 'لا توجد صورة مرفقة';
+
+  @override
+  String reviewDynamicCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count حقلًا إضافيًا',
+      few: '$count حقول إضافية',
+      two: 'حقلان إضافيان',
+      one: 'حقل إضافي واحد',
+      zero: 'لا توجد حقول إضافية',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String suggestedActionDate(String date) {
+    return 'تاريخ البدء المقترح: $date';
+  }
+
+  @override
+  String get useSuggestedActionDate => 'استخدام التاريخ المقترح';
+
+  @override
+  String get countryGeneric => 'دولي';
+
+  @override
+  String get countryIndia => 'الهند';
+
+  @override
+  String get countryFrance => 'فرنسا';
+
+  @override
+  String get countryUae => 'الإمارات العربية المتحدة';
+
+  @override
+  String get countryOther => 'أخرى';
+
+  @override
+  String get schemaGenericPassport => 'جواز سفر';
+
+  @override
+  String get schemaIndiaAadhaar => 'آدهار';
+
+  @override
+  String get schemaFranceNationalId => 'بطاقة الهوية الفرنسية';
+
+  @override
+  String get schemaUaeEmiratesId => 'هوية الإمارات';
+
+  @override
+  String get schemaGenericOther => 'مستند آخر';
+
+  @override
+  String get fieldPassportNumber => 'رقم جواز السفر';
+
+  @override
+  String get fieldFullName => 'الاسم الكامل';
+
+  @override
+  String get fieldNationality => 'الجنسية';
+
+  @override
+  String get fieldDateOfBirth => 'تاريخ الميلاد';
+
+  @override
+  String get fieldGender => 'الجنس';
+
+  @override
+  String get fieldAddress => 'العنوان';
+
+  @override
+  String get fieldSurname => 'اسم العائلة';
+
+  @override
+  String get fieldGivenNames => 'الأسماء الأولى';
+
+  @override
+  String get fieldAadhaarNumber => 'رقم آدهار';
+
+  @override
+  String get fieldIdNumber => 'رقم الهوية';
+
+  @override
+  String get navDocumentsShort => 'مستندات';
+
+  @override
+  String get navSubscriptionsShort => 'خطط';
+
+  @override
+  String get navProfileShort => 'أنا';
+
+  @override
+  String get snapshotNinetyDayView => 'عرض 90 يومًا';
+
+  @override
+  String get profileMonogram => 'R';
+
+  @override
+  String get guidedSetup => 'إعداد موجّه';
+
+  @override
+  String get ocrOnDeviceEyebrow => 'استخراج على الجهاز';
+
+  @override
+  String get howToAddBody => 'امسح للبدء بسرعة، أو أدخل التفاصيل بنفسك.';
+
+  @override
+  String get identityIntro => 'نعرض فقط الحقول المناسبة لهذا المستند.';
+
+  @override
+  String get datesIntro => 'تشمل التواريخ دائمًا اليوم والشهر والسنة.';
+
+  @override
+  String get planningIntro =>
+      'التفاصيل الاختيارية تساعدك على معرفة ما يستحق الانتباه.';
+
+  @override
+  String get reviewIntro => 'راجع التفاصيل المهمة. يمكنك تعديل كل شيء لاحقًا.';
+
+  @override
+  String get readyToSave => 'جاهز للحفظ';
+
+  @override
+  String get scanToFill => 'امسح لتعبئة هذه الحقول تلقائيًا';
+
+  @override
+  String get ocrDynamicTemplateTitle => 'قالب حقول ديناميكي';
+
+  @override
+  String get ocrDynamicTemplateBody =>
+      'تتغير الحقول حسب البلد ونوع المستند. تظهر التسميات غير المعروفة كحقول مخصصة.';
+
+  @override
+  String get ocrReviewHint => 'راجع القيم المميّزة قبل المتابعة.';
+
+  @override
+  String get ocrProcessingHint => 'يتم التعرف على النص على هذا الجهاز.';
 }

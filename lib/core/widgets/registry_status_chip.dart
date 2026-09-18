@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
 
 enum RegistryStatus { urgent, upcoming, active, expired, neutral }
 
@@ -40,43 +39,55 @@ class RegistryStatusChip extends StatelessWidget {
     super.key,
     required this.status,
     required this.label,
+    this.onDark = false,
+    this.compact = false,
   });
 
   final RegistryStatus status;
   final String label;
+  final bool onDark;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppStatusColors.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final palette = _palette(colors, colorScheme);
+    final background = onDark
+        ? colorScheme.onPrimary.withValues(alpha: 0.12)
+        : palette.background;
+    final foreground = onDark ? colorScheme.onPrimary : palette.foreground;
 
     return Semantics(
       label: label,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: palette.background,
+          color: background,
           borderRadius: AppRadius.chipBorder,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xxs,
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 8 : 10,
+            vertical: compact ? 5 : 7,
           ),
           child: Wrap(
-            spacing: AppSpacing.xxs,
+            spacing: 7,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Icon(
-                palette.icon,
-                size: AppSpacing.md,
-                color: palette.foreground,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: foreground,
+                  shape: BoxShape.circle,
+                ),
+                child: const SizedBox(width: 7, height: 7),
               ),
               Text(
                 label,
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.copyWith(color: palette.foreground),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: foreground,
+                  letterSpacing: 0.2,
+                  fontSize: compact ? 11 : 12,
+                ),
               ),
             ],
           ),
@@ -90,27 +101,22 @@ class RegistryStatusChip extends StatelessWidget {
       RegistryStatus.urgent => _StatusPalette(
         background: colors.urgentContainer,
         foreground: colors.onUrgentContainer,
-        icon: Icons.priority_high_rounded,
       ),
       RegistryStatus.upcoming => _StatusPalette(
         background: colors.warningContainer,
         foreground: colors.onWarningContainer,
-        icon: Icons.schedule_rounded,
       ),
       RegistryStatus.active => _StatusPalette(
         background: colors.successContainer,
         foreground: colors.onSuccessContainer,
-        icon: Icons.check_circle_outline_rounded,
       ),
       RegistryStatus.expired => _StatusPalette(
         background: colors.urgentContainer,
         foreground: colors.onUrgentContainer,
-        icon: Icons.event_busy_rounded,
       ),
       RegistryStatus.neutral => _StatusPalette(
-        background: colorScheme.surfaceContainer,
-        foreground: colorScheme.onSurfaceVariant,
-        icon: Icons.info_outline_rounded,
+        background: colorScheme.primaryContainer,
+        foreground: colorScheme.onPrimaryContainer,
       ),
     };
   }
@@ -119,13 +125,8 @@ class RegistryStatusChip extends StatelessWidget {
 typedef RegistryAuraStatusPill = RegistryStatusChip;
 
 class _StatusPalette {
-  const _StatusPalette({
-    required this.background,
-    required this.foreground,
-    required this.icon,
-  });
+  const _StatusPalette({required this.background, required this.foreground});
 
   final Color background;
   final Color foreground;
-  final IconData icon;
 }

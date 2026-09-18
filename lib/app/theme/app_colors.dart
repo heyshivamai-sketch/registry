@@ -33,8 +33,13 @@ abstract final class AppColors {
   static const Color outline = Color(0xFFE7E9F2);
   static const Color outlineVariant = Color(0xFFE7E9F2);
 
-  static const Color heroStart = midnight;
-  static const Color heroEnd = deepNavy;
+  static const Color heroStart = Color(0xFF111A3D);
+  static const Color heroEnd = Color(0xFF2B4383);
+  static const Color heroHighlight = Color(0xFF806FFF);
+  static const Color countdownFill = Color(0xFF263D79);
+  static const Color countdownRing = Color(0xFF7FE1D1);
+  static const Color addStart = Color(0xFF796CFF);
+  static const Color addEnd = Color(0xFF4A58D6);
 
   static const Color urgent = coral;
   static const Color urgentContainer = Color(0xFFFFE8E5);
@@ -69,6 +74,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     required this.indigo,
     required this.violet,
     required this.aqua,
+    required this.heroHighlight,
+    required this.countdownFill,
+    required this.countdownRing,
+    required this.addStart,
+    required this.addEnd,
     required this.dock,
     required this.dockForeground,
   });
@@ -78,6 +88,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
   final Color indigo;
   final Color violet;
   final Color aqua;
+  final Color heroHighlight;
+  final Color countdownFill;
+  final Color countdownRing;
+  final Color addStart;
+  final Color addEnd;
   final Color dock;
   final Color dockForeground;
 
@@ -87,6 +102,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     indigo: AppColors.indigo,
     violet: AppColors.violet,
     aqua: AppColors.aqua,
+    heroHighlight: AppColors.heroHighlight,
+    countdownFill: AppColors.countdownFill,
+    countdownRing: AppColors.countdownRing,
+    addStart: AppColors.addStart,
+    addEnd: AppColors.addEnd,
     dock: Color(0xEB11162E),
     dockForeground: Color(0xFF8790AD),
   );
@@ -97,6 +117,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     indigo: Color(0xFF9AABFF),
     violet: Color(0xFF9A8CFF),
     aqua: Color(0xFF6EE7CB),
+    heroHighlight: Color(0xFF9A8CFF),
+    countdownFill: Color(0xFF1C2C5C),
+    countdownRing: Color(0xFF7FE1D1),
+    addStart: Color(0xFF9A8CFF),
+    addEnd: Color(0xFF4A58D6),
     dock: Color(0xF211162E),
     dockForeground: Color(0xFFAEB5CF),
   );
@@ -112,6 +137,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     Color? indigo,
     Color? violet,
     Color? aqua,
+    Color? heroHighlight,
+    Color? countdownFill,
+    Color? countdownRing,
+    Color? addStart,
+    Color? addEnd,
     Color? dock,
     Color? dockForeground,
   }) {
@@ -121,6 +151,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
       indigo: indigo ?? this.indigo,
       violet: violet ?? this.violet,
       aqua: aqua ?? this.aqua,
+      heroHighlight: heroHighlight ?? this.heroHighlight,
+      countdownFill: countdownFill ?? this.countdownFill,
+      countdownRing: countdownRing ?? this.countdownRing,
+      addStart: addStart ?? this.addStart,
+      addEnd: addEnd ?? this.addEnd,
       dock: dock ?? this.dock,
       dockForeground: dockForeground ?? this.dockForeground,
     );
@@ -137,6 +172,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
       indigo: Color.lerp(indigo, other.indigo, t)!,
       violet: Color.lerp(violet, other.violet, t)!,
       aqua: Color.lerp(aqua, other.aqua, t)!,
+      heroHighlight: Color.lerp(heroHighlight, other.heroHighlight, t)!,
+      countdownFill: Color.lerp(countdownFill, other.countdownFill, t)!,
+      countdownRing: Color.lerp(countdownRing, other.countdownRing, t)!,
+      addStart: Color.lerp(addStart, other.addStart, t)!,
+      addEnd: Color.lerp(addEnd, other.addEnd, t)!,
       dock: Color.lerp(dock, other.dock, t)!,
       dockForeground: Color.lerp(dockForeground, other.dockForeground, t)!,
     );

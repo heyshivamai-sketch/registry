@@ -427,6 +427,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldDocumentType => 'Document type';
 
   @override
+  String get fieldCategory => 'Category';
+
+  @override
   String get fieldOwnerName => 'Owner or profile name';
 
   @override
@@ -779,4 +782,311 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get renewalHistoryEmptyTitle => 'No renewals yet';
+
+  @override
+  String wizardStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get wizardContinue => 'Continue';
+
+  @override
+  String get wizardBack => 'Back';
+
+  @override
+  String get stepSourceTitle => 'Scan or manual entry';
+
+  @override
+  String get stepIdentityTitle => 'Document identity';
+
+  @override
+  String get stepDatesTitle => 'Important dates';
+
+  @override
+  String get stepRenewalTitle => 'Renewal planning';
+
+  @override
+  String get stepReviewTitle => 'Review and save';
+
+  @override
+  String get howToAddTitle => 'How would you like to add it?';
+
+  @override
+  String get scanDocumentTitle => 'Scan document';
+
+  @override
+  String get scanDocumentRecommended => 'Recommended';
+
+  @override
+  String get scanDocumentSubtitle =>
+      'Take a photo or choose an image, then review extracted details.';
+
+  @override
+  String get enterManuallyTitle => 'Enter manually';
+
+  @override
+  String get enterManuallySubtitle =>
+      'Type the details yourself, one step at a time.';
+
+  @override
+  String get ocrPrivacy =>
+      'Your scan is processed on this device. Nothing is saved until you confirm.';
+
+  @override
+  String get ocrReviewPrivacy =>
+      'Your scan is processed on this device. Review all extracted details before saving.';
+
+  @override
+  String get scanAgain => 'Scan again';
+
+  @override
+  String get ocrProcessingTitle => 'Reading this document';
+
+  @override
+  String get ocrProcessingMessage =>
+      'Text is being recognised on this device. You can cancel and enter details manually.';
+
+  @override
+  String get ocrCancel => 'Cancel scan';
+
+  @override
+  String get ocrFailedTitle => 'We could not read this scan';
+
+  @override
+  String get ocrFailedMessage =>
+      'Keep the photo and enter details manually, or try another image.';
+
+  @override
+  String get ocrRetry => 'Try again';
+
+  @override
+  String get ocrReviewTitle => 'Review scan';
+
+  @override
+  String ocrFieldsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fields found',
+      one: '1 field found',
+      zero: 'No fields found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ocrConfidenceHigh => 'High confidence';
+
+  @override
+  String get ocrConfidenceReview => 'Review';
+
+  @override
+  String get ocrConfidenceMissing => 'Not detected';
+
+  @override
+  String get ocrReviewField => 'Review this field';
+
+  @override
+  String get ocrSuggestedCountry => 'Suggested country';
+
+  @override
+  String get ocrSuggestedType => 'Suggested document type';
+
+  @override
+  String get ocrAddMissingField => 'Add missing field';
+
+  @override
+  String get ocrConfirmContinue => 'Confirm and continue';
+
+  @override
+  String get ocrRetake => 'Retake or replace';
+
+  @override
+  String get fieldCountry => 'Country or region';
+
+  @override
+  String get schemaChangeTitle => 'Change document type?';
+
+  @override
+  String get schemaChangeMessage =>
+      'Some details you entered do not belong to the new type and will be removed.';
+
+  @override
+  String get schemaChangeConfirm => 'Change type';
+
+  @override
+  String get schemaChangeCancel => 'Keep current type';
+
+  @override
+  String get addCustomField => 'Add custom field';
+
+  @override
+  String get customFieldLabel => 'Field name';
+
+  @override
+  String get customFieldValue => 'Value';
+
+  @override
+  String get removeCustomField => 'Remove field';
+
+  @override
+  String get markFieldSensitive => 'Hide this value outside review';
+
+  @override
+  String get reviewJumpIdentity => 'Edit identity';
+
+  @override
+  String get reviewJumpDates => 'Edit dates';
+
+  @override
+  String get reviewJumpRenewal => 'Edit renewal plan';
+
+  @override
+  String get reviewJumpScan => 'Edit scan';
+
+  @override
+  String get reviewAttachmentYes => 'Photo attached';
+
+  @override
+  String get reviewAttachmentNo => 'No photo attached';
+
+  @override
+  String reviewDynamicCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count extra fields',
+      one: '1 extra field',
+      zero: 'No extra fields',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String suggestedActionDate(String date) {
+    return 'Suggested start date: $date';
+  }
+
+  @override
+  String get useSuggestedActionDate => 'Use suggested date';
+
+  @override
+  String get countryGeneric => 'International';
+
+  @override
+  String get countryIndia => 'India';
+
+  @override
+  String get countryFrance => 'France';
+
+  @override
+  String get countryUae => 'United Arab Emirates';
+
+  @override
+  String get countryOther => 'Other';
+
+  @override
+  String get schemaGenericPassport => 'Passport';
+
+  @override
+  String get schemaIndiaAadhaar => 'Aadhaar';
+
+  @override
+  String get schemaFranceNationalId => 'French national ID';
+
+  @override
+  String get schemaUaeEmiratesId => 'Emirates ID';
+
+  @override
+  String get schemaGenericOther => 'Other document';
+
+  @override
+  String get fieldPassportNumber => 'Passport number';
+
+  @override
+  String get fieldFullName => 'Full name';
+
+  @override
+  String get fieldNationality => 'Nationality';
+
+  @override
+  String get fieldDateOfBirth => 'Date of birth';
+
+  @override
+  String get fieldGender => 'Gender';
+
+  @override
+  String get fieldAddress => 'Address';
+
+  @override
+  String get fieldSurname => 'Surname';
+
+  @override
+  String get fieldGivenNames => 'Given names';
+
+  @override
+  String get fieldAadhaarNumber => 'Aadhaar number';
+
+  @override
+  String get fieldIdNumber => 'ID number';
+
+  @override
+  String get navDocumentsShort => 'Docs';
+
+  @override
+  String get navSubscriptionsShort => 'Plans';
+
+  @override
+  String get navProfileShort => 'Me';
+
+  @override
+  String get snapshotNinetyDayView => '90-day view';
+
+  @override
+  String get profileMonogram => 'R';
+
+  @override
+  String get guidedSetup => 'Guided setup';
+
+  @override
+  String get ocrOnDeviceEyebrow => 'On-device extraction';
+
+  @override
+  String get howToAddBody =>
+      'Scan for a faster start, or enter the details yourself.';
+
+  @override
+  String get identityIntro =>
+      'We show only the fields relevant to this document.';
+
+  @override
+  String get datesIntro => 'Dates always include day, month and year.';
+
+  @override
+  String get planningIntro =>
+      'Optional details help you decide what deserves attention.';
+
+  @override
+  String get reviewIntro =>
+      'Review the important details. You can edit everything later.';
+
+  @override
+  String get readyToSave => 'Ready to save';
+
+  @override
+  String get scanToFill => 'Scan to fill these automatically';
+
+  @override
+  String get ocrDynamicTemplateTitle => 'Dynamic field template';
+
+  @override
+  String get ocrDynamicTemplateBody =>
+      'Fields change by country and document type. Unknown labels appear as custom fields.';
+
+  @override
+  String get ocrReviewHint => 'Review highlighted values before continuing.';
+
+  @override
+  String get ocrProcessingHint => 'Text is being recognised on this device.';
 }

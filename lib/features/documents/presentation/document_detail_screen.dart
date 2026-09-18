@@ -70,8 +70,7 @@ class _DocumentDetailBody extends StatelessWidget {
             Text(
               l10n.documentPassEyebrow,
               style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                letterSpacing: 1.1,
+                color: theme.colorScheme.tertiary,
               ),
             ),
             Text(l10n.documentPassTitle, style: theme.textTheme.titleLarge),
@@ -118,124 +117,104 @@ class _DocumentDetailBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DocumentDigitalPass(document: document),
+              DocumentDigitalPass(document: document, large: true),
               const SizedBox(height: AppSpacing.md),
               _QuickActions(document: document),
               const SizedBox(height: AppSpacing.md),
               RegistrySurface(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(14),
+                borderRadius: BorderRadius.circular(19),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RegistrySectionHeader(
-                      icon: Icons.timelapse_outlined,
                       title: l10n.deadlineHealth,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      DocumentStatus.remainingLabel(l10n, document),
-                      style: theme.textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    if (document.hasDistinctActionDate)
-                      _InfoRow(
-                        label: l10n.fieldActionDate,
-                        value: RegistryDateFormatter.dayMonthYear(
-                          document.displayActionDate,
-                          locale,
-                        ),
-                      ),
-                    _InfoRow(
-                      label: l10n.fieldExpiryDate,
-                      value: RegistryDateFormatter.dayMonthYear(
-                        document.expiryDate,
-                        locale,
+                      actionLabel: DocumentStatus.remainingLabel(
+                        l10n,
+                        document,
                       ),
                     ),
-                    _InfoRow(
-                      label: l10n.fieldImpact,
-                      value: DocumentCopy.impact(l10n, document.impact),
-                    ),
-                    if (document.renewalEffort != null)
-                      _InfoRow(
-                        label: l10n.fieldRenewalEffort,
-                        value: DocumentCopy.effort(
-                          l10n,
-                          document.renewalEffort!,
-                        ),
-                      ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _DeadlineGrid(document: document),
                   ],
                 ),
               ),
-              if (_hasInformation(document)) ...[
-                const SizedBox(height: AppSpacing.md),
-                RegistrySurface(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RegistrySectionHeader(
-                        icon: Icons.info_outline,
-                        title: l10n.documentInformation,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      if (_present(document.ownerName))
-                        _InfoRow(
-                          label: l10n.ownerLabel,
-                          value: document.ownerName!,
-                        ),
-                      if (_present(document.issuingAuthority))
-                        _InfoRow(
-                          label: l10n.issuedBy,
-                          value: document.issuingAuthority!,
-                        ),
-                      if (document.maskedDocumentNumber.isNotEmpty)
-                        _InfoRow(
-                          label: l10n.fieldDocumentNumber,
-                          value: document.maskedDocumentNumber,
-                        ),
-                      if (document.issueDate != null)
-                        _InfoRow(
-                          label: l10n.fieldIssueDate,
-                          value: RegistryDateFormatter.dayMonthYear(
-                            document.issueDate!,
-                            locale,
-                          ),
-                        ),
-                      if (_present(document.costOfLapsing))
-                        _InfoRow(
-                          label: l10n.fieldCostOfLapsing,
-                          value: document.costOfLapsing!,
-                        ),
-                      if (_present(document.dependency))
-                        _InfoRow(
-                          label: l10n.fieldDependency,
-                          value: document.dependency!,
-                        ),
-                      if (_present(document.expectedChanges))
-                        _InfoRow(
-                          label: l10n.fieldExpectedChanges,
-                          value: document.expectedChanges!,
-                        ),
-                      if (_present(document.notes))
-                        _InfoRow(
-                          label: l10n.fieldNotes,
-                          value: document.notes!,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
               const SizedBox(height: AppSpacing.md),
               RegistrySurface(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegistrySectionHeader(
-                      icon: Icons.notifications_outlined,
-                      title: l10n.remindersTitle,
+                    RegistrySectionHeader(title: l10n.documentInformation),
+                    const SizedBox(height: AppSpacing.md),
+                    RegistryInfoRow(
+                      label: l10n.fieldDocumentType,
+                      value: DocumentCopy.schema(l10n, document.schemaId),
                     ),
+                    RegistryInfoRow(
+                      label: l10n.fieldCategory,
+                      value: DocumentCopy.category(l10n, document.category),
+                    ),
+                    if (_present(document.ownerName))
+                      RegistryInfoRow(
+                        label: l10n.ownerLabel,
+                        value: document.ownerName!,
+                      ),
+                    if (_present(document.issuingAuthority))
+                      RegistryInfoRow(
+                        label: l10n.issuedBy,
+                        value: document.issuingAuthority!,
+                      ),
+                    if (document.maskedDocumentNumber.isNotEmpty)
+                      RegistryInfoRow(
+                        label: l10n.fieldDocumentNumber,
+                        value: document.maskedDocumentNumber,
+                      ),
+                    if (document.issueDate != null)
+                      RegistryInfoRow(
+                        label: l10n.fieldIssueDate,
+                        value: RegistryDateFormatter.dayMonthYear(
+                          document.issueDate!,
+                          locale,
+                        ),
+                      ),
+                    if (_present(document.costOfLapsing))
+                      RegistryInfoRow(
+                        label: l10n.fieldCostOfLapsing,
+                        value: document.costOfLapsing!,
+                      ),
+                    if (_present(document.dependency))
+                      RegistryInfoRow(
+                        label: l10n.fieldDependency,
+                        value: document.dependency!,
+                      ),
+                    if (_present(document.expectedChanges))
+                      RegistryInfoRow(
+                        label: l10n.fieldExpectedChanges,
+                        value: document.expectedChanges!,
+                      ),
+                    if (_present(document.notes))
+                      RegistryInfoRow(
+                        label: l10n.fieldNotes,
+                        value: document.notes!,
+                      ),
+                    for (final field in document.visibleDynamicFields)
+                      RegistryInfoRow(
+                        label: DocumentCopy.fieldLabel(l10n, field),
+                        value: field.sensitive
+                            ? field.maskedValue
+                            : field.value,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              RegistrySurface(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RegistrySectionHeader(title: l10n.remindersTitle),
                     const SizedBox(height: AppSpacing.sm),
                     if (document.reminders.isEmpty)
                       Text(
@@ -266,10 +245,7 @@ class _DocumentDetailBody extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RegistrySectionHeader(
-                        icon: Icons.photo_outlined,
-                        title: l10n.attachmentSectionTitle,
-                      ),
+                      RegistrySectionHeader(title: l10n.attachmentSectionTitle),
                       const SizedBox(height: AppSpacing.sm),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
@@ -297,10 +273,7 @@ class _DocumentDetailBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegistrySectionHeader(
-                      icon: Icons.history_outlined,
-                      title: l10n.renewalHistory,
-                    ),
+                    RegistrySectionHeader(title: l10n.renewalHistory),
                     const SizedBox(height: AppSpacing.sm),
                     if (history.isEmpty)
                       RegistryEmptyState(
@@ -311,29 +284,7 @@ class _DocumentDetailBody extends StatelessWidget {
                       )
                     else
                       for (final entry in history) ...[
-                        _InfoRow(
-                          label: l10n.previousExpiry,
-                          value: RegistryDateFormatter.dayMonthYear(
-                            entry.previousExpiryDate,
-                            locale,
-                          ),
-                        ),
-                        _InfoRow(
-                          label: l10n.newExpiry,
-                          value: RegistryDateFormatter.dayMonthYear(
-                            entry.newExpiryDate,
-                            locale,
-                          ),
-                        ),
-                        _InfoRow(
-                          label: l10n.renewalDate,
-                          value: RegistryDateFormatter.dayMonthYear(
-                            entry.renewedOn,
-                            locale,
-                          ),
-                        ),
-                        if (_present(entry.note))
-                          _InfoRow(label: l10n.fieldNotes, value: entry.note!),
+                        _HistoryItem(entry: entry),
                         const SizedBox(height: AppSpacing.sm),
                       ],
                     const SizedBox(height: AppSpacing.sm),
@@ -364,17 +315,6 @@ class _DocumentDetailBody extends StatelessWidget {
       }
       return b.id.compareTo(a.id);
     });
-  }
-
-  bool _hasInformation(RegistryDocument document) {
-    return _present(document.ownerName) ||
-        _present(document.issuingAuthority) ||
-        document.maskedDocumentNumber.isNotEmpty ||
-        document.issueDate != null ||
-        _present(document.dependency) ||
-        _present(document.costOfLapsing) ||
-        _present(document.expectedChanges) ||
-        _present(document.notes);
   }
 
   bool _present(String? value) => value != null && value.trim().isNotEmpty;
@@ -473,17 +413,13 @@ class _QuickActions extends StatelessWidget {
       ),
     ];
 
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: actions
-          .map(
-            (action) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 96),
-              child: action,
-            ),
-          )
-          .toList(growable: false),
+    return Row(
+      children: [
+        for (var i = 0; i < actions.length; i++) ...[
+          if (i != 0) const SizedBox(width: 7),
+          Expanded(child: actions[i]),
+        ],
+      ],
     );
   }
 }
@@ -515,13 +451,10 @@ class _QuickAction extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(18),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: AppSpacing.minTapTarget,
-            minWidth: AppSpacing.minTapTarget,
-          ),
+          constraints: const BoxConstraints(minHeight: 59),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
+              horizontal: AppSpacing.xxs,
               vertical: AppSpacing.xs,
             ),
             child: Column(
@@ -532,7 +465,11 @@ class _QuickAction extends StatelessWidget {
                 Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    letterSpacing: 0,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -543,8 +480,67 @@ class _QuickAction extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+class _DeadlineGrid extends StatelessWidget {
+  const _DeadlineGrid({required this.document});
+
+  final RegistryDocument document;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final locale = l10n.localeName;
+    final cells = <(String, String)>[
+      if (document.hasDistinctActionDate)
+        (
+          l10n.pulseStartByEyebrow,
+          RegistryDateFormatter.dayMonthYear(
+            document.displayActionDate,
+            locale,
+          ),
+        ),
+      (
+        l10n.pulseExpiresEyebrow,
+        RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),
+      ),
+      (l10n.fieldImpact, DocumentCopy.impact(l10n, document.impact)),
+      if (document.renewalEffort != null)
+        (
+          l10n.fieldRenewalEffort,
+          DocumentCopy.effort(l10n, document.renewalEffort!),
+        ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wide = constraints.maxWidth >= 280;
+        if (!wide) {
+          return Column(
+            children: [
+              for (var i = 0; i < cells.length; i++) ...[
+                if (i != 0) const SizedBox(height: 8),
+                _DeadlineCell(label: cells[i].$1, value: cells[i].$2),
+              ],
+            ],
+          );
+        }
+        return Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final cell in cells)
+              SizedBox(
+                width: (constraints.maxWidth - 8) / 2,
+                child: _DeadlineCell(label: cell.$1, value: cell.$2),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _DeadlineCell extends StatelessWidget {
+  const _DeadlineCell({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -552,15 +548,94 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: theme.textTheme.labelMedium),
-          const SizedBox(height: AppSpacing.xxs),
-          Text(value, style: theme.textTheme.bodyLarge),
-        ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F8FB),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                letterSpacing: 0.8,
+                fontSize: 10,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryItem extends StatelessWidget {
+  const _HistoryItem({required this.entry});
+
+  final RenewalHistoryEntry entry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final locale = l10n.localeName;
+    final theme = Theme.of(context);
+    final previous = RegistryDateFormatter.dayMonthYear(
+      entry.previousExpiryDate,
+      locale,
+    );
+    final next = RegistryDateFormatter.dayMonthYear(
+      entry.newExpiryDate,
+      locale,
+    );
+    final recorded = RegistryDateFormatter.dayMonthYear(
+      entry.renewedOn,
+      locale,
+    );
+    final note = entry.note?.trim();
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: Color(0xFFF7FBFA),
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+        border: Border(left: BorderSide(color: Color(0xFF42D8B7), width: 2)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 6,
+              children: [
+                Text(
+                  previous,
+                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
+                ),
+                Text(
+                  '→',
+                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
+                ),
+                Text(
+                  next,
+                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
+                ),
+              ],
+            ),
+            const SizedBox(height: 3),
+            Text(recorded, style: theme.textTheme.bodySmall),
+            if (note != null && note.isNotEmpty)
+              Text(note, style: theme.textTheme.bodySmall),
+          ],
+        ),
       ),
     );
   }

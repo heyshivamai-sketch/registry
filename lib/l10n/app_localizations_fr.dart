@@ -432,6 +432,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fieldDocumentType => 'Type de document';
 
   @override
+  String get fieldCategory => 'Catégorie';
+
+  @override
   String get fieldOwnerName => 'Nom du titulaire ou du profil';
 
   @override
@@ -789,4 +792,314 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get renewalHistoryEmptyTitle => 'Aucun renouvellement';
+
+  @override
+  String wizardStepOf(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get wizardContinue => 'Continuer';
+
+  @override
+  String get wizardBack => 'Retour';
+
+  @override
+  String get stepSourceTitle => 'Scan ou saisie manuelle';
+
+  @override
+  String get stepIdentityTitle => 'Identité du document';
+
+  @override
+  String get stepDatesTitle => 'Dates importantes';
+
+  @override
+  String get stepRenewalTitle => 'Préparation du renouvellement';
+
+  @override
+  String get stepReviewTitle => 'Vérifier et enregistrer';
+
+  @override
+  String get howToAddTitle => 'Comment souhaitez-vous l’ajouter ?';
+
+  @override
+  String get scanDocumentTitle => 'Scanner le document';
+
+  @override
+  String get scanDocumentRecommended => 'Recommandé';
+
+  @override
+  String get scanDocumentSubtitle =>
+      'Prenez une photo ou choisissez une image, puis vérifiez les informations extraites.';
+
+  @override
+  String get enterManuallyTitle => 'Saisir manuellement';
+
+  @override
+  String get enterManuallySubtitle =>
+      'Saisissez les informations vous-même, étape par étape.';
+
+  @override
+  String get ocrPrivacy =>
+      'Votre scan est traité sur cet appareil. Rien n’est enregistré avant votre confirmation.';
+
+  @override
+  String get ocrReviewPrivacy =>
+      'Votre scan est traité sur cet appareil. Vérifiez toutes les informations extraites avant d’enregistrer.';
+
+  @override
+  String get scanAgain => 'Scanner à nouveau';
+
+  @override
+  String get ocrProcessingTitle => 'Lecture du document';
+
+  @override
+  String get ocrProcessingMessage =>
+      'Le texte est reconnu sur cet appareil. Vous pouvez annuler et saisir les informations manuellement.';
+
+  @override
+  String get ocrCancel => 'Annuler le scan';
+
+  @override
+  String get ocrFailedTitle => 'Ce scan n’a pas pu être lu';
+
+  @override
+  String get ocrFailedMessage =>
+      'Conservez la photo et saisissez les informations manuellement, ou essayez une autre image.';
+
+  @override
+  String get ocrRetry => 'Réessayer';
+
+  @override
+  String get ocrReviewTitle => 'Vérifier le scan';
+
+  @override
+  String ocrFieldsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count champs trouvés',
+      one: '1 champ trouvé',
+      zero: 'Aucun champ trouvé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ocrConfidenceHigh => 'Confiance élevée';
+
+  @override
+  String get ocrConfidenceReview => 'À vérifier';
+
+  @override
+  String get ocrConfidenceMissing => 'Non détecté';
+
+  @override
+  String get ocrReviewField => 'Vérifier ce champ';
+
+  @override
+  String get ocrSuggestedCountry => 'Pays suggéré';
+
+  @override
+  String get ocrSuggestedType => 'Type de document suggéré';
+
+  @override
+  String get ocrAddMissingField => 'Ajouter un champ manquant';
+
+  @override
+  String get ocrConfirmContinue => 'Confirmer et continuer';
+
+  @override
+  String get ocrRetake => 'Reprendre ou remplacer';
+
+  @override
+  String get fieldCountry => 'Pays ou région';
+
+  @override
+  String get schemaChangeTitle => 'Changer le type de document ?';
+
+  @override
+  String get schemaChangeMessage =>
+      'Certaines informations saisies ne correspondent pas au nouveau type et seront retirées.';
+
+  @override
+  String get schemaChangeConfirm => 'Changer le type';
+
+  @override
+  String get schemaChangeCancel => 'Conserver le type actuel';
+
+  @override
+  String get addCustomField => 'Ajouter un champ personnalisé';
+
+  @override
+  String get customFieldLabel => 'Nom du champ';
+
+  @override
+  String get customFieldValue => 'Valeur';
+
+  @override
+  String get removeCustomField => 'Supprimer le champ';
+
+  @override
+  String get markFieldSensitive =>
+      'Masquer cette valeur hors de la vérification';
+
+  @override
+  String get reviewJumpIdentity => 'Modifier l’identité';
+
+  @override
+  String get reviewJumpDates => 'Modifier les dates';
+
+  @override
+  String get reviewJumpRenewal => 'Modifier le plan de renouvellement';
+
+  @override
+  String get reviewJumpScan => 'Modifier le scan';
+
+  @override
+  String get reviewAttachmentYes => 'Photo jointe';
+
+  @override
+  String get reviewAttachmentNo => 'Aucune photo jointe';
+
+  @override
+  String reviewDynamicCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count champs supplémentaires',
+      one: '1 champ supplémentaire',
+      zero: 'Aucun champ supplémentaire',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String suggestedActionDate(String date) {
+    return 'Date de début suggérée : $date';
+  }
+
+  @override
+  String get useSuggestedActionDate => 'Utiliser la date suggérée';
+
+  @override
+  String get countryGeneric => 'International';
+
+  @override
+  String get countryIndia => 'Inde';
+
+  @override
+  String get countryFrance => 'France';
+
+  @override
+  String get countryUae => 'Émirats arabes unis';
+
+  @override
+  String get countryOther => 'Autre';
+
+  @override
+  String get schemaGenericPassport => 'Passeport';
+
+  @override
+  String get schemaIndiaAadhaar => 'Aadhaar';
+
+  @override
+  String get schemaFranceNationalId => 'Carte nationale d’identité';
+
+  @override
+  String get schemaUaeEmiratesId => 'Emirates ID';
+
+  @override
+  String get schemaGenericOther => 'Autre document';
+
+  @override
+  String get fieldPassportNumber => 'Numéro de passeport';
+
+  @override
+  String get fieldFullName => 'Nom complet';
+
+  @override
+  String get fieldNationality => 'Nationalité';
+
+  @override
+  String get fieldDateOfBirth => 'Date de naissance';
+
+  @override
+  String get fieldGender => 'Genre';
+
+  @override
+  String get fieldAddress => 'Adresse';
+
+  @override
+  String get fieldSurname => 'Nom';
+
+  @override
+  String get fieldGivenNames => 'Prénoms';
+
+  @override
+  String get fieldAadhaarNumber => 'Numéro Aadhaar';
+
+  @override
+  String get fieldIdNumber => 'Numéro d’identité';
+
+  @override
+  String get navDocumentsShort => 'Docs';
+
+  @override
+  String get navSubscriptionsShort => 'Forfaits';
+
+  @override
+  String get navProfileShort => 'Moi';
+
+  @override
+  String get snapshotNinetyDayView => 'Vue 90 jours';
+
+  @override
+  String get profileMonogram => 'R';
+
+  @override
+  String get guidedSetup => 'Configuration guidée';
+
+  @override
+  String get ocrOnDeviceEyebrow => 'Extraction sur l’appareil';
+
+  @override
+  String get howToAddBody =>
+      'Scannez pour gagner du temps, ou saisissez les détails vous-même.';
+
+  @override
+  String get identityIntro =>
+      'Seuls les champs utiles pour ce document sont affichés.';
+
+  @override
+  String get datesIntro =>
+      'Les dates incluent toujours le jour, le mois et l’année.';
+
+  @override
+  String get planningIntro =>
+      'Les détails optionnels aident à décider ce qui mérite votre attention.';
+
+  @override
+  String get reviewIntro =>
+      'Vérifiez les informations importantes. Vous pourrez tout modifier plus tard.';
+
+  @override
+  String get readyToSave => 'Prêt à enregistrer';
+
+  @override
+  String get scanToFill => 'Scanner pour remplir automatiquement';
+
+  @override
+  String get ocrDynamicTemplateTitle => 'Modèle de champs dynamique';
+
+  @override
+  String get ocrDynamicTemplateBody =>
+      'Les champs changent selon le pays et le type de document. Les libellés inconnus deviennent des champs personnalisés.';
+
+  @override
+  String get ocrReviewHint =>
+      'Vérifiez les valeurs mises en avant avant de continuer.';
+
+  @override
+  String get ocrProcessingHint => 'Le texte est reconnu sur cet appareil.';
 }

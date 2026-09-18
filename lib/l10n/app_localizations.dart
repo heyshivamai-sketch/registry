@@ -814,6 +814,12 @@ abstract class AppLocalizations {
   /// **'Document type'**
   String get fieldDocumentType;
 
+  /// No description provided for @fieldCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get fieldCategory;
+
   /// No description provided for @fieldOwnerName.
   ///
   /// In en, this message translates to:
@@ -1485,6 +1491,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No renewals yet'**
   String get renewalHistoryEmptyTitle;
+
+  /// No description provided for @wizardStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String wizardStepOf(int current, int total);
+
+  /// No description provided for @wizardContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get wizardContinue;
+
+  /// No description provided for @wizardBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get wizardBack;
+
+  /// No description provided for @stepSourceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or manual entry'**
+  String get stepSourceTitle;
+
+  /// No description provided for @stepIdentityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document identity'**
+  String get stepIdentityTitle;
+
+  /// No description provided for @stepDatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Important dates'**
+  String get stepDatesTitle;
+
+  /// No description provided for @stepRenewalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal planning'**
+  String get stepRenewalTitle;
+
+  /// No description provided for @stepReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review and save'**
+  String get stepReviewTitle;
+
+  /// No description provided for @howToAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to add it?'**
+  String get howToAddTitle;
+
+  /// No description provided for @scanDocumentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan document'**
+  String get scanDocumentTitle;
+
+  /// No description provided for @scanDocumentRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get scanDocumentRecommended;
+
+  /// No description provided for @scanDocumentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo or choose an image, then review extracted details.'**
+  String get scanDocumentSubtitle;
+
+  /// No description provided for @enterManuallyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter manually'**
+  String get enterManuallyTitle;
+
+  /// No description provided for @enterManuallySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the details yourself, one step at a time.'**
+  String get enterManuallySubtitle;
+
+  /// No description provided for @ocrPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your scan is processed on this device. Nothing is saved until you confirm.'**
+  String get ocrPrivacy;
+
+  /// No description provided for @ocrReviewPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your scan is processed on this device. Review all extracted details before saving.'**
+  String get ocrReviewPrivacy;
+
+  /// No description provided for @scanAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get scanAgain;
+
+  /// No description provided for @ocrProcessingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading this document'**
+  String get ocrProcessingTitle;
+
+  /// No description provided for @ocrProcessingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Text is being recognised on this device. You can cancel and enter details manually.'**
+  String get ocrProcessingMessage;
+
+  /// No description provided for @ocrCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel scan'**
+  String get ocrCancel;
+
+  /// No description provided for @ocrFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not read this scan'**
+  String get ocrFailedTitle;
+
+  /// No description provided for @ocrFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the photo and enter details manually, or try another image.'**
+  String get ocrFailedMessage;
+
+  /// No description provided for @ocrRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get ocrRetry;
+
+  /// No description provided for @ocrReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review scan'**
+  String get ocrReviewTitle;
+
+  /// No description provided for @ocrFieldsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No fields found} one{1 field found} other{{count} fields found}}'**
+  String ocrFieldsFound(int count);
+
+  /// No description provided for @ocrConfidenceHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High confidence'**
+  String get ocrConfidenceHigh;
+
+  /// No description provided for @ocrConfidenceReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get ocrConfidenceReview;
+
+  /// No description provided for @ocrConfidenceMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Not detected'**
+  String get ocrConfidenceMissing;
+
+  /// No description provided for @ocrReviewField.
+  ///
+  /// In en, this message translates to:
+  /// **'Review this field'**
+  String get ocrReviewField;
+
+  /// No description provided for @ocrSuggestedCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested country'**
+  String get ocrSuggestedCountry;
+
+  /// No description provided for @ocrSuggestedType.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested document type'**
+  String get ocrSuggestedType;
+
+  /// No description provided for @ocrAddMissingField.
+  ///
+  /// In en, this message translates to:
+  /// **'Add missing field'**
+  String get ocrAddMissingField;
+
+  /// No description provided for @ocrConfirmContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm and continue'**
+  String get ocrConfirmContinue;
+
+  /// No description provided for @ocrRetake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake or replace'**
+  String get ocrRetake;
+
+  /// No description provided for @fieldCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country or region'**
+  String get fieldCountry;
+
+  /// No description provided for @schemaChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change document type?'**
+  String get schemaChangeTitle;
+
+  /// No description provided for @schemaChangeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Some details you entered do not belong to the new type and will be removed.'**
+  String get schemaChangeMessage;
+
+  /// No description provided for @schemaChangeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Change type'**
+  String get schemaChangeConfirm;
+
+  /// No description provided for @schemaChangeCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current type'**
+  String get schemaChangeCancel;
+
+  /// No description provided for @addCustomField.
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom field'**
+  String get addCustomField;
+
+  /// No description provided for @customFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Field name'**
+  String get customFieldLabel;
+
+  /// No description provided for @customFieldValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get customFieldValue;
+
+  /// No description provided for @removeCustomField.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove field'**
+  String get removeCustomField;
+
+  /// No description provided for @markFieldSensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this value outside review'**
+  String get markFieldSensitive;
+
+  /// No description provided for @reviewJumpIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit identity'**
+  String get reviewJumpIdentity;
+
+  /// No description provided for @reviewJumpDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit dates'**
+  String get reviewJumpDates;
+
+  /// No description provided for @reviewJumpRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit renewal plan'**
+  String get reviewJumpRenewal;
+
+  /// No description provided for @reviewJumpScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit scan'**
+  String get reviewJumpScan;
+
+  /// No description provided for @reviewAttachmentYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo attached'**
+  String get reviewAttachmentYes;
+
+  /// No description provided for @reviewAttachmentNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No photo attached'**
+  String get reviewAttachmentNo;
+
+  /// No description provided for @reviewDynamicCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No extra fields} one{1 extra field} other{{count} extra fields}}'**
+  String reviewDynamicCount(int count);
+
+  /// No description provided for @suggestedActionDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested start date: {date}'**
+  String suggestedActionDate(String date);
+
+  /// No description provided for @useSuggestedActionDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use suggested date'**
+  String get useSuggestedActionDate;
+
+  /// No description provided for @countryGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'International'**
+  String get countryGeneric;
+
+  /// No description provided for @countryIndia.
+  ///
+  /// In en, this message translates to:
+  /// **'India'**
+  String get countryIndia;
+
+  /// No description provided for @countryFrance.
+  ///
+  /// In en, this message translates to:
+  /// **'France'**
+  String get countryFrance;
+
+  /// No description provided for @countryUae.
+  ///
+  /// In en, this message translates to:
+  /// **'United Arab Emirates'**
+  String get countryUae;
+
+  /// No description provided for @countryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get countryOther;
+
+  /// No description provided for @schemaGenericPassport.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport'**
+  String get schemaGenericPassport;
+
+  /// No description provided for @schemaIndiaAadhaar.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar'**
+  String get schemaIndiaAadhaar;
+
+  /// No description provided for @schemaFranceNationalId.
+  ///
+  /// In en, this message translates to:
+  /// **'French national ID'**
+  String get schemaFranceNationalId;
+
+  /// No description provided for @schemaUaeEmiratesId.
+  ///
+  /// In en, this message translates to:
+  /// **'Emirates ID'**
+  String get schemaUaeEmiratesId;
+
+  /// No description provided for @schemaGenericOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other document'**
+  String get schemaGenericOther;
+
+  /// No description provided for @fieldPassportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport number'**
+  String get fieldPassportNumber;
+
+  /// No description provided for @fieldFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fieldFullName;
+
+  /// No description provided for @fieldNationality.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get fieldNationality;
+
+  /// No description provided for @fieldDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get fieldDateOfBirth;
+
+  /// No description provided for @fieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get fieldGender;
+
+  /// No description provided for @fieldAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get fieldAddress;
+
+  /// No description provided for @fieldSurname.
+  ///
+  /// In en, this message translates to:
+  /// **'Surname'**
+  String get fieldSurname;
+
+  /// No description provided for @fieldGivenNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Given names'**
+  String get fieldGivenNames;
+
+  /// No description provided for @fieldAadhaarNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar number'**
+  String get fieldAadhaarNumber;
+
+  /// No description provided for @fieldIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID number'**
+  String get fieldIdNumber;
+
+  /// No description provided for @navDocumentsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Docs'**
+  String get navDocumentsShort;
+
+  /// No description provided for @navSubscriptionsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans'**
+  String get navSubscriptionsShort;
+
+  /// No description provided for @navProfileShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get navProfileShort;
+
+  /// No description provided for @snapshotNinetyDayView.
+  ///
+  /// In en, this message translates to:
+  /// **'90-day view'**
+  String get snapshotNinetyDayView;
+
+  /// No description provided for @profileMonogram.
+  ///
+  /// In en, this message translates to:
+  /// **'R'**
+  String get profileMonogram;
+
+  /// No description provided for @guidedSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Guided setup'**
+  String get guidedSetup;
+
+  /// No description provided for @ocrOnDeviceEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device extraction'**
+  String get ocrOnDeviceEyebrow;
+
+  /// No description provided for @howToAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan for a faster start, or enter the details yourself.'**
+  String get howToAddBody;
+
+  /// No description provided for @identityIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'We show only the fields relevant to this document.'**
+  String get identityIntro;
+
+  /// No description provided for @datesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates always include day, month and year.'**
+  String get datesIntro;
+
+  /// No description provided for @planningIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional details help you decide what deserves attention.'**
+  String get planningIntro;
+
+  /// No description provided for @reviewIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the important details. You can edit everything later.'**
+  String get reviewIntro;
+
+  /// No description provided for @readyToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to save'**
+  String get readyToSave;
+
+  /// No description provided for @scanToFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to fill these automatically'**
+  String get scanToFill;
+
+  /// No description provided for @ocrDynamicTemplateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic field template'**
+  String get ocrDynamicTemplateTitle;
+
+  /// No description provided for @ocrDynamicTemplateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fields change by country and document type. Unknown labels appear as custom fields.'**
+  String get ocrDynamicTemplateBody;
+
+  /// No description provided for @ocrReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Review highlighted values before continuing.'**
+  String get ocrReviewHint;
+
+  /// No description provided for @ocrProcessingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Text is being recognised on this device.'**
+  String get ocrProcessingHint;
 }
 
 class _AppLocalizationsDelegate

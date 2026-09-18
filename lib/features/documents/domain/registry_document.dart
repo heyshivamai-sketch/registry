@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:the_registry/features/documents/domain/document_field_value.dart';
+import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 
 enum DocumentCategory {
@@ -41,6 +43,9 @@ class RegistryDocument {
     this.reminders = const {},
     this.attachmentBytes,
     this.renewalHistory = const [],
+    this.schemaId = DocumentSchemaIds.genericOther,
+    this.countryCode,
+    this.dynamicFields = const [],
   });
 
   static const Object _unset = Object();
@@ -65,6 +70,14 @@ class RegistryDocument {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final List<RenewalHistoryEntry> renewalHistory;
+  final String schemaId;
+  final String? countryCode;
+  final List<DocumentFieldValue> dynamicFields;
+
+  List<DocumentFieldValue> get visibleDynamicFields => [
+    for (final field in dynamicFields)
+      if (!field.isEmpty) field,
+  ];
 
   DateTime get displayActionDate => actionDate ?? expiryDate;
 
@@ -116,6 +129,9 @@ class RegistryDocument {
     DateTime? createdAt,
     Object? updatedAt = _unset,
     List<RenewalHistoryEntry>? renewalHistory,
+    String? schemaId,
+    Object? countryCode = _unset,
+    List<DocumentFieldValue>? dynamicFields,
   }) {
     return RegistryDocument(
       id: id ?? this.id,
@@ -160,6 +176,11 @@ class RegistryDocument {
           ? this.updatedAt
           : updatedAt as DateTime?,
       renewalHistory: renewalHistory ?? this.renewalHistory,
+      schemaId: schemaId ?? this.schemaId,
+      countryCode: identical(countryCode, _unset)
+          ? this.countryCode
+          : countryCode as String?,
+      dynamicFields: dynamicFields ?? this.dynamicFields,
     );
   }
 }

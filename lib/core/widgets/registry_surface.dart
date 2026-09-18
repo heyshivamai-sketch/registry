@@ -86,6 +86,114 @@ class RegistryIconBadge extends StatelessWidget {
 
 typedef RegistryAuraIconTile = RegistryIconBadge;
 
+enum RegistryCalloutTone { privacy, tip, warning }
+
+class RegistryCallout extends StatelessWidget {
+  const RegistryCallout({
+    super.key,
+    required this.message,
+    this.title,
+    this.tone = RegistryCalloutTone.privacy,
+  });
+
+  final String message;
+  final String? title;
+  final RegistryCalloutTone tone;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = switch (tone) {
+      RegistryCalloutTone.privacy => (
+        background: const Color(0xFFE9FAF6),
+        foreground: const Color(0xFF146A5D),
+        muted: const Color(0xFF146A5D),
+      ),
+      RegistryCalloutTone.tip => (
+        background: const Color(0xFFF0EFFF),
+        foreground: const Color(0xFF4B4594),
+        muted: const Color(0xFF68708B),
+      ),
+      RegistryCalloutTone.warning => (
+        background: const Color(0xFFFFF2EF),
+        foreground: const Color(0xFF8E3934),
+        muted: const Color(0xFF8E3934),
+      ),
+    };
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.background,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title != null) ...[
+              Text(
+                title!,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: colors.foreground,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xxs),
+            ],
+            Text(
+              message,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: title == null ? colors.foreground : colors.muted,
+                height: 1.45,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RegistryInfoRow extends StatelessWidget {
+  const RegistryInfoRow({super.key, required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    if (value.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class RegistryElevatedSurface extends StatelessWidget {
   const RegistryElevatedSurface({
     super.key,

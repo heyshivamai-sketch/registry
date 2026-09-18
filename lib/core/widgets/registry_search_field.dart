@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_motion.dart';
+import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -23,22 +23,30 @@ class RegistrySearchField extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final hasQuery = controller.text.isNotEmpty;
     final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(17),
+      borderRadius: BorderRadius.circular(AppRadius.search),
       borderSide: BorderSide(color: colorScheme.outlineVariant),
     );
 
-    return AnimatedContainer(
-      duration: AppMotion.short,
-      curve: Curves.easeOut,
+    return SizedBox(
+      height: AppSpacing.searchHeight,
       child: TextField(
         key: fieldKey,
         controller: controller,
         textInputAction: TextInputAction.search,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface,
+          fontSize: 13,
+        ),
         decoration: InputDecoration(
           hintText: hintText ?? l10n.searchPlaceholder,
+          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: const Color(0xFF788198),
+            fontSize: 13,
+          ),
           prefixIcon: Icon(
             Icons.search_rounded,
             color: colorScheme.onSurfaceVariant,
+            size: 22,
           ),
           suffixIcon: hasQuery
               ? IconButton(
@@ -53,12 +61,12 @@ class RegistrySearchField extends StatelessWidget {
           border: border,
           enabledBorder: border,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(17),
+            borderRadius: BorderRadius.circular(AppRadius.search),
             borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
+            vertical: 0,
           ),
         ),
       ),

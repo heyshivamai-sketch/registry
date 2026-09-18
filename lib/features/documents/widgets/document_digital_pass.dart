@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
+import 'package:the_registry/app/theme/app_shadows.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
@@ -17,21 +16,22 @@ class DocumentDigitalPass extends StatelessWidget {
     required this.document,
     this.onTap,
     this.showExpiry = true,
+    this.large = false,
   });
 
   final RegistryDocument document;
   final VoidCallback? onTap;
   final bool showExpiry;
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final brand = AppBrandColors.of(context);
     final locale = l10n.localeName;
     final status = DocumentStatus.resolve(document);
     final category = DocumentCopy.category(l10n, document.category);
-    final issuer = document.issuingAuthority?.trim();
+    final country = DocumentCopy.country(l10n, document.countryCode);
     final onHero = Colors.white;
     final expiry = RegistryDateFormatter.dayMonthYear(
       document.expiryDate,
@@ -39,7 +39,7 @@ class DocumentDigitalPass extends StatelessWidget {
     );
 
     final content = Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: EdgeInsets.all(large ? 19 : 17),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -48,124 +48,138 @@ class DocumentDigitalPass extends StatelessWidget {
             children: [
               RegistryIconBadge(
                 icon: DocumentIcons.forCategory(document.category),
+                size: 43,
                 background: onHero.withValues(alpha: 0.14),
                 foreground: onHero,
               ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RegistryStatusChip(
-                      status: status,
-                      label: DocumentStatus.label(l10n, status),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      category,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: onHero.withValues(alpha: 0.78),
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                    if (issuer != null && issuer.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.xxs),
-                      Text(
-                        issuer,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: onHero.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      document.name,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: onHero,
-                        fontSize: 26,
-                      ),
-                    ),
-                    if (_present(document.ownerName)) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        document.ownerName!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: onHero.withValues(alpha: 0.9),
-                        ),
-                      ),
-                    ],
-                  ],
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: RegistryStatusChip(
+                    status: status,
+                    label: DocumentStatus.label(l10n, status),
+                    onDark: true,
+                    compact: true,
+                  ),
                 ),
               ),
-              if (document.hasAttachment)
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: AppSpacing.xs,
-                  ),
-                  child: Semantics(
-                    label: l10n.hasAttachment,
-                    child: Icon(
-                      Icons.photo_outlined,
-                      color: onHero.withValues(alpha: 0.86),
-                      size: AppSpacing.iconMd,
-                    ),
-                  ),
-                ),
             ],
           ),
-          if (document.maskedDocumentNumber.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.md),
-            Semantics(
-              label: l10n.maskedDocumentNumberLabel(
-                document.maskedDocumentNumber,
-              ),
-              child: Text(
-                document.maskedDocumentNumber,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: onHero,
-                  letterSpacing: 1.6,
-                  fontFeatures: const [FontFeature.tabularFigures()],
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 6,
+            children: [
+              Text(
+                country,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: const Color(0xFFAEB9DB),
+                  letterSpacing: 1.4,
+                  fontSize: 10,
                 ),
+              ),
+              Text(
+                '·',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: const Color(0xFFAEB9DB),
+                ),
+              ),
+              Text(
+                category,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: const Color(0xFFAEB9DB),
+                  letterSpacing: 1.4,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Text(
+            document.name,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              color: onHero,
+              fontSize: 24,
+              height: 1.15,
+            ),
+          ),
+          if (_present(document.ownerName)) ...[
+            const SizedBox(height: 3),
+            Text(
+              document.ownerName!,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: const Color(0xFFCCD3EB),
+                fontSize: 12,
               ),
             ),
           ],
           if (showExpiry) ...[
-            const SizedBox(height: AppSpacing.md),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final expiryCell = _PassDateCell(
-                  eyebrow: l10n.pulseExpiresEyebrow,
-                  value: expiry,
-                  onHero: onHero,
-                );
-                if (!document.hasDistinctActionDate) {
-                  return expiryCell;
-                }
-                final startCell = _PassDateCell(
-                  eyebrow: l10n.pulseStartByEyebrow,
-                  value: RegistryDateFormatter.dayMonthYear(
-                    document.displayActionDate,
-                    locale,
+            const SizedBox(height: 26),
+            Wrap(
+              spacing: AppSpacing.md,
+              runSpacing: AppSpacing.sm,
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.end,
+              children: [
+                if (document.maskedDocumentNumber.isNotEmpty)
+                  Semantics(
+                    label: l10n.maskedDocumentNumberLabel(
+                      document.maskedDocumentNumber,
+                    ),
+                    child: Text(
+                      document.maskedDocumentNumber,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: onHero,
+                        letterSpacing: 1.6,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
                   ),
-                  onHero: onHero,
-                );
-                if (constraints.maxWidth < 280) {
-                  return Column(
+                if (document.hasDistinctActionDate)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(width: double.infinity, child: startCell),
-                      const SizedBox(height: AppSpacing.xs),
-                      SizedBox(width: double.infinity, child: expiryCell),
+                      Text(
+                        l10n.pulseStartByEyebrow,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: const Color(0xFFAEB9DB),
+                          letterSpacing: 0.8,
+                          fontSize: 10,
+                        ),
+                      ),
+                      Text(
+                        RegistryDateFormatter.dayMonthYear(
+                          document.displayActionDate,
+                          locale,
+                        ),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: onHero,
+                          fontSize: 13,
+                        ),
+                      ),
                     ],
-                  );
-                }
-                return Row(
+                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Expanded(child: startCell),
-                    const SizedBox(width: AppSpacing.xs),
-                    Expanded(child: expiryCell),
+                    Text(
+                      l10n.pulseExpiresEyebrow,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: const Color(0xFFAEB9DB),
+                        letterSpacing: 0.8,
+                        fontSize: 10,
+                      ),
+                    ),
+                    Text(
+                      expiry,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: onHero,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
-                );
-              },
+                ),
+              ],
             ),
           ],
         ],
@@ -178,17 +192,40 @@ class DocumentDigitalPass extends StatelessWidget {
       label: l10n.documentPassLabel,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: AppRadius.xlBorder,
+          borderRadius: BorderRadius.circular(AppSpacing.passRadius),
+          boxShadow: AppShadows.pulse(context),
           gradient: LinearGradient(
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd,
-            colors: [
-              brand.heroStart,
-              Color.lerp(brand.heroEnd, brand.indigo, 0.28)!,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [const Color(0xFF141D43), const Color(0xFF283E79)],
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSpacing.passRadius),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -30,
+                top: -40,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          const Color(0xFF7F74FF).withValues(alpha: 0.55),
+                          const Color(0xFF7F74FF).withValues(alpha: 0),
+                        ],
+                      ),
+                    ),
+                    child: const SizedBox(width: 200, height: 200),
+                  ),
+                ),
+              ),
+              content,
             ],
           ),
         ),
-        child: content,
       ),
     );
 
@@ -204,48 +241,4 @@ class DocumentDigitalPass extends StatelessWidget {
   }
 
   bool _present(String? value) => value != null && value.trim().isNotEmpty;
-}
-
-class _PassDateCell extends StatelessWidget {
-  const _PassDateCell({
-    required this.eyebrow,
-    required this.value,
-    required this.onHero,
-  });
-
-  final String eyebrow;
-  final String value;
-  final Color onHero;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: onHero.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: onHero.withValues(alpha: 0.12)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              eyebrow,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: onHero.withValues(alpha: 0.72),
-                letterSpacing: 0.8,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xxs),
-            Text(
-              value,
-              style: theme.textTheme.titleSmall?.copyWith(color: onHero),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

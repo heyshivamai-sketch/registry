@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpacing.screenPadding,
-          AppSpacing.screenPadding,
+          AppSpacing.pageTop,
           AppSpacing.screenPadding,
           AppSpacing.scrollDockClearance,
         ),
@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
             RegistryAuraSectionHeader(
               key: const ValueKey<String>('home-snapshot-header'),
               title: l10n.sectionRegistrySnapshot,
+              actionLabel: l10n.snapshotNinetyDayView,
             ),
             const SizedBox(height: AppSpacing.sm),
             HomeMetricsRow(

@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/features/documents/domain/date_picker_service.dart';
+import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_repository.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
@@ -16,6 +17,7 @@ class RegistryApp extends StatefulWidget {
     this.documentRepository,
     this.imagePickerService,
     this.datePickerService,
+    this.documentOcrService,
     this.locale,
   });
 
@@ -23,6 +25,7 @@ class RegistryApp extends StatefulWidget {
   final DocumentRepository? documentRepository;
   final ImagePickerService? imagePickerService;
   final DatePickerService? datePickerService;
+  final DocumentOcrService? documentOcrService;
 
   /// When null, the device locale is used. Unsupported languages fall back
   /// to English via [localeListResolutionCallback].
@@ -57,6 +60,8 @@ class _RegistryAppState extends State<RegistryApp> {
       widget.imagePickerService ?? createDefaultImagePicker();
   late final DatePickerService _dates =
       widget.datePickerService ?? createDefaultDatePicker();
+  late final DocumentOcrService _ocr =
+      widget.documentOcrService ?? createDefaultDocumentOcr();
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +69,7 @@ class _RegistryAppState extends State<RegistryApp> {
       documents: _documents,
       imagePicker: _images,
       datePicker: _dates,
+      documentOcr: _ocr,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Registry',
         debugShowCheckedModeBanner: false,

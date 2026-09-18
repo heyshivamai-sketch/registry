@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:the_registry/features/documents/domain/document_field_value.dart';
+import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 
@@ -26,6 +28,9 @@ RegistryDocument sampleDocument({
   DateTime? createdAt,
   DateTime? updatedAt,
   List<RenewalHistoryEntry> renewalHistory = const [],
+  String schemaId = DocumentSchemaIds.genericOther,
+  String? countryCode,
+  List<DocumentFieldValue> dynamicFields = const [],
 }) {
   return RegistryDocument(
     id: id,
@@ -48,5 +53,8 @@ RegistryDocument sampleDocument({
     createdAt: createdAt ?? DateTime(2026, 1, 2),
     updatedAt: updatedAt,
     renewalHistory: renewalHistory,
+    schemaId: schemaId,
+    countryCode: countryCode,
+    dynamicFields: dynamicFields,
   );
 }

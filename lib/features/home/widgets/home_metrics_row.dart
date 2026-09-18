@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
+import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_metric.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -67,14 +68,14 @@ class HomeMetricsRow extends StatelessWidget {
       return Material(
         color: metric.color,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(17),
+          borderRadius: BorderRadius.circular(AppRadius.metric),
           side: BorderSide(color: colorScheme.outlineVariant),
         ),
         child: metric.onTap == null
             ? child
             : InkWell(
                 onTap: metric.onTap,
-                borderRadius: BorderRadius.circular(17),
+                borderRadius: BorderRadius.circular(AppRadius.metric),
                 child: child,
               ),
       );

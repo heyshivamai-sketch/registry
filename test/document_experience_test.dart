@@ -5,6 +5,8 @@ import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
+import 'package:the_registry/features/documents/domain/document_field_value.dart';
+import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
@@ -17,6 +19,7 @@ import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 import 'support/fake_date_picker_service.dart';
+import 'support/fake_document_ocr_service.dart';
 import 'support/fake_image_picker_service.dart';
 import 'support/fake_onboarding_repository.dart';
 import 'support/sample_document.dart';
@@ -38,6 +41,7 @@ void main() {
   late InMemoryDocumentRepository documents;
   late FakeImagePickerService images;
   late FakeDatePickerService dates;
+  late FakeDocumentOcrService ocr;
 
   Widget app({Locale locale = const Locale('en')}) {
     return RegistryApp(
@@ -45,6 +49,7 @@ void main() {
       documentRepository: documents,
       imagePickerService: images,
       datePickerService: dates,
+      documentOcrService: ocr,
       locale: locale,
     );
   }
@@ -53,6 +58,7 @@ void main() {
     documents = InMemoryDocumentRepository();
     images = FakeImagePickerService();
     dates = FakeDatePickerService();
+    ocr = FakeDocumentOcrService();
   });
 
   Future<void> openDocuments(WidgetTester tester) async {
@@ -97,6 +103,12 @@ void main() {
       duration: Duration.zero,
     );
     await tester.pump();
+  }
+
+  Future<void> continueWizard(WidgetTester tester) async {
+    await reveal(tester, find.byKey(const ValueKey<String>('wizard-continue')));
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
+    await tester.pumpAndSettle();
   }
 
   testWidgets('Document card opens detail', (tester) async {
@@ -191,6 +203,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openEdit(tester);
+    await continueWizard(tester);
 
     expect(find.byType(AddDocumentScreen), findsOneWidget);
     expect(find.text('Edit document'), findsOneWidget);
@@ -216,20 +229,21 @@ void main() {
           .text,
       'AB12345678',
     );
-    expect(find.text('17 Sep 2026'), findsOneWidget);
-    expect(find.text('05 Oct 2027'), findsOneWidget);
-    expect(find.text('01 Sep 2027'), findsOneWidget);
-    expect(find.byType(Image), findsOneWidget);
-    await reveal(
-      tester,
-      find.byKey(const ValueKey<String>('section-additional')),
-    );
     expect(
       tester
           .widget<TextField>(find.byKey(const ValueKey<String>('field-issuer')))
           .controller!
           .text,
       'Algeria',
+    );
+    await continueWizard(tester);
+    expect(find.text('17 Sep 2026'), findsOneWidget);
+    expect(find.text('05 Oct 2027'), findsOneWidget);
+    expect(find.text('01 Sep 2027'), findsOneWidget);
+    await continueWizard(tester);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('section-additional')),
     );
     expect(
       tester
@@ -238,6 +252,13 @@ void main() {
           .text,
       'Travel disruption',
     );
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+    await tester.pumpAndSettle();
+    expect(find.byType(Image), findsOneWidget);
   });
 
   testWidgets('Edit image replace and remove work', (tester) async {
@@ -248,6 +269,7 @@ void main() {
     await openEdit(tester);
 
     expect(find.byType(Image), findsOneWidget);
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-replace')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-replace')));
     await tester.pumpAndSettle();
     await tester.tap(
@@ -256,6 +278,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(Image), findsOneWidget);
 
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-remove')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-remove')));
     await tester.pumpAndSettle();
     expect(find.byType(Image), findsNothing);
@@ -271,11 +294,12 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openEdit(tester);
+    await continueWizard(tester);
     await tester.enterText(
       find.byKey(const ValueKey<String>('field-name')),
       '',
     );
-    await tester.tap(find.byKey(const ValueKey<String>('save-document')));
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();
 
     expect(find.text('This field is required.'), findsWidgets);
@@ -287,6 +311,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openEdit(tester);
+    await continueWizard(tester);
     await tester.enterText(
       find.byKey(const ValueKey<String>('field-name')),
       'Changed name',
@@ -322,10 +347,14 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openEdit(tester);
+    await continueWizard(tester);
     await tester.enterText(
       find.byKey(const ValueKey<String>('field-name')),
       'Updated passport',
     );
+    await continueWizard(tester);
+    await continueWizard(tester);
+    await continueWizard(tester);
     await tester.tap(find.byKey(const ValueKey<String>('save-document')));
     await tester.pumpAndSettle();
 
@@ -1029,6 +1058,81 @@ void main() {
     expect(
       overflows.where((details) => details.toString().contains('overflowed')),
       isEmpty,
+    );
+  });
+
+  testWidgets('Detail masks sensitive dynamic fields', (tester) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await documents.save(
+      sampleDocument(
+        name: 'Aadhaar',
+        category: DocumentCategory.idCard,
+        schemaId: DocumentSchemaIds.indiaAadhaar,
+        countryCode: DocumentCountryCodes.india,
+        dynamicFields: const [
+          DocumentFieldValue(
+            id: DocumentFieldKeys.aadhaarNumber,
+            fieldKey: DocumentFieldKeys.aadhaarNumber,
+            value: '1234 5678 9012',
+            sensitive: true,
+          ),
+          DocumentFieldValue(
+            id: DocumentFieldKeys.gender,
+            fieldKey: DocumentFieldKeys.gender,
+            value: 'F',
+          ),
+        ],
+      ),
+    );
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDetail(tester);
+
+    expect(find.text('••••••••••9012'), findsOneWidget);
+    expect(find.text('1234 5678 9012'), findsNothing);
+    expect(find.text('F'), findsOneWidget);
+    expect(find.text('Document type'), findsWidgets);
+    expect(find.text('Category'), findsWidgets);
+    expect(find.text('Aadhaar'), findsWidgets);
+    expect(find.text('ID card'), findsWidgets);
+  });
+
+  testWidgets('Edit prefills saved dynamic fields', (tester) async {
+    tester.view.physicalSize = const Size(400, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await documents.save(
+      sampleDocument(
+        schemaId: DocumentSchemaIds.genericPassport,
+        countryCode: DocumentCountryCodes.generic,
+        dynamicFields: const [
+          DocumentFieldValue(
+            id: DocumentFieldKeys.nationality,
+            fieldKey: DocumentFieldKeys.nationality,
+            value: 'Sampleland',
+          ),
+        ],
+      ),
+    );
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openEdit(tester);
+    await continueWizard(tester);
+
+    expect(
+      tester
+          .widget<TextField>(
+            find.byKey(const ValueKey<String>('dynamic-nationality')),
+          )
+          .controller!
+          .text,
+      'Sampleland',
     );
   });
 }

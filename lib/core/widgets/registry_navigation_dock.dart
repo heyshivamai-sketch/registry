@@ -34,6 +34,7 @@ class RegistryAuraNavigationDock extends StatelessWidget {
       required IconData icon,
       required IconData selectedIcon,
       required String label,
+      required String shortLabel,
       required Key key,
     }) {
       final selected = selectedIndex == index;
@@ -46,7 +47,7 @@ class RegistryAuraNavigationDock extends StatelessWidget {
           child: InkWell(
             key: key,
             onTap: () => onDestinationSelected(index),
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(
                 minWidth: AppSpacing.minTapTarget,
@@ -56,12 +57,12 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                 duration: reduceMotion ? Duration.zero : AppMotion.short,
                 curve: Curves.easeOut,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xxs,
+                  horizontal: 2,
                   vertical: AppSpacing.xxs,
                 ),
                 decoration: BoxDecoration(
                   color: selected
-                      ? colorScheme.onPrimary.withValues(alpha: 0.12)
+                      ? colorScheme.onPrimary.withValues(alpha: 0.075)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -70,22 +71,40 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                   children: [
                     Icon(
                       selected ? selectedIcon : icon,
-                      size: 20,
+                      size: 18,
                       color: selected
                           ? colorScheme.onPrimary
                           : brand.dockForeground,
                     ),
-                    if (selected && !compact) ...[
+                    if (!compact) ...[
                       const SizedBox(height: 2),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          label,
+                          shortLabel,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: selected
+                                    ? colorScheme.onPrimary
+                                    : brand.dockForeground,
+                                fontSize: 10,
+                                letterSpacing: 0,
+                              ),
+                        ),
+                      ),
+                    ] else if (selected) ...[
+                      const SizedBox(height: 2),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          shortLabel,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
                                 color: colorScheme.onPrimary,
                                 fontSize: 10,
+                                letterSpacing: 0,
                               ),
                         ),
                       ),
@@ -120,17 +139,21 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [brand.violet, brand.indigo],
+                  colors: [brand.addStart, brand.addEnd],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: brand.violet.withValues(alpha: 0.42),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
+                    color: const Color(0xFF444FC6).withValues(alpha: 0.42),
+                    blurRadius: 22,
+                    offset: const Offset(0, 10),
                   ),
                 ],
               ),
-              child: Icon(Icons.add_rounded, color: colorScheme.onPrimary),
+              child: Icon(
+                Icons.add_rounded,
+                color: colorScheme.onPrimary,
+                size: 25,
+              ),
             ),
           ),
         ),
@@ -142,85 +165,82 @@ class RegistryAuraNavigationDock extends StatelessWidget {
         AppSpacing.dockInset,
         0,
         AppSpacing.dockInset,
-        AppSpacing.xs,
+        AppSpacing.dockBottom,
       ),
       child: SizedBox(
-        height: AppSpacing.dockHeight + 12,
+        height: AppSpacing.dockHeight + AppSpacing.addButtonLift,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.bottomCenter,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: ClipRRect(
-                borderRadius: AppRadius.dockBorder,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: brand.dock,
-                      borderRadius: AppRadius.dockBorder,
-                      border: Border.all(
-                        color: colorScheme.onPrimary.withValues(alpha: 0.12),
-                      ),
-                      boxShadow: AppShadows.dock(context),
+            ClipRRect(
+              borderRadius: AppRadius.dockBorder,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: brand.dock,
+                    borderRadius: AppRadius.dockBorder,
+                    border: Border.all(
+                      color: colorScheme.onPrimary.withValues(alpha: 0.125),
                     ),
-                    child: SizedBox(
-                      height: AppSpacing.dockHeight,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.xs,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: destination(
-                                index: 0,
-                                icon: Icons.home_outlined,
-                                selectedIcon: Icons.home_rounded,
-                                label: l10n.navHome,
-                                key: const ValueKey<String>('nav-home'),
-                              ),
+                    boxShadow: AppShadows.dock(context),
+                  ),
+                  child: SizedBox(
+                    height: AppSpacing.dockHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: destination(
+                              index: 0,
+                              icon: Icons.home_outlined,
+                              selectedIcon: Icons.home_rounded,
+                              label: l10n.navHome,
+                              shortLabel: l10n.navHome,
+                              key: const ValueKey<String>('nav-home'),
                             ),
-                            Expanded(
-                              child: destination(
-                                index: 1,
-                                icon: Icons.folder_outlined,
-                                selectedIcon: Icons.folder_rounded,
-                                label: l10n.navDocuments,
-                                key: const ValueKey<String>('nav-documents'),
-                              ),
+                          ),
+                          Expanded(
+                            child: destination(
+                              index: 1,
+                              icon: Icons.folder_outlined,
+                              selectedIcon: Icons.folder_rounded,
+                              label: l10n.navDocuments,
+                              shortLabel: l10n.navDocumentsShort,
+                              key: const ValueKey<String>('nav-documents'),
                             ),
-                            const SizedBox(width: AppSpacing.addButtonSize),
-                            Expanded(
-                              child: destination(
-                                index: 2,
-                                icon: Icons.subscriptions_outlined,
-                                selectedIcon: Icons.subscriptions_rounded,
-                                label: l10n.navSubscriptions,
-                                key: const ValueKey<String>(
-                                  'nav-subscriptions',
-                                ),
-                              ),
+                          ),
+                          const SizedBox(width: 58),
+                          Expanded(
+                            child: destination(
+                              index: 2,
+                              icon: Icons.subscriptions_outlined,
+                              selectedIcon: Icons.subscriptions_rounded,
+                              label: l10n.navSubscriptions,
+                              shortLabel: l10n.navSubscriptionsShort,
+                              key: const ValueKey<String>('nav-subscriptions'),
                             ),
-                            Expanded(
-                              child: destination(
-                                index: 3,
-                                icon: Icons.person_outline_rounded,
-                                selectedIcon: Icons.person_rounded,
-                                label: l10n.navProfile,
-                                key: const ValueKey<String>('nav-profile'),
-                              ),
+                          ),
+                          Expanded(
+                            child: destination(
+                              index: 3,
+                              icon: Icons.person_outline_rounded,
+                              selectedIcon: Icons.person_rounded,
+                              label: l10n.navProfile,
+                              shortLabel: l10n.navProfileShort,
+                              key: const ValueKey<String>('nav-profile'),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            Positioned(top: 0, child: addButton),
+            Positioned(top: -AppSpacing.addButtonLift, child: addButton),
           ],
         ),
       ),

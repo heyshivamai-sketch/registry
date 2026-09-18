@@ -3,6 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
+import 'package:the_registry/features/documents/domain/document_field_value.dart';
+import 'package:the_registry/features/documents/domain/document_ocr.dart';
+import 'package:the_registry/features/documents/domain/document_ocr_parser.dart';
+import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
@@ -11,8 +15,10 @@ import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 import 'support/fake_date_picker_service.dart';
+import 'support/fake_document_ocr_service.dart';
 import 'support/fake_image_picker_service.dart';
 import 'support/fake_onboarding_repository.dart';
+import 'support/sample_document.dart';
 import 'support/save_screenshot.dart';
 import 'support/tiny_png.dart';
 
@@ -32,13 +38,16 @@ void main() {
   late InMemoryDocumentRepository documents;
   late FakeImagePickerService images;
   late FakeDatePickerService dates;
+  late FakeDocumentOcrService ocr;
 
   Widget app({Locale locale = const Locale('en')}) {
     return RegistryApp(
+      key: UniqueKey(),
       onboardingRepository: FakeOnboardingRepository(completed: true),
       documentRepository: documents,
       imagePickerService: images,
       datePickerService: dates,
+      documentOcrService: ocr,
       locale: locale,
     );
   }
@@ -47,6 +56,7 @@ void main() {
     documents = InMemoryDocumentRepository();
     images = FakeImagePickerService();
     dates = FakeDatePickerService();
+    ocr = FakeDocumentOcrService();
   });
 
   Future<void> openFromHomeSheet(WidgetTester tester) async {
@@ -74,7 +84,14 @@ void main() {
     await tester.pump();
   }
 
-  Future<void> fillRequiredFields(WidgetTester tester) async {
+  Future<void> continueWizard(WidgetTester tester) async {
+    await reveal(tester, find.byKey(const ValueKey<String>('wizard-continue')));
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> goToDates(WidgetTester tester) async {
+    await continueWizard(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('field-name')));
     await tester.enterText(
       find.byKey(const ValueKey<String>('field-name')),
@@ -85,15 +102,42 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
     await tester.pumpAndSettle();
+    await continueWizard(tester);
+  }
+
+  Future<void> goToRenewal(WidgetTester tester) async {
+    await goToDates(tester);
+    dates.results['expiry'] = DateTime(2027, 10, 5);
+    await reveal(tester, find.byKey(const ValueKey<String>('date-expiry')));
+    await tester.tap(find.byKey(const ValueKey<String>('date-expiry')));
+    await tester.pumpAndSettle();
+    await continueWizard(tester);
+  }
+
+  Future<void> fillRequiredFields(WidgetTester tester) async {
+    await continueWizard(tester);
+    await reveal(tester, find.byKey(const ValueKey<String>('field-name')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-name')),
+      'Family passport',
+    );
+    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
+    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.pumpAndSettle();
+    await continueWizard(tester);
 
     dates.results['expiry'] = DateTime(2027, 10, 5);
     await reveal(tester, find.byKey(const ValueKey<String>('date-expiry')));
     await tester.tap(find.byKey(const ValueKey<String>('date-expiry')));
     await tester.pumpAndSettle();
+    await continueWizard(tester);
 
     await reveal(tester, find.byKey(const ValueKey<String>('impact-high')));
     await tester.tap(find.byKey(const ValueKey<String>('impact-high')));
     await tester.pumpAndSettle();
+    await continueWizard(tester);
   }
 
   testWidgets('Add Document opens from Home add sheet', (tester) async {
@@ -125,7 +169,9 @@ void main() {
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
 
-    await tester.tap(find.byKey(const ValueKey<String>('save-document')));
+    await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();
 
     expect(find.text('This field is required.'), findsWidgets);
@@ -141,12 +187,18 @@ void main() {
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
     await fillRequiredFields(tester);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('review-jump-dates')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('review-jump-dates')));
+    await tester.pumpAndSettle();
 
     dates.results['issue'] = DateTime(2028, 1, 1);
     await reveal(tester, find.byKey(const ValueKey<String>('date-issue')));
     await tester.tap(find.byKey(const ValueKey<String>('date-issue')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('save-document')));
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();
 
     expect(
@@ -165,12 +217,18 @@ void main() {
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
     await fillRequiredFields(tester);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('review-jump-dates')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('review-jump-dates')));
+    await tester.pumpAndSettle();
 
     dates.results['action'] = DateTime(2028, 2, 1);
     await reveal(tester, find.byKey(const ValueKey<String>('date-action')));
     await tester.tap(find.byKey(const ValueKey<String>('date-action')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('save-document')));
+    await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();
 
     expect(
@@ -200,11 +258,12 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
     await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-remove')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-remove')));
     await tester.pumpAndSettle();
 
     expect(find.byType(Image), findsNothing);
-    expect(find.text('Add a photo of this document'), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('entry-manual')), findsOneWidget);
   });
 
   testWidgets('Cancelled picker leaves the form usable', (tester) async {
@@ -218,7 +277,10 @@ void main() {
 
     expect(find.byType(AddDocumentScreen), findsOneWidget);
     expect(find.byType(Image), findsNothing);
-    expect(find.byKey(const ValueKey<String>('save-document')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('wizard-continue')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Successful save adds the document to Documents', (tester) async {
@@ -267,9 +329,17 @@ void main() {
     await fillRequiredFields(tester);
 
     dates.results['action'] = DateTime(2027, 9, 1);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('review-jump-dates')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('review-jump-dates')));
+    await tester.pumpAndSettle();
     await reveal(tester, find.byKey(const ValueKey<String>('date-action')));
     await tester.tap(find.byKey(const ValueKey<String>('date-action')));
     await tester.pumpAndSettle();
+    await continueWizard(tester);
+    await continueWizard(tester);
     await tester.tap(find.byKey(const ValueKey<String>('save-document')));
     await tester.pumpAndSettle();
 
@@ -300,7 +370,8 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
-
+    await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+    await tester.pumpAndSettle();
     await reveal(tester, find.byKey(const ValueKey<String>('field-name')));
     await tester.enterText(
       find.byKey(const ValueKey<String>('field-name')),
@@ -367,6 +438,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
+    await goToDates(tester);
 
     const helper =
         'The date you should start taking action, which may be earlier than the expiry date.';
@@ -387,6 +459,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
+    await goToRenewal(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('impact-high')));
 
     FilterChip chipOf(String key) {
@@ -416,6 +489,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
+    await goToRenewal(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('effort-moderate')));
     await tester.tap(find.byKey(const ValueKey<String>('effort-moderate')));
     await tester.pumpAndSettle();
@@ -438,6 +512,7 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
+    await goToRenewal(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('reminder-30')));
     await tester.tap(find.byKey(const ValueKey<String>('reminder-action')));
     await tester.tap(find.byKey(const ValueKey<String>('reminder-7')));
@@ -504,6 +579,7 @@ void main() {
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
     await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-replace')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-replace')));
     await tester.pumpAndSettle();
 
@@ -527,6 +603,7 @@ void main() {
     await tester.pumpAndSettle();
 
     images.galleryResult = const ImagePickResult.cancelled();
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-replace')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-replace')));
     await tester.pumpAndSettle();
     await tester.tap(
@@ -552,13 +629,14 @@ void main() {
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
+    await goToRenewal(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('reminder-30')));
 
     final reminderBox = tester.getRect(
       find.byKey(const ValueKey<String>('reminder-30')),
     );
     final saveBox = tester.getRect(
-      find.byKey(const ValueKey<String>('save-document')),
+      find.byKey(const ValueKey<String>('wizard-continue')),
     );
     expect(reminderBox.bottom, lessThanOrEqualTo(saveBox.top + 0.5));
   });
@@ -575,6 +653,12 @@ void main() {
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
     await fillRequiredFields(tester);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('review-jump-dates')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('review-jump-dates')));
+    await tester.pumpAndSettle();
 
     dates.results['issue'] = DateTime(2026, 9, 17);
     await reveal(tester, find.byKey(const ValueKey<String>('date-issue')));
@@ -611,6 +695,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
     await tester.pumpAndSettle();
+    await goToDates(tester);
 
     dates.results['expiry'] = DateTime(2027, 10, 5);
     await reveal(tester, find.byKey(const ValueKey<String>('date-expiry')));
@@ -651,6 +736,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
     await tester.pumpAndSettle();
+    await goToDates(tester);
 
     dates.results['expiry'] = DateTime(2027, 10, 5);
     await reveal(tester, find.byKey(const ValueKey<String>('date-expiry')));
@@ -685,20 +771,36 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+    ocr.result = const DocumentOcrResult.cancelled();
 
     await tester.pumpWidget(wrapForScreenshot(app()));
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
-    await saveScreenshot(tester, 'empty_attachment');
+    await saveScreenshot(
+      tester,
+      'add_document_start',
+      folder: 'registry_aura_phase3',
+    );
 
     images.galleryResult = ImagePickResult.success(kTinyPngBytes);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
     await tester.pumpAndSettle();
-    await saveScreenshot(tester, 'selected_attachment');
+    await saveScreenshot(
+      tester,
+      'selected_attachment',
+      folder: 'registry_aura_phase3',
+    );
 
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-remove')));
     await tester.tap(find.byKey(const ValueKey<String>('attach-remove')));
     await tester.pumpAndSettle();
     await fillRequiredFields(tester);
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('review-jump-dates')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('review-jump-dates')));
+    await tester.pumpAndSettle();
     dates.results['issue'] = DateTime(2026, 9, 17);
     await reveal(tester, find.byKey(const ValueKey<String>('date-issue')));
     await tester.tap(find.byKey(const ValueKey<String>('date-issue')));
@@ -707,6 +809,12 @@ void main() {
     await reveal(tester, find.byKey(const ValueKey<String>('date-action')));
     await tester.tap(find.byKey(const ValueKey<String>('date-action')));
     await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'full_year_dates',
+      folder: 'registry_aura_phase3',
+    );
+    await continueWizard(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('impact-high')));
     await tester.tap(find.byKey(const ValueKey<String>('effort-moderate')));
     await tester.pumpAndSettle();
@@ -714,17 +822,30 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('reminder-action')));
     await tester.tap(find.byKey(const ValueKey<String>('reminder-7')));
     await tester.pumpAndSettle();
-    await saveScreenshot(tester, 'selected_chips');
-
-    await reveal(tester, find.byKey(const ValueKey<String>('date-issue')));
-    await saveScreenshot(tester, 'full_year_dates');
-
+    await saveScreenshot(
+      tester,
+      'renewal_planning',
+      folder: 'registry_aura_phase3',
+    );
     await reveal(tester, find.byKey(const ValueKey<String>('reminder-30')));
-    await saveScreenshot(tester, 'bottom_above_save');
-
+    await saveScreenshot(
+      tester,
+      'bottom_above_save',
+      folder: 'registry_aura_phase3',
+    );
+    await continueWizard(tester);
+    await saveScreenshot(
+      tester,
+      'review_and_save',
+      folder: 'registry_aura_phase3',
+    );
     await tester.tap(find.byKey(const ValueKey<String>('save-document')));
     await tester.pumpAndSettle();
-    await saveScreenshot(tester, 'saved_document_card');
+    await saveScreenshot(
+      tester,
+      'saved_dynamic_detail',
+      folder: 'registry_aura_phase3',
+    );
   });
 
   test('Controller validates required and date order', () {
@@ -753,5 +874,293 @@ void main() {
 
     controller.setActionDate(DateTime.utc(2026, 5, 1));
     expect(controller.validate(l10n), isTrue);
+  });
+
+  testWidgets('Create starts at step 1', (tester) async {
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    expect(find.text('How would you like to add it?'), findsOneWidget);
+    expect(find.textContaining('Step 1 of 5'), findsOneWidget);
+  });
+
+  testWidgets('OCR success opens review and confirm does not save', (
+    tester,
+  ) async {
+    ocr.result = DocumentOcrParser.parse('''
+Government of India
+Aadhaar
+Name: SAMPLE NAME
+1234 5678 9012
+''');
+    images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey<String>('ocr-review')), findsOneWidget);
+    expect(find.text('Aadhaar'), findsWidgets);
+    expect(find.text('Document type'), findsWidgets);
+    expect(find.text('Category'), findsWidgets);
+    expect(find.text('ID card'), findsWidgets);
+    expect(find.byKey(const ValueKey<String>('ocr-schema')), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('ocr-category')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey<String>('ocr-confirm')));
+    await tester.pumpAndSettle();
+    expect(documents.documents, isEmpty);
+    expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('field-schema')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('field-category')),
+      findsOneWidget,
+    );
+    expect(find.text('Document type'), findsWidgets);
+    expect(find.text('Category *'), findsWidgets);
+  });
+
+  testWidgets('OCR failure keeps the image and allows retry', (tester) async {
+    ocr.result = const DocumentOcrResult.failed();
+    images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey<String>('ocr-failed')), findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('ocr-retry')), findsOneWidget);
+  });
+
+  testWidgets('OCR cancellation is not treated as an error', (tester) async {
+    ocr.result = const DocumentOcrResult.cancelled();
+    images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey<String>('ocr-failed')), findsNothing);
+    expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('Add and remove custom field', (tester) async {
+    tester.view.physicalSize = const Size(400, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('add-custom-field')));
+    await tester.pumpAndSettle();
+    expect(find.text('Field name'), findsOneWidget);
+    await tester.tap(find.text('Remove field'));
+    await tester.pumpAndSettle();
+    expect(find.text('Remove field'), findsNothing);
+  });
+
+  testWidgets('Double save is prevented by the controller', (tester) async {
+    final controller = AddDocumentController()
+      ..setName('Visa')
+      ..setCategory(DocumentCategory.visaResidence)
+      ..setExpiryDate(DateTime.utc(2026, 6, 1))
+      ..setImpact(DocumentImpact.medium);
+    final l10n = lookupAppLocalizations(const Locale('en'));
+    controller.saving = true;
+    expect(await controller.submit(l10n: l10n, save: (_) async {}), isFalse);
+  });
+
+  test('Empty dynamic fields are omitted from the saved document', () {
+    final controller = AddDocumentController()
+      ..setName('Visa')
+      ..setCategory(DocumentCategory.visaResidence)
+      ..setExpiryDate(DateTime.utc(2026, 6, 1))
+      ..setImpact(DocumentImpact.medium)
+      ..addCustomField(label: 'Club', value: '  ');
+    expect(controller.toDocument().dynamicFields, isEmpty);
+  });
+
+  testWidgets('Phase 3 extra screenshots', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    Future<void> remount({Locale locale = const Locale('en')}) async {
+      await tester.pumpWidget(wrapForScreenshot(app(locale: locale)));
+      await tester.pumpAndSettle();
+    }
+
+    await remount();
+    await openFromDocumentsTab(tester);
+    await continueWizard(tester);
+    await saveScreenshot(
+      tester,
+      'manual_identity',
+      folder: 'registry_aura_phase3',
+    );
+
+    await reveal(tester, find.byKey(const ValueKey<String>('field-name')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-name')),
+      'Family passport',
+    );
+    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
+    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.pumpAndSettle();
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('add-custom-field')),
+    );
+    await saveScreenshot(
+      tester,
+      'dynamic_fields',
+      folder: 'registry_aura_phase3',
+    );
+    await continueWizard(tester);
+    await saveScreenshot(
+      tester,
+      'important_dates',
+      folder: 'registry_aura_phase3',
+    );
+
+    await remount(locale: const Locale('ar'));
+    await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
+    await tester.pumpAndSettle();
+    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
+    await tester.ensureVisible(arabicAdd);
+    await tester.tap(arabicAdd);
+    await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'add_document_arabic',
+      folder: 'registry_aura_phase3',
+    );
+
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    await remount();
+    await openFromDocumentsTab(tester);
+    await saveScreenshot(
+      tester,
+      'add_document_large_text',
+      folder: 'registry_aura_phase3',
+    );
+    tester.platformDispatcher.clearTextScaleFactorTestValue();
+
+    ocr.result = const DocumentOcrResult.cancelled();
+    images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+    await remount();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('attach-replace')));
+    await tester.tap(find.byKey(const ValueKey<String>('attach-replace')));
+    await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'scan_source_sheet',
+      folder: 'registry_aura_phase3',
+    );
+
+    ocr.delay = const Duration(milliseconds: 400);
+    ocr.result = DocumentOcrParser.parse('''
+Government of India
+Aadhaar
+Name: SAMPLE NAME
+DOB: 1990
+Gender: Female
+1234 5678 9012
+Address: SAMPLE STREET, CITY
+''');
+    await remount();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pump();
+    await saveScreenshot(
+      tester,
+      'ocr_processing',
+      folder: 'registry_aura_phase3',
+      settle: false,
+    );
+    await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'ocr_review_aadhaar',
+      folder: 'registry_aura_phase3',
+    );
+    ocr.delay = null;
+
+    ocr.result = DocumentOcrParser.parse('''
+Membership Card
+Club: SAMPLE CLUB
+Member code: ZX-99
+''');
+    await remount();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'ocr_low_confidence',
+      folder: 'registry_aura_phase3',
+    );
+
+    ocr.result = DocumentOcrParser.parse('''
+PASSPORT
+Passport No. P1234567
+Surname SAMPLE
+Given names JANE MARIE
+Nationality SAMPLELAND
+Date of birth 12 JAN 1990
+Date of issue 01 MAR 2020
+Date of expiry 01 MAR 2030
+Authority SAMPLE OFFICE
+''');
+    await remount();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    await saveScreenshot(
+      tester,
+      'ocr_passport',
+      folder: 'registry_aura_phase3',
+    );
+
+    await documents.save(
+      sampleDocument(
+        schemaId: DocumentSchemaIds.genericPassport,
+        countryCode: DocumentCountryCodes.generic,
+        dynamicFields: const [
+          DocumentFieldValue(
+            id: DocumentFieldKeys.nationality,
+            fieldKey: DocumentFieldKeys.nationality,
+            value: 'Sampleland',
+          ),
+        ],
+      ),
+    );
+    await remount();
+    await tester.tap(_navLabel('Documents'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('document-actions')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('action-edit')));
+    await tester.pumpAndSettle();
+    await continueWizard(tester);
+    await saveScreenshot(
+      tester,
+      'edit_prefilled',
+      folder: 'registry_aura_phase3',
+    );
   });
 }
