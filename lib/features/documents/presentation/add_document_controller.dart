@@ -1,8 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
+enum DocumentFormMode { create, edit }
+
 class AddDocumentController extends ChangeNotifier {
+  DocumentFormMode mode = DocumentFormMode.create;
+  String? existingId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  List<RenewalHistoryEntry> renewalHistory = const [];
+
   String name = '';
   DocumentCategory? category;
   String ownerName = '';
@@ -29,27 +38,55 @@ class AddDocumentController extends ChangeNotifier {
   String? impactError;
 
   bool saving = false;
+  _FormSnapshot? _baseline;
+
+  bool get isEditing => mode == DocumentFormMode.edit;
 
   bool get hasAttachment =>
       attachmentBytes != null && attachmentBytes!.isNotEmpty;
 
-  bool get isDirty {
-    return name.trim().isNotEmpty ||
-        category != null ||
-        ownerName.trim().isNotEmpty ||
-        issuingAuthority.trim().isNotEmpty ||
-        documentNumber.trim().isNotEmpty ||
-        issueDate != null ||
-        expiryDate != null ||
-        actionDate != null ||
-        impact != null ||
-        renewalEffort != null ||
+  bool get hasAdditionalDetails {
+    return issuingAuthority.trim().isNotEmpty ||
         costOfLapsing.trim().isNotEmpty ||
         dependency.trim().isNotEmpty ||
         expectedChanges.trim().isNotEmpty ||
-        notes.trim().isNotEmpty ||
-        reminders.isNotEmpty ||
-        hasAttachment;
+        notes.trim().isNotEmpty;
+  }
+
+  bool get isDirty {
+    final current = _snapshot();
+    if (_baseline != null) {
+      return current != _baseline;
+    }
+    return current != const _FormSnapshot();
+  }
+
+  void loadDocument(RegistryDocument document) {
+    mode = DocumentFormMode.edit;
+    existingId = document.id;
+    createdAt = document.createdAt;
+    updatedAt = document.updatedAt;
+    renewalHistory = List<RenewalHistoryEntry>.unmodifiable(
+      document.renewalHistory,
+    );
+    name = document.name;
+    category = document.category;
+    ownerName = document.ownerName ?? '';
+    issuingAuthority = document.issuingAuthority ?? '';
+    documentNumber = document.documentNumber ?? '';
+    issueDate = document.issueDate;
+    expiryDate = document.expiryDate;
+    actionDate = document.actionDate;
+    impact = document.impact;
+    renewalEffort = document.renewalEffort;
+    costOfLapsing = document.costOfLapsing ?? '';
+    dependency = document.dependency ?? '';
+    expectedChanges = document.expectedChanges ?? '';
+    notes = document.notes ?? '';
+    reminders = Set<ReminderPreference>.from(document.reminders);
+    attachmentBytes = document.attachmentBytes;
+    _baseline = _snapshot();
+    notifyListeners();
   }
 
   void setName(String value) {
@@ -170,8 +207,33 @@ class AddDocumentController extends ChangeNotifier {
   }
 
   RegistryDocument toDocument() {
+    final now = DateTime.now();
+    if (isEditing) {
+      return RegistryDocument(
+        id: existingId!,
+        name: name.trim(),
+        category: category!,
+        ownerName: _optional(ownerName),
+        issuingAuthority: _optional(issuingAuthority),
+        documentNumber: _optional(documentNumber),
+        issueDate: issueDate,
+        expiryDate: expiryDate!,
+        actionDate: actionDate,
+        impact: impact!,
+        renewalEffort: renewalEffort,
+        costOfLapsing: _optional(costOfLapsing),
+        dependency: _optional(dependency),
+        expectedChanges: _optional(expectedChanges),
+        notes: _optional(notes),
+        reminders: Set<ReminderPreference>.from(reminders),
+        attachmentBytes: attachmentBytes,
+        createdAt: createdAt ?? now,
+        updatedAt: now,
+        renewalHistory: renewalHistory,
+      );
+    }
     return RegistryDocument(
-      id: 'doc_${DateTime.now().microsecondsSinceEpoch}',
+      id: 'doc_${now.microsecondsSinceEpoch}',
       name: name.trim(),
       category: category!,
       ownerName: _optional(ownerName),
@@ -188,13 +250,14 @@ class AddDocumentController extends ChangeNotifier {
       notes: _optional(notes),
       reminders: Set<ReminderPreference>.from(reminders),
       attachmentBytes: attachmentBytes,
-      createdAt: DateTime.now(),
+      createdAt: now,
     );
   }
 
   Future<bool> submit({
     required AppLocalizations l10n,
     required Future<void> Function(RegistryDocument document) save,
+    Future<bool> Function(RegistryDocument document)? update,
   }) async {
     if (saving) {
       return false;
@@ -205,12 +268,41 @@ class AddDocumentController extends ChangeNotifier {
     saving = true;
     notifyListeners();
     try {
-      await save(toDocument());
+      final document = toDocument();
+      if (isEditing) {
+        return await (update ?? _unsupportedUpdate)(document);
+      }
+      await save(document);
       return true;
     } finally {
       saving = false;
       notifyListeners();
     }
+  }
+
+  Future<bool> _unsupportedUpdate(RegistryDocument document) async {
+    return false;
+  }
+
+  _FormSnapshot _snapshot() {
+    return _FormSnapshot(
+      name: name,
+      category: category,
+      ownerName: ownerName,
+      issuingAuthority: issuingAuthority,
+      documentNumber: documentNumber,
+      issueDate: issueDate,
+      expiryDate: expiryDate,
+      actionDate: actionDate,
+      impact: impact,
+      renewalEffort: renewalEffort,
+      costOfLapsing: costOfLapsing,
+      dependency: dependency,
+      expectedChanges: expectedChanges,
+      notes: notes,
+      reminders: reminders,
+      attachmentBytes: attachmentBytes,
+    );
   }
 
   DateTime _dateOnly(DateTime date) =>
@@ -220,4 +312,83 @@ class AddDocumentController extends ChangeNotifier {
     final trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
   }
+}
+
+class _FormSnapshot {
+  const _FormSnapshot({
+    this.name = '',
+    this.category,
+    this.ownerName = '',
+    this.issuingAuthority = '',
+    this.documentNumber = '',
+    this.issueDate,
+    this.expiryDate,
+    this.actionDate,
+    this.impact,
+    this.renewalEffort,
+    this.costOfLapsing = '',
+    this.dependency = '',
+    this.expectedChanges = '',
+    this.notes = '',
+    this.reminders = const {},
+    this.attachmentBytes,
+  });
+
+  final String name;
+  final DocumentCategory? category;
+  final String ownerName;
+  final String issuingAuthority;
+  final String documentNumber;
+  final DateTime? issueDate;
+  final DateTime? expiryDate;
+  final DateTime? actionDate;
+  final DocumentImpact? impact;
+  final RenewalEffort? renewalEffort;
+  final String costOfLapsing;
+  final String dependency;
+  final String expectedChanges;
+  final String notes;
+  final Set<ReminderPreference> reminders;
+  final Uint8List? attachmentBytes;
+
+  @override
+  bool operator ==(Object other) {
+    return other is _FormSnapshot &&
+        other.name.trim() == name.trim() &&
+        other.category == category &&
+        other.ownerName.trim() == ownerName.trim() &&
+        other.issuingAuthority.trim() == issuingAuthority.trim() &&
+        other.documentNumber.trim() == documentNumber.trim() &&
+        other.issueDate == issueDate &&
+        other.expiryDate == expiryDate &&
+        other.actionDate == actionDate &&
+        other.impact == impact &&
+        other.renewalEffort == renewalEffort &&
+        other.costOfLapsing.trim() == costOfLapsing.trim() &&
+        other.dependency.trim() == dependency.trim() &&
+        other.expectedChanges.trim() == expectedChanges.trim() &&
+        other.notes.trim() == notes.trim() &&
+        setEquals(other.reminders, reminders) &&
+        listEquals(other.attachmentBytes, attachmentBytes);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    name,
+    category,
+    ownerName,
+    issuingAuthority,
+    documentNumber,
+    issueDate,
+    expiryDate,
+    actionDate,
+    impact,
+    renewalEffort,
+    costOfLapsing,
+    dependency,
+    expectedChanges,
+    notes,
+    Object.hashAll(reminders),
+    attachmentBytes == null ? 0 : Object.hashAll(attachmentBytes!),
+  );
 }

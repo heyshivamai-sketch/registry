@@ -164,7 +164,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String documentsAttentionSummary(int count) {
-    return '$count need attention';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count need attention',
+      one: '$count needs attention',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -513,4 +519,154 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectDate => 'Select date';
+
+  @override
+  String get statusOverdue => 'Overdue';
+
+  @override
+  String get documentDetailsTitle => 'Document details';
+
+  @override
+  String get editDocumentTitle => 'Edit document';
+
+  @override
+  String get editDocumentHeadline => 'Update this document';
+
+  @override
+  String get editDocumentSubtitle =>
+      'Changes stay on this device for this session.';
+
+  @override
+  String get requiredFieldsHint => 'Fields marked with * are required.';
+
+  @override
+  String get sectionEssential => 'Essential information';
+
+  @override
+  String get sectionAdditional => 'Additional details';
+
+  @override
+  String get deleteDocument => 'Delete document';
+
+  @override
+  String get deleteDocumentTitle => 'Delete this document?';
+
+  @override
+  String deleteDocumentMessage(String name) {
+    return '$name will be removed from this session.';
+  }
+
+  @override
+  String get deleteDocumentConfirm => 'Delete';
+
+  @override
+  String get deleteDocumentCancel => 'Cancel';
+
+  @override
+  String get documentUpdated => 'Document updated for this session.';
+
+  @override
+  String get documentDeleted => 'Document deleted from this session.';
+
+  @override
+  String get deadlineHealth => 'Deadline health';
+
+  @override
+  String get deadlineRemaining => 'Time remaining';
+
+  @override
+  String get issuedBy => 'Issued by';
+
+  @override
+  String get documentInformation => 'Document information';
+
+  @override
+  String get noRemindersSelected => 'No reminders selected';
+
+  @override
+  String get attachmentPreview => 'Attachment preview';
+
+  @override
+  String get renewalHistory => 'Renewal history';
+
+  @override
+  String get noRenewalHistory => 'No renewals recorded yet.';
+
+  @override
+  String get recordRenewal => 'Record renewal';
+
+  @override
+  String get recordRenewalSubtitle =>
+      'Add one renewal to this session. Other document details stay as they are unless you set a new start date.';
+
+  @override
+  String get previousExpiry => 'Previous expiry';
+
+  @override
+  String get newExpiry => 'New expiry';
+
+  @override
+  String get renewalDate => 'Renewal date';
+
+  @override
+  String get renewalNoteOptional => 'Note (optional)';
+
+  @override
+  String get renewalRecorded => 'Renewal recorded for this session.';
+
+  @override
+  String get errorNewExpiryNotAfterPrevious =>
+      'New expiry date must be after the previous expiry date.';
+
+  @override
+  String get errorNewExpiryRequired => 'New expiry date is required.';
+
+  @override
+  String get errorActionAfterNewExpiry =>
+      'Renewal start date cannot be after the new expiry date.';
+
+  @override
+  String get documentUnavailableTitle => 'Document not available';
+
+  @override
+  String get documentUnavailableMessage =>
+      'This document is no longer in this session.';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get discardChangesTitle => 'Discard changes?';
+
+  @override
+  String get discardChangesMessage => 'Your edits will not be kept.';
+
+  @override
+  String get moreActions => 'More actions';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String maskedDocumentNumberLabel(String number) {
+    return 'Masked document number $number';
+  }
+
+  @override
+  String get ownerLabel => 'Owner';
+
+  @override
+  String get optionalNewActionDate => 'New renewal start date (optional)';
+
+  @override
+  String get saveRenewal => 'Save renewal';
+
+  @override
+  String get viewAttachment => 'View photo';
+
+  @override
+  String get noPhotoAttached => 'No photo attached';
+
+  @override
+  String get documentPassLabel => 'Document summary';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
+import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_placeholder_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -21,6 +22,30 @@ abstract final class AppRoutes {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(l10n.documentSaved)));
+    }
+    return didSave;
+  }
+
+  static Future<void> openDocumentDetail(BuildContext context, String id) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => DocumentDetailScreen(documentId: id),
+      ),
+    );
+  }
+
+  static Future<bool> openEditDocument(BuildContext context, String id) async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => AddDocumentScreen(documentId: id),
+      ),
+    );
+    final didSave = saved ?? false;
+    if (didSave && context.mounted) {
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.documentUpdated)));
     }
     return didSave;
   }

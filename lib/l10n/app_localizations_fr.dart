@@ -166,7 +166,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String documentsAttentionSummary(int count) {
-    return '$count à traiter';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count à traiter',
+      one: '$count à traiter',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -517,4 +523,159 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get selectDate => 'Choisir une date';
+
+  @override
+  String get statusOverdue => 'En retard';
+
+  @override
+  String get documentDetailsTitle => 'Détails du document';
+
+  @override
+  String get editDocumentTitle => 'Modifier le document';
+
+  @override
+  String get editDocumentHeadline => 'Mettre à jour ce document';
+
+  @override
+  String get editDocumentSubtitle =>
+      'Les modifications restent sur cet appareil pour cette session.';
+
+  @override
+  String get requiredFieldsHint =>
+      'Les champs marqués d’un * sont obligatoires.';
+
+  @override
+  String get sectionEssential => 'Informations essentielles';
+
+  @override
+  String get sectionAdditional => 'Informations complémentaires';
+
+  @override
+  String get deleteDocument => 'Supprimer le document';
+
+  @override
+  String get deleteDocumentTitle => 'Supprimer ce document ?';
+
+  @override
+  String deleteDocumentMessage(String name) {
+    return '$name sera retiré de cette session.';
+  }
+
+  @override
+  String get deleteDocumentConfirm => 'Supprimer';
+
+  @override
+  String get deleteDocumentCancel => 'Annuler';
+
+  @override
+  String get documentUpdated => 'Document mis à jour pour cette session.';
+
+  @override
+  String get documentDeleted => 'Document supprimé de cette session.';
+
+  @override
+  String get deadlineHealth => 'État des échéances';
+
+  @override
+  String get deadlineRemaining => 'Temps restant';
+
+  @override
+  String get issuedBy => 'Délivré par';
+
+  @override
+  String get documentInformation => 'Informations du document';
+
+  @override
+  String get noRemindersSelected => 'Aucun rappel sélectionné';
+
+  @override
+  String get attachmentPreview => 'Aperçu de la pièce jointe';
+
+  @override
+  String get renewalHistory => 'Historique des renouvellements';
+
+  @override
+  String get noRenewalHistory =>
+      'Aucun renouvellement enregistré pour le moment.';
+
+  @override
+  String get recordRenewal => 'Enregistrer un renouvellement';
+
+  @override
+  String get recordRenewalSubtitle =>
+      'Ajoutez un renouvellement à cette session. Les autres informations restent inchangées, sauf si vous choisissez une nouvelle date de début.';
+
+  @override
+  String get previousExpiry => 'Expiration précédente';
+
+  @override
+  String get newExpiry => 'Nouvelle expiration';
+
+  @override
+  String get renewalDate => 'Date de renouvellement';
+
+  @override
+  String get renewalNoteOptional => 'Note (facultatif)';
+
+  @override
+  String get renewalRecorded => 'Renouvellement enregistré pour cette session.';
+
+  @override
+  String get errorNewExpiryNotAfterPrevious =>
+      'La nouvelle date d’expiration doit être postérieure à la précédente.';
+
+  @override
+  String get errorNewExpiryRequired =>
+      'La nouvelle date d’expiration est obligatoire.';
+
+  @override
+  String get errorActionAfterNewExpiry =>
+      'La date de début de renouvellement ne peut pas être postérieure à la nouvelle date d’expiration.';
+
+  @override
+  String get documentUnavailableTitle => 'Document indisponible';
+
+  @override
+  String get documentUnavailableMessage =>
+      'Ce document n’est plus dans cette session.';
+
+  @override
+  String get saveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get discardChangesTitle => 'Abandonner les modifications ?';
+
+  @override
+  String get discardChangesMessage =>
+      'Vos modifications ne seront pas conservées.';
+
+  @override
+  String get moreActions => 'Autres actions';
+
+  @override
+  String get editAction => 'Modifier';
+
+  @override
+  String maskedDocumentNumberLabel(String number) {
+    return 'Numéro de document masqué $number';
+  }
+
+  @override
+  String get ownerLabel => 'Titulaire';
+
+  @override
+  String get optionalNewActionDate =>
+      'Nouvelle date de début de renouvellement (facultatif)';
+
+  @override
+  String get saveRenewal => 'Enregistrer le renouvellement';
+
+  @override
+  String get viewAttachment => 'Voir la photo';
+
+  @override
+  String get noPhotoAttached => 'Aucune photo jointe';
+
+  @override
+  String get documentPassLabel => 'Résumé du document';
 }

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_empty_state.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
+import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
@@ -14,7 +16,9 @@ import 'package:the_registry/features/documents/widgets/document_date_field.dart
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class AddDocumentScreen extends StatefulWidget {
-  const AddDocumentScreen({super.key});
+  const AddDocumentScreen({super.key, this.documentId});
+
+  final String? documentId;
 
   @override
   State<AddDocumentScreen> createState() => _AddDocumentScreenState();
@@ -22,10 +26,59 @@ class AddDocumentScreen extends StatefulWidget {
 
 class _AddDocumentScreenState extends State<AddDocumentScreen> {
   final AddDocumentController _controller = AddDocumentController();
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _owner = TextEditingController();
+  final TextEditingController _issuer = TextEditingController();
+  final TextEditingController _number = TextEditingController();
+  final TextEditingController _cost = TextEditingController();
+  final TextEditingController _dependency = TextEditingController();
+  final TextEditingController _changes = TextEditingController();
+  final TextEditingController _notes = TextEditingController();
+  bool _loaded = false;
+  bool _missing = false;
+  bool _additionalOpen = false;
+
+  bool get _isEditing => widget.documentId != null;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_loaded) {
+      return;
+    }
+    _loaded = true;
+    final id = widget.documentId;
+    if (id == null) {
+      return;
+    }
+    final document = RegistryDependencies.of(context).documents.findById(id);
+    if (document == null) {
+      _missing = true;
+      return;
+    }
+    _controller.loadDocument(document);
+    _name.text = document.name;
+    _owner.text = document.ownerName ?? '';
+    _issuer.text = document.issuingAuthority ?? '';
+    _number.text = document.documentNumber ?? '';
+    _cost.text = document.costOfLapsing ?? '';
+    _dependency.text = document.dependency ?? '';
+    _changes.text = document.expectedChanges ?? '';
+    _notes.text = document.notes ?? '';
+    _additionalOpen = _controller.hasAdditionalDetails;
+  }
 
   @override
   void dispose() {
     _controller.dispose();
+    _name.dispose();
+    _owner.dispose();
+    _issuer.dispose();
+    _number.dispose();
+    _cost.dispose();
+    _dependency.dispose();
+    _changes.dispose();
+    _notes.dispose();
     super.dispose();
   }
 
@@ -35,8 +88,12 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(l10n.discardDraftTitle),
-          content: Text(l10n.discardDraftMessage),
+          title: Text(
+            _isEditing ? l10n.discardChangesTitle : l10n.discardDraftTitle,
+          ),
+          content: Text(
+            _isEditing ? l10n.discardChangesMessage : l10n.discardDraftMessage,
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -198,15 +255,49 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     final saved = await _controller.submit(
       l10n: l10n,
       save: deps.documents.save,
+      update: deps.documents.update,
     );
     if (saved && mounted) {
       Navigator.of(context).pop(true);
     }
   }
 
+  InputDecoration _decoration({
+    required String label,
+    String? errorText,
+    String? helperText,
+    bool requiredField = false,
+    Widget? suffixIcon,
+    bool alignLabelWithHint = false,
+  }) {
+    return InputDecoration(
+      labelText: requiredField ? '$label *' : label,
+      errorText: errorText,
+      errorMaxLines: 4,
+      helperText: helperText,
+      helperMaxLines: 4,
+      alignLabelWithHint: alignLabelWithHint,
+      suffixIcon: suffixIcon,
+      border: const OutlineInputBorder(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    if (_missing) {
+      return Scaffold(
+        appBar: AppBar(title: Text(l10n.editDocumentTitle)),
+        body: Padding(
+          padding: const EdgeInsets.all(AppSpacing.screenPadding),
+          child: RegistryEmptyState(
+            title: l10n.documentUnavailableTitle,
+            message: l10n.documentUnavailableMessage,
+          ),
+        ),
+      );
+    }
 
     return ListenableBuilder(
       listenable: _controller,
@@ -219,27 +310,42 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
             }
           },
           child: Scaffold(
-            appBar: AppBar(title: Text(l10n.addDocumentTitle)),
+            appBar: AppBar(
+              title: Text(
+                _isEditing ? l10n.editDocumentTitle : l10n.addDocumentTitle,
+              ),
+            ),
             body: SafeArea(
               child: SingleChildScrollView(
                 key: const ValueKey<String>('add-document-scroll'),
-                padding: const EdgeInsetsDirectional.fromSTEB(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsetsDirectional.fromSTEB(
                   AppSpacing.screenPadding,
                   AppSpacing.screenPadding,
                   AppSpacing.screenPadding,
-                  AppSpacing.lg,
+                  AppSpacing.xl + MediaQuery.viewInsetsOf(context).bottom,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      l10n.addDocumentHeadline,
+                      _isEditing
+                          ? l10n.editDocumentHeadline
+                          : l10n.addDocumentHeadline,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      l10n.addDocumentSubtitle,
+                      _isEditing
+                          ? l10n.editDocumentSubtitle
+                          : l10n.addDocumentSubtitle,
                       style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.requiredFieldsHint,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: AppSpacing.sectionGap),
                     DocumentAttachmentCard(
@@ -249,260 +355,352 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                       onReplace: _replaceAttachment,
                       onRemove: () => _controller.setAttachment(null),
                     ),
-                    const SizedBox(height: AppSpacing.sectionGap),
-                    RegistrySectionHeader(title: l10n.sectionBasicInfo),
-                    const SizedBox(height: AppSpacing.sm),
-                    TextField(
-                      key: const ValueKey<String>('field-name'),
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: InputDecoration(
-                        labelText: '${l10n.fieldDocumentName} *',
-                        errorText: _controller.nameError,
-                        border: const OutlineInputBorder(),
-                      ),
-                      onChanged: _controller.setName,
-                    ),
                     const SizedBox(height: AppSpacing.md),
-                    Semantics(
-                      button: true,
-                      label: l10n.fieldDocumentType,
-                      child: InkWell(
-                        key: const ValueKey<String>('field-category'),
-                        onTap: _pickCategory,
-                        borderRadius: BorderRadius.circular(4),
-                        child: InputDecorator(
-                          isEmpty: _controller.category == null,
-                          decoration: InputDecoration(
-                            labelText: '${l10n.fieldDocumentType} *',
-                            errorText: _controller.categoryError,
-                            suffixIcon: const Icon(Icons.arrow_drop_down),
-                            border: const OutlineInputBorder(),
+                    RegistrySurface(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RegistrySectionHeader(
+                            icon: Icons.badge_outlined,
+                            title: l10n.sectionEssential,
                           ),
-                          child: Text(
-                            _controller.category == null
-                                ? l10n.fieldDocumentType
-                                : DocumentCopy.category(
-                                    l10n,
-                                    _controller.category!,
-                                  ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-owner'),
-                      textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldOwnerName,
-                        border: const OutlineInputBorder(),
-                      ),
-                      onChanged: _controller.setOwnerName,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-issuer'),
-                      textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldIssuingAuthority,
-                        border: const OutlineInputBorder(),
-                      ),
-                      onChanged: _controller.setIssuingAuthority,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-number'),
-                      obscureText: _controller.obscureDocumentNumber,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldDocumentNumber,
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          key: const ValueKey<String>('toggle-number'),
-                          tooltip: _controller.obscureDocumentNumber
-                              ? l10n.showDocumentNumber
-                              : l10n.hideDocumentNumber,
-                          onPressed: _controller.toggleDocumentNumberVisibility,
-                          icon: Icon(
-                            _controller.obscureDocumentNumber
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                          ),
-                        ),
-                      ),
-                      onChanged: _controller.setDocumentNumber,
-                    ),
-                    const SizedBox(height: AppSpacing.sectionGap),
-                    RegistrySectionHeader(title: l10n.sectionImportantDates),
-                    const SizedBox(height: AppSpacing.sm),
-                    DocumentDateField(
-                      fieldId: 'issue',
-                      label: l10n.fieldIssueDate,
-                      value: _controller.issueDate,
-                      errorText: _controller.issueDateError,
-                      onTap: () => _pickDate('issue'),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    DocumentDateField(
-                      fieldId: 'expiry',
-                      label: l10n.fieldExpiryDate,
-                      value: _controller.expiryDate,
-                      requiredField: true,
-                      errorText: _controller.expiryError,
-                      onTap: () => _pickDate('expiry'),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    DocumentDateField(
-                      fieldId: 'action',
-                      label: l10n.fieldActionDate,
-                      value: _controller.actionDate,
-                      helperText: l10n.actionDateHelper,
-                      errorText: _controller.actionDateError,
-                      onTap: () => _pickDate('action'),
-                    ),
-                    const SizedBox(height: AppSpacing.sectionGap),
-                    RegistrySectionHeader(title: l10n.sectionPriorityRenewal),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      '${l10n.fieldImpact} *',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    if (_controller.impactError != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppSpacing.xxs),
-                        child: Text(
-                          _controller.impactError!,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                      ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Wrap(
-                      spacing: AppSpacing.xs,
-                      runSpacing: AppSpacing.xs,
-                      children: [
-                        for (final value in DocumentImpact.values)
-                          RegistrySelectableChip(
-                            key: ValueKey<String>('impact-${value.name}'),
-                            label: DocumentCopy.impact(l10n, value),
-                            selected: _controller.impact == value,
-                            selectedColor: _impactContainer(context, value),
-                            selectedForegroundColor: _impactForeground(
-                              context,
-                              value,
+                          const SizedBox(height: AppSpacing.md),
+                          TextField(
+                            key: const ValueKey<String>('field-name'),
+                            controller: _name,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: _decoration(
+                              label: l10n.fieldDocumentName,
+                              errorText: _controller.nameError,
+                              requiredField: true,
                             ),
-                            checkmarkColor: _impactForeground(context, value),
-                            onSelected: (_) => _controller.setImpact(value),
+                            onChanged: _controller.setName,
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l10n.fieldRenewalEffort,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Wrap(
-                      spacing: AppSpacing.xs,
-                      runSpacing: AppSpacing.xs,
-                      children: [
-                        for (final value in RenewalEffort.values)
-                          RegistrySelectableChip(
-                            key: ValueKey<String>('effort-${value.name}'),
-                            label: DocumentCopy.effort(l10n, value),
-                            selected: _controller.renewalEffort == value,
-                            onSelected: (selected) => _controller
-                                .setRenewalEffort(selected ? value : null),
+                          const SizedBox(height: AppSpacing.md),
+                          Semantics(
+                            button: true,
+                            label: l10n.fieldDocumentType,
+                            child: InkWell(
+                              key: const ValueKey<String>('field-category'),
+                              onTap: _pickCategory,
+                              borderRadius: BorderRadius.circular(4),
+                              child: InputDecorator(
+                                isEmpty: _controller.category == null,
+                                decoration: _decoration(
+                                  label: l10n.fieldDocumentType,
+                                  errorText: _controller.categoryError,
+                                  requiredField: true,
+                                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                                ),
+                                child: Text(
+                                  _controller.category == null
+                                      ? l10n.fieldDocumentType
+                                      : DocumentCopy.category(
+                                          l10n,
+                                          _controller.category!,
+                                        ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ),
+                            ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-cost'),
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldCostOfLapsing,
-                        helperText: l10n.fieldCostHelper,
-                        border: const OutlineInputBorder(),
+                          const SizedBox(height: AppSpacing.md),
+                          TextField(
+                            key: const ValueKey<String>('field-owner'),
+                            controller: _owner,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: _decoration(label: l10n.fieldOwnerName),
+                            onChanged: _controller.setOwnerName,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          TextField(
+                            key: const ValueKey<String>('field-number'),
+                            controller: _number,
+                            obscureText: _controller.obscureDocumentNumber,
+                            decoration: _decoration(
+                              label: l10n.fieldDocumentNumber,
+                              suffixIcon: IconButton(
+                                key: const ValueKey<String>('toggle-number'),
+                                tooltip: _controller.obscureDocumentNumber
+                                    ? l10n.showDocumentNumber
+                                    : l10n.hideDocumentNumber,
+                                onPressed:
+                                    _controller.toggleDocumentNumberVisibility,
+                                icon: Icon(
+                                  _controller.obscureDocumentNumber
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                ),
+                              ),
+                            ),
+                            onChanged: _controller.setDocumentNumber,
+                          ),
+                        ],
                       ),
-                      onChanged: _controller.setCostOfLapsing,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-dependency'),
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldDependency,
-                        helperText: l10n.fieldDependencyHelper,
-                        border: const OutlineInputBorder(),
+                    RegistrySurface(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RegistrySectionHeader(
+                            icon: Icons.event_outlined,
+                            title: l10n.sectionImportantDates,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          DocumentDateField(
+                            fieldId: 'issue',
+                            label: l10n.fieldIssueDate,
+                            value: _controller.issueDate,
+                            errorText: _controller.issueDateError,
+                            onTap: () => _pickDate('issue'),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          DocumentDateField(
+                            fieldId: 'expiry',
+                            label: l10n.fieldExpiryDate,
+                            value: _controller.expiryDate,
+                            requiredField: true,
+                            errorText: _controller.expiryError,
+                            onTap: () => _pickDate('expiry'),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          DocumentDateField(
+                            fieldId: 'action',
+                            label: l10n.fieldActionDate,
+                            value: _controller.actionDate,
+                            helperText: l10n.actionDateHelper,
+                            errorText: _controller.actionDateError,
+                            onTap: () => _pickDate('action'),
+                          ),
+                        ],
                       ),
-                      onChanged: _controller.setDependency,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-changes'),
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldExpectedChanges,
-                        border: const OutlineInputBorder(),
+                    RegistrySurface(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RegistrySectionHeader(
+                            icon: Icons.flag_outlined,
+                            title: l10n.sectionPriorityRenewal,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            '${l10n.fieldImpact} *',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          if (_controller.impactError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: AppSpacing.xxs,
+                              ),
+                              child: Text(
+                                _controller.impactError!,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                              ),
+                            ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Wrap(
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: [
+                              for (final value in DocumentImpact.values)
+                                RegistrySelectableChip(
+                                  key: ValueKey<String>('impact-${value.name}'),
+                                  label: DocumentCopy.impact(l10n, value),
+                                  selected: _controller.impact == value,
+                                  selectedColor: _impactContainer(
+                                    context,
+                                    value,
+                                  ),
+                                  selectedForegroundColor: _impactForeground(
+                                    context,
+                                    value,
+                                  ),
+                                  checkmarkColor: _impactForeground(
+                                    context,
+                                    value,
+                                  ),
+                                  onSelected: (_) =>
+                                      _controller.setImpact(value),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l10n.fieldRenewalEffort,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Wrap(
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: [
+                              for (final value in RenewalEffort.values)
+                                RegistrySelectableChip(
+                                  key: ValueKey<String>('effort-${value.name}'),
+                                  label: DocumentCopy.effort(l10n, value),
+                                  selected: _controller.renewalEffort == value,
+                                  onSelected: (selected) =>
+                                      _controller.setRenewalEffort(
+                                        selected ? value : null,
+                                      ),
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
-                      onChanged: _controller.setExpectedChanges,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const ValueKey<String>('field-notes'),
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldNotes,
-                        alignLabelWithHint: true,
-                        border: const OutlineInputBorder(),
+                    RegistrySurface(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          InkWell(
+                            key: const ValueKey<String>('section-additional'),
+                            onTap: () => setState(
+                              () => _additionalOpen = !_additionalOpen,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.xs,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: RegistrySectionHeader(
+                                      icon: Icons.notes_outlined,
+                                      title: l10n.sectionAdditional,
+                                    ),
+                                  ),
+                                  Icon(
+                                    _additionalOpen
+                                        ? Icons.expand_less
+                                        : Icons.expand_more,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (_additionalOpen) ...[
+                            const SizedBox(height: AppSpacing.md),
+                            TextField(
+                              key: const ValueKey<String>('field-issuer'),
+                              controller: _issuer,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: _decoration(
+                                label: l10n.fieldIssuingAuthority,
+                              ),
+                              onChanged: _controller.setIssuingAuthority,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            TextField(
+                              key: const ValueKey<String>('field-cost'),
+                              controller: _cost,
+                              decoration: _decoration(
+                                label: l10n.fieldCostOfLapsing,
+                                helperText: l10n.fieldCostHelper,
+                              ),
+                              onChanged: _controller.setCostOfLapsing,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            TextField(
+                              key: const ValueKey<String>('field-dependency'),
+                              controller: _dependency,
+                              decoration: _decoration(
+                                label: l10n.fieldDependency,
+                                helperText: l10n.fieldDependencyHelper,
+                              ),
+                              onChanged: _controller.setDependency,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            TextField(
+                              key: const ValueKey<String>('field-changes'),
+                              controller: _changes,
+                              maxLines: 3,
+                              decoration: _decoration(
+                                label: l10n.fieldExpectedChanges,
+                              ),
+                              onChanged: _controller.setExpectedChanges,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            TextField(
+                              key: const ValueKey<String>('field-notes'),
+                              controller: _notes,
+                              maxLines: 4,
+                              decoration: _decoration(
+                                label: l10n.fieldNotes,
+                                alignLabelWithHint: true,
+                              ),
+                              onChanged: _controller.setNotes,
+                            ),
+                          ],
+                        ],
                       ),
-                      onChanged: _controller.setNotes,
                     ),
-                    const SizedBox(height: AppSpacing.sectionGap),
-                    RegistrySectionHeader(
-                      title: l10n.sectionReminders,
-                      subtitle: l10n.remindersHelper,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Wrap(
-                      key: const ValueKey<String>('reminder-chips'),
-                      spacing: AppSpacing.xs,
-                      runSpacing: AppSpacing.xs,
-                      children: [
-                        RegistrySelectableChip(
-                          key: const ValueKey<String>('reminder-action'),
-                          label: l10n.reminderOnActionDate,
-                          selected: _controller.reminders.contains(
-                            ReminderPreference.onActionDate,
+                    const SizedBox(height: AppSpacing.md),
+                    RegistrySurface(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RegistrySectionHeader(
+                            icon: Icons.notifications_outlined,
+                            title: l10n.sectionReminders,
+                            subtitle: l10n.remindersHelper,
                           ),
-                          onSelected: (_) => _controller.toggleReminder(
-                            ReminderPreference.onActionDate,
+                          const SizedBox(height: AppSpacing.sm),
+                          Wrap(
+                            key: const ValueKey<String>('reminder-chips'),
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: [
+                              RegistrySelectableChip(
+                                key: const ValueKey<String>('reminder-action'),
+                                label: l10n.reminderOnActionDate,
+                                selected: _controller.reminders.contains(
+                                  ReminderPreference.onActionDate,
+                                ),
+                                onSelected: (_) => _controller.toggleReminder(
+                                  ReminderPreference.onActionDate,
+                                ),
+                              ),
+                              RegistrySelectableChip(
+                                key: const ValueKey<String>('reminder-7'),
+                                label: l10n.reminder7Days,
+                                selected: _controller.reminders.contains(
+                                  ReminderPreference.sevenDaysBefore,
+                                ),
+                                onSelected: (_) => _controller.toggleReminder(
+                                  ReminderPreference.sevenDaysBefore,
+                                ),
+                              ),
+                              RegistrySelectableChip(
+                                key: const ValueKey<String>('reminder-30'),
+                                label: l10n.reminder30Days,
+                                selected: _controller.reminders.contains(
+                                  ReminderPreference.thirtyDaysBefore,
+                                ),
+                                onSelected: (_) => _controller.toggleReminder(
+                                  ReminderPreference.thirtyDaysBefore,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        RegistrySelectableChip(
-                          key: const ValueKey<String>('reminder-7'),
-                          label: l10n.reminder7Days,
-                          selected: _controller.reminders.contains(
-                            ReminderPreference.sevenDaysBefore,
-                          ),
-                          onSelected: (_) => _controller.toggleReminder(
-                            ReminderPreference.sevenDaysBefore,
-                          ),
-                        ),
-                        RegistrySelectableChip(
-                          key: const ValueKey<String>('reminder-30'),
-                          label: l10n.reminder30Days,
-                          selected: _controller.reminders.contains(
-                            ReminderPreference.thirtyDaysBefore,
-                          ),
-                          onSelected: (_) => _controller.toggleReminder(
-                            ReminderPreference.thirtyDaysBefore,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -523,7 +721,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                     width: double.infinity,
                     child: RegistryPrimaryButton(
                       key: const ValueKey<String>('save-document'),
-                      label: l10n.saveDocument,
+                      label: _isEditing ? l10n.saveChanges : l10n.saveDocument,
                       onPressed: _controller.saving ? null : _save,
                     ),
                   ),

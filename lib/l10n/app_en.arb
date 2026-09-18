@@ -71,7 +71,7 @@
       "count": { "type": "int" }
     }
   },
-  "documentsAttentionSummary": "{count} need attention",
+  "documentsAttentionSummary": "{count, plural, one{{count} needs attention} other{{count} need attention}}",
   "@documentsAttentionSummary": {
     "placeholders": {
       "count": { "type": "int" }
@@ -204,5 +204,62 @@
   "requiredMarker": "Required",
   "optionalMarker": "Optional",
   "hasAttachment": "Has attachment",
-  "selectDate": "Select date"
+  "selectDate": "Select date",
+  "statusOverdue": "Overdue",
+  "documentDetailsTitle": "Document details",
+  "editDocumentTitle": "Edit document",
+  "editDocumentHeadline": "Update this document",
+  "editDocumentSubtitle": "Changes stay on this device for this session.",
+  "requiredFieldsHint": "Fields marked with * are required.",
+  "sectionEssential": "Essential information",
+  "sectionAdditional": "Additional details",
+  "deleteDocument": "Delete document",
+  "deleteDocumentTitle": "Delete this document?",
+  "deleteDocumentMessage": "{name} will be removed from this session.",
+  "@deleteDocumentMessage": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "deleteDocumentConfirm": "Delete",
+  "deleteDocumentCancel": "Cancel",
+  "documentUpdated": "Document updated for this session.",
+  "documentDeleted": "Document deleted from this session.",
+  "deadlineHealth": "Deadline health",
+  "deadlineRemaining": "Time remaining",
+  "issuedBy": "Issued by",
+  "documentInformation": "Document information",
+  "noRemindersSelected": "No reminders selected",
+  "attachmentPreview": "Attachment preview",
+  "renewalHistory": "Renewal history",
+  "noRenewalHistory": "No renewals recorded yet.",
+  "recordRenewal": "Record renewal",
+  "recordRenewalSubtitle": "Add one renewal to this session. Other document details stay as they are unless you set a new start date.",
+  "previousExpiry": "Previous expiry",
+  "newExpiry": "New expiry",
+  "renewalDate": "Renewal date",
+  "renewalNoteOptional": "Note (optional)",
+  "renewalRecorded": "Renewal recorded for this session.",
+  "errorNewExpiryNotAfterPrevious": "New expiry date must be after the previous expiry date.",
+  "errorNewExpiryRequired": "New expiry date is required.",
+  "errorActionAfterNewExpiry": "Renewal start date cannot be after the new expiry date.",
+  "documentUnavailableTitle": "Document not available",
+  "documentUnavailableMessage": "This document is no longer in this session.",
+  "saveChanges": "Save changes",
+  "discardChangesTitle": "Discard changes?",
+  "discardChangesMessage": "Your edits will not be kept.",
+  "moreActions": "More actions",
+  "editAction": "Edit",
+  "maskedDocumentNumberLabel": "Masked document number {number}",
+  "@maskedDocumentNumberLabel": {
+    "placeholders": {
+      "number": { "type": "String" }
+    }
+  },
+  "ownerLabel": "Owner",
+  "optionalNewActionDate": "New renewal start date (optional)",
+  "saveRenewal": "Save renewal",
+  "viewAttachment": "View photo",
+  "noPhotoAttached": "No photo attached",
+  "documentPassLabel": "Document summary"
 }

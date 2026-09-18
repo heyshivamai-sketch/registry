@@ -31,4 +31,12 @@ abstract final class DocumentCopy {
       RenewalEffort.difficult => l10n.effortDifficult,
     };
   }
+
+  static String reminder(AppLocalizations l10n, ReminderPreference preference) {
+    return switch (preference) {
+      ReminderPreference.onActionDate => l10n.reminderOnActionDate,
+      ReminderPreference.sevenDaysBefore => l10n.reminder7Days,
+      ReminderPreference.thirtyDaysBefore => l10n.reminder30Days,
+    };
+  }
 }

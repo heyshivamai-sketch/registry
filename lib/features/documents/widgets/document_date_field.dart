@@ -13,6 +13,7 @@ class DocumentDateField extends StatelessWidget {
     this.helperText,
     this.errorText,
     this.requiredField = false,
+    this.enabled = true,
   });
 
   final String fieldId;
@@ -22,6 +23,7 @@ class DocumentDateField extends StatelessWidget {
   final String? helperText;
   final String? errorText;
   final bool requiredField;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +38,21 @@ class DocumentDateField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          button: true,
+          button: enabled,
           label: label,
           child: InkWell(
             key: ValueKey<String>('date-$fieldId'),
-            onTap: onTap,
+            onTap: enabled ? onTap : null,
             borderRadius: BorderRadius.circular(4),
             child: InputDecorator(
               decoration: InputDecoration(
                 labelText: requiredField ? '$label *' : label,
                 errorText: errorText,
-                errorMaxLines: 3,
-                suffixIcon: const Icon(Icons.calendar_today_outlined),
+                errorMaxLines: 4,
+                helperMaxLines: 4,
+                suffixIcon: enabled
+                    ? const Icon(Icons.calendar_today_outlined)
+                    : null,
                 border: const OutlineInputBorder(),
               ),
               child: Padding(

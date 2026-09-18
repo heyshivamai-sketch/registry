@@ -5,7 +5,7 @@ import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'package:the_registry/features/documents/domain/document_status.dart';
 import 'package:the_registry/features/documents/widgets/document_list_card.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -22,13 +22,7 @@ class DocumentsScreen extends StatelessWidget {
         listenable: documents,
         builder: (context, _) {
           final items = documents.documents;
-          final attentionCount = items
-              .where(
-                (item) =>
-                    item.impact == DocumentImpact.high ||
-                    item.impact == DocumentImpact.critical,
-              )
-              .length;
+          final attentionCount = DocumentStatus.attentionCount(items);
 
           return ListView(
             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -80,6 +74,8 @@ class DocumentsScreen extends StatelessWidget {
                   DocumentListCard(
                     key: ValueKey<String>(document.id),
                     document: document,
+                    onTap: () =>
+                        AppRoutes.openDocumentDetail(context, document.id),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],

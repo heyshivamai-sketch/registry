@@ -106,11 +106,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dueToday => 'مستحق اليوم';
 
   @override
-  String get oneDayRemaining => 'متبقٍ يوم واحد';
+  String get oneDayRemaining => 'متبقي يوم واحد';
 
   @override
   String daysRemaining(int count) {
-    return 'متبقٍ $count أيام';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'متبقي $count يوم',
+      many: 'متبقي $count يومًا',
+      few: 'متبقي $count أيام',
+      two: 'متبقي يومين',
+      one: 'متبقي يوم واحد',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -509,4 +518,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectDate => 'اختر تاريخًا';
+
+  @override
+  String get statusOverdue => 'متأخر';
+
+  @override
+  String get documentDetailsTitle => 'تفاصيل المستند';
+
+  @override
+  String get editDocumentTitle => 'تعديل المستند';
+
+  @override
+  String get editDocumentHeadline => 'حدّث هذا المستند';
+
+  @override
+  String get editDocumentSubtitle =>
+      'تبقى التغييرات على هذا الجهاز لهذه الجلسة.';
+
+  @override
+  String get requiredFieldsHint => 'الحقول التي تحمل * مطلوبة.';
+
+  @override
+  String get sectionEssential => 'المعلومات الأساسية';
+
+  @override
+  String get sectionAdditional => 'تفاصيل إضافية';
+
+  @override
+  String get deleteDocument => 'حذف المستند';
+
+  @override
+  String get deleteDocumentTitle => 'حذف هذا المستند؟';
+
+  @override
+  String deleteDocumentMessage(String name) {
+    return 'ستتم إزالة $name من هذه الجلسة.';
+  }
+
+  @override
+  String get deleteDocumentConfirm => 'حذف';
+
+  @override
+  String get deleteDocumentCancel => 'إلغاء';
+
+  @override
+  String get documentUpdated => 'تم تحديث المستند لهذه الجلسة.';
+
+  @override
+  String get documentDeleted => 'تم حذف المستند من هذه الجلسة.';
+
+  @override
+  String get deadlineHealth => 'حالة المواعيد';
+
+  @override
+  String get deadlineRemaining => 'الوقت المتبقي';
+
+  @override
+  String get issuedBy => 'جهة الإصدار';
+
+  @override
+  String get documentInformation => 'معلومات المستند';
+
+  @override
+  String get noRemindersSelected => 'لم يتم اختيار تذكيرات';
+
+  @override
+  String get attachmentPreview => 'معاينة المرفق';
+
+  @override
+  String get renewalHistory => 'سجل التجديد';
+
+  @override
+  String get noRenewalHistory => 'لا يوجد تجديد مسجّل بعد.';
+
+  @override
+  String get recordRenewal => 'تسجيل تجديد';
+
+  @override
+  String get recordRenewalSubtitle =>
+      'أضف تجديدًا واحدًا لهذه الجلسة. تبقى بقية التفاصيل كما هي ما لم تختر تاريخ بدء جديد.';
+
+  @override
+  String get previousExpiry => 'تاريخ الانتهاء السابق';
+
+  @override
+  String get newExpiry => 'تاريخ الانتهاء الجديد';
+
+  @override
+  String get renewalDate => 'تاريخ التجديد';
+
+  @override
+  String get renewalNoteOptional => 'ملاحظة (اختياري)';
+
+  @override
+  String get renewalRecorded => 'تم تسجيل التجديد لهذه الجلسة.';
+
+  @override
+  String get errorNewExpiryNotAfterPrevious =>
+      'يجب أن يكون تاريخ الانتهاء الجديد بعد التاريخ السابق.';
+
+  @override
+  String get errorNewExpiryRequired => 'تاريخ الانتهاء الجديد مطلوب.';
+
+  @override
+  String get errorActionAfterNewExpiry =>
+      'لا يمكن أن يكون تاريخ بدء التجديد بعد تاريخ الانتهاء الجديد.';
+
+  @override
+  String get documentUnavailableTitle => 'المستند غير متاح';
+
+  @override
+  String get documentUnavailableMessage =>
+      'لم يعد هذا المستند موجودًا في هذه الجلسة.';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get discardChangesTitle => 'تجاهل التغييرات؟';
+
+  @override
+  String get discardChangesMessage => 'لن تُحفظ تعديلاتك.';
+
+  @override
+  String get moreActions => 'المزيد من الإجراءات';
+
+  @override
+  String get editAction => 'تعديل';
+
+  @override
+  String maskedDocumentNumberLabel(String number) {
+    return 'رقم المستند المخفي $number';
+  }
+
+  @override
+  String get ownerLabel => 'المالك';
+
+  @override
+  String get optionalNewActionDate => 'تاريخ بدء التجديد الجديد (اختياري)';
+
+  @override
+  String get saveRenewal => 'حفظ التجديد';
+
+  @override
+  String get viewAttachment => 'عرض الصورة';
+
+  @override
+  String get noPhotoAttached => 'لا توجد صورة مرفقة';
+
+  @override
+  String get documentPassLabel => 'ملخص المستند';
 }

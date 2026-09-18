@@ -385,7 +385,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentsAttentionSummary.
   ///
   /// In en, this message translates to:
-  /// **'{count} need attention'**
+  /// **'{count, plural, one{{count} needs attention} other{{count} need attention}}'**
   String documentsAttentionSummary(int count);
 
   /// No description provided for @sectionNeedsAttention.
@@ -1035,6 +1035,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select date'**
   String get selectDate;
+
+  /// No description provided for @statusOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get statusOverdue;
+
+  /// No description provided for @documentDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document details'**
+  String get documentDetailsTitle;
+
+  /// No description provided for @editDocumentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit document'**
+  String get editDocumentTitle;
+
+  /// No description provided for @editDocumentHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Update this document'**
+  String get editDocumentHeadline;
+
+  /// No description provided for @editDocumentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes stay on this device for this session.'**
+  String get editDocumentSubtitle;
+
+  /// No description provided for @requiredFieldsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fields marked with * are required.'**
+  String get requiredFieldsHint;
+
+  /// No description provided for @sectionEssential.
+  ///
+  /// In en, this message translates to:
+  /// **'Essential information'**
+  String get sectionEssential;
+
+  /// No description provided for @sectionAdditional.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional details'**
+  String get sectionAdditional;
+
+  /// No description provided for @deleteDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete document'**
+  String get deleteDocument;
+
+  /// No description provided for @deleteDocumentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this document?'**
+  String get deleteDocumentTitle;
+
+  /// No description provided for @deleteDocumentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will be removed from this session.'**
+  String deleteDocumentMessage(String name);
+
+  /// No description provided for @deleteDocumentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteDocumentConfirm;
+
+  /// No description provided for @deleteDocumentCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get deleteDocumentCancel;
+
+  /// No description provided for @documentUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Document updated for this session.'**
+  String get documentUpdated;
+
+  /// No description provided for @documentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Document deleted from this session.'**
+  String get documentDeleted;
+
+  /// No description provided for @deadlineHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Deadline health'**
+  String get deadlineHealth;
+
+  /// No description provided for @deadlineRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time remaining'**
+  String get deadlineRemaining;
+
+  /// No description provided for @issuedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued by'**
+  String get issuedBy;
+
+  /// No description provided for @documentInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Document information'**
+  String get documentInformation;
+
+  /// No description provided for @noRemindersSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders selected'**
+  String get noRemindersSelected;
+
+  /// No description provided for @attachmentPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment preview'**
+  String get attachmentPreview;
+
+  /// No description provided for @renewalHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal history'**
+  String get renewalHistory;
+
+  /// No description provided for @noRenewalHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No renewals recorded yet.'**
+  String get noRenewalHistory;
+
+  /// No description provided for @recordRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Record renewal'**
+  String get recordRenewal;
+
+  /// No description provided for @recordRenewalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add one renewal to this session. Other document details stay as they are unless you set a new start date.'**
+  String get recordRenewalSubtitle;
+
+  /// No description provided for @previousExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous expiry'**
+  String get previousExpiry;
+
+  /// No description provided for @newExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'New expiry'**
+  String get newExpiry;
+
+  /// No description provided for @renewalDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal date'**
+  String get renewalDate;
+
+  /// No description provided for @renewalNoteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get renewalNoteOptional;
+
+  /// No description provided for @renewalRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal recorded for this session.'**
+  String get renewalRecorded;
+
+  /// No description provided for @errorNewExpiryNotAfterPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'New expiry date must be after the previous expiry date.'**
+  String get errorNewExpiryNotAfterPrevious;
+
+  /// No description provided for @errorNewExpiryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'New expiry date is required.'**
+  String get errorNewExpiryRequired;
+
+  /// No description provided for @errorActionAfterNewExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal start date cannot be after the new expiry date.'**
+  String get errorActionAfterNewExpiry;
+
+  /// No description provided for @documentUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document not available'**
+  String get documentUnavailableTitle;
+
+  /// No description provided for @documentUnavailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This document is no longer in this session.'**
+  String get documentUnavailableMessage;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// No description provided for @discardChangesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardChangesTitle;
+
+  /// No description provided for @discardChangesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your edits will not be kept.'**
+  String get discardChangesMessage;
+
+  /// No description provided for @moreActions.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get moreActions;
+
+  /// No description provided for @editAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// No description provided for @maskedDocumentNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Masked document number {number}'**
+  String maskedDocumentNumberLabel(String number);
+
+  /// No description provided for @ownerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get ownerLabel;
+
+  /// No description provided for @optionalNewActionDate.
+  ///
+  /// In en, this message translates to:
+  /// **'New renewal start date (optional)'**
+  String get optionalNewActionDate;
+
+  /// No description provided for @saveRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save renewal'**
+  String get saveRenewal;
+
+  /// No description provided for @viewAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'View photo'**
+  String get viewAttachment;
+
+  /// No description provided for @noPhotoAttached.
+  ///
+  /// In en, this message translates to:
+  /// **'No photo attached'**
+  String get noPhotoAttached;
+
+  /// No description provided for @documentPassLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Document summary'**
+  String get documentPassLabel;
 }
 
 class _AppLocalizationsDelegate
