@@ -28,6 +28,17 @@ abstract final class RegistryDateFormatter {
     return (1 - (daysUntil / AppSpacing.horizonDays)).clamp(0.0, 1.0);
   }
 
+  static String weekdayDateLine(DateTime date, String locale) {
+    final local = DateTime(date.year, date.month, date.day);
+    final weekday = DateFormat.EEEE(locale).format(local);
+    final rest = DateFormat.yMMMMd(locale).format(local);
+    return '$weekday · $rest';
+  }
+
+  static bool isWithinHorizon(DateTime date, {DateTime? now}) {
+    return daysUntil(date, now: now) <= AppSpacing.horizonDays;
+  }
+
   static String monthYear(DateTime date, String locale) {
     final local = DateTime(date.year, date.month, date.day);
     final month = DateFormat.MMM(locale).format(local);

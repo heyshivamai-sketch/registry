@@ -232,6 +232,12 @@ abstract class AppLocalizations {
   /// **'Subscriptions'**
   String get navSubscriptions;
 
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:
@@ -243,6 +249,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Registry'**
   String get homeTitle;
+
+  /// No description provided for @notificationsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsButton;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsPlaceholderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are not scheduled in this version. This screen is a placeholder.'**
+  String get notificationsPlaceholderMessage;
 
   /// No description provided for @searchPlaceholder.
   ///
@@ -334,11 +358,59 @@ abstract class AppLocalizations {
   /// **'Needs attention'**
   String get summaryNeedsAttention;
 
+  /// No description provided for @summaryNext90Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 90 days'**
+  String get summaryNext90Days;
+
+  /// No description provided for @snapshotDocumentsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Records in your registry'**
+  String get snapshotDocumentsHint;
+
+  /// No description provided for @snapshotSubscriptionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans you are tracking'**
+  String get snapshotSubscriptionsHint;
+
+  /// No description provided for @snapshotNext90Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Across your registry'**
+  String get snapshotNext90Hint;
+
+  /// No description provided for @snapshotDocumentsSupporting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{None need action} one{1 action due} other{{count} need action}}'**
+  String snapshotDocumentsSupporting(int count);
+
+  /// No description provided for @snapshotSubscriptionsSupporting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 tracked} other{{count} tracked}}'**
+  String snapshotSubscriptionsSupporting(int count);
+
   /// No description provided for @pulseEyebrow.
   ///
   /// In en, this message translates to:
-  /// **'Next action'**
+  /// **'Next best action'**
   String get pulseEyebrow;
+
+  /// No description provided for @pulseStartByEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by'**
+  String get pulseStartByEyebrow;
+
+  /// No description provided for @pulseExpiresEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get pulseExpiresEyebrow;
 
   /// No description provided for @countdownDayUnit.
   ///
@@ -367,13 +439,13 @@ abstract class AppLocalizations {
   /// No description provided for @addSheetDocumentSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Passports, licences and other records.'**
+  /// **'Scan or enter a document'**
   String get addSheetDocumentSubtitle;
 
   /// No description provided for @addSheetSubscriptionSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Charges and memberships you want to review.'**
+  /// **'Track a charge or renewal'**
   String get addSheetSubscriptionSubtitle;
 
   /// No description provided for @documentsSummary.
@@ -391,14 +463,26 @@ abstract class AppLocalizations {
   /// No description provided for @sectionNeedsAttention.
   ///
   /// In en, this message translates to:
-  /// **'Needs your attention'**
+  /// **'Action queue'**
   String get sectionNeedsAttention;
 
   /// No description provided for @sectionComingUp.
   ///
   /// In en, this message translates to:
-  /// **'Coming up'**
+  /// **'Horizon'**
   String get sectionComingUp;
+
+  /// No description provided for @sectionRegistrySnapshot.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry snapshot'**
+  String get sectionRegistrySnapshot;
+
+  /// No description provided for @sectionItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} item} other{{count} items}}'**
+  String sectionItemCount(int count);
 
   /// No description provided for @startByDate.
   ///
@@ -453,6 +537,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active'**
   String get statusActive;
+
+  /// No description provided for @statusNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get statusNeutral;
 
   /// No description provided for @itemCarInsurance.
   ///
@@ -535,13 +625,13 @@ abstract class AppLocalizations {
   /// No description provided for @addSheetTitle.
   ///
   /// In en, this message translates to:
-  /// **'Add to Registry'**
+  /// **'Quick Add'**
   String get addSheetTitle;
 
   /// No description provided for @addSheetSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Choose what you want to keep on track.'**
+  /// **'What would you like to track?'**
   String get addSheetSubtitle;
 
   /// No description provided for @addFabTooltip.

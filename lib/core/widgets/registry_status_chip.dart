@@ -3,7 +3,37 @@ import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 
-enum RegistryStatus { urgent, upcoming, active, expired }
+enum RegistryStatus { urgent, upcoming, active, expired, neutral }
+
+extension RegistryStatusVisuals on RegistryStatus {
+  Color accent(AppStatusColors colors) {
+    return switch (this) {
+      RegistryStatus.urgent || RegistryStatus.expired => colors.urgent,
+      RegistryStatus.upcoming => colors.warning,
+      RegistryStatus.active => colors.success,
+      RegistryStatus.neutral => colors.expired,
+    };
+  }
+
+  Color container(AppStatusColors colors, ColorScheme colorScheme) {
+    return switch (this) {
+      RegistryStatus.urgent || RegistryStatus.expired => colors.urgentContainer,
+      RegistryStatus.upcoming => colors.warningContainer,
+      RegistryStatus.active => colors.successContainer,
+      RegistryStatus.neutral => colorScheme.surfaceContainer,
+    };
+  }
+
+  Color onContainer(AppStatusColors colors, ColorScheme colorScheme) {
+    return switch (this) {
+      RegistryStatus.urgent ||
+      RegistryStatus.expired => colors.onUrgentContainer,
+      RegistryStatus.upcoming => colors.onWarningContainer,
+      RegistryStatus.active => colors.onSuccessContainer,
+      RegistryStatus.neutral => colorScheme.onSurfaceVariant,
+    };
+  }
+}
 
 class RegistryStatusChip extends StatelessWidget {
   const RegistryStatusChip({
@@ -18,7 +48,8 @@ class RegistryStatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppStatusColors.of(context);
-    final palette = _palette(colors);
+    final colorScheme = Theme.of(context).colorScheme;
+    final palette = _palette(colors, colorScheme);
 
     return Semantics(
       label: label,
@@ -54,7 +85,7 @@ class RegistryStatusChip extends StatelessWidget {
     );
   }
 
-  _StatusPalette _palette(AppStatusColors colors) {
+  _StatusPalette _palette(AppStatusColors colors, ColorScheme colorScheme) {
     return switch (status) {
       RegistryStatus.urgent => _StatusPalette(
         background: colors.urgentContainer,
@@ -72,13 +103,20 @@ class RegistryStatusChip extends StatelessWidget {
         icon: Icons.check_circle_outline_rounded,
       ),
       RegistryStatus.expired => _StatusPalette(
-        background: colors.expiredContainer,
-        foreground: colors.onExpiredContainer,
+        background: colors.urgentContainer,
+        foreground: colors.onUrgentContainer,
         icon: Icons.event_busy_rounded,
+      ),
+      RegistryStatus.neutral => _StatusPalette(
+        background: colorScheme.surfaceContainer,
+        foreground: colorScheme.onSurfaceVariant,
+        icon: Icons.info_outline_rounded,
       ),
     };
   }
 }
+
+typedef RegistryAuraStatusPill = RegistryStatusChip;
 
 class _StatusPalette {
   const _StatusPalette({

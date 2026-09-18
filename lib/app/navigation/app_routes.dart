@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
+import 'package:the_registry/features/notifications/presentation/notifications_placeholder_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_placeholder_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -9,6 +10,14 @@ abstract final class AppRoutes {
   static Future<void> openProfile(BuildContext context) {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const ProfilePlaceholderScreen()),
+    );
+  }
+
+  static Future<void> openNotifications(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const NotificationsPlaceholderScreen(),
+      ),
     );
   }
 

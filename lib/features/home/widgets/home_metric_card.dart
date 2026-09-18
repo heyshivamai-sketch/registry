@@ -12,6 +12,7 @@ class HomeMetricCard extends StatelessWidget {
     required this.icon,
     required this.tone,
     this.inline = false,
+    this.supportingText,
   });
 
   final String title;
@@ -19,6 +20,7 @@ class HomeMetricCard extends StatelessWidget {
   final IconData icon;
   final HomeMetricTone tone;
   final bool inline;
+  final String? supportingText;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +32,13 @@ class HomeMetricCard extends StatelessWidget {
       HomeMetricTone.attention => status.onUrgentContainer,
     };
 
-    return RegistryMetric(
+    return RegistryAuraMetricCard(
       label: title,
       value: value,
       icon: icon,
       color: color,
       inline: inline,
+      supportingText: supportingText,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -24,7 +25,7 @@ abstract final class MockRegistryCatalog {
       actionDate: DateTime.utc(2026, 10, 1),
       dueDate: DateTime.utc(2026, 11, 12),
       isHero: false,
-      needsAttention: true,
+      needsAttention: false,
     ),
     RegistryItem(
       id: 'streaming',
@@ -35,7 +36,7 @@ abstract final class MockRegistryCatalog {
       actionDate: DateTime.utc(2026, 9, 22),
       dueDate: DateTime.utc(2026, 9, 28),
       isHero: false,
-      needsAttention: true,
+      needsAttention: false,
     ),
     RegistryItem(
       id: 'driving_licence',
@@ -63,6 +64,18 @@ abstract final class MockRegistryCatalog {
 
   static List<RegistryItem> byImpact(Iterable<RegistryItem> source) {
     return [...source]..sort((a, b) => b.impactScore.compareTo(a.impactScore));
+  }
+
+  static int withinHorizonCount(
+    Iterable<RegistryItem> source, {
+    DateTime? now,
+  }) {
+    return source
+        .where(
+          (item) =>
+              RegistryDateFormatter.isWithinHorizon(item.actionDate, now: now),
+        )
+        .length;
   }
 
   /// Nearest action/renewal date first. Ties fall back to the due date.

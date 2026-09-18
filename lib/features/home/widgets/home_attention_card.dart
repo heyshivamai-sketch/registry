@@ -22,32 +22,15 @@ class HomeAttentionCard extends StatelessWidget {
     final status = AppStatusColors.of(context);
     final locale = l10n.localeName;
     final dueDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
-    final palette = switch (item.status) {
-      RegistryStatus.urgent => (
-        fill: status.urgentContainer,
-        accent: status.urgent,
-        icon: status.onUrgentContainer,
-      ),
-      RegistryStatus.upcoming => (
-        fill: Color.lerp(
-          status.warningContainer,
-          colorScheme.surfaceContainerLowest,
-          0.45,
-        )!,
-        accent: status.warning,
-        icon: status.onWarningContainer,
-      ),
-      RegistryStatus.active => (
-        fill: status.successContainer,
-        accent: status.success,
-        icon: status.onSuccessContainer,
-      ),
-      RegistryStatus.expired => (
-        fill: status.expiredContainer,
-        accent: status.expired,
-        icon: status.onExpiredContainer,
-      ),
-    };
+    final accent = item.status.accent(status);
+    final fill = Color.lerp(
+      item.status.container(status, colorScheme),
+      colorScheme.surfaceContainerLowest,
+      item.status == RegistryStatus.urgent ||
+              item.status == RegistryStatus.expired
+          ? 0.15
+          : 0.55,
+    )!;
 
     final content = Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
@@ -59,10 +42,10 @@ class HomeAttentionCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RegistryIconBadge(
+          RegistryAuraIconTile(
             icon: item.icon,
-            background: palette.fill,
-            foreground: palette.icon,
+            background: item.status.container(status, colorScheme),
+            foreground: item.status.onContainer(status, colorScheme),
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
@@ -76,22 +59,9 @@ class HomeAttentionCard extends StatelessWidget {
                   style: theme.textTheme.titleSmall,
                 ),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  '${item.actionLabel(l10n)} · ${item.dueDateLabel(l10n, dueDate)}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall,
-                ),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  item.remainingLabel(l10n),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: palette.accent,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
-                ),
+                Text(dueDate, style: theme.textTheme.bodySmall),
                 const SizedBox(height: AppSpacing.xs),
-                RegistryStatusChip(
+                RegistryAuraStatusPill(
                   status: item.status,
                   label: item.statusLabel(l10n),
                 ),
@@ -110,7 +80,7 @@ class HomeAttentionCard extends StatelessWidget {
     );
 
     return Material(
-      color: Color.lerp(palette.fill, colorScheme.surfaceContainerLowest, 0.35),
+      color: fill,
       borderRadius: AppRadius.cardBorder,
       child: InkWell(
         onTap: onTap,
@@ -120,12 +90,21 @@ class HomeAttentionCard extends StatelessWidget {
             borderRadius: AppRadius.cardBorder,
             border: BorderDirectional(
               start: BorderSide(
-                color: palette.accent,
-                width: item.status == RegistryStatus.urgent ? 4 : 3,
+                color: accent,
+                width:
+                    item.status == RegistryStatus.urgent ||
+                        item.status == RegistryStatus.expired
+                    ? 4
+                    : 3,
               ),
             ),
           ),
-          child: content,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: AppSpacing.minTapTarget,
+            ),
+            child: content,
+          ),
         ),
       ),
     );

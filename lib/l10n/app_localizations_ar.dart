@@ -79,10 +79,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navSubscriptions => 'الاشتراكات';
 
   @override
+  String get navProfile => 'الملف';
+
+  @override
   String get homeGreeting => 'ابقَ سابقًا لما يهم';
 
   @override
   String get homeTitle => 'سجلك';
+
+  @override
+  String get notificationsButton => 'الإشعارات';
+
+  @override
+  String get notificationsTitle => 'الإشعارات';
+
+  @override
+  String get notificationsPlaceholderMessage =>
+      'لا تُجدول التذكيرات في هذا الإصدار. هذه الشاشة عنصر نائب.';
 
   @override
   String get searchPlaceholder => 'ابحث في المستندات والاشتراكات';
@@ -143,7 +156,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get summaryNeedsAttention => 'يحتاج انتباهك';
 
   @override
-  String get pulseEyebrow => 'الإجراء التالي';
+  String get summaryNext90Days => 'الـ 90 يومًا القادمة';
+
+  @override
+  String get snapshotDocumentsHint => 'سجلات في سجلك';
+
+  @override
+  String get snapshotSubscriptionsHint => 'الخطط التي تتابعها';
+
+  @override
+  String get snapshotNext90Hint => 'عبر سجلك بالكامل';
+
+  @override
+  String snapshotDocumentsSupporting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تحتاج إجراء',
+      one: 'إجراء واحد مستحق',
+      zero: 'لا إجراء مطلوب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snapshotSubscriptionsSupporting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count متتبَّعة',
+      one: 'واحد متتبَّع',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pulseEyebrow => 'أفضل إجراء تالٍ';
+
+  @override
+  String get pulseStartByEyebrow => 'ابدأ قبل';
+
+  @override
+  String get pulseExpiresEyebrow => 'ينتهي في';
 
   @override
   String get countdownDayUnit => 'يوم';
@@ -158,11 +212,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get countdownOverdueUnit => 'متأخر';
 
   @override
-  String get addSheetDocumentSubtitle => 'جوازات السفر والرخص والسجلات الأخرى.';
+  String get addSheetDocumentSubtitle => 'امسح أو أدخل مستندًا';
 
   @override
-  String get addSheetSubscriptionSubtitle =>
-      'الرسوم والعضويات التي تريد مراجعتها.';
+  String get addSheetSubscriptionSubtitle => 'تتبّع رسومًا أو تجديدًا';
 
   @override
   String documentsSummary(int count) {
@@ -175,10 +228,24 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get sectionNeedsAttention => 'يحتاج انتباهك';
+  String get sectionNeedsAttention => 'قائمة الإجراءات';
 
   @override
-  String get sectionComingUp => 'قادمًا';
+  String get sectionComingUp => 'الأفق';
+
+  @override
+  String get sectionRegistrySnapshot => 'لمحة عن السجل';
+
+  @override
+  String sectionItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عناصر',
+      one: 'عنصر واحد',
+    );
+    return '$_temp0';
+  }
 
   @override
   String startByDate(String date) {
@@ -214,6 +281,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get statusActive => 'نشط';
+
+  @override
+  String get statusNeutral => 'معلومة';
 
   @override
   String get itemCarInsurance => 'تأمين السيارة';
@@ -255,10 +325,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addSubscription => 'إضافة اشتراك';
 
   @override
-  String get addSheetTitle => 'أضف إلى السجل';
+  String get addSheetTitle => 'إضافة سريعة';
 
   @override
-  String get addSheetSubtitle => 'اختر ما تريد تتبّعه.';
+  String get addSheetSubtitle => 'ماذا تريد أن تتبّع؟';
 
   @override
   String get addFabTooltip => 'إضافة';

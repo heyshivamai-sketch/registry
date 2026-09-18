@@ -37,7 +37,9 @@ abstract final class DocumentStatus {
   static bool isAttentionStatus(RegistryStatus status) {
     return switch (status) {
       RegistryStatus.urgent || RegistryStatus.expired => true,
-      RegistryStatus.upcoming || RegistryStatus.active => false,
+      RegistryStatus.upcoming ||
+      RegistryStatus.active ||
+      RegistryStatus.neutral => false,
     };
   }
 
@@ -56,6 +58,7 @@ abstract final class DocumentStatus {
       RegistryStatus.urgent => l10n.actionNeeded,
       RegistryStatus.upcoming => l10n.statusUpcoming,
       RegistryStatus.active => l10n.statusActive,
+      RegistryStatus.neutral => l10n.statusNeutral,
     };
   }
 

@@ -11,3 +11,5 @@ class RegistryPrimaryButton extends StatelessWidget {
     return FilledButton(onPressed: onPressed, child: Text(label));
   }
 }
+
+typedef RegistryAuraPrimaryButton = RegistryPrimaryButton;

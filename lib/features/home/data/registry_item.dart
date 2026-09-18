@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/documents/domain/document_status.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -28,7 +29,12 @@ class RegistryItem {
   final DateTime actionDate;
   final DateTime dueDate;
   final bool isHero;
+
+  /// Catalog flag retained for callers. Home attention uses [requiresAttention].
   final bool needsAttention;
+
+  /// Status-based attention: Action needed or Overdue only.
+  bool get requiresAttention => DocumentStatus.isAttentionStatus(status);
 
   String title(AppLocalizations l10n) {
     return switch (id) {
@@ -66,11 +72,14 @@ class RegistryItem {
   }
 
   String statusLabel(AppLocalizations l10n) {
-    return switch (status) {
-      RegistryStatus.urgent => l10n.statusUrgent,
-      RegistryStatus.upcoming => l10n.statusUpcoming,
-      RegistryStatus.active => l10n.statusActive,
-      RegistryStatus.expired => l10n.statusUrgent,
+    return DocumentStatus.label(l10n, status);
+  }
+
+  String impactLabel(AppLocalizations l10n) {
+    return switch (impact) {
+      RegistryImpact.high => l10n.highImpactLabel,
+      RegistryImpact.medium => l10n.impactMedium,
+      RegistryImpact.low => l10n.impactLow,
     };
   }
 

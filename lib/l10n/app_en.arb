@@ -31,8 +31,12 @@
   "navHome": "Home",
   "navDocuments": "Documents",
   "navSubscriptions": "Subscriptions",
+  "navProfile": "Profile",
   "homeGreeting": "Stay ahead of what matters",
   "homeTitle": "Your Registry",
+  "notificationsButton": "Notifications",
+  "notificationsTitle": "Notifications",
+  "notificationsPlaceholderMessage": "Reminders are not scheduled in this version. This screen is a placeholder.",
   "searchPlaceholder": "Search documents and subscriptions",
   "searchClear": "Clear search",
   "filterTooltip": "Filter",
@@ -58,13 +62,31 @@
   "summaryDocuments": "Documents",
   "summarySubscriptions": "Subscriptions",
   "summaryNeedsAttention": "Needs attention",
-  "pulseEyebrow": "Next action",
+  "summaryNext90Days": "Next 90 days",
+  "snapshotDocumentsHint": "Records in your registry",
+  "snapshotSubscriptionsHint": "Plans you are tracking",
+  "snapshotNext90Hint": "Across your registry",
+  "snapshotDocumentsSupporting": "{count, plural, =0{None need action} one{1 action due} other{{count} need action}}",
+  "@snapshotDocumentsSupporting": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "snapshotSubscriptionsSupporting": "{count, plural, one{1 tracked} other{{count} tracked}}",
+  "@snapshotSubscriptionsSupporting": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "pulseEyebrow": "Next best action",
+  "pulseStartByEyebrow": "Start by",
+  "pulseExpiresEyebrow": "Expires",
   "countdownDayUnit": "day",
   "countdownDaysUnit": "days",
   "countdownTodayUnit": "today",
   "countdownOverdueUnit": "overdue",
-  "addSheetDocumentSubtitle": "Passports, licences and other records.",
-  "addSheetSubscriptionSubtitle": "Charges and memberships you want to review.",
+  "addSheetDocumentSubtitle": "Scan or enter a document",
+  "addSheetSubscriptionSubtitle": "Track a charge or renewal",
   "documentsSummary": "{count} saved",
   "@documentsSummary": {
     "placeholders": {
@@ -77,8 +99,15 @@
       "count": { "type": "int" }
     }
   },
-  "sectionNeedsAttention": "Needs your attention",
-  "sectionComingUp": "Coming up",
+  "sectionNeedsAttention": "Action queue",
+  "sectionComingUp": "Horizon",
+  "sectionRegistrySnapshot": "Registry snapshot",
+  "sectionItemCount": "{count, plural, one{{count} item} other{{count} items}}",
+  "@sectionItemCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "startByDate": "Start by {date}",
   "@startByDate": {
     "placeholders": {
@@ -108,6 +137,7 @@
   "statusUrgent": "Urgent",
   "statusUpcoming": "Upcoming",
   "statusActive": "Active",
+  "statusNeutral": "Info",
   "itemCarInsurance": "Car insurance",
   "heroCarInsurance": "Start insurance renewal",
   "actionStartRenewalSoon": "Start renewal soon",
@@ -121,8 +151,8 @@
   "actionReviewMembership": "Review before renewal",
   "addDocument": "Add Document",
   "addSubscription": "Add Subscription",
-  "addSheetTitle": "Add to Registry",
-  "addSheetSubtitle": "Choose what you want to keep on track.",
+  "addSheetTitle": "Quick Add",
+  "addSheetSubtitle": "What would you like to track?",
   "addFabTooltip": "Add",
   "documentsTitle": "Documents",
   "documentsEmptyTitle": "No documents yet",

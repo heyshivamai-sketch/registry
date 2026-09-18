@@ -33,12 +33,7 @@ class DocumentListCard extends StatelessWidget {
       locale,
     );
     final registryStatus = DocumentStatus.resolve(document);
-    final accent = switch (registryStatus) {
-      RegistryStatus.urgent => statusColors.urgent,
-      RegistryStatus.upcoming => statusColors.warning,
-      RegistryStatus.active => statusColors.success,
-      RegistryStatus.expired => statusColors.expired,
-    };
+    final accent = registryStatus.accent(statusColors);
 
     return RegistrySurface(
       padding: EdgeInsets.zero,

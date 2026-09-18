@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
+import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
@@ -19,10 +20,13 @@ import 'support/sample_document.dart';
 import 'support/tiny_png.dart';
 
 Finder _navLabel(String label) {
-  return find.descendant(
-    of: find.byType(NavigationBar),
-    matching: find.text(label),
-  );
+  return switch (label) {
+    'Documents' => find.byKey(const ValueKey<String>('nav-documents')),
+    'Subscriptions' => find.byKey(const ValueKey<String>('nav-subscriptions')),
+    'Home' => find.byKey(const ValueKey<String>('nav-home')),
+    'Profile' => find.byKey(const ValueKey<String>('nav-profile')),
+    _ => find.byTooltip(label),
+  };
 }
 
 void main() {
@@ -352,7 +356,11 @@ void main() {
     expect(find.text('Document deleted from this session.'), findsOneWidget);
     expect(find.text('No documents yet'), findsOneWidget);
     expect(
-      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      tester
+          .widget<RegistryAuraNavigationDock>(
+            find.byType(RegistryAuraNavigationDock),
+          )
+          .selectedIndex,
       1,
     );
   });

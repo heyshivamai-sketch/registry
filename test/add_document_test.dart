@@ -18,10 +18,13 @@ import 'support/save_screenshot.dart';
 import 'support/tiny_png.dart';
 
 Finder _navLabel(String label) {
-  return find.descendant(
-    of: find.byType(NavigationBar),
-    matching: find.text(label),
-  );
+  return switch (label) {
+    'Documents' => find.byKey(const ValueKey<String>('nav-documents')),
+    'Subscriptions' => find.byKey(const ValueKey<String>('nav-subscriptions')),
+    'Home' => find.byKey(const ValueKey<String>('nav-home')),
+    'Profile' => find.byKey(const ValueKey<String>('nav-profile')),
+    _ => find.byTooltip(label),
+  };
 }
 
 void main() {

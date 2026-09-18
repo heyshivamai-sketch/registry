@@ -79,10 +79,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSubscriptions => 'Subscriptions';
 
   @override
+  String get navProfile => 'Profile';
+
+  @override
   String get homeGreeting => 'Stay ahead of what matters';
 
   @override
   String get homeTitle => 'Your Registry';
+
+  @override
+  String get notificationsButton => 'Notifications';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsPlaceholderMessage =>
+      'Reminders are not scheduled in this version. This screen is a placeholder.';
 
   @override
   String get searchPlaceholder => 'Search documents and subscriptions';
@@ -135,7 +148,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get summaryNeedsAttention => 'Needs attention';
 
   @override
-  String get pulseEyebrow => 'Next action';
+  String get summaryNext90Days => 'Next 90 days';
+
+  @override
+  String get snapshotDocumentsHint => 'Records in your registry';
+
+  @override
+  String get snapshotSubscriptionsHint => 'Plans you are tracking';
+
+  @override
+  String get snapshotNext90Hint => 'Across your registry';
+
+  @override
+  String snapshotDocumentsSupporting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count need action',
+      one: '1 action due',
+      zero: 'None need action',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snapshotSubscriptionsSupporting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracked',
+      one: '1 tracked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pulseEyebrow => 'Next best action';
+
+  @override
+  String get pulseStartByEyebrow => 'Start by';
+
+  @override
+  String get pulseExpiresEyebrow => 'Expires';
 
   @override
   String get countdownDayUnit => 'day';
@@ -150,12 +204,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get countdownOverdueUnit => 'overdue';
 
   @override
-  String get addSheetDocumentSubtitle =>
-      'Passports, licences and other records.';
+  String get addSheetDocumentSubtitle => 'Scan or enter a document';
 
   @override
-  String get addSheetSubscriptionSubtitle =>
-      'Charges and memberships you want to review.';
+  String get addSheetSubscriptionSubtitle => 'Track a charge or renewal';
 
   @override
   String documentsSummary(int count) {
@@ -174,10 +226,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sectionNeedsAttention => 'Needs your attention';
+  String get sectionNeedsAttention => 'Action queue';
 
   @override
-  String get sectionComingUp => 'Coming up';
+  String get sectionComingUp => 'Horizon';
+
+  @override
+  String get sectionRegistrySnapshot => 'Registry snapshot';
+
+  @override
+  String sectionItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '$count item',
+    );
+    return '$_temp0';
+  }
 
   @override
   String startByDate(String date) {
@@ -213,6 +279,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusActive => 'Active';
+
+  @override
+  String get statusNeutral => 'Info';
 
   @override
   String get itemCarInsurance => 'Car insurance';
@@ -254,10 +323,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addSubscription => 'Add Subscription';
 
   @override
-  String get addSheetTitle => 'Add to Registry';
+  String get addSheetTitle => 'Quick Add';
 
   @override
-  String get addSheetSubtitle => 'Choose what you want to keep on track.';
+  String get addSheetSubtitle => 'What would you like to track?';
 
   @override
   String get addFabTooltip => 'Add';

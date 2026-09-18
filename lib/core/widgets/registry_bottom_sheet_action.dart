@@ -21,23 +21,25 @@ class RegistryBottomSheetAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final brandViolet = colorScheme.tertiary;
 
     return Material(
-      color: colorScheme.surfaceContainerLowest,
+      color: colorScheme.surfaceContainer,
       borderRadius: AppRadius.cardBorder,
       child: InkWell(
         onTap: onTap,
         borderRadius: AppRadius.cardBorder,
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.cardBorder,
-            border: Border.all(color: colorScheme.outlineVariant),
-          ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             child: Row(
               children: [
-                RegistryIconBadge(icon: icon),
+                RegistryAuraIconTile(
+                  icon: icon,
+                  background: colorScheme.primaryContainer,
+                  foreground: brandViolet,
+                ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
@@ -63,3 +65,5 @@ class RegistryBottomSheetAction extends StatelessWidget {
     );
   }
 }
+
+typedef RegistryAuraBottomSheetAction = RegistryBottomSheetAction;

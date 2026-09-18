@@ -56,7 +56,7 @@ abstract final class AppTheme {
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: colorScheme.primary,
+        backgroundColor: brandColors.violet,
         foregroundColor: colorScheme.onPrimary,
         elevation: 2,
         focusElevation: 3,
@@ -68,23 +68,23 @@ abstract final class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
-        height: 68,
-        backgroundColor: colorScheme.surfaceContainerLowest,
-        indicatorColor: colorScheme.primaryContainer,
+        height: AppSpacing.dockHeight,
+        backgroundColor: Colors.transparent,
+        indicatorColor: colorScheme.onPrimary.withValues(alpha: 0.08),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
           return IconThemeData(
             color: selected
-                ? colorScheme.onPrimaryContainer
-                : colorScheme.onSurfaceVariant,
+                ? colorScheme.onPrimary
+                : brandColors.dockForeground,
           );
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
-          return textTheme.labelMedium?.copyWith(
+          return textTheme.labelSmall?.copyWith(
             color: selected
-                ? colorScheme.primary
-                : colorScheme.onSurfaceVariant,
+                ? colorScheme.onPrimary
+                : brandColors.dockForeground,
           );
         }),
       ),
@@ -94,7 +94,7 @@ abstract final class AppTheme {
         showDragHandle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppRadius.lg),
+            top: Radius.circular(AppRadius.xl),
           ),
         ),
       ),
@@ -147,7 +147,7 @@ abstract final class AppTheme {
     onSecondary: AppColors.onSecondary,
     secondaryContainer: AppColors.secondaryContainer,
     onSecondaryContainer: AppColors.onSecondaryContainer,
-    tertiary: AppColors.indigo,
+    tertiary: AppColors.violet,
     onTertiary: AppColors.onPrimary,
     error: AppColors.urgent,
     onError: AppColors.onPrimary,
@@ -173,7 +173,7 @@ abstract final class AppTheme {
     onSecondary: Color(0xFF04332F),
     secondaryContainer: Color(0xFF1A5F58),
     onSecondaryContainer: Color(0xFFCDECEA),
-    tertiary: Color(0xFF9AA8F0),
+    tertiary: Color(0xFF9A8CFF),
     onTertiary: Color(0xFF10243F),
     error: Color(0xFFFF8A80),
     onError: Color(0xFF4E1C1C),

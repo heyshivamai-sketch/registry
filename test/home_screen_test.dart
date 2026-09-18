@@ -3,7 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/core/widgets/registry_countdown_ring.dart';
+import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/documents/domain/document_status.dart';
+import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
@@ -13,6 +16,7 @@ import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
 import 'package:the_registry/features/home/widgets/home_search_field.dart';
 import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
 import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
+import 'package:the_registry/features/notifications/presentation/notifications_placeholder_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -43,20 +47,16 @@ bool _rectsOverlap(Rect a, Rect b) {
       a.bottom > b.top;
 }
 
-void _expectFabClearsHomeContent(
+void _expectDockClearsHomeContent(
   WidgetTester tester, {
   required bool includeHorizon,
 }) {
-  final fab = tester.getRect(find.byKey(const ValueKey<String>('home-fab')));
-  final metrics = find.byKey(const ValueKey<String>('home-metrics'));
-  if (metrics.evaluate().isNotEmpty) {
-    expect(_rectsOverlap(fab, tester.getRect(metrics)), isFalse);
-  }
+  final dock = tester.getRect(find.byType(RegistryAuraNavigationDock));
 
   if (includeHorizon) {
     expect(
       _rectsOverlap(
-        fab,
+        dock,
         tester.getRect(
           find.byKey(const ValueKey<String>('upcoming-driving_licence')),
         ),
@@ -69,8 +69,10 @@ void _expectFabClearsHomeContent(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Home renders the modern dashboard sections', (tester) async {
-    tester.view.physicalSize = const Size(412, 1200);
+  testWidgets('Home renders the Registry Aura dashboard sections', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -79,46 +81,51 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(HomeHeader), findsOneWidget);
-    expect(find.text('Stay ahead of what matters'), findsOneWidget);
     expect(find.text('Your Registry'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('home-notifications')),
+      findsOneWidget,
+    );
     expect(find.byType(HomeSearchField), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('home-filter')), findsNothing);
+    expect(find.text('⌘K'), findsNothing);
     expect(find.byType(PriorityHeroCard), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('hero-countdown')),
       findsOneWidget,
     );
     expect(find.byType(RegistryCountdownRing), findsOneWidget);
-    expect(find.text('Action needed'), findsOneWidget);
-    expect(find.text('Next action'), findsOneWidget);
+    expect(find.text('Action needed'), findsWidgets);
+    expect(find.text('Next best action'), findsOneWidget);
+    expect(find.text('Registry snapshot'), findsOneWidget);
     expect(find.byType(HomeMetricsRow), findsOneWidget);
-    expect(find.text('3'), findsWidgets);
-    expect(find.text('Needs your attention'), findsOneWidget);
+    expect(find.text('Action queue'), findsOneWidget);
     expect(find.byType(HomeAttentionCard), findsWidgets);
-    expect(find.text('Coming up', skipOffstage: false), findsOneWidget);
+    expect(find.text('Horizon', skipOffstage: false), findsOneWidget);
     expect(find.byType(HomeUpcomingItem, skipOffstage: false), findsWidgets);
     expect(find.textContaining('20 Sep 2026'), findsWidgets);
     expect(find.textContaining('05 Oct 2026'), findsWidgets);
     expect(find.textContaining('Start by'), findsWidgets);
     expect(find.textContaining('Expires'), findsWidgets);
     expect(find.bySemanticsLabel(RegExp(r'day')), findsWidgets);
-    expect(
-      tester.widget<HomeMetricsRow>(
-        find.byKey(const ValueKey<String>('home-metrics')),
-      ),
-      isA<HomeMetricsRow>(),
-    );
+    expect(kHomeHeroReviewOpensDetail, isFalse);
     final metrics = tester.widget<HomeMetricsRow>(
       find.byKey(const ValueKey<String>('home-metrics')),
     );
     expect(metrics.documentCount, 3);
     expect(metrics.subscriptionCount, 2);
-    expect(metrics.attentionCount, 3);
+    expect(metrics.horizonCount, 5);
     expect(
       tester
           .widgetList<HomeAttentionCard>(find.byType(HomeAttentionCard))
           .map((card) => card.item.id),
-      ['car_insurance', 'passport', 'streaming'],
+      ['car_insurance'],
+    );
+    expect(
+      tester
+          .widgetList<HomeAttentionCard>(find.byType(HomeAttentionCard))
+          .every((card) => DocumentStatus.isAttentionStatus(card.item.status)),
+      isTrue,
     );
   });
 
@@ -161,6 +168,29 @@ void main() {
     );
   });
 
+  testWidgets('Search empty state appears for unknown queries', (tester) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('home-search')),
+      'zzzzzz',
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey<String>('home-search-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('No matching items'), findsOneWidget);
+    expect(find.byType(PriorityHeroCard), findsNothing);
+  });
+
   testWidgets('Profile control opens Profile', (tester) async {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
@@ -168,17 +198,28 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('home-profile')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ProfilePlaceholderScreen), findsOneWidget);
+    expect(find.byType(ProfilePlaceholderScreen), findsWidgets);
   });
 
-  testWidgets('FAB still opens the Add sheet', (tester) async {
+  testWidgets('Notifications control opens the placeholder', (tester) async {
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey<String>('home-notifications')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NotificationsPlaceholderScreen), findsOneWidget);
+  });
+
+  testWidgets('Central Add button opens the Add sheet', (tester) async {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey<String>('home-fab')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add to Registry'), findsOneWidget);
+    expect(find.text('Quick Add'), findsOneWidget);
+    expect(find.text('What would you like to track?'), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('add-document')), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('add-subscription')),
@@ -186,7 +227,7 @@ void main() {
     );
   });
 
-  testWidgets('Bottom navigation preserves Home search state', (tester) async {
+  testWidgets('Floating dock preserves Home search state', (tester) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -202,22 +243,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Streaming subscription'), findsNothing);
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Documents'),
-      ),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
     await tester.pumpAndSettle();
     expect(find.text('No documents yet'), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('documents-add')), findsOneWidget);
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Subscriptions'),
-      ),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
     await tester.pumpAndSettle();
     expect(find.text('No subscriptions yet'), findsOneWidget);
     expect(
@@ -225,12 +256,7 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Home'),
-      ),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
     expect(
       tester
@@ -242,27 +268,35 @@ void main() {
     expect(find.text('Streaming subscription'), findsNothing);
   });
 
-  testWidgets('Bottom navigation still switches tabs', (tester) async {
+  testWidgets('Floating dock switches tabs including Profile', (tester) async {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Documents'),
-      ),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
     await tester.pumpAndSettle();
     expect(find.text('No documents yet'), findsOneWidget);
-
-    await tester.tap(
-      find.descendant(
-        of: find.byType(NavigationBar),
-        matching: find.text('Home'),
-      ),
+    expect(
+      tester
+          .widget<RegistryAuraNavigationDock>(
+            find.byType(RegistryAuraNavigationDock),
+          )
+          .selectedIndex,
+      1,
     );
+
+    await tester.tap(find.byKey(const ValueKey<String>('nav-profile')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'There is no account in this version. Registry will keep your records private on this device.',
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(DocumentsScreen, skipOffstage: false), findsOneWidget);
   });
 
   testWidgets('Arabic Home stays RTL', (tester) async {
@@ -274,7 +308,7 @@ void main() {
       Directionality.of(tester.element(find.byType(AppShell))),
       TextDirection.rtl,
     );
-    expect(find.text('يلزم اتخاذ إجراء'), findsOneWidget);
+    expect(find.text('يلزم اتخاذ إجراء'), findsWidgets);
   });
 
   testWidgets('Small-screen Home has no overflow', (tester) async {
@@ -287,7 +321,7 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text('Coming up'),
+      find.text('Horizon'),
       200,
       scrollable: find.byType(Scrollable).first,
     );
@@ -318,8 +352,8 @@ void main() {
     );
   });
 
-  testWidgets('Coming up is chronological by action date', (tester) async {
-    tester.view.physicalSize = const Size(412, 1400);
+  testWidgets('Horizon is chronological by action date', (tester) async {
+    tester.view.physicalSize = const Size(412, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -332,18 +366,19 @@ void main() {
           find.byType(HomeUpcomingItem, skipOffstage: false),
         )
         .toList();
-    expect(upcoming.map((item) => item.item.id), ['gym', 'driving_licence']);
-    expect(upcoming.first.item.dueDate, DateTime.utc(2026, 10, 18));
-    expect(upcoming.last.item.dueDate, DateTime.utc(2026, 12, 1));
+    expect(upcoming.map((item) => item.item.id), [
+      'streaming',
+      'passport',
+      'gym',
+      'driving_licence',
+    ]);
     expect(
       upcoming.first.item.actionDate.isBefore(upcoming.last.item.actionDate),
       isTrue,
     );
   });
 
-  testWidgets('Small-screen last Coming up card clears the FAB', (
-    tester,
-  ) async {
+  testWidgets('Small-screen last Horizon card clears the dock', (tester) async {
     tester.view.physicalSize = const Size(320, 640);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -359,23 +394,14 @@ void main() {
     scrollable.position.jumpTo(scrollable.position.maxScrollExtent);
     await tester.pumpAndSettle();
 
-    final lastCard = tester.getRect(
-      find.byKey(const ValueKey<String>('upcoming-driving_licence')),
-    );
-    final fab = tester.getRect(find.byKey(const ValueKey<String>('home-fab')));
-    final overlapsHorizontally =
-        lastCard.left < fab.right && lastCard.right > fab.left;
-    final overlapsVertically =
-        lastCard.top < fab.bottom && lastCard.bottom > fab.top;
-    expect(overlapsHorizontally && overlapsVertically, isFalse);
+    _expectDockClearsHomeContent(tester, includeHorizon: true);
     expect(
       overflows.where((details) => details.toString().contains('overflowed')),
       isEmpty,
     );
-    _expectFabClearsHomeContent(tester, includeHorizon: true);
   });
 
-  testWidgets('Default layout uses an extended FAB that clears metrics', (
+  testWidgets('Pixel-sized layout keeps metrics above the dock', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(412, 915);
@@ -386,14 +412,11 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
-    final fab = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fab.isExtended, isTrue);
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
+    expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('home-metrics')), findsOneWidget);
   });
 
-  testWidgets('1.5x text uses a compact FAB that clears metrics', (
+  testWidgets('1.5x text Home has no overflow and clears the dock', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(412, 915);
@@ -407,18 +430,13 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
-    final fab = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fab.isExtended, isFalse);
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
     expect(
       overflows.where((details) => details.toString().contains('overflowed')),
       isEmpty,
     );
   });
 
-  testWidgets('1.8x text uses a compact FAB that clears metrics', (
+  testWidgets('1.8x text Home has no overflow and clears the dock', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(412, 915);
@@ -432,38 +450,13 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
-    final fab = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fab.isExtended, isFalse);
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
     expect(
       overflows.where((details) => details.toString().contains('overflowed')),
       isEmpty,
     );
   });
 
-  testWidgets('Narrow phone uses a compact FAB that clears metrics', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(320, 640);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(_app());
-    await tester.pumpAndSettle();
-
-    final fab = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fab.isExtended, isFalse);
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
-  });
-
-  testWidgets('Arabic RTL compact and extended FAB stay on the start edge', (
-    tester,
-  ) async {
+  testWidgets('Arabic RTL dock stays usable', (tester) async {
     tester.view.physicalSize = const Size(412, 915);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -476,33 +469,10 @@ void main() {
       Directionality.of(tester.element(find.byType(AppShell))),
       TextDirection.rtl,
     );
-    final fab = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fab.isExtended, isTrue);
-    final fabRect = tester.getRect(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(fabRect.left, lessThan(412 / 2));
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
-
-    tester.platformDispatcher.textScaleFactorTestValue = 1.5;
-    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-    await tester.pumpWidget(_app(locale: const Locale('ar')));
-    await tester.pumpAndSettle();
-
-    final compact = tester.widget<FloatingActionButton>(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(compact.isExtended, isFalse);
-    final compactRect = tester.getRect(
-      find.byKey(const ValueKey<String>('home-fab')),
-    );
-    expect(compactRect.left, lessThan(412 / 2));
-    _expectFabClearsHomeContent(tester, includeHorizon: false);
+    expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
   });
 
-  testWidgets('Status chips use icon and text together', (tester) async {
+  testWidgets('Status pills use icon and text together', (tester) async {
     tester.view.physicalSize = const Size(412, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -521,9 +491,7 @@ void main() {
       find.descendant(of: chips, matching: find.byType(Text)),
       findsWidgets,
     );
-    expect(find.text('Urgent'), findsWidgets);
-    expect(find.text('Upcoming'), findsWidgets);
-    expect(find.text('Active', skipOffstage: false), findsWidgets);
+    expect(find.text('Action needed'), findsWidgets);
   });
 
   test('Relative remaining copy uses existing dates', () {
@@ -553,5 +521,13 @@ void main() {
       RegistryDateFormatter.dayMonthYear(item.dueDate, 'en'),
       '05 Oct 2026',
     );
+    expect(item.requiresAttention, isTrue);
+  });
+
+  test('Upcoming and active items are excluded from attention', () {
+    expect(DocumentStatus.isAttentionStatus(RegistryStatus.upcoming), isFalse);
+    expect(DocumentStatus.isAttentionStatus(RegistryStatus.active), isFalse);
+    expect(DocumentStatus.isAttentionStatus(RegistryStatus.urgent), isTrue);
+    expect(DocumentStatus.isAttentionStatus(RegistryStatus.expired), isTrue);
   });
 }

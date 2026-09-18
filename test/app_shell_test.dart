@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
+import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
@@ -16,13 +17,6 @@ Widget _app({Locale locale = const Locale('en')}) {
   );
 }
 
-Finder _navLabel(String label) {
-  return find.descendant(
-    of: find.byType(NavigationBar),
-    matching: find.text(label),
-  );
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -33,7 +27,7 @@ void main() {
     expect(find.byType(AppShell), findsOneWidget);
     expect(find.byType(HomeScreen), findsOneWidget);
     expect(find.text('Your Registry'), findsOneWidget);
-    expect(find.text('Stay ahead of what matters'), findsOneWidget);
+    expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
   });
 
   testWidgets('Bottom navigation changes tabs', (tester) async {
@@ -41,15 +35,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('No documents yet'), findsNothing);
-    await tester.tap(_navLabel('Documents'));
+    await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
     await tester.pumpAndSettle();
     expect(find.text('No documents yet'), findsOneWidget);
 
-    await tester.tap(_navLabel('Subscriptions'));
+    await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
     await tester.pumpAndSettle();
     expect(find.text('No subscriptions yet'), findsOneWidget);
 
-    await tester.tap(_navLabel('Home'));
+    await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
     expect(find.text('Your Registry'), findsOneWidget);
   });
@@ -61,7 +55,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('home-profile')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ProfilePlaceholderScreen), findsOneWidget);
+    expect(find.byType(ProfilePlaceholderScreen), findsWidgets);
     expect(
       find.text(
         'There is no account in this version. Registry will keep your records private on this device.',
@@ -134,7 +128,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('home-fab')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add to Registry'), findsOneWidget);
+    expect(find.text('Quick Add'), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('add-document')), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('add-subscription')),

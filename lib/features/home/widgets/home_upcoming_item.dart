@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
@@ -27,23 +26,7 @@ class HomeUpcomingItem extends StatelessWidget {
     final status = AppStatusColors.of(context);
     final locale = l10n.localeName;
     final dueDate = RegistryDateFormatter.dayMonthYear(item.dueDate, locale);
-    final marker = switch (item.status) {
-      RegistryStatus.urgent => status.urgent,
-      RegistryStatus.upcoming => status.warning,
-      RegistryStatus.active => status.success,
-      RegistryStatus.expired => status.expired,
-    };
-    final statusFill = switch (item.status) {
-      RegistryStatus.urgent => status.urgentContainer,
-      RegistryStatus.upcoming => status.warningContainer,
-      RegistryStatus.active => status.successContainer,
-      RegistryStatus.expired => status.expiredContainer,
-    };
-    final fill = Color.lerp(
-      colorScheme.surfaceContainerLowest,
-      statusFill,
-      0.22,
-    )!;
+    final marker = item.status.accent(status);
 
     return IntrinsicHeight(
       child: Row(
@@ -55,11 +38,11 @@ class HomeUpcomingItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  RegistryDateFormatter.dayNumber(item.dueDate, locale),
+                  RegistryDateFormatter.dayNumber(item.actionDate, locale),
                   style: theme.textTheme.titleMedium,
                 ),
                 Text(
-                  RegistryDateFormatter.monthYear(item.dueDate, locale),
+                  RegistryDateFormatter.monthYear(item.actionDate, locale),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -80,6 +63,7 @@ class HomeUpcomingItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: marker,
                     shape: BoxShape.circle,
+                    border: Border.all(color: colorScheme.surface, width: 3),
                   ),
                   child: const SizedBox(width: 10, height: 10),
                 ),
@@ -105,54 +89,33 @@ class HomeUpcomingItem extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.sm),
               child: Material(
-                color: fill,
+                color: colorScheme.surfaceContainerLowest,
                 shape: RoundedRectangleBorder(
-                  borderRadius: AppRadius.cardBorder,
-                  side: BorderSide(color: marker.withValues(alpha: 0.28)),
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(color: colorScheme.outlineVariant),
                 ),
                 child: InkWell(
                   onTap: onTap,
-                  borderRadius: AppRadius.cardBorder,
+                  borderRadius: BorderRadius.circular(15),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.sm),
-                    child: Row(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(item.icon, color: colorScheme.primary),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.title(l10n),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.titleSmall,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                '${item.actionLabel(l10n)} · $dueDate',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                item.remainingLabel(l10n),
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  fontFeatures: const [
-                                    FontFeature.tabularFigures(),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              RegistryStatusChip(
-                                status: item.status,
-                                label: item.statusLabel(l10n),
-                              ),
-                            ],
-                          ),
+                        Text(
+                          item.title(l10n),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(dueDate, style: theme.textTheme.bodySmall),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          item.actionLabel(l10n),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall,
                         ),
                       ],
                     ),

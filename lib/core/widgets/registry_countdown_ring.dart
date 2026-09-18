@@ -29,12 +29,7 @@ class RegistryCountdownRing extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final progress = RegistryDateFormatter.horizonProgress(daysUntil);
-    final accent = switch (status) {
-      RegistryStatus.urgent => colors.urgent,
-      RegistryStatus.upcoming => colors.warning,
-      RegistryStatus.active => colors.success,
-      RegistryStatus.expired => colors.expired,
-    };
+    final accent = status.accent(colors);
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final textScale = MediaQuery.textScalerOf(
       context,

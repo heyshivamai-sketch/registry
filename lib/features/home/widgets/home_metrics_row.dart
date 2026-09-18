@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/home/widgets/home_metric_card.dart';
+import 'package:the_registry/core/widgets/registry_metric.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class HomeMetricsRow extends StatelessWidget {
@@ -11,113 +10,103 @@ class HomeMetricsRow extends StatelessWidget {
     super.key,
     required this.documentCount,
     required this.subscriptionCount,
-    required this.attentionCount,
+    required this.horizonCount,
+    this.documentSupporting,
+    this.subscriptionSupporting,
+    this.horizonSupporting,
   });
 
   final int documentCount;
   final int subscriptionCount;
-  final int attentionCount;
+  final int horizonCount;
+  final String? documentSupporting;
+  final String? subscriptionSupporting;
+  final String? horizonSupporting;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final status = AppStatusColors.of(context);
+    final tabs = RegistryTabScope.maybeOf(context);
     final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
     final metrics = [
       (
         title: l10n.summaryDocuments,
         value: '$documentCount',
-        icon: Icons.folder_outlined,
-        tone: HomeMetricTone.documents,
-        color: colorScheme.primaryContainer,
+        supporting: documentSupporting ?? l10n.snapshotDocumentsHint,
+        color: colorScheme.surfaceContainerLowest,
+        onTap: tabs == null ? null : () => tabs.onSelect(1),
       ),
       (
         title: l10n.summarySubscriptions,
         value: '$subscriptionCount',
-        icon: Icons.subscriptions_outlined,
-        tone: HomeMetricTone.subscriptions,
+        supporting: subscriptionSupporting ?? l10n.snapshotSubscriptionsHint,
         color: colorScheme.secondaryContainer,
+        onTap: tabs == null ? null : () => tabs.onSelect(2),
       ),
       (
-        title: l10n.summaryNeedsAttention,
-        value: '$attentionCount',
-        icon: Icons.priority_high_rounded,
-        tone: HomeMetricTone.attention,
-        color: status.urgentContainer,
+        title: l10n.summaryNext90Days,
+        value: '$horizonCount',
+        supporting: horizonSupporting ?? l10n.snapshotNext90Hint,
+        color: status.warningContainer,
+        onTap: null,
       ),
     ];
 
-    return RegistrySurface(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: AppSpacing.sm,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final minColumnWidth = 96.0 * textScale.clamp(1.0, 1.75);
-          final canFitRow =
-              constraints.maxWidth >=
-              (minColumnWidth * 3) + (AppSpacing.xs * 2);
+    Widget card(int i) {
+      final metric = metrics[i];
+      final child = Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: RegistryAuraMetricCard(
+          label: metric.title,
+          value: metric.value,
+          supportingText: metric.supporting,
+        ),
+      );
+      return Material(
+        color: metric.color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(17),
+          side: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        child: metric.onTap == null
+            ? child
+            : InkWell(
+                onTap: metric.onTap,
+                borderRadius: BorderRadius.circular(17),
+                child: child,
+              ),
+      );
+    }
 
-          if (!canFitRow) {
-            return Column(
-              children: [
-                for (var i = 0; i < metrics.length; i++) ...[
-                  if (i != 0) const SizedBox(height: AppSpacing.xs),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: metrics[i].color.withValues(alpha: 0.55),
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xs,
-                        horizontal: AppSpacing.sm,
-                      ),
-                      child: HomeMetricCard(
-                        title: metrics[i].title,
-                        value: metrics[i].value,
-                        icon: metrics[i].icon,
-                        tone: metrics[i].tone,
-                        inline: true,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            );
-          }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final minColumnWidth = 108.0 * textScale.clamp(1.0, 1.75);
+        final canFitRow =
+            constraints.maxWidth >= (minColumnWidth * 3) + (AppSpacing.xs * 2);
 
-          return Row(
+        if (!canFitRow) {
+          return Column(
             children: [
               for (var i = 0; i < metrics.length; i++) ...[
-                if (i != 0) const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: metrics[i].color.withValues(alpha: 0.55),
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xs,
-                        horizontal: AppSpacing.xxs,
-                      ),
-                      child: HomeMetricCard(
-                        title: metrics[i].title,
-                        value: metrics[i].value,
-                        icon: metrics[i].icon,
-                        tone: metrics[i].tone,
-                      ),
-                    ),
-                  ),
-                ),
+                if (i != 0) const SizedBox(height: AppSpacing.xs),
+                SizedBox(width: double.infinity, child: card(i)),
               ],
             ],
           );
-        },
-      ),
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < metrics.length; i++) ...[
+              if (i != 0) const SizedBox(width: AppSpacing.xs),
+              Expanded(child: card(i)),
+            ],
+          ],
+        );
+      },
     );
   }
 }

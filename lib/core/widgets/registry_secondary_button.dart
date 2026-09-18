@@ -15,3 +15,5 @@ class RegistrySecondaryButton extends StatelessWidget {
     return OutlinedButton(onPressed: onPressed, child: Text(label));
   }
 }
+
+typedef RegistryAuraSecondaryButton = RegistrySecondaryButton;

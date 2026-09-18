@@ -9,21 +9,31 @@ class RegistryPlaceholderPage extends StatelessWidget {
     required this.title,
     required this.message,
     this.icon = Icons.hourglass_empty_outlined,
+    this.embedded = false,
   });
 
   final String title;
   final String message;
   final IconData icon;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsetsDirectional.all(AppSpacing.screenPadding),
-          children: [
-            RegistryEmptyState(title: title, message: message, icon: icon),
+    final body = SafeArea(
+      child: ListView(
+        padding: EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.screenPadding,
+          AppSpacing.screenPadding,
+          AppSpacing.screenPadding,
+          embedded ? AppSpacing.scrollDockClearance : AppSpacing.screenPadding,
+        ),
+        children: [
+          if (embedded) ...[
+            Text(title, style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          RegistryEmptyState(title: title, message: message, icon: icon),
+          if (!embedded) ...[
             const SizedBox(height: AppSpacing.lg),
             SizedBox(
               width: double.infinity,
@@ -33,8 +43,17 @@ class RegistryPlaceholderPage extends StatelessWidget {
               ),
             ),
           ],
-        ),
+        ],
       ),
+    );
+
+    if (embedded) {
+      return body;
+    }
+
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: body,
     );
   }
 }

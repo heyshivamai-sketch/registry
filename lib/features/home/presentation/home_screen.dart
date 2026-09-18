@@ -52,10 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     final hero = visible.where((item) => item.isHero).firstOrNull;
     final attention = MockRegistryCatalog.byImpact(
-      visible.where((item) => item.needsAttention),
+      visible.where((item) => item.requiresAttention),
     );
     final comingUp = MockRegistryCatalog.byUpcomingDate(
-      visible.where((item) => !item.needsAttention),
+      visible.where((item) => !item.requiresAttention),
     );
     final documentCount = allItems
         .where((item) => item.type == RegistryItemType.document)
@@ -63,17 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final subscriptionCount = allItems
         .where((item) => item.type == RegistryItemType.subscription)
         .length;
-    final attentionCount = allItems.where((item) => item.needsAttention).length;
-    final fabGutter = AppSpacing.useExtendedFab(context)
-        ? 0.0
-        : AppSpacing.minTapTarget + AppSpacing.sm;
-
-    Widget awayFromFab(Widget child) {
-      return Padding(
-        padding: EdgeInsetsDirectional.only(end: fabGutter),
-        child: child,
-      );
-    }
+    final horizonCount = MockRegistryCatalog.withinHorizonCount(allItems);
+    final documentAttention = allItems
+        .where(
+          (item) =>
+              item.type == RegistryItemType.document && item.requiresAttention,
+        )
+        .length;
 
     return SafeArea(
       child: ListView(
@@ -81,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
-          AppSpacing.scrollFabClearance,
+          AppSpacing.scrollDockClearance,
         ),
         children: [
           const HomeHeader(),
@@ -90,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: AppSpacing.md),
           if (visible.isEmpty)
             RegistryEmptyState(
+              key: const ValueKey<String>('home-search-empty'),
               title: l10n.searchNoResultsTitle,
               message: l10n.searchNoResultsMessage,
               icon: Icons.search_off_rounded,
@@ -102,40 +99,49 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: AppSpacing.md),
             ],
-            awayFromFab(
-              HomeMetricsRow(
-                key: const ValueKey<String>('home-metrics'),
-                documentCount: documentCount,
-                subscriptionCount: subscriptionCount,
-                attentionCount: attentionCount,
+            RegistryAuraSectionHeader(
+              key: const ValueKey<String>('home-snapshot-header'),
+              title: l10n.sectionRegistrySnapshot,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            HomeMetricsRow(
+              key: const ValueKey<String>('home-metrics'),
+              documentCount: documentCount,
+              subscriptionCount: subscriptionCount,
+              horizonCount: horizonCount,
+              documentSupporting: l10n.snapshotDocumentsSupporting(
+                documentAttention,
               ),
+              subscriptionSupporting: l10n.snapshotSubscriptionsSupporting(
+                subscriptionCount,
+              ),
+              horizonSupporting: l10n.snapshotNext90Hint,
             ),
             if (attention.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
-              RegistrySectionHeader(
+              RegistryAuraSectionHeader(
                 key: const ValueKey<String>('home-attention-header'),
                 title: l10n.sectionNeedsAttention,
+                count: attention.length,
               ),
               const SizedBox(height: AppSpacing.sm),
               for (final item in attention) ...[
-                awayFromFab(HomeAttentionCard(item: item)),
+                HomeAttentionCard(item: item),
                 const SizedBox(height: AppSpacing.sm),
               ],
             ],
             if (comingUp.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.xs),
-              RegistrySectionHeader(
+              RegistryAuraSectionHeader(
                 key: const ValueKey<String>('home-coming-up-header'),
                 title: l10n.sectionComingUp,
               ),
               const SizedBox(height: AppSpacing.sm),
               for (var index = 0; index < comingUp.length; index++)
-                awayFromFab(
-                  HomeUpcomingItem(
-                    key: ValueKey<String>('upcoming-${comingUp[index].id}'),
-                    item: comingUp[index],
-                    isLast: index == comingUp.length - 1,
-                  ),
+                HomeUpcomingItem(
+                  key: ValueKey<String>('upcoming-${comingUp[index].id}'),
+                  item: comingUp[index],
+                  isLast: index == comingUp.length - 1,
                 ),
             ],
           ],
