@@ -18,26 +18,25 @@ class SubscriptionsScreen extends StatelessWidget {
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
-          AppSpacing.xxl + AppSpacing.xl,
+          AppSpacing.scrollFabClearance,
         ),
         children: [
           Text(
             l10n.subscriptionsTitle,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           RegistryEmptyState(
             title: l10n.subscriptionsEmptyTitle,
             message: l10n.subscriptionsEmptyMessage,
-            icon: Icons.subscriptions_outlined,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          SizedBox(
-            width: double.infinity,
-            child: RegistryPrimaryButton(
-              key: const ValueKey<String>('subscriptions-add'),
-              label: l10n.addSubscription,
-              onPressed: () => AppRoutes.openAddSubscription(context),
+            illustration: const RegistrySubscriptionIllustration(),
+            action: SizedBox(
+              width: double.infinity,
+              child: RegistryPrimaryButton(
+                key: const ValueKey<String>('subscriptions-add'),
+                label: l10n.addSubscription,
+                onPressed: () => AppRoutes.openAddSubscription(context),
+              ),
             ),
           ),
         ],

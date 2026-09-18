@@ -100,6 +100,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewAction => 'مراجعة';
 
   @override
+  String get actionNeeded => 'يلزم اتخاذ إجراء';
+
+  @override
+  String get dueToday => 'مستحق اليوم';
+
+  @override
+  String get oneDayRemaining => 'متبقٍ يوم واحد';
+
+  @override
+  String daysRemaining(int count) {
+    return 'متبقٍ $count أيام';
+  }
+
+  @override
+  String get oneDayOverdue => 'متأخر يومًا واحدًا';
+
+  @override
+  String daysOverdue(int count) {
+    return 'متأخر $count أيام';
+  }
+
+  @override
   String get highImpactLabel => 'تأثير مرتفع';
 
   @override
@@ -110,6 +132,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get summaryNeedsAttention => 'يحتاج انتباهك';
+
+  @override
+  String get pulseEyebrow => 'الإجراء التالي';
+
+  @override
+  String get countdownDayUnit => 'يوم';
+
+  @override
+  String get countdownDaysUnit => 'أيام';
+
+  @override
+  String get countdownTodayUnit => 'اليوم';
+
+  @override
+  String get countdownOverdueUnit => 'متأخر';
+
+  @override
+  String get addSheetDocumentSubtitle => 'جوازات السفر والرخص والسجلات الأخرى.';
+
+  @override
+  String get addSheetSubscriptionSubtitle =>
+      'الرسوم والعضويات التي تريد مراجعتها.';
+
+  @override
+  String documentsSummary(int count) {
+    return '$count محفوظ';
+  }
+
+  @override
+  String documentsAttentionSummary(int count) {
+    return '$count يحتاج انتباهك';
+  }
 
   @override
   String get sectionNeedsAttention => 'يحتاج انتباهك';

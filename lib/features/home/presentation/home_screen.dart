@@ -4,11 +4,12 @@ import 'package:the_registry/core/widgets/registry_empty_state.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/features/home/data/mock_registry_catalog.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
+import 'package:the_registry/features/home/widgets/home_attention_card.dart';
 import 'package:the_registry/features/home/widgets/home_header.dart';
-import 'package:the_registry/features/home/widgets/home_metric_card.dart';
+import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
 import 'package:the_registry/features/home/widgets/home_search_field.dart';
+import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
 import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
-import 'package:the_registry/features/home/widgets/registry_item_card.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,13 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  void _onFilter() {
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(l10n.filtersComingSoon)));
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -57,8 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     final hero = visible.where((item) => item.isHero).firstOrNull;
-    final attention = visible.where((item) => item.needsAttention).toList();
-    final comingUp = visible.where((item) => !item.needsAttention).toList();
+    final attention = MockRegistryCatalog.byImpact(
+      visible.where((item) => item.needsAttention),
+    );
+    final comingUp = MockRegistryCatalog.byUpcomingDate(
+      visible.where((item) => !item.needsAttention),
+    );
     final documentCount = allItems
         .where((item) => item.type == RegistryItemType.document)
         .length;
@@ -66,6 +64,16 @@ class _HomeScreenState extends State<HomeScreen> {
         .where((item) => item.type == RegistryItemType.subscription)
         .length;
     final attentionCount = allItems.where((item) => item.needsAttention).length;
+    final fabGutter = AppSpacing.useExtendedFab(context)
+        ? 0.0
+        : AppSpacing.minTapTarget + AppSpacing.sm;
+
+    Widget awayFromFab(Widget child) {
+      return Padding(
+        padding: EdgeInsetsDirectional.only(end: fabGutter),
+        child: child,
+      );
+    }
 
     return SafeArea(
       child: ListView(
@@ -73,13 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
-          AppSpacing.xxl + AppSpacing.xl,
+          AppSpacing.scrollFabClearance,
         ),
         children: [
           const HomeHeader(),
+          const SizedBox(height: AppSpacing.sm),
+          HomeSearchField(controller: _searchController),
           const SizedBox(height: AppSpacing.md),
-          HomeSearchField(controller: _searchController, onFilter: _onFilter),
-          const SizedBox(height: AppSpacing.sectionGap),
           if (visible.isEmpty)
             RegistryEmptyState(
               title: l10n.searchNoResultsTitle,
@@ -88,53 +96,47 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           else ...[
             if (hero != null) ...[
-              PriorityHeroCard(item: hero),
+              PriorityHeroCard(
+                key: const ValueKey<String>('home-hero'),
+                item: hero,
+              ),
               const SizedBox(height: AppSpacing.md),
             ],
-            Row(
-              children: [
-                Expanded(
-                  child: HomeMetricCard(
-                    title: l10n.summaryDocuments,
-                    value: '$documentCount',
-                    icon: Icons.folder_outlined,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: HomeMetricCard(
-                    title: l10n.summarySubscriptions,
-                    value: '$subscriptionCount',
-                    icon: Icons.subscriptions_outlined,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: HomeMetricCard(
-                    title: l10n.summaryNeedsAttention,
-                    value: '$attentionCount',
-                    icon: Icons.priority_high_rounded,
-                  ),
-                ),
-              ],
+            awayFromFab(
+              HomeMetricsRow(
+                key: const ValueKey<String>('home-metrics'),
+                documentCount: documentCount,
+                subscriptionCount: subscriptionCount,
+                attentionCount: attentionCount,
+              ),
             ),
             if (attention.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.sectionGap),
-              RegistrySectionHeader(title: l10n.sectionNeedsAttention),
+              const SizedBox(height: AppSpacing.md),
+              RegistrySectionHeader(
+                key: const ValueKey<String>('home-attention-header'),
+                title: l10n.sectionNeedsAttention,
+              ),
               const SizedBox(height: AppSpacing.sm),
               for (final item in attention) ...[
-                RegistryItemCard(item: item),
+                awayFromFab(HomeAttentionCard(item: item)),
                 const SizedBox(height: AppSpacing.sm),
               ],
             ],
             if (comingUp.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.md),
-              RegistrySectionHeader(title: l10n.sectionComingUp),
+              const SizedBox(height: AppSpacing.xs),
+              RegistrySectionHeader(
+                key: const ValueKey<String>('home-coming-up-header'),
+                title: l10n.sectionComingUp,
+              ),
               const SizedBox(height: AppSpacing.sm),
-              for (final item in comingUp) ...[
-                RegistryItemCard(item: item),
-                const SizedBox(height: AppSpacing.sm),
-              ],
+              for (var index = 0; index < comingUp.length; index++)
+                awayFromFab(
+                  HomeUpcomingItem(
+                    key: ValueKey<String>('upcoming-${comingUp[index].id}'),
+                    item: comingUp[index],
+                    isLast: index == comingUp.length - 1,
+                  ),
+                ),
             ],
           ],
         ],

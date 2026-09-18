@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/navigation/app_routes.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_bottom_sheet_action.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 abstract final class AddItemSheet {
@@ -35,12 +36,11 @@ abstract final class AddItemSheet {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
-              ListTile(
+              RegistryBottomSheetAction(
                 key: const ValueKey<String>('add-document'),
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.description_outlined),
-                title: Text(l10n.addDocument),
-                minVerticalPadding: AppSpacing.md,
+                icon: Icons.description_outlined,
+                title: l10n.addDocument,
+                subtitle: l10n.addSheetDocumentSubtitle,
                 onTap: () async {
                   Navigator.of(sheetContext).pop();
                   final saved = await AppRoutes.openAddDocument(context);
@@ -49,12 +49,12 @@ abstract final class AddItemSheet {
                   }
                 },
               ),
-              ListTile(
+              const SizedBox(height: AppSpacing.sm),
+              RegistryBottomSheetAction(
                 key: const ValueKey<String>('add-subscription'),
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.subscriptions_outlined),
-                title: Text(l10n.addSubscription),
-                minVerticalPadding: AppSpacing.md,
+                icon: Icons.subscriptions_outlined,
+                title: l10n.addSubscription,
+                subtitle: l10n.addSheetSubscriptionSubtitle,
                 onTap: () {
                   Navigator.of(sheetContext).pop();
                   AppRoutes.openAddSubscription(context);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
+import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 
 enum RegistryStatus { urgent, upcoming, active, expired }
@@ -21,20 +22,33 @@ class RegistryStatusChip extends StatelessWidget {
 
     return Semantics(
       label: label,
-      child: Chip(
-        visualDensity: VisualDensity.compact,
-        materialTapTargetSize: MaterialTapTargetSize.padded,
-        backgroundColor: palette.background,
-        avatar: Icon(
-          palette.icon,
-          size: AppSpacing.md,
-          color: palette.foreground,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: palette.background,
+          borderRadius: AppRadius.chipBorder,
         ),
-        label: Text(
-          label,
-          style: Theme.of(
-            context,
-          ).textTheme.labelMedium?.copyWith(color: palette.foreground),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xxs,
+          ),
+          child: Wrap(
+            spacing: AppSpacing.xxs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Icon(
+                palette.icon,
+                size: AppSpacing.md,
+                color: palette.foreground,
+              ),
+              Text(
+                label,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.copyWith(color: palette.foreground),
+              ),
+            ],
+          ),
         ),
       ),
     );

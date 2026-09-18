@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 abstract final class AppRadius {
   static const double sm = 8;
   static const double md = 12;
-  static const double card = 18;
+  static const double card = 20;
+  static const double lg = 24;
   static const double chip = 100;
-  static const double button = 12;
+  static const double button = 14;
 
   static const BorderRadius cardBorder = BorderRadius.all(
     Radius.circular(card),
   );
+  static const BorderRadius lgBorder = BorderRadius.all(Radius.circular(lg));
   static const BorderRadius chipBorder = BorderRadius.all(
     Radius.circular(chip),
   );

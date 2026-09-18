@@ -103,6 +103,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reviewAction => 'Examiner';
 
   @override
+  String get actionNeeded => 'Action requise';
+
+  @override
+  String get dueToday => 'Échéance aujourd’hui';
+
+  @override
+  String get oneDayRemaining => '1 jour restant';
+
+  @override
+  String daysRemaining(int count) {
+    return '$count jours restants';
+  }
+
+  @override
+  String get oneDayOverdue => '1 jour de retard';
+
+  @override
+  String daysOverdue(int count) {
+    return '$count jours de retard';
+  }
+
+  @override
   String get highImpactLabel => 'Impact élevé';
 
   @override
@@ -113,6 +135,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get summaryNeedsAttention => 'À traiter';
+
+  @override
+  String get pulseEyebrow => 'Prochaine action';
+
+  @override
+  String get countdownDayUnit => 'jour';
+
+  @override
+  String get countdownDaysUnit => 'jours';
+
+  @override
+  String get countdownTodayUnit => 'aujourd’hui';
+
+  @override
+  String get countdownOverdueUnit => 'retard';
+
+  @override
+  String get addSheetDocumentSubtitle =>
+      'Passeports, permis et autres documents.';
+
+  @override
+  String get addSheetSubscriptionSubtitle =>
+      'Prélèvements et abonnements à revoir.';
+
+  @override
+  String documentsSummary(int count) {
+    return '$count enregistrés';
+  }
+
+  @override
+  String documentsAttentionSummary(int count) {
+    return '$count à traiter';
+  }
 
   @override
   String get sectionNeedsAttention => 'Nécessite votre attention';

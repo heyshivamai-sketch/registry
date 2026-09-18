@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/navigation/add_item_sheet.dart';
+import 'package:the_registry/app/theme/app_motion.dart';
+import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscriptions_screen.dart';
@@ -18,6 +20,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final extended = AppSpacing.useExtendedFab(context);
 
     return Scaffold(
       body: IndexedStack(
@@ -28,21 +31,23 @@ class _AppShellState extends State<AppShell> {
           SubscriptionsScreen(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        key: const ValueKey<String>('home-fab'),
-        tooltip: l10n.addFabTooltip,
-        onPressed: () => AddItemSheet.show(
-          context,
-          onDocumentSaved: () {
-            if (mounted) {
-              setState(() => _index = 1);
-            }
-          },
-        ),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: extended
+          ? FloatingActionButton.extended(
+              key: const ValueKey<String>('home-fab'),
+              tooltip: l10n.addFabTooltip,
+              onPressed: _openAdd,
+              icon: const Icon(Icons.add),
+              label: Text(l10n.addFabTooltip),
+            )
+          : FloatingActionButton(
+              key: const ValueKey<String>('home-fab'),
+              tooltip: l10n.addFabTooltip,
+              onPressed: _openAdd,
+              child: const Icon(Icons.add),
+            ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
+        animationDuration: AppMotion.short,
         onDestinationSelected: (index) => setState(() => _index = index),
         destinations: [
           NavigationDestination(
@@ -62,6 +67,17 @@ class _AppShellState extends State<AppShell> {
           ),
         ],
       ),
+    );
+  }
+
+  void _openAdd() {
+    AddItemSheet.show(
+      context,
+      onDocumentSaved: () {
+        if (mounted) {
+          setState(() => _index = 1);
+        }
+      },
     );
   }
 }

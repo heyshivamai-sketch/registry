@@ -65,6 +65,17 @@ abstract final class MockRegistryCatalog {
     return [...source]..sort((a, b) => b.impactScore.compareTo(a.impactScore));
   }
 
+  /// Nearest action/renewal date first. Ties fall back to the due date.
+  static List<RegistryItem> byUpcomingDate(Iterable<RegistryItem> source) {
+    return [...source]..sort((a, b) {
+      final byAction = a.actionDate.compareTo(b.actionDate);
+      if (byAction != 0) {
+        return byAction;
+      }
+      return a.dueDate.compareTo(b.dueDate);
+    });
+  }
+
   static bool matches(RegistryItem item, String query, AppLocalizations l10n) {
     final needle = query.trim().toLowerCase();
     if (needle.isEmpty) {

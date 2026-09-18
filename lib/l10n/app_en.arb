@@ -38,10 +38,45 @@
   "filterTooltip": "Filter",
   "filtersComingSoon": "Filters will be available in a later version.",
   "reviewAction": "Review",
+  "actionNeeded": "Action needed",
+  "dueToday": "Due today",
+  "oneDayRemaining": "1 day remaining",
+  "daysRemaining": "{count} days remaining",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "oneDayOverdue": "1 day overdue",
+  "daysOverdue": "{count} days overdue",
+  "@daysOverdue": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "highImpactLabel": "High impact",
   "summaryDocuments": "Documents",
   "summarySubscriptions": "Subscriptions",
   "summaryNeedsAttention": "Needs attention",
+  "pulseEyebrow": "Next action",
+  "countdownDayUnit": "day",
+  "countdownDaysUnit": "days",
+  "countdownTodayUnit": "today",
+  "countdownOverdueUnit": "overdue",
+  "addSheetDocumentSubtitle": "Passports, licences and other records.",
+  "addSheetSubscriptionSubtitle": "Charges and memberships you want to review.",
+  "documentsSummary": "{count} saved",
+  "@documentsSummary": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAttentionSummary": "{count} need attention",
+  "@documentsAttentionSummary": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "sectionNeedsAttention": "Needs your attention",
   "sectionComingUp": "Coming up",
   "startByDate": "Start by {date}",

@@ -4,6 +4,7 @@ import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
+import 'package:the_registry/features/home/widgets/home_attention_card.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class RegistryItemCard extends StatelessWidget {
@@ -14,6 +15,10 @@ class RegistryItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (item.needsAttention) {
+      return HomeAttentionCard(item: item, onTap: onTap);
+    }
+
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -26,6 +31,7 @@ class RegistryItemCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.cardBorder),
       child: InkWell(
         onTap: onTap ?? () {},
         child: Padding(
@@ -85,9 +91,7 @@ class RegistryItemCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xs),
                     RegistryStatusChip(
                       status: item.status,
-                      label: item.impact == RegistryImpact.high
-                          ? l10n.highImpactLabel
-                          : item.statusLabel(l10n),
+                      label: item.statusLabel(l10n),
                     ),
                   ],
                 ),

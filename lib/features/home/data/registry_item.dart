@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 enum RegistryItemType { document, subscription }
@@ -83,6 +84,49 @@ class RegistryItem {
     return type == RegistryItemType.subscription
         ? l10n.nextChargeDate(formattedDate)
         : l10n.expiresDate(formattedDate);
+  }
+
+  String remainingLabel(AppLocalizations l10n, {DateTime? now}) {
+    final days = RegistryDateFormatter.daysUntil(actionDate, now: now);
+    if (days == 0) {
+      return l10n.dueToday;
+    }
+    if (days == 1) {
+      return l10n.oneDayRemaining;
+    }
+    if (days > 1) {
+      return l10n.daysRemaining(days);
+    }
+    if (days == -1) {
+      return l10n.oneDayOverdue;
+    }
+    return l10n.daysOverdue(-days);
+  }
+
+  int remainingDays({DateTime? now}) {
+    return RegistryDateFormatter.daysUntil(actionDate, now: now);
+  }
+
+  String countdownValueLabel({DateTime? now}) {
+    final days = remainingDays(now: now);
+    if (days == 0) {
+      return '0';
+    }
+    return '${days.abs()}';
+  }
+
+  String countdownUnitLabel(AppLocalizations l10n, {DateTime? now}) {
+    final days = remainingDays(now: now);
+    if (days == 0) {
+      return l10n.countdownTodayUnit;
+    }
+    if (days < 0) {
+      return l10n.countdownOverdueUnit;
+    }
+    if (days.abs() == 1) {
+      return l10n.countdownDayUnit;
+    }
+    return l10n.countdownDaysUnit;
   }
 
   IconData get icon {

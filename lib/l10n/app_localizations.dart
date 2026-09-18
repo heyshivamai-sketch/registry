@@ -274,6 +274,42 @@ abstract class AppLocalizations {
   /// **'Review'**
   String get reviewAction;
 
+  /// No description provided for @actionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Action needed'**
+  String get actionNeeded;
+
+  /// No description provided for @dueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get dueToday;
+
+  /// No description provided for @oneDayRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day remaining'**
+  String get oneDayRemaining;
+
+  /// No description provided for @daysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days remaining'**
+  String daysRemaining(int count);
+
+  /// No description provided for @oneDayOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day overdue'**
+  String get oneDayOverdue;
+
+  /// No description provided for @daysOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days overdue'**
+  String daysOverdue(int count);
+
   /// No description provided for @highImpactLabel.
   ///
   /// In en, this message translates to:
@@ -297,6 +333,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needs attention'**
   String get summaryNeedsAttention;
+
+  /// No description provided for @pulseEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Next action'**
+  String get pulseEyebrow;
+
+  /// No description provided for @countdownDayUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get countdownDayUnit;
+
+  /// No description provided for @countdownDaysUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get countdownDaysUnit;
+
+  /// No description provided for @countdownTodayUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get countdownTodayUnit;
+
+  /// No description provided for @countdownOverdueUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'overdue'**
+  String get countdownOverdueUnit;
+
+  /// No description provided for @addSheetDocumentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Passports, licences and other records.'**
+  String get addSheetDocumentSubtitle;
+
+  /// No description provided for @addSheetSubscriptionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Charges and memberships you want to review.'**
+  String get addSheetSubscriptionSubtitle;
+
+  /// No description provided for @documentsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} saved'**
+  String documentsSummary(int count);
+
+  /// No description provided for @documentsAttentionSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} need attention'**
+  String documentsAttentionSummary(int count);
 
   /// No description provided for @sectionNeedsAttention.
   ///

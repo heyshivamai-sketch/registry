@@ -11,7 +11,11 @@ Widget wrapForScreenshot(Widget child) {
   return RepaintBoundary(key: screenshotRootKey, child: child);
 }
 
-Future<void> saveScreenshot(WidgetTester tester, String filename) async {
+Future<void> saveScreenshot(
+  WidgetTester tester,
+  String filename, {
+  String folder = 'add_document',
+}) async {
   await tester.pumpAndSettle();
   final boundary = tester.renderObject<RenderRepaintBoundary>(
     find.byKey(screenshotRootKey),
@@ -19,7 +23,7 @@ Future<void> saveScreenshot(WidgetTester tester, String filename) async {
   await tester.runAsync(() async {
     final image = await boundary.toImage(pixelRatio: 1.5);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final file = File('screenshots/add_document/$filename.png');
+    final file = File('screenshots/$folder/$filename.png');
     file.parent.createSync(recursive: true);
     await file.writeAsBytes(bytes!.buffer.asUint8List());
   });

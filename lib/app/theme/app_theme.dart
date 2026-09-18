@@ -11,6 +11,7 @@ abstract final class AppTheme {
     return _build(
       colorScheme: _lightColorScheme,
       statusColors: AppStatusColors.light,
+      brandColors: AppBrandColors.light,
     );
   }
 
@@ -18,12 +19,14 @@ abstract final class AppTheme {
     return _build(
       colorScheme: _darkColorScheme,
       statusColors: AppStatusColors.dark,
+      brandColors: AppBrandColors.dark,
     );
   }
 
   static ThemeData _build({
     required ColorScheme colorScheme,
     required AppStatusColors statusColors,
+    required AppBrandColors brandColors,
   }) {
     final textTheme = AppTypography.textTheme(colorScheme);
 
@@ -33,7 +36,7 @@ abstract final class AppTheme {
       colorScheme: colorScheme,
       textTheme: textTheme,
       scaffoldBackgroundColor: colorScheme.surface,
-      extensions: <ThemeExtension<dynamic>>[statusColors],
+      extensions: <ThemeExtension<dynamic>>[statusColors, brandColors],
       appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -50,6 +53,49 @@ abstract final class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.cardBorder,
           side: BorderSide(color: colorScheme.outlineVariant),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        elevation: 2,
+        focusElevation: 3,
+        hoverElevation: 3,
+        highlightElevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+        ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        elevation: 0,
+        height: 68,
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        indicatorColor: colorScheme.primaryContainer,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: selected
+                ? colorScheme.onPrimaryContainer
+                : colorScheme.onSurfaceVariant,
+          );
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return textTheme.labelMedium?.copyWith(
+            color: selected
+                ? colorScheme.primary
+                : colorScheme.onSurfaceVariant,
+          );
+        }),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.lg),
+          ),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -101,8 +147,8 @@ abstract final class AppTheme {
     onSecondary: AppColors.onSecondary,
     secondaryContainer: AppColors.secondaryContainer,
     onSecondaryContainer: AppColors.onSecondaryContainer,
-    tertiary: AppColors.secondary,
-    onTertiary: AppColors.onSecondary,
+    tertiary: AppColors.indigo,
+    onTertiary: AppColors.onPrimary,
     error: AppColors.urgent,
     onError: AppColors.onPrimary,
     surface: AppColors.background,
@@ -127,8 +173,8 @@ abstract final class AppTheme {
     onSecondary: Color(0xFF04332F),
     secondaryContainer: Color(0xFF1A5F58),
     onSecondaryContainer: Color(0xFFCDECEA),
-    tertiary: Color(0xFF7ED3CA),
-    onTertiary: Color(0xFF04332F),
+    tertiary: Color(0xFF9AA8F0),
+    onTertiary: Color(0xFF10243F),
     error: Color(0xFFFF8A80),
     onError: Color(0xFF4E1C1C),
     surface: AppColors.darkBackground,

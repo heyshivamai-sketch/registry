@@ -235,6 +235,15 @@ void main() {
     expect(find.byType(DocumentListCard), findsOneWidget);
     expect(find.text('Family passport'), findsOneWidget);
     expect(find.text('Document saved to this session.'), findsOneWidget);
+    expect(find.textContaining('1 saved'), findsOneWidget);
+    expect(find.textContaining('need attention'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(DocumentListCard),
+        matching: find.byType(Icon),
+      ),
+      findsWidgets,
+    );
   });
 
   testWidgets('Saved card shows action date and expiry separately', (

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/app/theme/app_colors.dart';
+import 'package:the_registry/core/widgets/registry_metric.dart';
+
+enum HomeMetricTone { documents, subscriptions, attention }
 
 class HomeMetricCard extends StatelessWidget {
   const HomeMetricCard({
@@ -8,49 +10,32 @@ class HomeMetricCard extends StatelessWidget {
     required this.title,
     required this.value,
     required this.icon,
+    required this.tone,
+    this.inline = false,
   });
 
   final String title;
   final String value;
   final IconData icon;
+  final HomeMetricTone tone;
+  final bool inline;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final status = AppStatusColors.of(context);
+    final color = switch (tone) {
+      HomeMetricTone.documents => colorScheme.onPrimaryContainer,
+      HomeMetricTone.subscriptions => colorScheme.onSecondaryContainer,
+      HomeMetricTone.attention => status.onUrgentContainer,
+    };
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xs),
-                child: Icon(
-                  icon,
-                  size: AppSpacing.md,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(value, style: theme.textTheme.headlineMedium),
-            const SizedBox(height: AppSpacing.xxs),
-            Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall,
-            ),
-          ],
-        ),
-      ),
+    return RegistryMetric(
+      label: title,
+      value: value,
+      icon: icon,
+      color: color,
+      inline: inline,
     );
   }
 }

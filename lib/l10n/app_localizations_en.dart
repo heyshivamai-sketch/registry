@@ -101,6 +101,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewAction => 'Review';
 
   @override
+  String get actionNeeded => 'Action needed';
+
+  @override
+  String get dueToday => 'Due today';
+
+  @override
+  String get oneDayRemaining => '1 day remaining';
+
+  @override
+  String daysRemaining(int count) {
+    return '$count days remaining';
+  }
+
+  @override
+  String get oneDayOverdue => '1 day overdue';
+
+  @override
+  String daysOverdue(int count) {
+    return '$count days overdue';
+  }
+
+  @override
   String get highImpactLabel => 'High impact';
 
   @override
@@ -111,6 +133,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get summaryNeedsAttention => 'Needs attention';
+
+  @override
+  String get pulseEyebrow => 'Next action';
+
+  @override
+  String get countdownDayUnit => 'day';
+
+  @override
+  String get countdownDaysUnit => 'days';
+
+  @override
+  String get countdownTodayUnit => 'today';
+
+  @override
+  String get countdownOverdueUnit => 'overdue';
+
+  @override
+  String get addSheetDocumentSubtitle =>
+      'Passports, licences and other records.';
+
+  @override
+  String get addSheetSubscriptionSubtitle =>
+      'Charges and memberships you want to review.';
+
+  @override
+  String documentsSummary(int count) {
+    return '$count saved';
+  }
+
+  @override
+  String documentsAttentionSummary(int count) {
+    return '$count need attention';
+  }
 
   @override
   String get sectionNeedsAttention => 'Needs your attention';
