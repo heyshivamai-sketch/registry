@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
+import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
+import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
 import 'package:the_registry/features/documents/widgets/document_list_card.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -59,9 +62,24 @@ void main() {
 
   Future<void> openDetail(WidgetTester tester) async {
     await openDocuments(tester);
-    await tester.ensureVisible(find.byType(DocumentListCard));
-    await tester.tap(find.byType(DocumentListCard));
+    final featured = find.byKey(
+      const ValueKey<String>('featured-document-pass'),
+    );
+    if (featured.evaluate().isNotEmpty) {
+      await tester.ensureVisible(featured);
+      await tester.tap(featured);
+    } else {
+      await tester.ensureVisible(find.byType(DocumentListCard));
+      await tester.tap(find.byType(DocumentListCard));
+    }
     await tester.pumpAndSettle();
+  }
+
+  Finder featuredStatus(String label) {
+    return find.descendant(
+      of: find.byKey(const ValueKey<String>('featured-document-pass')),
+      matching: find.text(label),
+    );
   }
 
   Future<void> openEdit(WidgetTester tester) async {
@@ -88,7 +106,7 @@ void main() {
     await openDetail(tester);
 
     expect(find.byType(DocumentDetailScreen), findsOneWidget);
-    expect(find.text('Document details'), findsOneWidget);
+    expect(find.text('Document pass'), findsOneWidget);
     expect(find.text('Family passport'), findsWidgets);
     expect(find.text('Passport'), findsWidgets);
   });
@@ -117,7 +135,7 @@ void main() {
     await openDetail(tester);
 
     expect(find.textContaining('Amira'), findsWidgets);
-    expect(find.text('••••••5678'), findsOneWidget);
+    expect(find.text('••••••5678'), findsWidgets);
     expect(find.text('Deadline health'), findsOneWidget);
     expect(
       find.text(
@@ -126,7 +144,7 @@ void main() {
       findsWidgets,
     );
     expect(find.text('No reminders selected'), findsOneWidget);
-    expect(find.text('No photo attached'), findsOneWidget);
+    expect(find.text('No photo attached'), findsNothing);
     expect(find.text('No renewals recorded yet.'), findsOneWidget);
     expect(find.text('Issued by'), findsNothing);
     expect(find.text('Cost of lapsing'), findsNothing);
@@ -149,13 +167,16 @@ void main() {
         },
       ),
     );
+    expect(documents.documents.single.hasAttachment, isTrue);
+    expect(documents.documents.single.reminders, hasLength(2));
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openDetail(tester);
-
-    expect(find.byType(Image), findsOneWidget);
+    expect(find.byType(DocumentDetailScreen), findsOneWidget);
     expect(find.text('On action date'), findsOneWidget);
     expect(find.text('7 days before'), findsOneWidget);
+    await reveal(tester, find.byKey(const ValueKey<String>('open-attachment')));
+    expect(find.byType(Image), findsWidgets);
   });
 
   testWidgets('Edit action prefills every supported field and image', (
@@ -316,7 +337,10 @@ void main() {
 
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
-    expect(find.byType(DocumentListCard), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+      findsOneWidget,
+    );
     expect(find.text('Updated passport'), findsOneWidget);
   });
 
@@ -389,10 +413,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('المستندات'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(DocumentListCard));
+    await tester.tap(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('تفاصيل المستند'), findsOneWidget);
+    expect(find.text('بطاقة المستند'), findsOneWidget);
     expect(
       Directionality.of(tester.element(find.byType(DocumentDetailScreen))),
       TextDirection.rtl,
@@ -509,14 +535,8 @@ void main() {
     await openDocuments(tester);
 
     expect(find.text('0 need attention'), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byType(DocumentListCard),
-        matching: find.text('Active'),
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('Action needed'), findsNothing);
+    expect(featuredStatus('Active'), findsOneWidget);
+    expect(featuredStatus('Action needed'), findsNothing);
   });
 
   testWidgets('High-impact Action needed document counts as attention', (
@@ -535,13 +555,7 @@ void main() {
     await openDocuments(tester);
 
     expect(find.text('1 needs attention'), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byType(DocumentListCard),
-        matching: find.text('Action needed'),
-      ),
-      findsOneWidget,
-    );
+    expect(featuredStatus('Action needed'), findsOneWidget);
   });
 
   testWidgets('Overdue document is counted as needing attention', (
@@ -560,13 +574,7 @@ void main() {
     await openDocuments(tester);
 
     expect(find.text('1 needs attention'), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byType(DocumentListCard),
-        matching: find.text('Overdue'),
-      ),
-      findsOneWidget,
-    );
+    expect(featuredStatus('Overdue'), findsOneWidget);
   });
 
   testWidgets(
@@ -592,15 +600,11 @@ void main() {
       await tester.pumpAndSettle();
       await openDocuments(tester);
       expect(find.text('1 needs attention'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(DocumentListCard),
-          matching: find.text('Action needed'),
-        ),
-        findsOneWidget,
-      );
+      expect(featuredStatus('Action needed'), findsOneWidget);
 
-      await tester.tap(find.byType(DocumentListCard));
+      await tester.tap(
+        find.byKey(const ValueKey<String>('featured-document-pass')),
+      );
       await tester.pumpAndSettle();
       await reveal(
         tester,
@@ -622,14 +626,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('0 need attention'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(DocumentListCard),
-          matching: find.text('Active'),
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('Action needed'), findsNothing);
+      expect(featuredStatus('Active'), findsOneWidget);
+      expect(featuredStatus('Action needed'), findsNothing);
     },
   );
 
@@ -666,7 +664,9 @@ void main() {
     await tester.pumpAndSettle();
 
     for (final entry in cases.entries) {
-      await tester.tap(find.text('Passport ${entry.key}'));
+      final name = find.text('Passport ${entry.key}');
+      await tester.ensureVisible(name);
+      await tester.tap(name);
       await tester.pumpAndSettle();
       expect(find.text(entry.value), findsOneWidget);
       await tester.tap(find.byType(BackButton));
@@ -688,5 +688,347 @@ void main() {
     expect(edit.isDirty, isFalse);
     edit.setName('Other');
     expect(edit.isDirty, isTrue);
+  });
+
+  Future<void> seedWallet(InMemoryDocumentRepository documents) async {
+    final today = dateOnlyToday();
+    await documents.save(
+      sampleDocument(
+        id: 'active',
+        name: 'Active warranty',
+        category: DocumentCategory.warranty,
+        expiryDate: today.add(const Duration(days: 400)),
+        actionDate: today.add(const Duration(days: 300)),
+        impact: DocumentImpact.low,
+      ),
+    );
+    await documents.save(
+      sampleDocument(
+        id: 'upcoming',
+        name: 'Upcoming certificate',
+        category: DocumentCategory.certificate,
+        expiryDate: today.add(const Duration(days: 80)),
+        actionDate: today.add(const Duration(days: 20)),
+      ),
+    );
+    await documents.save(
+      sampleDocument(
+        id: 'urgent',
+        name: 'Urgent licence',
+        category: DocumentCategory.drivingLicence,
+        expiryDate: today.add(const Duration(days: 20)),
+        actionDate: today.subtract(const Duration(days: 1)),
+      ),
+    );
+    await documents.save(
+      sampleDocument(
+        id: 'overdue',
+        name: 'Overdue visa',
+        category: DocumentCategory.visaResidence,
+        expiryDate: today.subtract(const Duration(days: 2)),
+        actionDate: today.subtract(const Duration(days: 10)),
+      ),
+    );
+  }
+
+  testWidgets('Empty documents wallet shows premium empty state', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+
+    expect(find.text('Digital wallet'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('documents-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('No documents yet'), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('documents-add')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+      findsNothing,
+    );
+  });
+
+  testWidgets(
+    'Populated wallet features overdue pass and excludes it from cards',
+    (tester) async {
+      tester.view.physicalSize = const Size(400, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await seedWallet(documents);
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openDocuments(tester);
+
+      expect(
+        find.byKey(const ValueKey<String>('featured-document-pass')),
+        findsOneWidget,
+      );
+      expect(featuredStatus('Overdue'), findsOneWidget);
+      expect(find.text('Overdue visa'), findsOneWidget);
+      expect(find.byType(DocumentListCard), findsNWidgets(3));
+      expect(
+        find.descendant(
+          of: find.byType(DocumentListCard),
+          matching: find.text('Overdue visa'),
+        ),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('Featured pass opens real document detail', (tester) async {
+    await documents.save(sampleDocument());
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDetail(tester);
+    expect(find.byType(DocumentDetailScreen), findsOneWidget);
+    expect(find.text('Verified details'), findsOneWidget);
+  });
+
+  testWidgets('Search, clear and empty results do not mutate repository', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await seedWallet(documents);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('documents-search')),
+      'licence',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Urgent licence'), findsOneWidget);
+    expect(find.text('Overdue visa'), findsNothing);
+    expect(documents.documents, hasLength(4));
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('documents-search')),
+      'zzzz-no-match',
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('documents-filter-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('No matching documents'), findsOneWidget);
+    expect(find.text('No documents yet'), findsNothing);
+
+    await tester.tap(
+      find.byKey(const ValueKey<String>('documents-search-clear')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Overdue visa'), findsOneWidget);
+    expect(documents.documents, hasLength(4));
+  });
+
+  testWidgets('Search query survives opening and returning from detail', (
+    tester,
+  ) async {
+    await documents.save(sampleDocument());
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('documents-search')),
+      'Family',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<TextField>(
+            find.byKey(const ValueKey<String>('documents-search')),
+          )
+          .controller!
+          .text,
+      'Family',
+    );
+  });
+
+  testWidgets('Status filters use DocumentStatus.resolve', (tester) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await seedWallet(documents);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+
+    Future<void> select(String key, String visible, String hidden) async {
+      await tester.tap(find.byKey(ValueKey<String>(key)));
+      await tester.pumpAndSettle();
+      expect(find.text(visible), findsOneWidget);
+      expect(find.text(hidden), findsNothing);
+    }
+
+    await select('filter-action', 'Urgent licence', 'Overdue visa');
+    await select('filter-upcoming', 'Upcoming certificate', 'Urgent licence');
+    await select('filter-active', 'Active warranty', 'Upcoming certificate');
+    await select('filter-overdue', 'Overdue visa', 'Active warranty');
+    await tester.tap(find.byKey(const ValueKey<String>('filter-all')));
+    await tester.pumpAndSettle();
+    expect(find.text('Overdue visa'), findsOneWidget);
+    expect(find.text('Active warranty'), findsOneWidget);
+  });
+
+  testWidgets('Digital pass hides missing optional fields', (tester) async {
+    await documents.save(
+      sampleDocument(
+        ownerName: null,
+        documentNumber: null,
+        issuingAuthority: null,
+        attachmentBytes: null,
+      ),
+    );
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+    expect(find.text('Amira'), findsNothing);
+    expect(find.text('••••••5678'), findsNothing);
+    await openDetail(tester);
+    expect(find.text('Owner'), findsNothing);
+    expect(find.text('Issued by'), findsNothing);
+    expect(find.byKey(const ValueKey<String>('quick-view-scan')), findsNothing);
+  });
+
+  testWidgets('Detail sections, masked number and attachment preview', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await documents.save(sampleDocument(attachmentBytes: kTinyPngBytes));
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDetail(tester);
+
+    expect(find.text('Deadline health'), findsOneWidget);
+    expect(find.text('Document information'), findsOneWidget);
+    expect(find.text('Reminders'), findsOneWidget);
+    expect(find.text('••••••5678'), findsWidgets);
+    expect(find.text('AB12345678'), findsNothing);
+    await reveal(tester, find.byKey(const ValueKey<String>('open-attachment')));
+    await tester.tap(find.byKey(const ValueKey<String>('open-attachment')));
+    await tester.pumpAndSettle();
+    expect(find.byType(DocumentAttachmentPreviewPage), findsOneWidget);
+  });
+
+  testWidgets('Renewal history is newest first', (tester) async {
+    tester.view.physicalSize = const Size(400, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await documents.save(
+      sampleDocument(
+        renewalHistory: [
+          RenewalHistoryEntry(
+            id: 'old',
+            renewedOn: DateTime(2024, 1, 2),
+            previousExpiryDate: DateTime(2022, 1, 1),
+            newExpiryDate: DateTime(2024, 1, 1),
+            note: 'Older renewal',
+          ),
+          RenewalHistoryEntry(
+            id: 'new',
+            renewedOn: DateTime(2025, 2, 2),
+            previousExpiryDate: DateTime(2024, 1, 1),
+            newExpiryDate: DateTime(2025, 2, 1),
+            note: 'Newer renewal',
+          ),
+        ],
+      ),
+    );
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDetail(tester);
+    await reveal(tester, find.text('Newer renewal'));
+    final newer = tester.getTopLeft(find.text('Newer renewal')).dy;
+    await reveal(tester, find.text('Older renewal'));
+    final older = tester.getTopLeft(find.text('Older renewal')).dy;
+    expect(newer, lessThan(older));
+    expect(find.text('01 Jan 2022'), findsOneWidget);
+    expect(find.text('01 Feb 2025'), findsOneWidget);
+  });
+
+  testWidgets('French detail dates include four-digit years', (tester) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await documents.save(sampleDocument());
+    await tester.pumpWidget(app(locale: const Locale('fr')));
+    await tester.pumpAndSettle();
+    await tester.tap(_navLabel('Documents'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        RegistryDateFormatter.dayMonthYear(DateTime(2027, 10, 5), 'fr'),
+      ),
+      findsWidgets,
+    );
+    expect(find.textContaining('2027'), findsWidgets);
+  });
+
+  testWidgets('Documents list clears the navigation dock and has no overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    final overflows = <FlutterErrorDetails>[];
+    final original = FlutterError.onError;
+    FlutterError.onError = (details) {
+      overflows.add(details);
+      original?.call(details);
+    };
+    addTearDown(() => FlutterError.onError = original);
+
+    await seedWallet(documents);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+
+    final list = tester.widget<ListView>(find.byType(ListView).first);
+    expect(
+      (list.padding as EdgeInsetsDirectional).bottom,
+      AppSpacing.scrollDockClearance,
+    );
+
+    tester.platformDispatcher.textScaleFactorTestValue = 1.8;
+    await tester.pumpAndSettle();
+    expect(
+      overflows.where((details) => details.toString().contains('overflowed')),
+      isEmpty,
+    );
   });
 }

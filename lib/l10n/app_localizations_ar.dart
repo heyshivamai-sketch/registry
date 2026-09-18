@@ -738,4 +738,45 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentPassLabel => 'ملخص المستند';
+
+  @override
+  String get documentsEyebrow => 'محفظة رقمية';
+
+  @override
+  String get documentsSearchPlaceholder => 'ابحث في مستنداتك';
+
+  @override
+  String get documentsFilterAll => 'الكل';
+
+  @override
+  String get documentsSearchEmptyTitle => 'لا توجد مستندات مطابقة';
+
+  @override
+  String get documentsSearchEmptyMessage =>
+      'جرّب اسمًا أو نوعًا أو مالكًا آخر، أو امسح البحث لعرض محفظتك.';
+
+  @override
+  String get documentsFilterEmptyTitle => 'لا شيء في هذا التصفية';
+
+  @override
+  String get documentsFilterEmptyMessage =>
+      'اختر حالة أخرى، أو حدد الكل لعرض كل المستندات المحفوظة.';
+
+  @override
+  String get documentsRemainingHeader => 'كل المستندات';
+
+  @override
+  String get documentPassTitle => 'بطاقة المستند';
+
+  @override
+  String get documentPassEyebrow => 'تفاصيل موثّقة';
+
+  @override
+  String get viewScan => 'عرض المسح';
+
+  @override
+  String get remindersTitle => 'التذكيرات';
+
+  @override
+  String get renewalHistoryEmptyTitle => 'لا توجد تجديدات بعد';
 }

@@ -1407,6 +1407,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Document summary'**
   String get documentPassLabel;
+
+  /// No description provided for @documentsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital wallet'**
+  String get documentsEyebrow;
+
+  /// No description provided for @documentsSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search your documents'**
+  String get documentsSearchPlaceholder;
+
+  /// No description provided for @documentsFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get documentsFilterAll;
+
+  /// No description provided for @documentsSearchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching documents'**
+  String get documentsSearchEmptyTitle;
+
+  /// No description provided for @documentsSearchEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different name, type or owner, or clear search to see your wallet.'**
+  String get documentsSearchEmptyMessage;
+
+  /// No description provided for @documentsFilterEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in this filter'**
+  String get documentsFilterEmptyTitle;
+
+  /// No description provided for @documentsFilterEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another status, or select All to see every saved document.'**
+  String get documentsFilterEmptyMessage;
+
+  /// No description provided for @documentsRemainingHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'All documents'**
+  String get documentsRemainingHeader;
+
+  /// No description provided for @documentPassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document pass'**
+  String get documentPassTitle;
+
+  /// No description provided for @documentPassEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified details'**
+  String get documentPassEyebrow;
+
+  /// No description provided for @viewScan.
+  ///
+  /// In en, this message translates to:
+  /// **'View scan'**
+  String get viewScan;
+
+  /// No description provided for @remindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get remindersTitle;
+
+  /// No description provided for @renewalHistoryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No renewals yet'**
+  String get renewalHistoryEmptyTitle;
 }
 
 class _AppLocalizationsDelegate

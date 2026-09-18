@@ -291,5 +291,18 @@
   "saveRenewal": "Save renewal",
   "viewAttachment": "View photo",
   "noPhotoAttached": "No photo attached",
-  "documentPassLabel": "Document summary"
+  "documentPassLabel": "Document summary",
+  "documentsEyebrow": "Digital wallet",
+  "documentsSearchPlaceholder": "Search your documents",
+  "documentsFilterAll": "All",
+  "documentsSearchEmptyTitle": "No matching documents",
+  "documentsSearchEmptyMessage": "Try a different name, type or owner, or clear search to see your wallet.",
+  "documentsFilterEmptyTitle": "Nothing in this filter",
+  "documentsFilterEmptyMessage": "Choose another status, or select All to see every saved document.",
+  "documentsRemainingHeader": "All documents",
+  "documentPassTitle": "Document pass",
+  "documentPassEyebrow": "Verified details",
+  "viewScan": "View scan",
+  "remindersTitle": "Reminders",
+  "renewalHistoryEmptyTitle": "No renewals yet"
 }

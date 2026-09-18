@@ -227,5 +227,18 @@
   "saveRenewal": "Enregistrer le renouvellement",
   "viewAttachment": "Voir la photo",
   "noPhotoAttached": "Aucune photo jointe",
-  "documentPassLabel": "Résumé du document"
+  "documentPassLabel": "Résumé du document",
+  "documentsEyebrow": "Portefeuille numérique",
+  "documentsSearchPlaceholder": "Rechercher vos documents",
+  "documentsFilterAll": "Tous",
+  "documentsSearchEmptyTitle": "Aucun document correspondant",
+  "documentsSearchEmptyMessage": "Essayez un autre nom, type ou titulaire, ou effacez la recherche pour voir votre portefeuille.",
+  "documentsFilterEmptyTitle": "Rien dans ce filtre",
+  "documentsFilterEmptyMessage": "Choisissez un autre statut, ou sélectionnez Tous pour voir chaque document enregistré.",
+  "documentsRemainingHeader": "Tous les documents",
+  "documentPassTitle": "Passe documentaire",
+  "documentPassEyebrow": "Détails vérifiés",
+  "viewScan": "Voir le scan",
+  "remindersTitle": "Rappels",
+  "renewalHistoryEmptyTitle": "Aucun renouvellement"
 }

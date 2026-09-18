@@ -49,95 +49,110 @@ class DocumentListCard extends StatelessWidget {
                 start: BorderSide(color: accent, width: 3),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RegistryIconBadge(
-                    icon: DocumentIcons.forCategory(document.category),
-                    background: colorScheme.primaryContainer,
-                    foreground: colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          DocumentCopy.category(l10n, document.category),
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: colorScheme.secondary,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: AppSpacing.minTapTarget,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RegistryIconBadge(
+                      icon: DocumentIcons.forCategory(document.category),
+                      background: colorScheme.primaryContainer,
+                      foreground: colorScheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            DocumentCopy.category(l10n, document.category),
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: colorScheme.secondary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          document.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleSmall,
-                        ),
-                        if (document.ownerName != null &&
-                            document.ownerName!.trim().isNotEmpty) ...[
                           const SizedBox(height: AppSpacing.xxs),
                           Text(
-                            document.ownerName!,
-                            maxLines: 1,
+                            document.name,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall,
+                            style: theme.textTheme.titleSmall,
                           ),
-                        ],
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          l10n.startByDate(actionDate),
-                          style: theme.textTheme.titleSmall,
-                        ),
-                        if (document.hasDistinctActionDate)
+                          if (document.ownerName != null &&
+                              document.ownerName!.trim().isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.xxs),
+                            Text(
+                              document.ownerName!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
+                          const SizedBox(height: AppSpacing.sm),
                           Text(
-                            l10n.expiresDate(expiryDate),
-                            style: theme.textTheme.bodySmall,
+                            l10n.startByDate(actionDate),
+                            style: theme.textTheme.titleSmall,
                           ),
-                        if (document.maskedDocumentNumber.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.xs),
-                          Semantics(
-                            label: l10n.maskedDocumentNumberLabel(
-                              document.maskedDocumentNumber,
+                          if (document.hasDistinctActionDate)
+                            Text(
+                              l10n.expiresDate(expiryDate),
+                              style: theme.textTheme.bodySmall,
                             ),
-                            child: Text(
-                              document.maskedDocumentNumber,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
+                          if (document.maskedDocumentNumber.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.xs),
+                            Semantics(
+                              label: l10n.maskedDocumentNumberLabel(
+                                document.maskedDocumentNumber,
                               ),
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: AppSpacing.xs),
-                        Wrap(
-                          spacing: AppSpacing.xs,
-                          runSpacing: AppSpacing.xs,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            RegistryStatusChip(
-                              status: registryStatus,
-                              label: DocumentStatus.label(l10n, registryStatus),
-                            ),
-                            if (document.hasAttachment)
-                              Semantics(
-                                label: l10n.hasAttachment,
-                                child: Icon(
-                                  Icons.attach_file_rounded,
-                                  size: AppSpacing.iconMd,
-                                  color: colorScheme.primary,
+                              child: Text(
+                                document.maskedDocumentNumber,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
                                 ),
                               ),
+                            ),
                           ],
-                        ),
-                      ],
+                          const SizedBox(height: AppSpacing.xs),
+                          Wrap(
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              RegistryStatusChip(
+                                status: registryStatus,
+                                label: DocumentStatus.label(
+                                  l10n,
+                                  registryStatus,
+                                ),
+                              ),
+                              if (document.hasAttachment)
+                                Semantics(
+                                  label: l10n.hasAttachment,
+                                  child: Icon(
+                                    Icons.attach_file_rounded,
+                                    size: AppSpacing.iconMd,
+                                    color: colorScheme.primary,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    if (onTap != null)
+                      Icon(
+                        Directionality.of(context) == TextDirection.rtl
+                            ? Icons.chevron_left_rounded
+                            : Icons.chevron_right_rounded,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

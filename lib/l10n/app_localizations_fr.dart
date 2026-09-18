@@ -748,4 +748,45 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get documentPassLabel => 'Résumé du document';
+
+  @override
+  String get documentsEyebrow => 'Portefeuille numérique';
+
+  @override
+  String get documentsSearchPlaceholder => 'Rechercher vos documents';
+
+  @override
+  String get documentsFilterAll => 'Tous';
+
+  @override
+  String get documentsSearchEmptyTitle => 'Aucun document correspondant';
+
+  @override
+  String get documentsSearchEmptyMessage =>
+      'Essayez un autre nom, type ou titulaire, ou effacez la recherche pour voir votre portefeuille.';
+
+  @override
+  String get documentsFilterEmptyTitle => 'Rien dans ce filtre';
+
+  @override
+  String get documentsFilterEmptyMessage =>
+      'Choisissez un autre statut, ou sélectionnez Tous pour voir chaque document enregistré.';
+
+  @override
+  String get documentsRemainingHeader => 'Tous les documents';
+
+  @override
+  String get documentPassTitle => 'Passe documentaire';
+
+  @override
+  String get documentPassEyebrow => 'Détails vérifiés';
+
+  @override
+  String get viewScan => 'Voir le scan';
+
+  @override
+  String get remindersTitle => 'Rappels';
+
+  @override
+  String get renewalHistoryEmptyTitle => 'Aucun renouvellement';
 }

@@ -227,5 +227,18 @@
   "saveRenewal": "حفظ التجديد",
   "viewAttachment": "عرض الصورة",
   "noPhotoAttached": "لا توجد صورة مرفقة",
-  "documentPassLabel": "ملخص المستند"
+  "documentPassLabel": "ملخص المستند",
+  "documentsEyebrow": "محفظة رقمية",
+  "documentsSearchPlaceholder": "ابحث في مستنداتك",
+  "documentsFilterAll": "الكل",
+  "documentsSearchEmptyTitle": "لا توجد مستندات مطابقة",
+  "documentsSearchEmptyMessage": "جرّب اسمًا أو نوعًا أو مالكًا آخر، أو امسح البحث لعرض محفظتك.",
+  "documentsFilterEmptyTitle": "لا شيء في هذا التصفية",
+  "documentsFilterEmptyMessage": "اختر حالة أخرى، أو حدد الكل لعرض كل المستندات المحفوظة.",
+  "documentsRemainingHeader": "كل المستندات",
+  "documentPassTitle": "بطاقة المستند",
+  "documentPassEyebrow": "تفاصيل موثّقة",
+  "viewScan": "عرض المسح",
+  "remindersTitle": "التذكيرات",
+  "renewalHistoryEmptyTitle": "لا توجد تجديدات بعد"
 }

@@ -738,4 +738,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentPassLabel => 'Document summary';
+
+  @override
+  String get documentsEyebrow => 'Digital wallet';
+
+  @override
+  String get documentsSearchPlaceholder => 'Search your documents';
+
+  @override
+  String get documentsFilterAll => 'All';
+
+  @override
+  String get documentsSearchEmptyTitle => 'No matching documents';
+
+  @override
+  String get documentsSearchEmptyMessage =>
+      'Try a different name, type or owner, or clear search to see your wallet.';
+
+  @override
+  String get documentsFilterEmptyTitle => 'Nothing in this filter';
+
+  @override
+  String get documentsFilterEmptyMessage =>
+      'Choose another status, or select All to see every saved document.';
+
+  @override
+  String get documentsRemainingHeader => 'All documents';
+
+  @override
+  String get documentPassTitle => 'Document pass';
+
+  @override
+  String get documentPassEyebrow => 'Verified details';
+
+  @override
+  String get viewScan => 'View scan';
+
+  @override
+  String get remindersTitle => 'Reminders';
+
+  @override
+  String get renewalHistoryEmptyTitle => 'No renewals yet';
 }

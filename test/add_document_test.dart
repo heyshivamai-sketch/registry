@@ -6,7 +6,6 @@ import 'package:the_registry/features/documents/data/in_memory_document_reposito
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
-import 'package:the_registry/features/documents/widgets/document_list_card.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -60,7 +59,9 @@ void main() {
   Future<void> openFromDocumentsTab(WidgetTester tester) async {
     await tester.tap(_navLabel('Documents'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
+    final add = find.byKey(const ValueKey<String>('documents-add'));
+    await tester.ensureVisible(add);
+    await tester.tap(add);
     await tester.pumpAndSettle();
   }
 
@@ -235,14 +236,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AddDocumentScreen), findsNothing);
-    expect(find.byType(DocumentListCard), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('featured-document-pass')),
+      findsOneWidget,
+    );
     expect(find.text('Family passport'), findsOneWidget);
     expect(find.text('Document saved to this session.'), findsOneWidget);
     expect(find.textContaining('1 saved'), findsOneWidget);
     expect(find.textContaining('need attention'), findsOneWidget);
     expect(
       find.descendant(
-        of: find.byType(DocumentListCard),
+        of: find.byKey(const ValueKey<String>('featured-document-pass')),
         matching: find.byType(Icon),
       ),
       findsWidgets,
