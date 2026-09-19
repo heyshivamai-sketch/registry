@@ -66,13 +66,18 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> tapDocumentsAdd(WidgetTester tester) async {
+    final add = find.byKey(const ValueKey<String>('documents-add'));
+    await tester.ensureVisible(add);
+    await tester.pumpAndSettle();
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> openFromDocumentsTab(WidgetTester tester) async {
     await tester.tap(_navLabel('Documents'));
     await tester.pumpAndSettle();
-    final add = find.byKey(const ValueKey<String>('documents-add'));
-    await tester.ensureVisible(add);
-    await tester.tap(add);
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
   }
 
   Future<void> reveal(WidgetTester tester, Finder finder) async {
@@ -392,8 +397,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('المستندات'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
 
     expect(find.text('إضافة مستند'), findsWidgets);
     expect(
@@ -693,6 +697,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('Documents'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey<String>('documents-add')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
     await tester.pumpAndSettle();
     await goToDates(tester);
@@ -734,8 +742,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('المستندات'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('documents-add')));
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
     await goToDates(tester);
 
     dates.results['expiry'] = DateTime(2027, 10, 5);
@@ -1096,10 +1103,7 @@ Name: SAMPLE NAME
     await remount(locale: const Locale('ar'));
     await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
     await tester.pumpAndSettle();
-    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
-    await tester.ensureVisible(arabicAdd);
-    await tester.tap(arabicAdd);
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
     await saveScreenshot(
       tester,
       'add_document_arabic',
@@ -1328,10 +1332,7 @@ Authority SAMPLE OFFICE
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('المستندات'));
     await tester.pumpAndSettle();
-    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
-    await tester.ensureVisible(arabicAdd);
-    await tester.tap(arabicAdd);
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
     await continueWizard(tester);
 
     expect(
@@ -1441,10 +1442,7 @@ Authority SAMPLE OFFICE
     await tester.pumpAndSettle();
     await tester.tap(_navLabel('المستندات'));
     await tester.pumpAndSettle();
-    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
-    await tester.ensureVisible(arabicAdd);
-    await tester.tap(arabicAdd);
-    await tester.pumpAndSettle();
+    await tapDocumentsAdd(tester);
 
     expect(
       Directionality.of(tester.element(find.byType(AddDocumentScreen))),

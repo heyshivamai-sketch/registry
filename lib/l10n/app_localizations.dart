@@ -2103,6 +2103,606 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Status'**
   String get documentStatusLabel;
+
+  /// No description provided for @homeEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your registry is empty'**
+  String get homeEmptyTitle;
+
+  /// No description provided for @homeEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a document or subscription to start tracking important dates.'**
+  String get homeEmptyMessage;
+
+  /// No description provided for @homeCalmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs action'**
+  String get homeCalmTitle;
+
+  /// No description provided for @homeCalmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved items are up to date. Upcoming dates will appear on the Horizon.'**
+  String get homeCalmMessage;
+
+  /// No description provided for @homeEstimatedMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} / month'**
+  String homeEstimatedMonthly(String amount);
+
+  /// No description provided for @pulseDecideByEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide by'**
+  String get pulseDecideByEyebrow;
+
+  /// No description provided for @pulseNextChargeEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Next charge'**
+  String get pulseNextChargeEyebrow;
+
+  /// No description provided for @subscriptionsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend with intention'**
+  String get subscriptionsEyebrow;
+
+  /// No description provided for @subscriptionsSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search subscriptions'**
+  String get subscriptionsSearchPlaceholder;
+
+  /// No description provided for @subscriptionsSavedSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 saved} other{{count} saved}}'**
+  String subscriptionsSavedSummary(int count);
+
+  /// No description provided for @subscriptionsActiveSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 active plan} other{{count} active plans}}'**
+  String subscriptionsActiveSummary(int count);
+
+  /// No description provided for @subscriptionsAttentionSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No decisions due} one{1 decision due} other{{count} decisions due}}'**
+  String subscriptionsAttentionSummary(int count);
+
+  /// No description provided for @subscriptionsListHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans'**
+  String get subscriptionsListHeader;
+
+  /// No description provided for @addSubscriptionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new'**
+  String get addSubscriptionShort;
+
+  /// No description provided for @subscriptionsSearchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching plans'**
+  String get subscriptionsSearchEmptyTitle;
+
+  /// No description provided for @subscriptionsSearchEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different name or category, or clear search to see every plan.'**
+  String get subscriptionsSearchEmptyMessage;
+
+  /// No description provided for @subscriptionsFilterEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in this filter'**
+  String get subscriptionsFilterEmptyTitle;
+
+  /// No description provided for @subscriptionsFilterEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another status, or select All to see every saved plan.'**
+  String get subscriptionsFilterEmptyMessage;
+
+  /// No description provided for @monthlySnapshotEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly snapshot'**
+  String get monthlySnapshotEyebrow;
+
+  /// No description provided for @estimatedMonthlyCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated monthly cost'**
+  String get estimatedMonthlyCost;
+
+  /// No description provided for @estimatedMonthlyDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'A normalized estimate for active plans. It is not actual spending or payments already made.'**
+  String get estimatedMonthlyDisclaimer;
+
+  /// No description provided for @estimatedMonthlyMultiple.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} currencies'**
+  String estimatedMonthlyMultiple(int count);
+
+  /// No description provided for @fieldServiceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Service name'**
+  String get fieldServiceName;
+
+  /// No description provided for @fieldPlanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name'**
+  String get fieldPlanName;
+
+  /// No description provided for @fieldAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get fieldAmount;
+
+  /// No description provided for @fieldCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get fieldCurrency;
+
+  /// No description provided for @fieldBillingCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing cycle'**
+  String get fieldBillingCycle;
+
+  /// No description provided for @fieldNextPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Next payment date'**
+  String get fieldNextPayment;
+
+  /// No description provided for @fieldDecideBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide-by date'**
+  String get fieldDecideBy;
+
+  /// No description provided for @fieldAutoRenew.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-renew'**
+  String get fieldAutoRenew;
+
+  /// No description provided for @billingWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get billingWeekly;
+
+  /// No description provided for @billingMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get billingMonthly;
+
+  /// No description provided for @billingQuarterly.
+  ///
+  /// In en, this message translates to:
+  /// **'Quarterly'**
+  String get billingQuarterly;
+
+  /// No description provided for @billingYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get billingYearly;
+
+  /// No description provided for @billingPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'/ week'**
+  String get billingPerWeek;
+
+  /// No description provided for @billingPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/ month'**
+  String get billingPerMonth;
+
+  /// No description provided for @billingPerQuarter.
+  ///
+  /// In en, this message translates to:
+  /// **'/ quarter'**
+  String get billingPerQuarter;
+
+  /// No description provided for @billingPerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/ year'**
+  String get billingPerYear;
+
+  /// No description provided for @subscriptionCategoryEntertainment.
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment'**
+  String get subscriptionCategoryEntertainment;
+
+  /// No description provided for @subscriptionCategoryHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get subscriptionCategoryHealth;
+
+  /// No description provided for @subscriptionCategoryProductivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity'**
+  String get subscriptionCategoryProductivity;
+
+  /// No description provided for @subscriptionCategoryUtilities.
+  ///
+  /// In en, this message translates to:
+  /// **'Utilities'**
+  String get subscriptionCategoryUtilities;
+
+  /// No description provided for @subscriptionCategoryFinance.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance'**
+  String get subscriptionCategoryFinance;
+
+  /// No description provided for @subscriptionCategoryEducation.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get subscriptionCategoryEducation;
+
+  /// No description provided for @subscriptionCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get subscriptionCategoryOther;
+
+  /// No description provided for @subscriptionServiceIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you tracking?'**
+  String get subscriptionServiceIntroTitle;
+
+  /// No description provided for @subscriptionServiceIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with the service and category.'**
+  String get subscriptionServiceIntro;
+
+  /// No description provided for @subscriptionBillingIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing details'**
+  String get subscriptionBillingIntroTitle;
+
+  /// No description provided for @subscriptionBillingIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Add only what you know. Everything can be edited later.'**
+  String get subscriptionBillingIntro;
+
+  /// No description provided for @subscriptionPreferencesIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay ahead of the charge'**
+  String get subscriptionPreferencesIntroTitle;
+
+  /// No description provided for @subscriptionPreferencesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose when you want to make a decision.'**
+  String get subscriptionPreferencesIntro;
+
+  /// No description provided for @subscriptionReviewIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to track'**
+  String get subscriptionReviewIntroTitle;
+
+  /// No description provided for @subscriptionReviewIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the plan before adding it to your Registry.'**
+  String get subscriptionReviewIntro;
+
+  /// No description provided for @saveSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save subscription'**
+  String get saveSubscription;
+
+  /// No description provided for @subscriptionSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription saved to this session.'**
+  String get subscriptionSaved;
+
+  /// No description provided for @subscriptionUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription updated for this session.'**
+  String get subscriptionUpdated;
+
+  /// No description provided for @subscriptionDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription deleted from this session.'**
+  String get subscriptionDeleted;
+
+  /// No description provided for @subscriptionSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plan could not be saved. Your draft is still here. Try again.'**
+  String get subscriptionSaveFailed;
+
+  /// No description provided for @editSubscriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit subscription'**
+  String get editSubscriptionTitle;
+
+  /// No description provided for @subscriptionDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscriptionDetailsTitle;
+
+  /// No description provided for @planDetailsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan details'**
+  String get planDetailsEyebrow;
+
+  /// No description provided for @planInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan information'**
+  String get planInformation;
+
+  /// No description provided for @nextDecision.
+  ///
+  /// In en, this message translates to:
+  /// **'Next decision'**
+  String get nextDecision;
+
+  /// No description provided for @subscriptionUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan not available'**
+  String get subscriptionUnavailableTitle;
+
+  /// No description provided for @subscriptionUnavailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan is no longer in this session.'**
+  String get subscriptionUnavailableMessage;
+
+  /// No description provided for @nextPaymentHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Past dates stay as unresolved tracking. Dates are not advanced automatically.'**
+  String get nextPaymentHelper;
+
+  /// No description provided for @decideByHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be on or before the next payment date.'**
+  String get decideByHelper;
+
+  /// No description provided for @clearDecideBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear decide-by date'**
+  String get clearDecideBy;
+
+  /// No description provided for @autoRenewHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'A preference you track in this app. It does not change the provider.'**
+  String get autoRenewHelper;
+
+  /// No description provided for @autoRenewOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get autoRenewOn;
+
+  /// No description provided for @autoRenewOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get autoRenewOff;
+
+  /// No description provided for @subscriptionRemindersHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'These options are saved with the plan. Notifications are not scheduled.'**
+  String get subscriptionRemindersHelper;
+
+  /// No description provided for @subscriptionReminder7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days before'**
+  String get subscriptionReminder7Days;
+
+  /// No description provided for @subscriptionReminder1Day.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day before'**
+  String get subscriptionReminder1Day;
+
+  /// No description provided for @subscriptionReminderOnCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'On charge day'**
+  String get subscriptionReminderOnCharge;
+
+  /// No description provided for @decideByWhyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why decide-by?'**
+  String get decideByWhyTitle;
+
+  /// No description provided for @decideByWhyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'It gives you time to review or cancel before the payment date.'**
+  String get decideByWhyMessage;
+
+  /// No description provided for @reviewJumpService.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit service'**
+  String get reviewJumpService;
+
+  /// No description provided for @reviewJumpBilling.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit billing'**
+  String get reviewJumpBilling;
+
+  /// No description provided for @reviewJumpPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit preferences'**
+  String get reviewJumpPreferences;
+
+  /// No description provided for @subscriptionSessionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans stay on this device for this session. There is no bank connection or payment processing.'**
+  String get subscriptionSessionNote;
+
+  /// No description provided for @errorDecideByAfterPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide-by date must be on or before the next payment date.'**
+  String get errorDecideByAfterPayment;
+
+  /// No description provided for @errorAmountNegative.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount cannot be negative.'**
+  String get errorAmountNegative;
+
+  /// No description provided for @errorAmountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount for this currency.'**
+  String get errorAmountInvalid;
+
+  /// No description provided for @errorAmountPrecision.
+  ///
+  /// In en, this message translates to:
+  /// **'This currency does not allow that many decimal places.'**
+  String get errorAmountPrecision;
+
+  /// No description provided for @subscriptionCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get subscriptionCancelled;
+
+  /// No description provided for @subscriptionActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get subscriptionActive;
+
+  /// No description provided for @lifecycleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking status'**
+  String get lifecycleLabel;
+
+  /// No description provided for @markCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as cancelled'**
+  String get markCancelled;
+
+  /// No description provided for @cancelPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop tracking this plan?'**
+  String get cancelPlanTitle;
+
+  /// No description provided for @cancelPlanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This only updates tracking for {name} in this app. It does not cancel the subscription with the provider.'**
+  String cancelPlanMessage(String name);
+
+  /// No description provided for @planMarkedCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan marked as cancelled in this session.'**
+  String get planMarkedCancelled;
+
+  /// No description provided for @reactivatePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate'**
+  String get reactivatePlan;
+
+  /// No description provided for @reactivatePlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate this plan?'**
+  String get reactivatePlanTitle;
+
+  /// No description provided for @reactivatePlanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the next payment date for {name}. This only resumes tracking in this app.'**
+  String reactivatePlanMessage(String name);
+
+  /// No description provided for @planReactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan reactivated in this session.'**
+  String get planReactivated;
+
+  /// No description provided for @deleteSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete plan'**
+  String get deleteSubscription;
+
+  /// No description provided for @deleteSubscriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this plan?'**
+  String get deleteSubscriptionTitle;
+
+  /// No description provided for @deleteSubscriptionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will be removed from this session.'**
+  String deleteSubscriptionMessage(String name);
+
+  /// No description provided for @subscriptionTrackingDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry tracks this plan but does not cancel or charge it automatically.'**
+  String get subscriptionTrackingDisclaimer;
 }
 
 class _AppLocalizationsDelegate

@@ -1124,4 +1124,355 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentStatusLabel => 'الحالة';
+
+  @override
+  String get homeEmptyTitle => 'سجلك فارغ';
+
+  @override
+  String get homeEmptyMessage =>
+      'أضف مستندًا أو اشتراكًا لبدء تتبع التواريخ المهمة.';
+
+  @override
+  String get homeCalmTitle => 'لا يوجد إجراء مطلوب';
+
+  @override
+  String get homeCalmMessage =>
+      'العناصر المحفوظة محدّثة. ستظهر التواريخ القادمة في الأفق.';
+
+  @override
+  String homeEstimatedMonthly(String amount) {
+    return '$amount / شهر';
+  }
+
+  @override
+  String get pulseDecideByEyebrow => 'قرّر قبل';
+
+  @override
+  String get pulseNextChargeEyebrow => 'الدفعة التالية';
+
+  @override
+  String get subscriptionsEyebrow => 'أنفق بنية';
+
+  @override
+  String get subscriptionsSearchPlaceholder => 'ابحث في الاشتراكات';
+
+  @override
+  String subscriptionsSavedSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count محفوظة',
+      one: 'واحد محفوظ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsActiveSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count خطط نشطة',
+      one: 'خطة نشطة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsAttentionSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قرارات مستحقة',
+      one: 'قرار واحد مستحق',
+      zero: 'لا قرارات مستحقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionsListHeader => 'الخطط';
+
+  @override
+  String get addSubscriptionShort => 'إضافة';
+
+  @override
+  String get subscriptionsSearchEmptyTitle => 'لا توجد خطط مطابقة';
+
+  @override
+  String get subscriptionsSearchEmptyMessage =>
+      'جرّب اسمًا أو فئة أخرى، أو امسح البحث لرؤية كل الخطط.';
+
+  @override
+  String get subscriptionsFilterEmptyTitle => 'لا شيء في هذا التصفية';
+
+  @override
+  String get subscriptionsFilterEmptyMessage =>
+      'اختر حالة أخرى، أو الكل لرؤية كل الخطط المحفوظة.';
+
+  @override
+  String get monthlySnapshotEyebrow => 'لمحة شهرية';
+
+  @override
+  String get estimatedMonthlyCost => 'التكلفة الشهرية التقديرية';
+
+  @override
+  String get estimatedMonthlyDisclaimer =>
+      'تقدير موحّد للخطط النشطة. ليس إنفاقًا فعليًا ولا مدفوعات سابقة.';
+
+  @override
+  String estimatedMonthlyMultiple(int count) {
+    return '$count عملات';
+  }
+
+  @override
+  String get fieldServiceName => 'اسم الخدمة';
+
+  @override
+  String get fieldPlanName => 'اسم الخطة';
+
+  @override
+  String get fieldAmount => 'المبلغ';
+
+  @override
+  String get fieldCurrency => 'العملة';
+
+  @override
+  String get fieldBillingCycle => 'دورة الفوترة';
+
+  @override
+  String get fieldNextPayment => 'تاريخ الدفعة التالية';
+
+  @override
+  String get fieldDecideBy => 'تاريخ اتخاذ القرار';
+
+  @override
+  String get fieldAutoRenew => 'التجديد التلقائي';
+
+  @override
+  String get billingWeekly => 'أسبوعي';
+
+  @override
+  String get billingMonthly => 'شهري';
+
+  @override
+  String get billingQuarterly => 'ربع سنوي';
+
+  @override
+  String get billingYearly => 'سنوي';
+
+  @override
+  String get billingPerWeek => '/ أسبوع';
+
+  @override
+  String get billingPerMonth => '/ شهر';
+
+  @override
+  String get billingPerQuarter => '/ ربع سنة';
+
+  @override
+  String get billingPerYear => '/ سنة';
+
+  @override
+  String get subscriptionCategoryEntertainment => 'ترفيه';
+
+  @override
+  String get subscriptionCategoryHealth => 'صحة';
+
+  @override
+  String get subscriptionCategoryProductivity => 'إنتاجية';
+
+  @override
+  String get subscriptionCategoryUtilities => 'خدمات';
+
+  @override
+  String get subscriptionCategoryFinance => 'مالية';
+
+  @override
+  String get subscriptionCategoryEducation => 'تعليم';
+
+  @override
+  String get subscriptionCategoryOther => 'أخرى';
+
+  @override
+  String get subscriptionServiceIntroTitle => 'ماذا تتابع؟';
+
+  @override
+  String get subscriptionServiceIntro => 'ابدأ باسم الخدمة والفئة.';
+
+  @override
+  String get subscriptionBillingIntroTitle => 'تفاصيل الفوترة';
+
+  @override
+  String get subscriptionBillingIntro =>
+      'أضف ما تعرفه فقط. يمكن تعديل كل شيء لاحقًا.';
+
+  @override
+  String get subscriptionPreferencesIntroTitle => 'ابقَ سابقًا للدفعة';
+
+  @override
+  String get subscriptionPreferencesIntro => 'اختر متى تريد اتخاذ القرار.';
+
+  @override
+  String get subscriptionReviewIntroTitle => 'جاهز للمتابعة';
+
+  @override
+  String get subscriptionReviewIntro => 'أكد الخطة قبل إضافتها إلى سجلك.';
+
+  @override
+  String get saveSubscription => 'حفظ الاشتراك';
+
+  @override
+  String get subscriptionSaved => 'تم حفظ الاشتراك لهذه الجلسة.';
+
+  @override
+  String get subscriptionUpdated => 'تم تحديث الاشتراك لهذه الجلسة.';
+
+  @override
+  String get subscriptionDeleted => 'تم حذف الاشتراك من هذه الجلسة.';
+
+  @override
+  String get subscriptionSaveFailed =>
+      'تعذر حفظ الخطة. المسودة ما زالت هنا. حاول مرة أخرى.';
+
+  @override
+  String get editSubscriptionTitle => 'تعديل الاشتراك';
+
+  @override
+  String get subscriptionDetailsTitle => 'اشتراك';
+
+  @override
+  String get planDetailsEyebrow => 'تفاصيل الخطة';
+
+  @override
+  String get planInformation => 'معلومات الخطة';
+
+  @override
+  String get nextDecision => 'القرار التالي';
+
+  @override
+  String get subscriptionUnavailableTitle => 'الخطة غير متاحة';
+
+  @override
+  String get subscriptionUnavailableMessage =>
+      'هذه الخطة لم تعد في هذه الجلسة.';
+
+  @override
+  String get nextPaymentHelper =>
+      'تبقى التواريخ الماضية تتبعًا غير محسوم. لا يتم تقديم التواريخ تلقائيًا.';
+
+  @override
+  String get decideByHelper => 'يجب أن يكون في تاريخ الدفعة أو قبله.';
+
+  @override
+  String get clearDecideBy => 'مسح تاريخ القرار';
+
+  @override
+  String get autoRenewHelper =>
+      'تفضيل تتابعه في هذا التطبيق. لا يغيّر شيئًا لدى المزود.';
+
+  @override
+  String get autoRenewOn => 'تشغيل';
+
+  @override
+  String get autoRenewOff => 'إيقاف';
+
+  @override
+  String get subscriptionRemindersHelper =>
+      'تُحفظ هذه الخيارات مع الخطة. لا تُجدول الإشعارات.';
+
+  @override
+  String get subscriptionReminder7Days => 'قبل 7 أيام';
+
+  @override
+  String get subscriptionReminder1Day => 'قبل يوم واحد';
+
+  @override
+  String get subscriptionReminderOnCharge => 'يوم الدفعة';
+
+  @override
+  String get decideByWhyTitle => 'لماذا تاريخ القرار؟';
+
+  @override
+  String get decideByWhyMessage =>
+      'يمنحك وقتًا للمراجعة أو الإلغاء قبل تاريخ الدفع.';
+
+  @override
+  String get reviewJumpService => 'تعديل الخدمة';
+
+  @override
+  String get reviewJumpBilling => 'تعديل الفوترة';
+
+  @override
+  String get reviewJumpPreferences => 'تعديل التفضيلات';
+
+  @override
+  String get subscriptionSessionNote =>
+      'تبقى الخطط على هذا الجهاز لهذه الجلسة. لا يوجد ربط بنكي ولا معالجة دفع.';
+
+  @override
+  String get errorDecideByAfterPayment =>
+      'يجب أن يكون تاريخ القرار في تاريخ الدفعة أو قبله.';
+
+  @override
+  String get errorAmountNegative => 'لا يمكن أن يكون المبلغ سالبًا.';
+
+  @override
+  String get errorAmountInvalid => 'أدخل مبلغًا صالحًا لهذه العملة.';
+
+  @override
+  String get errorAmountPrecision =>
+      'هذه العملة لا تسمح بهذا العدد من الخانات العشرية.';
+
+  @override
+  String get subscriptionCancelled => 'ملغى';
+
+  @override
+  String get subscriptionActive => 'نشط';
+
+  @override
+  String get lifecycleLabel => 'حالة التتبع';
+
+  @override
+  String get markCancelled => 'وضع علامة ملغى';
+
+  @override
+  String get cancelPlanTitle => 'إيقاف تتبع هذه الخطة؟';
+
+  @override
+  String cancelPlanMessage(String name) {
+    return 'يؤثر هذا فقط على تتبع $name في هذا التطبيق. لا يلغي الاشتراك لدى المزود.';
+  }
+
+  @override
+  String get planMarkedCancelled => 'تم تعليم الخطة كملغاة في هذه الجلسة.';
+
+  @override
+  String get reactivatePlan => 'إعادة التفعيل';
+
+  @override
+  String get reactivatePlanTitle => 'إعادة تفعيل هذه الخطة؟';
+
+  @override
+  String reactivatePlanMessage(String name) {
+    return 'أكد تاريخ الدفعة التالية لـ $name. يستأنف هذا التتبع في هذا التطبيق فقط.';
+  }
+
+  @override
+  String get planReactivated => 'أُعيد تفعيل الخطة في هذه الجلسة.';
+
+  @override
+  String get deleteSubscription => 'حذف الخطة';
+
+  @override
+  String get deleteSubscriptionTitle => 'حذف هذه الخطة؟';
+
+  @override
+  String deleteSubscriptionMessage(String name) {
+    return 'ستُزال $name من هذه الجلسة.';
+  }
+
+  @override
+  String get subscriptionTrackingDisclaimer =>
+      'يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.';
 }

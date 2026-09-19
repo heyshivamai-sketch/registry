@@ -1124,4 +1124,357 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentStatusLabel => 'Status';
+
+  @override
+  String get homeEmptyTitle => 'Your registry is empty';
+
+  @override
+  String get homeEmptyMessage =>
+      'Add a document or subscription to start tracking important dates.';
+
+  @override
+  String get homeCalmTitle => 'Nothing needs action';
+
+  @override
+  String get homeCalmMessage =>
+      'Saved items are up to date. Upcoming dates will appear on the Horizon.';
+
+  @override
+  String homeEstimatedMonthly(String amount) {
+    return '$amount / month';
+  }
+
+  @override
+  String get pulseDecideByEyebrow => 'Decide by';
+
+  @override
+  String get pulseNextChargeEyebrow => 'Next charge';
+
+  @override
+  String get subscriptionsEyebrow => 'Spend with intention';
+
+  @override
+  String get subscriptionsSearchPlaceholder => 'Search subscriptions';
+
+  @override
+  String subscriptionsSavedSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved',
+      one: '1 saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsActiveSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active plans',
+      one: '1 active plan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsAttentionSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count decisions due',
+      one: '1 decision due',
+      zero: 'No decisions due',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionsListHeader => 'Plans';
+
+  @override
+  String get addSubscriptionShort => 'Add new';
+
+  @override
+  String get subscriptionsSearchEmptyTitle => 'No matching plans';
+
+  @override
+  String get subscriptionsSearchEmptyMessage =>
+      'Try a different name or category, or clear search to see every plan.';
+
+  @override
+  String get subscriptionsFilterEmptyTitle => 'Nothing in this filter';
+
+  @override
+  String get subscriptionsFilterEmptyMessage =>
+      'Choose another status, or select All to see every saved plan.';
+
+  @override
+  String get monthlySnapshotEyebrow => 'Monthly snapshot';
+
+  @override
+  String get estimatedMonthlyCost => 'Estimated monthly cost';
+
+  @override
+  String get estimatedMonthlyDisclaimer =>
+      'A normalized estimate for active plans. It is not actual spending or payments already made.';
+
+  @override
+  String estimatedMonthlyMultiple(int count) {
+    return '$count currencies';
+  }
+
+  @override
+  String get fieldServiceName => 'Service name';
+
+  @override
+  String get fieldPlanName => 'Plan name';
+
+  @override
+  String get fieldAmount => 'Amount';
+
+  @override
+  String get fieldCurrency => 'Currency';
+
+  @override
+  String get fieldBillingCycle => 'Billing cycle';
+
+  @override
+  String get fieldNextPayment => 'Next payment date';
+
+  @override
+  String get fieldDecideBy => 'Decide-by date';
+
+  @override
+  String get fieldAutoRenew => 'Auto-renew';
+
+  @override
+  String get billingWeekly => 'Weekly';
+
+  @override
+  String get billingMonthly => 'Monthly';
+
+  @override
+  String get billingQuarterly => 'Quarterly';
+
+  @override
+  String get billingYearly => 'Yearly';
+
+  @override
+  String get billingPerWeek => '/ week';
+
+  @override
+  String get billingPerMonth => '/ month';
+
+  @override
+  String get billingPerQuarter => '/ quarter';
+
+  @override
+  String get billingPerYear => '/ year';
+
+  @override
+  String get subscriptionCategoryEntertainment => 'Entertainment';
+
+  @override
+  String get subscriptionCategoryHealth => 'Health';
+
+  @override
+  String get subscriptionCategoryProductivity => 'Productivity';
+
+  @override
+  String get subscriptionCategoryUtilities => 'Utilities';
+
+  @override
+  String get subscriptionCategoryFinance => 'Finance';
+
+  @override
+  String get subscriptionCategoryEducation => 'Education';
+
+  @override
+  String get subscriptionCategoryOther => 'Other';
+
+  @override
+  String get subscriptionServiceIntroTitle => 'What are you tracking?';
+
+  @override
+  String get subscriptionServiceIntro => 'Start with the service and category.';
+
+  @override
+  String get subscriptionBillingIntroTitle => 'Billing details';
+
+  @override
+  String get subscriptionBillingIntro =>
+      'Add only what you know. Everything can be edited later.';
+
+  @override
+  String get subscriptionPreferencesIntroTitle => 'Stay ahead of the charge';
+
+  @override
+  String get subscriptionPreferencesIntro =>
+      'Choose when you want to make a decision.';
+
+  @override
+  String get subscriptionReviewIntroTitle => 'Ready to track';
+
+  @override
+  String get subscriptionReviewIntro =>
+      'Confirm the plan before adding it to your Registry.';
+
+  @override
+  String get saveSubscription => 'Save subscription';
+
+  @override
+  String get subscriptionSaved => 'Subscription saved to this session.';
+
+  @override
+  String get subscriptionUpdated => 'Subscription updated for this session.';
+
+  @override
+  String get subscriptionDeleted => 'Subscription deleted from this session.';
+
+  @override
+  String get subscriptionSaveFailed =>
+      'The plan could not be saved. Your draft is still here. Try again.';
+
+  @override
+  String get editSubscriptionTitle => 'Edit subscription';
+
+  @override
+  String get subscriptionDetailsTitle => 'Subscription';
+
+  @override
+  String get planDetailsEyebrow => 'Plan details';
+
+  @override
+  String get planInformation => 'Plan information';
+
+  @override
+  String get nextDecision => 'Next decision';
+
+  @override
+  String get subscriptionUnavailableTitle => 'Plan not available';
+
+  @override
+  String get subscriptionUnavailableMessage =>
+      'This plan is no longer in this session.';
+
+  @override
+  String get nextPaymentHelper =>
+      'Past dates stay as unresolved tracking. Dates are not advanced automatically.';
+
+  @override
+  String get decideByHelper => 'Must be on or before the next payment date.';
+
+  @override
+  String get clearDecideBy => 'Clear decide-by date';
+
+  @override
+  String get autoRenewHelper =>
+      'A preference you track in this app. It does not change the provider.';
+
+  @override
+  String get autoRenewOn => 'On';
+
+  @override
+  String get autoRenewOff => 'Off';
+
+  @override
+  String get subscriptionRemindersHelper =>
+      'These options are saved with the plan. Notifications are not scheduled.';
+
+  @override
+  String get subscriptionReminder7Days => '7 days before';
+
+  @override
+  String get subscriptionReminder1Day => '1 day before';
+
+  @override
+  String get subscriptionReminderOnCharge => 'On charge day';
+
+  @override
+  String get decideByWhyTitle => 'Why decide-by?';
+
+  @override
+  String get decideByWhyMessage =>
+      'It gives you time to review or cancel before the payment date.';
+
+  @override
+  String get reviewJumpService => 'Edit service';
+
+  @override
+  String get reviewJumpBilling => 'Edit billing';
+
+  @override
+  String get reviewJumpPreferences => 'Edit preferences';
+
+  @override
+  String get subscriptionSessionNote =>
+      'Plans stay on this device for this session. There is no bank connection or payment processing.';
+
+  @override
+  String get errorDecideByAfterPayment =>
+      'Decide-by date must be on or before the next payment date.';
+
+  @override
+  String get errorAmountNegative => 'Amount cannot be negative.';
+
+  @override
+  String get errorAmountInvalid => 'Enter a valid amount for this currency.';
+
+  @override
+  String get errorAmountPrecision =>
+      'This currency does not allow that many decimal places.';
+
+  @override
+  String get subscriptionCancelled => 'Cancelled';
+
+  @override
+  String get subscriptionActive => 'Active';
+
+  @override
+  String get lifecycleLabel => 'Tracking status';
+
+  @override
+  String get markCancelled => 'Mark as cancelled';
+
+  @override
+  String get cancelPlanTitle => 'Stop tracking this plan?';
+
+  @override
+  String cancelPlanMessage(String name) {
+    return 'This only updates tracking for $name in this app. It does not cancel the subscription with the provider.';
+  }
+
+  @override
+  String get planMarkedCancelled => 'Plan marked as cancelled in this session.';
+
+  @override
+  String get reactivatePlan => 'Reactivate';
+
+  @override
+  String get reactivatePlanTitle => 'Reactivate this plan?';
+
+  @override
+  String reactivatePlanMessage(String name) {
+    return 'Confirm the next payment date for $name. This only resumes tracking in this app.';
+  }
+
+  @override
+  String get planReactivated => 'Plan reactivated in this session.';
+
+  @override
+  String get deleteSubscription => 'Delete plan';
+
+  @override
+  String get deleteSubscriptionTitle => 'Delete this plan?';
+
+  @override
+  String deleteSubscriptionMessage(String name) {
+    return '$name will be removed from this session.';
+  }
+
+  @override
+  String get subscriptionTrackingDisclaimer =>
+      'Registry tracks this plan but does not cancel or charge it automatically.';
 }

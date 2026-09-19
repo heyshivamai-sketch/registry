@@ -428,5 +428,145 @@
   "catalogActionLabel": "Next action",
   "catalogRemainingLabel": "Time remaining",
   "catalogChargeDate": "Next charge date",
-  "documentStatusLabel": "Status"
+  "documentStatusLabel": "Status",
+  "homeEmptyTitle": "Your registry is empty",
+  "homeEmptyMessage": "Add a document or subscription to start tracking important dates.",
+  "homeCalmTitle": "Nothing needs action",
+  "homeCalmMessage": "Saved items are up to date. Upcoming dates will appear on the Horizon.",
+  "homeEstimatedMonthly": "{amount} / month",
+  "@homeEstimatedMonthly": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "pulseDecideByEyebrow": "Decide by",
+  "pulseNextChargeEyebrow": "Next charge",
+  "subscriptionsEyebrow": "Spend with intention",
+  "subscriptionsSearchPlaceholder": "Search subscriptions",
+  "subscriptionsSavedSummary": "{count, plural, one{1 saved} other{{count} saved}}",
+  "@subscriptionsSavedSummary": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "subscriptionsActiveSummary": "{count, plural, one{1 active plan} other{{count} active plans}}",
+  "@subscriptionsActiveSummary": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "subscriptionsAttentionSummary": "{count, plural, =0{No decisions due} one{1 decision due} other{{count} decisions due}}",
+  "@subscriptionsAttentionSummary": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "subscriptionsListHeader": "Plans",
+  "addSubscriptionShort": "Add new",
+  "subscriptionsSearchEmptyTitle": "No matching plans",
+  "subscriptionsSearchEmptyMessage": "Try a different name or category, or clear search to see every plan.",
+  "subscriptionsFilterEmptyTitle": "Nothing in this filter",
+  "subscriptionsFilterEmptyMessage": "Choose another status, or select All to see every saved plan.",
+  "monthlySnapshotEyebrow": "Monthly snapshot",
+  "estimatedMonthlyCost": "Estimated monthly cost",
+  "estimatedMonthlyDisclaimer": "A normalized estimate for active plans. It is not actual spending or payments already made.",
+  "estimatedMonthlyMultiple": "{count} currencies",
+  "@estimatedMonthlyMultiple": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "fieldServiceName": "Service name",
+  "fieldPlanName": "Plan name",
+  "fieldAmount": "Amount",
+  "fieldCurrency": "Currency",
+  "fieldBillingCycle": "Billing cycle",
+  "fieldNextPayment": "Next payment date",
+  "fieldDecideBy": "Decide-by date",
+  "fieldAutoRenew": "Auto-renew",
+  "billingWeekly": "Weekly",
+  "billingMonthly": "Monthly",
+  "billingQuarterly": "Quarterly",
+  "billingYearly": "Yearly",
+  "billingPerWeek": "/ week",
+  "billingPerMonth": "/ month",
+  "billingPerQuarter": "/ quarter",
+  "billingPerYear": "/ year",
+  "subscriptionCategoryEntertainment": "Entertainment",
+  "subscriptionCategoryHealth": "Health",
+  "subscriptionCategoryProductivity": "Productivity",
+  "subscriptionCategoryUtilities": "Utilities",
+  "subscriptionCategoryFinance": "Finance",
+  "subscriptionCategoryEducation": "Education",
+  "subscriptionCategoryOther": "Other",
+  "subscriptionServiceIntroTitle": "What are you tracking?",
+  "subscriptionServiceIntro": "Start with the service and category.",
+  "subscriptionBillingIntroTitle": "Billing details",
+  "subscriptionBillingIntro": "Add only what you know. Everything can be edited later.",
+  "subscriptionPreferencesIntroTitle": "Stay ahead of the charge",
+  "subscriptionPreferencesIntro": "Choose when you want to make a decision.",
+  "subscriptionReviewIntroTitle": "Ready to track",
+  "subscriptionReviewIntro": "Confirm the plan before adding it to your Registry.",
+  "saveSubscription": "Save subscription",
+  "subscriptionSaved": "Subscription saved to this session.",
+  "subscriptionUpdated": "Subscription updated for this session.",
+  "subscriptionDeleted": "Subscription deleted from this session.",
+  "subscriptionSaveFailed": "The plan could not be saved. Your draft is still here. Try again.",
+  "editSubscriptionTitle": "Edit subscription",
+  "subscriptionDetailsTitle": "Subscription",
+  "planDetailsEyebrow": "Plan details",
+  "planInformation": "Plan information",
+  "nextDecision": "Next decision",
+  "subscriptionUnavailableTitle": "Plan not available",
+  "subscriptionUnavailableMessage": "This plan is no longer in this session.",
+  "nextPaymentHelper": "Past dates stay as unresolved tracking. Dates are not advanced automatically.",
+  "decideByHelper": "Must be on or before the next payment date.",
+  "clearDecideBy": "Clear decide-by date",
+  "autoRenewHelper": "A preference you track in this app. It does not change the provider.",
+  "autoRenewOn": "On",
+  "autoRenewOff": "Off",
+  "subscriptionRemindersHelper": "These options are saved with the plan. Notifications are not scheduled.",
+  "subscriptionReminder7Days": "7 days before",
+  "subscriptionReminder1Day": "1 day before",
+  "subscriptionReminderOnCharge": "On charge day",
+  "decideByWhyTitle": "Why decide-by?",
+  "decideByWhyMessage": "It gives you time to review or cancel before the payment date.",
+  "reviewJumpService": "Edit service",
+  "reviewJumpBilling": "Edit billing",
+  "reviewJumpPreferences": "Edit preferences",
+  "subscriptionSessionNote": "Plans stay on this device for this session. There is no bank connection or payment processing.",
+  "errorDecideByAfterPayment": "Decide-by date must be on or before the next payment date.",
+  "errorAmountNegative": "Amount cannot be negative.",
+  "errorAmountInvalid": "Enter a valid amount for this currency.",
+  "errorAmountPrecision": "This currency does not allow that many decimal places.",
+  "subscriptionCancelled": "Cancelled",
+  "subscriptionActive": "Active",
+  "lifecycleLabel": "Tracking status",
+  "markCancelled": "Mark as cancelled",
+  "cancelPlanTitle": "Stop tracking this plan?",
+  "cancelPlanMessage": "This only updates tracking for {name} in this app. It does not cancel the subscription with the provider.",
+  "@cancelPlanMessage": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "planMarkedCancelled": "Plan marked as cancelled in this session.",
+  "reactivatePlan": "Reactivate",
+  "reactivatePlanTitle": "Reactivate this plan?",
+  "reactivatePlanMessage": "Confirm the next payment date for {name}. This only resumes tracking in this app.",
+  "@reactivatePlanMessage": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "planReactivated": "Plan reactivated in this session.",
+  "deleteSubscription": "Delete plan",
+  "deleteSubscriptionTitle": "Delete this plan?",
+  "deleteSubscriptionMessage": "{name} will be removed from this session.",
+  "@deleteSubscriptionMessage": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "subscriptionTrackingDisclaimer": "Registry tracks this plan but does not cancel or charge it automatically."
 }

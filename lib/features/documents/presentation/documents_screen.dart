@@ -66,11 +66,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           );
 
           return ListView(
-            padding: const EdgeInsetsDirectional.fromSTEB(
+            padding: EdgeInsetsDirectional.fromSTEB(
               AppSpacing.screenPadding,
               AppSpacing.pageTop,
               AppSpacing.screenPadding,
-              AppSpacing.scrollDockClearance,
+              AppSpacing.scrollClearanceForDock(this.context),
             ),
             children: [
               _DocumentsHeader(

@@ -67,19 +67,10 @@ void main() {
     await tester.pumpAndSettle();
 
     await saveScreenshot(tester, 'home_reference_match', folder: _folder);
-    await reveal(tester, find.byKey(const ValueKey<String>('home-hero')));
-    await saveScreenshot(tester, 'home_pulse', folder: _folder);
     await reveal(tester, find.byKey(const ValueKey<String>('home-metrics')));
+    await saveScreenshot(tester, 'home_pulse', folder: _folder);
     await saveScreenshot(tester, 'home_snapshot', folder: _folder);
-    await reveal(
-      tester,
-      find.byKey(const ValueKey<String>('home-attention-header')),
-    );
     await saveScreenshot(tester, 'home_action_queue', folder: _folder);
-    await reveal(
-      tester,
-      find.byKey(const ValueKey<String>('home-coming-up-header')),
-    );
     await saveScreenshot(tester, 'home_horizon', folder: _folder);
     await saveScreenshot(tester, 'navigation_dock', folder: _folder);
 

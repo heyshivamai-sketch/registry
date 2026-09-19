@@ -115,6 +115,7 @@ abstract final class MockRegistryCatalog {
       item.heroTitle(l10n),
       item.actionLabel(l10n),
       item.typeLabel(l10n),
+      ...item.searchTerms,
     ].join(' ').toLowerCase();
     return haystack.contains(needle);
   }

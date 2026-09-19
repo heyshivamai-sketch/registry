@@ -25,7 +25,9 @@ class RegistryPlaceholderPage extends StatelessWidget {
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
           AppSpacing.screenPadding,
-          embedded ? AppSpacing.scrollDockClearance : AppSpacing.screenPadding,
+          embedded
+              ? AppSpacing.scrollClearanceForDock(context)
+              : AppSpacing.screenPadding,
         ),
         children: [
           if (embedded) ...[

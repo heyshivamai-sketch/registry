@@ -13,6 +13,7 @@ import 'package:the_registry/features/documents/domain/renewal_history_entry.dar
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
+import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
 import 'package:the_registry/features/documents/widgets/document_list_card.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
@@ -73,9 +74,11 @@ void main() {
     );
     if (featured.evaluate().isNotEmpty) {
       await tester.ensureVisible(featured);
+      await tester.pump();
       await tester.tap(featured);
     } else {
       await tester.ensureVisible(find.byType(DocumentListCard));
+      await tester.pump();
       await tester.tap(find.byType(DocumentListCard));
     }
     await tester.pumpAndSettle();
@@ -1083,7 +1086,9 @@ void main() {
     final list = tester.widget<ListView>(find.byType(ListView).first);
     expect(
       (list.padding as EdgeInsetsDirectional).bottom,
-      AppSpacing.scrollDockClearance,
+      AppSpacing.scrollClearanceForDock(
+        tester.element(find.byType(DocumentsScreen)),
+      ),
     );
 
     tester.platformDispatcher.textScaleFactorTestValue = 1.8;

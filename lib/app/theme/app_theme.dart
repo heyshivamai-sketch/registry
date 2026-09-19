@@ -66,6 +66,15 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.card),
         ),
       ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        insetPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.xs,
+          AppSpacing.md,
+          AppSpacing.md,
+        ),
+      ),
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
         height: AppSpacing.dockHeight,

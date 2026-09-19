@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/navigation/add_item_sheet.dart';
 import 'package:the_registry/app/theme/app_motion.dart';
+import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
@@ -56,26 +57,49 @@ class AppShellState extends State<AppShell> {
             selectTab(0);
           }
         },
-        child: Scaffold(
-          extendBody: true,
-          body: IndexedStack(
-            index: _index,
-            children: const [
-              HomeScreen(),
-              DocumentsScreen(),
-              SubscriptionsScreen(),
-              ProfilePlaceholderScreen(embedded: true),
-            ],
-          ),
-          bottomNavigationBar: AnimatedSwitcher(
-            duration: AppMotion.short,
-            child: RegistryAuraNavigationDock(
-              key: const ValueKey<String>('nav-dock'),
-              selectedIndex: _index,
-              onDestinationSelected: selectTab,
-              onAddPressed: _openAdd,
-            ),
-          ),
+        child: Builder(
+          builder: (context) {
+            final theme = Theme.of(context);
+            return Theme(
+              data: theme.copyWith(
+                snackBarTheme: theme.snackBarTheme.copyWith(
+                  behavior: SnackBarBehavior.floating,
+                  insetPadding: EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.xs,
+                    AppSpacing.md,
+                    AppSpacing.snackBarDockInset(context),
+                  ),
+                ),
+              ),
+              child: Scaffold(
+                extendBody: true,
+                body: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: AppSpacing.dockOverlayExtent(context),
+                  ),
+                  child: IndexedStack(
+                    index: _index,
+                    children: const [
+                      HomeScreen(),
+                      DocumentsScreen(),
+                      SubscriptionsScreen(),
+                      ProfilePlaceholderScreen(embedded: true),
+                    ],
+                  ),
+                ),
+                bottomNavigationBar: AnimatedSwitcher(
+                  duration: AppMotion.short,
+                  child: RegistryAuraNavigationDock(
+                    key: const ValueKey<String>('nav-dock'),
+                    selectedIndex: _index,
+                    onDestinationSelected: selectTab,
+                    onAddPressed: _openAdd,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -87,6 +111,11 @@ class AppShellState extends State<AppShell> {
       onDocumentSaved: () {
         if (mounted) {
           selectTab(1);
+        }
+      },
+      onSubscriptionSaved: () {
+        if (mounted) {
+          selectTab(2);
         }
       },
     );

@@ -181,11 +181,15 @@ class PriorityHeroCard extends StatelessWidget {
                     builder: (context, constraints) {
                       final stackedDates = constraints.maxWidth < 280;
                       final start = dateCell(
-                        l10n.pulseStartByEyebrow,
+                        item.type == RegistryItemType.subscription
+                            ? l10n.pulseDecideByEyebrow
+                            : l10n.pulseStartByEyebrow,
                         startDate,
                       );
                       final expiry = dateCell(
-                        l10n.pulseExpiresEyebrow,
+                        item.type == RegistryItemType.subscription
+                            ? l10n.pulseNextChargeEyebrow
+                            : l10n.pulseExpiresEyebrow,
                         expiryDate,
                       );
                       if (stackedDates) {
@@ -229,7 +233,7 @@ class PriorityHeroCard extends StatelessWidget {
                         color: colorScheme.primary,
                       ),
                       onPressed: () =>
-                          AppRoutes.openCatalogItemReview(context, item.id),
+                          AppRoutes.openRegistryItem(context, item),
                     ),
                   ),
                 ],

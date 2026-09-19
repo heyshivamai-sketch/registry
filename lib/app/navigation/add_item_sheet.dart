@@ -9,6 +9,7 @@ abstract final class AddItemSheet {
   static Future<void> show(
     BuildContext context, {
     VoidCallback? onDocumentSaved,
+    VoidCallback? onSubscriptionSaved,
   }) {
     final l10n = AppLocalizations.of(context);
     return showModalBottomSheet<void>(
@@ -63,9 +64,12 @@ abstract final class AddItemSheet {
                   icon: Icons.subscriptions_outlined,
                   title: l10n.typeSubscription,
                   subtitle: l10n.addSheetSubscriptionSubtitle,
-                  onTap: () {
+                  onTap: () async {
                     Navigator.of(sheetContext).pop();
-                    AppRoutes.openAddSubscription(context);
+                    final saved = await AppRoutes.openAddSubscription(context);
+                    if (saved) {
+                      onSubscriptionSaved?.call();
+                    }
                   },
                 ),
               ],

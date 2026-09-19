@@ -1137,4 +1137,360 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get documentStatusLabel => 'Statut';
+
+  @override
+  String get homeEmptyTitle => 'Votre registre est vide';
+
+  @override
+  String get homeEmptyMessage =>
+      'Ajoutez un document ou un abonnement pour suivre les dates importantes.';
+
+  @override
+  String get homeCalmTitle => 'Rien à traiter';
+
+  @override
+  String get homeCalmMessage =>
+      'Les éléments enregistrés sont à jour. Les dates à venir apparaissent dans l’Horizon.';
+
+  @override
+  String homeEstimatedMonthly(String amount) {
+    return '$amount / mois';
+  }
+
+  @override
+  String get pulseDecideByEyebrow => 'Décider avant';
+
+  @override
+  String get pulseNextChargeEyebrow => 'Prochain prélèvement';
+
+  @override
+  String get subscriptionsEyebrow => 'Dépenser avec intention';
+
+  @override
+  String get subscriptionsSearchPlaceholder => 'Rechercher des abonnements';
+
+  @override
+  String subscriptionsSavedSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enregistrés',
+      one: '1 enregistré',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsActiveSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count abonnements actifs',
+      one: '1 abonnement actif',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String subscriptionsAttentionSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count décisions à prendre',
+      one: '1 décision à prendre',
+      zero: 'Aucune décision à prendre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscriptionsListHeader => 'Abonnements';
+
+  @override
+  String get addSubscriptionShort => 'Ajouter';
+
+  @override
+  String get subscriptionsSearchEmptyTitle => 'Aucun abonnement correspondant';
+
+  @override
+  String get subscriptionsSearchEmptyMessage =>
+      'Essayez un autre nom ou une autre catégorie, ou effacez la recherche.';
+
+  @override
+  String get subscriptionsFilterEmptyTitle => 'Rien dans ce filtre';
+
+  @override
+  String get subscriptionsFilterEmptyMessage =>
+      'Choisissez un autre statut, ou Tous pour voir chaque abonnement.';
+
+  @override
+  String get monthlySnapshotEyebrow => 'Aperçu mensuel';
+
+  @override
+  String get estimatedMonthlyCost => 'Coût mensuel estimé';
+
+  @override
+  String get estimatedMonthlyDisclaimer =>
+      'Estimation normalisée des abonnements actifs. Ce n’est pas une dépense réelle ni un historique de paiements.';
+
+  @override
+  String estimatedMonthlyMultiple(int count) {
+    return '$count devises';
+  }
+
+  @override
+  String get fieldServiceName => 'Nom du service';
+
+  @override
+  String get fieldPlanName => 'Nom de l’offre';
+
+  @override
+  String get fieldAmount => 'Montant';
+
+  @override
+  String get fieldCurrency => 'Devise';
+
+  @override
+  String get fieldBillingCycle => 'Cycle de facturation';
+
+  @override
+  String get fieldNextPayment => 'Prochaine date de paiement';
+
+  @override
+  String get fieldDecideBy => 'Date de décision';
+
+  @override
+  String get fieldAutoRenew => 'Renouvellement automatique';
+
+  @override
+  String get billingWeekly => 'Hebdomadaire';
+
+  @override
+  String get billingMonthly => 'Mensuel';
+
+  @override
+  String get billingQuarterly => 'Trimestriel';
+
+  @override
+  String get billingYearly => 'Annuel';
+
+  @override
+  String get billingPerWeek => '/ semaine';
+
+  @override
+  String get billingPerMonth => '/ mois';
+
+  @override
+  String get billingPerQuarter => '/ trimestre';
+
+  @override
+  String get billingPerYear => '/ an';
+
+  @override
+  String get subscriptionCategoryEntertainment => 'Divertissement';
+
+  @override
+  String get subscriptionCategoryHealth => 'Santé';
+
+  @override
+  String get subscriptionCategoryProductivity => 'Productivité';
+
+  @override
+  String get subscriptionCategoryUtilities => 'Services';
+
+  @override
+  String get subscriptionCategoryFinance => 'Finance';
+
+  @override
+  String get subscriptionCategoryEducation => 'Éducation';
+
+  @override
+  String get subscriptionCategoryOther => 'Autre';
+
+  @override
+  String get subscriptionServiceIntroTitle => 'Que suivez-vous ?';
+
+  @override
+  String get subscriptionServiceIntro =>
+      'Commencez par le service et la catégorie.';
+
+  @override
+  String get subscriptionBillingIntroTitle => 'Détails de facturation';
+
+  @override
+  String get subscriptionBillingIntro =>
+      'Ajoutez seulement ce que vous savez. Tout pourra être modifié plus tard.';
+
+  @override
+  String get subscriptionPreferencesIntroTitle => 'Anticipez le prélèvement';
+
+  @override
+  String get subscriptionPreferencesIntro =>
+      'Choisissez quand vous voulez décider.';
+
+  @override
+  String get subscriptionReviewIntroTitle => 'Prêt à suivre';
+
+  @override
+  String get subscriptionReviewIntro =>
+      'Confirmez l’abonnement avant de l’ajouter à votre registre.';
+
+  @override
+  String get saveSubscription => 'Enregistrer l’abonnement';
+
+  @override
+  String get subscriptionSaved => 'Abonnement enregistré pour cette session.';
+
+  @override
+  String get subscriptionUpdated => 'Abonnement mis à jour pour cette session.';
+
+  @override
+  String get subscriptionDeleted => 'Abonnement supprimé de cette session.';
+
+  @override
+  String get subscriptionSaveFailed =>
+      'L’abonnement n’a pas pu être enregistré. Votre brouillon est toujours là. Réessayez.';
+
+  @override
+  String get editSubscriptionTitle => 'Modifier l’abonnement';
+
+  @override
+  String get subscriptionDetailsTitle => 'Abonnement';
+
+  @override
+  String get planDetailsEyebrow => 'Détails de l’offre';
+
+  @override
+  String get planInformation => 'Informations sur l’offre';
+
+  @override
+  String get nextDecision => 'Prochaine décision';
+
+  @override
+  String get subscriptionUnavailableTitle => 'Abonnement indisponible';
+
+  @override
+  String get subscriptionUnavailableMessage =>
+      'Cet abonnement n’est plus dans cette session.';
+
+  @override
+  String get nextPaymentHelper =>
+      'Les dates passées restent un suivi non résolu. Les dates ne sont pas avancées automatiquement.';
+
+  @override
+  String get decideByHelper => 'Doit être le jour du paiement ou avant.';
+
+  @override
+  String get clearDecideBy => 'Effacer la date de décision';
+
+  @override
+  String get autoRenewHelper =>
+      'Une préférence suivie dans cette application. Elle ne change rien chez le fournisseur.';
+
+  @override
+  String get autoRenewOn => 'Activé';
+
+  @override
+  String get autoRenewOff => 'Désactivé';
+
+  @override
+  String get subscriptionRemindersHelper =>
+      'Ces options sont enregistrées avec l’abonnement. Les notifications ne sont pas planifiées.';
+
+  @override
+  String get subscriptionReminder7Days => '7 jours avant';
+
+  @override
+  String get subscriptionReminder1Day => '1 jour avant';
+
+  @override
+  String get subscriptionReminderOnCharge => 'Le jour du prélèvement';
+
+  @override
+  String get decideByWhyTitle => 'Pourquoi une date de décision ?';
+
+  @override
+  String get decideByWhyMessage =>
+      'Elle vous laisse le temps de revoir ou d’annuler avant le paiement.';
+
+  @override
+  String get reviewJumpService => 'Modifier le service';
+
+  @override
+  String get reviewJumpBilling => 'Modifier la facturation';
+
+  @override
+  String get reviewJumpPreferences => 'Modifier les préférences';
+
+  @override
+  String get subscriptionSessionNote =>
+      'Les abonnements restent sur cet appareil pour cette session. Il n’y a ni connexion bancaire ni paiement.';
+
+  @override
+  String get errorDecideByAfterPayment =>
+      'La date de décision doit être le jour du paiement ou avant.';
+
+  @override
+  String get errorAmountNegative => 'Le montant ne peut pas être négatif.';
+
+  @override
+  String get errorAmountInvalid =>
+      'Saisissez un montant valide pour cette devise.';
+
+  @override
+  String get errorAmountPrecision =>
+      'Cette devise n’autorise pas autant de décimales.';
+
+  @override
+  String get subscriptionCancelled => 'Annulé';
+
+  @override
+  String get subscriptionActive => 'Actif';
+
+  @override
+  String get lifecycleLabel => 'Statut de suivi';
+
+  @override
+  String get markCancelled => 'Marquer comme annulé';
+
+  @override
+  String get cancelPlanTitle => 'Arrêter le suivi de cet abonnement ?';
+
+  @override
+  String cancelPlanMessage(String name) {
+    return 'Cela met à jour uniquement le suivi de $name dans cette application. Cela n’annule pas l’abonnement chez le fournisseur.';
+  }
+
+  @override
+  String get planMarkedCancelled =>
+      'Abonnement marqué comme annulé pour cette session.';
+
+  @override
+  String get reactivatePlan => 'Réactiver';
+
+  @override
+  String get reactivatePlanTitle => 'Réactiver cet abonnement ?';
+
+  @override
+  String reactivatePlanMessage(String name) {
+    return 'Confirmez la prochaine date de paiement pour $name. Cela reprend uniquement le suivi dans cette application.';
+  }
+
+  @override
+  String get planReactivated => 'Abonnement réactivé pour cette session.';
+
+  @override
+  String get deleteSubscription => 'Supprimer l’abonnement';
+
+  @override
+  String get deleteSubscriptionTitle => 'Supprimer cet abonnement ?';
+
+  @override
+  String deleteSubscriptionMessage(String name) {
+    return '$name sera retiré de cette session.';
+  }
+
+  @override
+  String get subscriptionTrackingDisclaimer =>
+      'Le registre suit cet abonnement mais ne l’annule pas et ne le facture pas automatiquement.';
 }

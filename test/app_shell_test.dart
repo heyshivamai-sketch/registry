@@ -6,7 +6,7 @@ import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/add_subscription_placeholder_screen.dart';
+import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
 
 import 'support/fake_onboarding_repository.dart';
 
@@ -80,8 +80,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Passport'), findsWidgets);
-    expect(find.text('Streaming subscription'), findsNothing);
-    expect(find.text('Start insurance renewal'), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('home-search-empty')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Search clear restores items', (tester) async {
@@ -98,7 +100,10 @@ void main() {
       'Passport',
     );
     await tester.pumpAndSettle();
-    expect(find.text('Streaming subscription'), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('home-search-empty')),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const ValueKey<String>('home-search-clear')),
       findsOneWidget,
@@ -112,11 +117,7 @@ void main() {
         .controller!;
     expect(controller.text, isEmpty);
     expect(
-      find.text('Streaming subscription', skipOffstage: false),
-      findsOneWidget,
-    );
-    expect(
-      find.text('Start insurance renewal', skipOffstage: false),
+      find.byKey(const ValueKey<String>('home-calm-empty')),
       findsOneWidget,
     );
   });
@@ -149,7 +150,12 @@ void main() {
     expect(find.text('Add a document'), findsOneWidget);
   });
 
-  testWidgets('Add Subscription opens its placeholder', (tester) async {
+  testWidgets('Add Subscription opens its form', (tester) async {
+    tester.view.physicalSize = const Size(412, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
@@ -158,11 +164,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('add-subscription')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AddSubscriptionPlaceholderScreen), findsOneWidget);
-    expect(
-      find.textContaining('The subscription form and payment reminders'),
-      findsOneWidget,
-    );
+    expect(find.byType(AddSubscriptionScreen), findsOneWidget);
+    expect(find.text('What are you tracking?'), findsOneWidget);
   });
 
   testWidgets('Arabic renders the shell in RTL', (tester) async {

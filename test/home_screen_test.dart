@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
-import 'package:the_registry/core/widgets/registry_countdown_ring.dart';
+import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/domain/document_status.dart';
+import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
 import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
@@ -16,18 +18,51 @@ import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
 import 'package:the_registry/features/home/widgets/home_search_field.dart';
 import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
 import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
-import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
 import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
 import 'package:the_registry/features/notifications/presentation/notifications_placeholder_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
+import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 import 'support/fake_onboarding_repository.dart';
+import 'support/sample_document.dart';
+import 'support/sample_subscription.dart';
 
-Widget _app({Locale locale = const Locale('en')}) {
+final _clock = FixedClock(DateTime(2026, 9, 19));
+
+Widget _app({
+  Locale locale = const Locale('en'),
+  InMemoryDocumentRepository? documents,
+  InMemorySubscriptionRepository? subscriptions,
+}) {
   return RegistryApp(
     onboardingRepository: FakeOnboardingRepository(completed: true),
+    documentRepository: documents ?? InMemoryDocumentRepository(),
+    subscriptionRepository: subscriptions ?? InMemorySubscriptionRepository(),
+    clock: _clock,
     locale: locale,
+  );
+}
+
+Future<void> _seedAttention(
+  InMemoryDocumentRepository documents,
+  InMemorySubscriptionRepository subscriptions,
+) async {
+  await documents.save(
+    sampleDocument(
+      id: 'passport',
+      name: 'Passport',
+      expiryDate: DateTime(2026, 11, 12),
+      actionDate: DateTime(2026, 9, 19),
+    ),
+  );
+  await subscriptions.save(
+    sampleSubscription(
+      id: 'stream',
+      serviceName: 'Streamio',
+      nextPaymentDate: DateTime(2026, 9, 28),
+      decideByDate: DateTime(2026, 9, 25),
+    ),
   );
 }
 
@@ -91,53 +126,35 @@ void main() {
     expect(find.byType(HomeSearchField), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('home-filter')), findsNothing);
     expect(find.text('⌘K'), findsNothing);
-    expect(find.byType(PriorityHeroCard), findsOneWidget);
+    expect(find.byType(PriorityHeroCard), findsNothing);
     expect(
-      find.byKey(const ValueKey<String>('hero-countdown')),
+      find.byKey(const ValueKey<String>('home-calm-empty')),
       findsOneWidget,
     );
-    expect(find.byType(RegistryCountdownRing), findsOneWidget);
-    expect(find.text('Action needed'), findsWidgets);
-    expect(find.text('Next best action'), findsOneWidget);
     expect(find.text('Registry snapshot'), findsOneWidget);
     expect(find.byType(HomeMetricsRow), findsOneWidget);
-    expect(find.text('Action queue'), findsOneWidget);
-    expect(find.byType(HomeAttentionCard), findsWidgets);
-    expect(find.text('Horizon', skipOffstage: false), findsOneWidget);
-    expect(find.byType(HomeUpcomingItem, skipOffstage: false), findsWidgets);
-    expect(find.textContaining('20 Sep 2026'), findsWidgets);
-    expect(find.textContaining('05 Oct 2026'), findsWidgets);
-    expect(find.textContaining('Start by'), findsWidgets);
-    expect(find.textContaining('Expires'), findsWidgets);
-    expect(find.bySemanticsLabel(RegExp(r'day')), findsWidgets);
-    expect(find.text('Review now'), findsOneWidget);
+    expect(find.byType(HomeAttentionCard), findsNothing);
     final metrics = tester.widget<HomeMetricsRow>(
       find.byKey(const ValueKey<String>('home-metrics')),
     );
-    expect(metrics.documentCount, 3);
-    expect(metrics.subscriptionCount, 2);
-    expect(metrics.horizonCount, 5);
-    expect(
-      tester
-          .widgetList<HomeAttentionCard>(find.byType(HomeAttentionCard))
-          .map((card) => card.item.id),
-      ['car_insurance'],
-    );
-    expect(
-      tester
-          .widgetList<HomeAttentionCard>(find.byType(HomeAttentionCard))
-          .every((card) => DocumentStatus.isAttentionStatus(card.item.status)),
-      isTrue,
-    );
+    expect(metrics.documentCount, 0);
+    expect(metrics.subscriptionCount, 0);
+    expect(metrics.horizonCount, 0);
   });
 
-  testWidgets('Search filters and clears mock items', (tester) async {
+  testWidgets('Search filters and clears live items', (tester) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_app());
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    await _seedAttention(documents, subscriptions);
+
+    await tester.pumpWidget(
+      _app(documents: documents, subscriptions: subscriptions),
+    );
     await tester.pumpAndSettle();
 
     await tester.enterText(
@@ -147,8 +164,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Passport'), findsWidgets);
-    expect(find.text('Streaming subscription'), findsNothing);
-    expect(find.text('Start insurance renewal'), findsNothing);
+    expect(find.text('Streamio'), findsNothing);
 
     await tester.tap(find.byTooltip('Clear search'));
     await tester.pumpAndSettle();
@@ -160,14 +176,8 @@ void main() {
           .text,
       isEmpty,
     );
-    expect(
-      find.text('Streaming subscription', skipOffstage: false),
-      findsOneWidget,
-    );
-    expect(
-      find.text('Start insurance renewal', skipOffstage: false),
-      findsOneWidget,
-    );
+    expect(find.text('Streamio', skipOffstage: false), findsWidgets);
+    expect(find.text('Passport', skipOffstage: false), findsWidgets);
   });
 
   testWidgets('Search empty state appears for unknown queries', (tester) async {
@@ -318,7 +328,7 @@ void main() {
       Directionality.of(tester.element(find.byType(AppShell))),
       TextDirection.rtl,
     );
-    expect(find.text('يلزم اتخاذ إجراء'), findsWidgets);
+    expect(find.text('يلزم اتخاذ إجراء'), findsNothing);
   });
 
   testWidgets('Small-screen Home has no overflow', (tester) async {
@@ -330,10 +340,9 @@ void main() {
     final overflows = _captureOverflows(tester);
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('Horizon'),
-      200,
-      scrollable: find.byType(Scrollable).first,
+    expect(
+      find.byKey(const ValueKey<String>('home-calm-empty')),
+      findsOneWidget,
     );
 
     expect(
@@ -376,16 +385,7 @@ void main() {
           find.byType(HomeUpcomingItem, skipOffstage: false),
         )
         .toList();
-    expect(upcoming.map((item) => item.item.id), [
-      'streaming',
-      'passport',
-      'gym',
-      'driving_licence',
-    ]);
-    expect(
-      upcoming.first.item.actionDate.isBefore(upcoming.last.item.actionDate),
-      isTrue,
-    );
+    expect(upcoming, isEmpty);
   });
 
   testWidgets('Small-screen last Horizon card clears the dock', (tester) async {
@@ -404,7 +404,7 @@ void main() {
     scrollable.position.jumpTo(scrollable.position.maxScrollExtent);
     await tester.pumpAndSettle();
 
-    _expectDockClearsHomeContent(tester, includeHorizon: true);
+    _expectDockClearsHomeContent(tester, includeHorizon: false);
     expect(
       overflows.where((details) => details.toString().contains('overflowed')),
       isEmpty,
@@ -490,7 +490,13 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_app());
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    await _seedAttention(documents, subscriptions);
+
+    await tester.pumpWidget(
+      _app(documents: documents, subscriptions: subscriptions),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(RegistryStatusChip), findsWidgets);
@@ -543,36 +549,26 @@ void main() {
     expect(DocumentStatus.isAttentionStatus(RegistryStatus.expired), isTrue);
   });
 
-  testWidgets('Pulse Review opens the highlighted catalog item', (
-    tester,
-  ) async {
+  testWidgets('Pulse Review opens the real document detail', (tester) async {
     tester.view.physicalSize = const Size(412, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_app());
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    await _seedAttention(documents, subscriptions);
+
+    await tester.pumpWidget(
+      _app(documents: documents, subscriptions: subscriptions),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(CatalogItemDetailScreen), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey<String>('catalog-item-detail')),
-      findsOneWidget,
-    );
-    expect(find.text('Start insurance renewal'), findsWidgets);
-    expect(find.text('Car insurance'), findsWidgets);
-    expect(find.text('High impact'), findsWidgets);
-    expect(find.textContaining('20 Sep 2026'), findsWidgets);
-    expect(find.textContaining('05 Oct 2026'), findsWidgets);
-    expect(find.byKey(const ValueKey<String>('quick-edit')), findsNothing);
-    expect(find.byKey(const ValueKey<String>('record-renewal')), findsNothing);
-    expect(
-      find.byKey(const ValueKey<String>('document-actions')),
-      findsNothing,
-    );
+    expect(find.byType(DocumentDetailScreen), findsOneWidget);
+    expect(find.text('Passport'), findsWidgets);
   });
 
   testWidgets('Back from Pulse Review preserves Home search state', (
@@ -583,19 +579,25 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_app());
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    await _seedAttention(documents, subscriptions);
+
+    await tester.pumpWidget(
+      _app(documents: documents, subscriptions: subscriptions),
+    );
     await tester.pumpAndSettle();
 
     await tester.enterText(
       find.byKey(const ValueKey<String>('home-search')),
-      'insurance',
+      'Passport',
     );
     await tester.pumpAndSettle();
-    expect(find.text('Streaming subscription'), findsNothing);
+    expect(find.text('Streamio'), findsNothing);
 
     await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
     await tester.pumpAndSettle();
-    expect(find.byType(CatalogItemDetailScreen), findsOneWidget);
+    expect(find.byType(DocumentDetailScreen), findsOneWidget);
 
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
@@ -606,21 +608,25 @@ void main() {
           .widget<TextField>(find.byKey(const ValueKey<String>('home-search')))
           .controller!
           .text,
-      'insurance',
+      'Passport',
     );
-    expect(find.text('Streaming subscription'), findsNothing);
+    expect(find.text('Streamio'), findsNothing);
     expect(find.byType(PriorityHeroCard), findsOneWidget);
   });
 
-  testWidgets('90-day view lists catalog items chronologically', (
-    tester,
-  ) async {
+  testWidgets('90-day view lists live items chronologically', (tester) async {
     tester.view.physicalSize = const Size(412, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_app());
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    await _seedAttention(documents, subscriptions);
+
+    await tester.pumpWidget(
+      _app(documents: documents, subscriptions: subscriptions),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey<String>('home-ninety-day')));
@@ -633,16 +639,9 @@ void main() {
     );
     final ordered = tester
         .widgetList<HomeUpcomingItem>(find.byType(HomeUpcomingItem))
-        .map((item) => item.item.id)
+        .map((item) => item.item.sourceId)
         .toList();
-    expect(ordered, [
-      'car_insurance',
-      'streaming',
-      'passport',
-      'gym',
-      'driving_licence',
-    ]);
-    expect(find.textContaining('05 Oct 2026'), findsWidgets);
+    expect(ordered, ['passport', 'stream']);
     expect(find.byType(RegistryStatusChip), findsWidgets);
 
     await tester.tap(find.byType(BackButton));
@@ -651,27 +650,13 @@ void main() {
     expect(find.byType(PriorityHeroCard), findsOneWidget);
   });
 
-  testWidgets('Open calendar and horizon metric open the same 90-day view', (
-    tester,
-  ) async {
+  testWidgets('Horizon metric opens the 90-day view', (tester) async {
     tester.view.physicalSize = const Size(412, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(_app());
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey<String>('home-open-calendar')),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.byKey(const ValueKey<String>('home-open-calendar')));
-    await tester.pumpAndSettle();
-    expect(find.byType(Horizon90DayScreen), findsOneWidget);
-
-    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey<String>('metric-horizon')));
@@ -696,23 +681,13 @@ void main() {
     expect(find.text('Nothing in the next 90 days'), findsOneWidget);
   });
 
-  testWidgets('Arabic 90-day and catalog review stay RTL', (tester) async {
+  testWidgets('Arabic 90-day stays RTL', (tester) async {
     tester.view.physicalSize = const Size(412, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(_app(locale: const Locale('ar')));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
-    await tester.pumpAndSettle();
-    expect(
-      Directionality.of(tester.element(find.byType(CatalogItemDetailScreen))),
-      TextDirection.rtl,
-    );
-
-    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('home-ninety-day')));
     await tester.pumpAndSettle();

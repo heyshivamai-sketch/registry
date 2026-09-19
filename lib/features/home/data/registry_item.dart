@@ -19,9 +19,15 @@ class RegistryItem {
     required this.dueDate,
     required this.isHero,
     required this.needsAttention,
+    this.sourceId,
+    this.titleText,
+    this.searchTerms = const [],
   });
 
   final String id;
+  final String? sourceId;
+  final String? titleText;
+  final List<String> searchTerms;
   final RegistryItemType type;
   final RegistryStatus status;
   final RegistryImpact impact;
@@ -37,6 +43,9 @@ class RegistryItem {
   bool get requiresAttention => DocumentStatus.isAttentionStatus(status);
 
   String title(AppLocalizations l10n) {
+    if (titleText != null && titleText!.trim().isNotEmpty) {
+      return titleText!;
+    }
     return switch (id) {
       'car_insurance' => l10n.itemCarInsurance,
       'passport' => l10n.itemPassport,
@@ -61,7 +70,10 @@ class RegistryItem {
       'streaming' => l10n.actionDecideBeforeCharge,
       'driving_licence' => l10n.actionPrepareRenewal,
       'gym' => l10n.actionReviewMembership,
-      _ => title(l10n),
+      _ =>
+        type == RegistryItemType.subscription
+            ? l10n.actionDecideBeforeCharge
+            : l10n.actionStartRenewalSoon,
     };
   }
 
