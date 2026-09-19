@@ -10,6 +10,7 @@ class RegistrySectionHeader extends StatelessWidget {
     this.icon,
     this.count,
     this.actionLabel,
+    this.actionKey,
     this.onAction,
   });
 
@@ -18,6 +19,7 @@ class RegistrySectionHeader extends StatelessWidget {
   final IconData? icon;
   final int? count;
   final String? actionLabel;
+  final Key? actionKey;
   final VoidCallback? onAction;
 
   @override
@@ -44,6 +46,7 @@ class RegistrySectionHeader extends StatelessWidget {
               ),
             )
           : TextButton(
+              key: actionKey,
               onPressed: onAction,
               style: TextButton.styleFrom(
                 foregroundColor: colorScheme.tertiary,

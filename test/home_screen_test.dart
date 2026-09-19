@@ -16,6 +16,8 @@ import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
 import 'package:the_registry/features/home/widgets/home_search_field.dart';
 import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
 import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
+import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
+import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
 import 'package:the_registry/features/notifications/presentation/notifications_placeholder_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -108,7 +110,7 @@ void main() {
     expect(find.textContaining('Start by'), findsWidgets);
     expect(find.textContaining('Expires'), findsWidgets);
     expect(find.bySemanticsLabel(RegExp(r'day')), findsWidgets);
-    expect(kHomeHeroReviewOpensDetail, isFalse);
+    expect(find.text('Review now'), findsOneWidget);
     final metrics = tester.widget<HomeMetricsRow>(
       find.byKey(const ValueKey<String>('home-metrics')),
     );
@@ -272,9 +274,17 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
 
+    expect(find.byIcon(Icons.home_rounded), findsWidgets);
+    expect(find.byIcon(Icons.article_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.account_circle_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsOneWidget);
+
     await tester.tap(find.byKey(const ValueKey<String>('nav-documents')));
     await tester.pumpAndSettle();
     expect(find.text('No documents yet'), findsOneWidget);
+    expect(find.byIcon(Icons.article_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.home_outlined), findsOneWidget);
     expect(
       tester
           .widget<RegistryAuraNavigationDock>(
@@ -531,5 +541,185 @@ void main() {
     expect(DocumentStatus.isAttentionStatus(RegistryStatus.active), isFalse);
     expect(DocumentStatus.isAttentionStatus(RegistryStatus.urgent), isTrue);
     expect(DocumentStatus.isAttentionStatus(RegistryStatus.expired), isTrue);
+  });
+
+  testWidgets('Pulse Review opens the highlighted catalog item', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CatalogItemDetailScreen), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('catalog-item-detail')),
+      findsOneWidget,
+    );
+    expect(find.text('Start insurance renewal'), findsWidgets);
+    expect(find.text('Car insurance'), findsWidgets);
+    expect(find.text('High impact'), findsWidgets);
+    expect(find.textContaining('20 Sep 2026'), findsWidgets);
+    expect(find.textContaining('05 Oct 2026'), findsWidgets);
+    expect(find.byKey(const ValueKey<String>('quick-edit')), findsNothing);
+    expect(find.byKey(const ValueKey<String>('record-renewal')), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('document-actions')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('Back from Pulse Review preserves Home search state', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('home-search')),
+      'insurance',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Streaming subscription'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
+    await tester.pumpAndSettle();
+    expect(find.byType(CatalogItemDetailScreen), findsOneWidget);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const ValueKey<String>('home-search')))
+          .controller!
+          .text,
+      'insurance',
+    );
+    expect(find.text('Streaming subscription'), findsNothing);
+    expect(find.byType(PriorityHeroCard), findsOneWidget);
+  });
+
+  testWidgets('90-day view lists catalog items chronologically', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey<String>('home-ninety-day')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Horizon90DayScreen), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('horizon-90-day')),
+      findsOneWidget,
+    );
+    final ordered = tester
+        .widgetList<HomeUpcomingItem>(find.byType(HomeUpcomingItem))
+        .map((item) => item.item.id)
+        .toList();
+    expect(ordered, [
+      'car_insurance',
+      'streaming',
+      'passport',
+      'gym',
+      'driving_licence',
+    ]);
+    expect(find.textContaining('05 Oct 2026'), findsWidgets);
+    expect(find.byType(RegistryStatusChip), findsWidgets);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(PriorityHeroCard), findsOneWidget);
+  });
+
+  testWidgets('Open calendar and horizon metric open the same 90-day view', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey<String>('home-open-calendar')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('home-open-calendar')));
+    await tester.pumpAndSettle();
+    expect(find.byType(Horizon90DayScreen), findsOneWidget);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey<String>('metric-horizon')));
+    await tester.pumpAndSettle();
+    expect(find.byType(Horizon90DayScreen), findsOneWidget);
+  });
+
+  testWidgets('90-day view shows an empty state when injected', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Horizon90DayScreen(items: []),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey<String>('horizon-90-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('Nothing in the next 90 days'), findsOneWidget);
+  });
+
+  testWidgets('Arabic 90-day and catalog review stay RTL', (tester) async {
+    tester.view.physicalSize = const Size(412, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_app(locale: const Locale('ar')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey<String>('hero-review')));
+    await tester.pumpAndSettle();
+    expect(
+      Directionality.of(tester.element(find.byType(CatalogItemDetailScreen))),
+      TextDirection.rtl,
+    );
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('home-ninety-day')));
+    await tester.pumpAndSettle();
+    expect(
+      Directionality.of(tester.element(find.byType(Horizon90DayScreen))),
+      TextDirection.rtl,
+    );
+    expect(find.text('عرض 90 يومًا'), findsWidgets);
   });
 }

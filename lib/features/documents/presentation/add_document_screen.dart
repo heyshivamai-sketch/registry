@@ -7,6 +7,7 @@ import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_secondary_button.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
+import 'package:the_registry/core/widgets/registry_selector_field.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/features/documents/domain/document_field_value.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
@@ -739,6 +740,13 @@ class _ActionBar extends StatelessWidget {
                         : 'wizard-continue',
                   ),
                   label: continueLabel,
+                  trailing: reviewing || onReview
+                      ? null
+                      : const Icon(
+                          Icons.arrow_forward_rounded,
+                          key: ValueKey<String>('wizard-continue-arrow'),
+                          size: 18,
+                        ),
                   onPressed: processing || controller.saving
                       ? null
                       : onContinue,
@@ -1054,7 +1062,7 @@ class _IdentityStep extends StatelessWidget {
                 title: l10n.sectionEssential,
               ),
               const SizedBox(height: AppSpacing.md),
-              _SelectorField(
+              RegistrySelectorField(
                 fieldKey: 'field-country',
                 label: l10n.fieldCountry,
                 value: DocumentCopy.country(l10n, controller.countryCode),
@@ -1062,7 +1070,7 @@ class _IdentityStep extends StatelessWidget {
                 onTap: onPickCountry,
               ),
               const SizedBox(height: AppSpacing.md),
-              _SelectorField(
+              RegistrySelectorField(
                 fieldKey: 'field-schema',
                 label: l10n.fieldDocumentType,
                 value: DocumentCopy.schema(l10n, controller.schemaId),
@@ -1070,31 +1078,16 @@ class _IdentityStep extends StatelessWidget {
                 onTap: onPickSchema,
               ),
               const SizedBox(height: AppSpacing.md),
-              Semantics(
-                button: true,
+              RegistrySelectorField(
+                fieldKey: 'field-category',
                 label: l10n.fieldCategory,
-                child: InkWell(
-                  key: const ValueKey<String>('field-category'),
-                  onTap: onPickCategory,
-                  borderRadius: BorderRadius.circular(4),
-                  child: InputDecorator(
-                    isEmpty: controller.category == null,
-                    decoration: decoration(
-                      label: l10n.fieldCategory,
-                      errorText: controller.categoryError,
-                      requiredField: true,
-                      suffixIcon: const Icon(Icons.arrow_drop_down),
-                    ),
-                    child: Text(
-                      controller.category == null
-                          ? l10n.fieldCategory
-                          : DocumentCopy.category(l10n, controller.category!),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
+                value: controller.category == null
+                    ? ''
+                    : DocumentCopy.category(l10n, controller.category!),
+                empty: controller.category == null,
+                requiredField: true,
+                errorText: controller.categoryError,
+                onTap: onPickCategory,
               ),
               const SizedBox(height: AppSpacing.md),
               TextField(
@@ -1189,44 +1182,6 @@ class _IdentityStep extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _SelectorField extends StatelessWidget {
-  const _SelectorField({
-    required this.fieldKey,
-    required this.label,
-    required this.value,
-    required this.empty,
-    required this.onTap,
-  });
-
-  final String fieldKey;
-  final String label;
-  final String value;
-  final bool empty;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: InkWell(
-        key: ValueKey<String>(fieldKey),
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(4),
-        child: InputDecorator(
-          isEmpty: empty,
-          decoration: InputDecoration(
-            labelText: label,
-            suffixIcon: const Icon(Icons.arrow_drop_down),
-            border: const OutlineInputBorder(),
-          ),
-          child: Text(value, style: Theme.of(context).textTheme.bodyLarge),
-        ),
-      ),
     );
   }
 }
@@ -1958,36 +1913,33 @@ class _OcrReview extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        _SelectorField(
+        RegistrySelectorField(
           fieldKey: 'ocr-country',
           label: l10n.fieldCountry,
           value: DocumentCopy.country(l10n, result?.classification.countryCode),
-          empty: false,
+          empty: result == null,
           onTap: onCountry,
         ),
         const SizedBox(height: AppSpacing.md),
-        _SelectorField(
+        RegistrySelectorField(
           fieldKey: 'ocr-schema',
           label: l10n.fieldDocumentType,
           value: DocumentCopy.schema(
             l10n,
             result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
           ),
-          empty: false,
-          onTap: () {
-            // Schema picker for OCR remaps extracted fields.
-            onSchema();
-          },
+          empty: result == null,
+          onTap: onSchema,
         ),
         const SizedBox(height: AppSpacing.md),
-        _SelectorField(
+        RegistrySelectorField(
           fieldKey: 'ocr-category',
           label: l10n.fieldCategory,
           value: DocumentCopy.category(
             l10n,
             result?.classification.category ?? DocumentCategory.other,
           ),
-          empty: false,
+          empty: result == null,
           onTap: onCategory,
         ),
         const SizedBox(height: AppSpacing.md),

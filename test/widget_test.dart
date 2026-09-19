@@ -32,7 +32,7 @@ void main() {
     expect(find.byType(RegistrySummaryCard), findsOneWidget);
     expect(find.text('Upcoming actions'), findsOneWidget);
     expect(find.byType(RegistryStatusChip), findsNWidgets(4));
-    expect(find.text('Urgent'), findsOneWidget);
+    expect(find.text('Action needed'), findsOneWidget);
     expect(find.text('Upcoming'), findsOneWidget);
     expect(find.text('Active'), findsOneWidget);
     expect(find.text('Expired'), findsOneWidget);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/app/navigation/app_routes.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_shadows.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
@@ -8,10 +9,6 @@ import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
-
-/// Home mock catalog items are not stored in [DocumentRepository], so Review
-/// has no production detail route in this phase.
-const bool kHomeHeroReviewOpensDetail = false;
 
 class PriorityHeroCard extends StatelessWidget {
   const PriorityHeroCard({super.key, required this.item});
@@ -231,7 +228,8 @@ class PriorityHeroCard extends StatelessWidget {
                         size: 18,
                         color: colorScheme.primary,
                       ),
-                      onPressed: kHomeHeroReviewOpensDetail ? () {} : () {},
+                      onPressed: () =>
+                          AppRoutes.openCatalogItemReview(context, item.id),
                     ),
                   ),
                 ],

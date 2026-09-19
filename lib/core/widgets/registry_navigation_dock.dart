@@ -17,6 +17,10 @@ class RegistryAuraNavigationDock extends StatelessWidget {
   });
 
   /// 0 Home, 1 Documents, 2 Subscriptions, 3 Profile.
+  ///
+  /// Prototype glyphs are custom Unicode (⌂ ▱ ＋ ◎ ◉). Material icons below
+  /// are the closest production equivalents: house, document card, plus,
+  /// concentric plan mark, and circular profile.
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final VoidCallback onAddPressed;
@@ -149,11 +153,7 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(
-                Icons.add_rounded,
-                color: colorScheme.onPrimary,
-                size: 25,
-              ),
+              child: Icon(Icons.add, color: colorScheme.onPrimary, size: 25),
             ),
           ),
         ),
@@ -205,8 +205,8 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                           Expanded(
                             child: destination(
                               index: 1,
-                              icon: Icons.folder_outlined,
-                              selectedIcon: Icons.folder_rounded,
+                              icon: Icons.article_outlined,
+                              selectedIcon: Icons.article_rounded,
                               label: l10n.navDocuments,
                               shortLabel: l10n.navDocumentsShort,
                               key: const ValueKey<String>('nav-documents'),
@@ -216,8 +216,8 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                           Expanded(
                             child: destination(
                               index: 2,
-                              icon: Icons.subscriptions_outlined,
-                              selectedIcon: Icons.subscriptions_rounded,
+                              icon: Icons.circle_outlined,
+                              selectedIcon: Icons.adjust,
                               label: l10n.navSubscriptions,
                               shortLabel: l10n.navSubscriptionsShort,
                               key: const ValueKey<String>('nav-subscriptions'),
@@ -226,8 +226,8 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                           Expanded(
                             child: destination(
                               index: 3,
-                              icon: Icons.person_outline_rounded,
-                              selectedIcon: Icons.person_rounded,
+                              icon: Icons.account_circle_outlined,
+                              selectedIcon: Icons.account_circle,
                               label: l10n.navProfile,
                               shortLabel: l10n.navProfileShort,
                               key: const ValueKey<String>('nav-profile'),

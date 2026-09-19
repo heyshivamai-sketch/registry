@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/app/navigation/app_routes.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
@@ -103,6 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
               key: const ValueKey<String>('home-snapshot-header'),
               title: l10n.sectionRegistrySnapshot,
               actionLabel: l10n.snapshotNinetyDayView,
+              actionKey: const ValueKey<String>('home-ninety-day'),
+              onAction: () => AppRoutes.openHorizon90Day(context),
             ),
             const SizedBox(height: AppSpacing.sm),
             HomeMetricsRow(
@@ -117,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 subscriptionCount,
               ),
               horizonSupporting: l10n.snapshotNext90Hint,
+              onHorizonTap: () => AppRoutes.openHorizon90Day(context),
             ),
             if (attention.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
@@ -136,6 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
               RegistryAuraSectionHeader(
                 key: const ValueKey<String>('home-coming-up-header'),
                 title: l10n.sectionComingUp,
+                actionLabel: l10n.horizonOpenCalendar,
+                actionKey: const ValueKey<String>('home-open-calendar'),
+                onAction: () => AppRoutes.openHorizon90Day(context),
               ),
               const SizedBox(height: AppSpacing.sm),
               for (var index = 0; index < comingUp.length; index++)

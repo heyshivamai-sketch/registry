@@ -32,7 +32,12 @@ class RegistrySelectableChip extends StatelessWidget {
         : colorScheme.onSurfaceVariant;
 
     return FilterChip(
-      label: Text(label),
+      label: Text(
+        label,
+        maxLines: 2,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+      ),
       selected: selected,
       showCheckmark: true,
       onSelected: onSelected,

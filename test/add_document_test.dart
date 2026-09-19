@@ -906,6 +906,48 @@ Name: SAMPLE NAME
     expect(find.text('ID card'), findsWidgets);
     expect(find.byKey(const ValueKey<String>('ocr-schema')), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('ocr-category')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-schema')),
+        matching: find.text('Document type'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-schema')),
+        matching: find.text('Aadhaar'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-category')),
+        matching: find.text('Category'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-category')),
+        matching: find.text('ID card'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-country')),
+        matching: find.text('Country or region'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('ocr-country')),
+        matching: find.text('India'),
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.byKey(const ValueKey<String>('ocr-confirm')));
     await tester.pumpAndSettle();
     expect(documents.documents, isEmpty);
@@ -917,6 +959,27 @@ Name: SAMPLE NAME
     );
     expect(find.text('Document type'), findsWidgets);
     expect(find.text('Category *'), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('field-schema')),
+        matching: find.text('Aadhaar'),
+      ),
+      findsWidgets,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('field-category')),
+        matching: find.text('ID card'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('field-country')),
+        matching: find.text('India'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('OCR failure keeps the image and allows retry', (tester) async {
@@ -1162,5 +1225,237 @@ Authority SAMPLE OFFICE
       'edit_prefilled',
       folder: 'registry_aura_phase3',
     );
+  });
+
+  testWidgets('Identity selectors keep labels distinct from selected values', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await continueWizard(tester);
+
+    final country = find.byKey(const ValueKey<String>('field-country'));
+    final schema = find.byKey(const ValueKey<String>('field-schema'));
+    final category = find.byKey(const ValueKey<String>('field-category'));
+
+    expect(
+      find.descendant(of: country, matching: find.text('Country or region')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: country, matching: find.text('Other')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: schema, matching: find.text('Document type')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: schema, matching: find.text('Other document')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: category, matching: find.text('Category *')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: category, matching: find.text('ID card')),
+      findsNothing,
+    );
+
+    await reveal(tester, country);
+    await tester.tap(country);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('country-IN')));
+    await tester.pumpAndSettle();
+    await reveal(tester, category);
+    await tester.tap(category);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('category-idCard')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(of: country, matching: find.text('India')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: country, matching: find.text('Country or region')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: schema, matching: find.text('Aadhaar')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: schema, matching: find.text('Document type')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: category, matching: find.text('ID card')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: category, matching: find.text('Category *')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Identity selectors do not overflow at large text or in Arabic', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(412, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    tester.platformDispatcher.textScaleFactorTestValue = 1.8;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    final overflows = <FlutterErrorDetails>[];
+    final original = FlutterError.onError;
+    FlutterError.onError = (details) {
+      overflows.add(details);
+      original?.call(details);
+    };
+    addTearDown(() => FlutterError.onError = original);
+
+    await tester.pumpWidget(app(locale: const Locale('ar')));
+    await tester.pumpAndSettle();
+    await tester.tap(_navLabel('المستندات'));
+    await tester.pumpAndSettle();
+    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
+    await tester.ensureVisible(arabicAdd);
+    await tester.tap(arabicAdd);
+    await tester.pumpAndSettle();
+    await continueWizard(tester);
+
+    expect(
+      Directionality.of(tester.element(find.byType(AddDocumentScreen))),
+      TextDirection.rtl,
+    );
+    expect(find.text('البلد أو المنطقة'), findsWidgets);
+    expect(find.text('نوع المستند'), findsWidgets);
+    expect(find.text('الفئة *'), findsWidgets);
+    expect(
+      overflows.where((details) => details.toString().contains('overflowed')),
+      isEmpty,
+    );
+  });
+
+  test('EN FR AR cover Pulse, 90-day and identity labels', () {
+    for (final locale in const [Locale('en'), Locale('fr'), Locale('ar')]) {
+      final l10n = lookupAppLocalizations(locale);
+      expect(l10n.reviewAction, isNotEmpty);
+      expect(l10n.snapshotNinetyDayView, isNotEmpty);
+      expect(l10n.horizonOpenCalendar, isNotEmpty);
+      expect(l10n.fieldCountry, isNotEmpty);
+      expect(l10n.fieldDocumentType, isNotEmpty);
+      expect(l10n.fieldCategory, isNotEmpty);
+      expect(l10n.catalogReviewTitle, isNotEmpty);
+      expect(l10n.horizon90EmptyTitle, isNotEmpty);
+    }
+    expect(
+      lookupAppLocalizations(const Locale('en')).reviewAction,
+      'Review now',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('en')).fieldCountry,
+      'Country or region',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('en')).fieldDocumentType,
+      'Document type',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('en')).fieldCategory,
+      'Category',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('fr')).reviewAction,
+      'Examiner maintenant',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('ar')).reviewAction,
+      'راجع الآن',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('en')).wizardContinue,
+      'Continue',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('fr')).wizardContinue,
+      'Continuer',
+    );
+    expect(lookupAppLocalizations(const Locale('ar')).wizardContinue, 'متابعة');
+    expect(
+      lookupAppLocalizations(const Locale('en')).actionNeeded,
+      'Action needed',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('fr')).actionNeeded,
+      'Action requise',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('ar')).actionNeeded,
+      'يلزم اتخاذ إجراء',
+    );
+    expect(
+      lookupAppLocalizations(const Locale('en')).statusUrgent,
+      'Action needed',
+    );
+  });
+
+  testWidgets('Continue uses a directional icon, not a Unicode arrow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+
+    expect(find.text('Continue'), findsOneWidget);
+    expect(find.textContaining('→'), findsNothing);
+    final icon = tester.widget<Icon>(
+      find.byKey(const ValueKey<String>('wizard-continue-arrow')),
+    );
+    expect(icon.icon, Icons.arrow_forward_rounded);
+    expect(icon.icon!.matchTextDirection, isTrue);
+  });
+
+  testWidgets('RTL Continue keeps the mirrored forward arrow', (tester) async {
+    tester.view.physicalSize = const Size(400, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(app(locale: const Locale('ar')));
+    await tester.pumpAndSettle();
+    await tester.tap(_navLabel('المستندات'));
+    await tester.pumpAndSettle();
+    final arabicAdd = find.byKey(const ValueKey<String>('documents-add'));
+    await tester.ensureVisible(arabicAdd);
+    await tester.tap(arabicAdd);
+    await tester.pumpAndSettle();
+
+    expect(
+      Directionality.of(tester.element(find.byType(AddDocumentScreen))),
+      TextDirection.rtl,
+    );
+    expect(find.text('متابعة'), findsWidgets);
+    expect(find.text('رجوع'), findsNothing);
+    final icon = tester.widget<Icon>(
+      find.byKey(const ValueKey<String>('wizard-continue-arrow')),
+    );
+    expect(icon.icon!.matchTextDirection, isTrue);
+    expect(find.byKey(const ValueKey<String>('save-document')), findsNothing);
   });
 }

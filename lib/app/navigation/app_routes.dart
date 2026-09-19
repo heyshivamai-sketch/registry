@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
+import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
+import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
 import 'package:the_registry/features/notifications/presentation/notifications_placeholder_screen.dart';
 import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_placeholder_screen.dart';
@@ -65,5 +67,22 @@ abstract final class AppRoutes {
         builder: (_) => const AddSubscriptionPlaceholderScreen(),
       ),
     );
+  }
+
+  static Future<void> openCatalogItemReview(
+    BuildContext context,
+    String itemId,
+  ) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CatalogItemDetailScreen(itemId: itemId),
+      ),
+    );
+  }
+
+  static Future<void> openHorizon90Day(BuildContext context) {
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const Horizon90DayScreen()));
   }
 }

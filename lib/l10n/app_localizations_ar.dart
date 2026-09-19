@@ -110,7 +110,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get filtersComingSoon => 'ستتوفر عوامل التصفية في إصدار لاحق.';
 
   @override
-  String get reviewAction => 'مراجعة';
+  String get reviewAction => 'راجع الآن';
 
   @override
   String get actionNeeded => 'يلزم اتخاذ إجراء';
@@ -274,7 +274,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get typeSubscription => 'اشتراك';
 
   @override
-  String get statusUrgent => 'عاجل';
+  String get statusUrgent => 'يلزم اتخاذ إجراء';
 
   @override
   String get statusUpcoming => 'قادم';
@@ -1089,4 +1089,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ocrProcessingHint => 'يتم التعرف على النص على هذا الجهاز.';
+
+  @override
+  String get horizonOpenCalendar => 'فتح التقويم';
+
+  @override
+  String get horizon90EmptyTitle => 'لا شيء خلال الـ 90 يومًا القادمة';
+
+  @override
+  String get horizon90EmptyMessage =>
+      'ستظهر هنا العناصر التي لها تاريخ إجراء أو تجديد خلال الـ 90 يومًا القادمة، من الأقرب إلى الأبعد.';
+
+  @override
+  String get catalogReviewEyebrow => 'عنصر مميز';
+
+  @override
+  String get catalogReviewTitle => 'مراجعة';
+
+  @override
+  String get catalogNotInWalletTitle => 'كتالوج الصفحة الرئيسية';
+
+  @override
+  String get catalogNotInWallet =>
+      'هذا هو العنصر المميز في الصفحة الرئيسية. وهو غير محفوظ في المستندات، لذا لا يتوفر التعديل أو الحذف أو تسجيل التجديد.';
+
+  @override
+  String get catalogActionLabel => 'الإجراء التالي';
+
+  @override
+  String get catalogRemainingLabel => 'الوقت المتبقي';
+
+  @override
+  String get catalogChargeDate => 'تاريخ الدفعة التالية';
+
+  @override
+  String get documentStatusLabel => 'الحالة';
 }

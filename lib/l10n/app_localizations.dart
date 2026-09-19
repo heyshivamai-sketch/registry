@@ -295,7 +295,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewAction.
   ///
   /// In en, this message translates to:
-  /// **'Review'**
+  /// **'Review now'**
   String get reviewAction;
 
   /// No description provided for @actionNeeded.
@@ -523,7 +523,7 @@ abstract class AppLocalizations {
   /// No description provided for @statusUrgent.
   ///
   /// In en, this message translates to:
-  /// **'Urgent'**
+  /// **'Action needed'**
   String get statusUrgent;
 
   /// No description provided for @statusUpcoming.
@@ -2037,6 +2037,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Text is being recognised on this device.'**
   String get ocrProcessingHint;
+
+  /// No description provided for @horizonOpenCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Open calendar'**
+  String get horizonOpenCalendar;
+
+  /// No description provided for @horizon90EmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the next 90 days'**
+  String get horizon90EmptyTitle;
+
+  /// No description provided for @horizon90EmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Items with an action or renewal date in the next 90 days will appear here, earliest first.'**
+  String get horizon90EmptyMessage;
+
+  /// No description provided for @catalogReviewEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlighted item'**
+  String get catalogReviewEyebrow;
+
+  /// No description provided for @catalogReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get catalogReviewTitle;
+
+  /// No description provided for @catalogNotInWalletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home catalog'**
+  String get catalogNotInWalletTitle;
+
+  /// No description provided for @catalogNotInWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the highlighted Home item. It is not saved in Documents, so editing, deleting and recording a renewal are not available.'**
+  String get catalogNotInWallet;
+
+  /// No description provided for @catalogActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next action'**
+  String get catalogActionLabel;
+
+  /// No description provided for @catalogRemainingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time remaining'**
+  String get catalogRemainingLabel;
+
+  /// No description provided for @catalogChargeDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Next charge date'**
+  String get catalogChargeDate;
+
+  /// No description provided for @documentStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get documentStatusLabel;
 }
 
 class _AppLocalizationsDelegate

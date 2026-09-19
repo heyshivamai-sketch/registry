@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -11,11 +12,13 @@ class HomeUpcomingItem extends StatelessWidget {
     required this.item,
     required this.isLast,
     this.onTap,
+    this.showStatus = false,
   });
 
   final RegistryItem item;
   final bool isLast;
   final VoidCallback? onTap;
+  final bool showStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +110,14 @@ class HomeUpcomingItem extends StatelessWidget {
                             fontSize: 13,
                           ),
                         ),
+                        if (showStatus) ...[
+                          const SizedBox(height: 6),
+                          RegistryAuraStatusPill(
+                            status: item.status,
+                            label: item.statusLabel(l10n),
+                            compact: true,
+                          ),
+                        ],
                         const SizedBox(height: 4),
                         Text(
                           '${item.actionLabel(l10n)} · $dueDate',

@@ -17,12 +17,18 @@ class RegistryPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final labelText = Text(
+      label,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      textAlign: trailing == null ? TextAlign.center : TextAlign.start,
+    );
     final child = trailing == null
-        ? Text(label)
+        ? labelText
         : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(child: Text(label)),
+              Expanded(child: labelText),
+              const SizedBox(width: AppSpacing.xs),
               trailing!,
             ],
           );

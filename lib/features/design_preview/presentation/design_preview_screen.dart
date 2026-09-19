@@ -58,7 +58,7 @@ class DesignPreviewScreen extends StatelessWidget {
               children: [
                 RegistryStatusChip(
                   status: RegistryStatus.urgent,
-                  label: 'Urgent',
+                  label: 'Action needed',
                 ),
                 RegistryStatusChip(
                   status: RegistryStatus.upcoming,

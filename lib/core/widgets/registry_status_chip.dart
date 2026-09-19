@@ -83,10 +83,13 @@ class RegistryStatusChip extends StatelessWidget {
               ),
               Text(
                 label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: foreground,
                   letterSpacing: 0.2,
                   fontSize: compact ? 11 : 12,
+                  height: 1.2,
                 ),
               ),
             ],

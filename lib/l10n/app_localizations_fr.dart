@@ -113,7 +113,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les filtres arriveront dans une prochaine version.';
 
   @override
-  String get reviewAction => 'Examiner';
+  String get reviewAction => 'Examiner maintenant';
 
   @override
   String get actionNeeded => 'Action requise';
@@ -275,7 +275,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get typeSubscription => 'Abonnement';
 
   @override
-  String get statusUrgent => 'Urgent';
+  String get statusUrgent => 'Action requise';
 
   @override
   String get statusUpcoming => 'À venir';
@@ -1102,4 +1102,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ocrProcessingHint => 'Le texte est reconnu sur cet appareil.';
+
+  @override
+  String get horizonOpenCalendar => 'Ouvrir le calendrier';
+
+  @override
+  String get horizon90EmptyTitle => 'Rien dans les 90 prochains jours';
+
+  @override
+  String get horizon90EmptyMessage =>
+      'Les éléments avec une date d’action ou de renouvellement dans les 90 prochains jours apparaîtront ici, du plus proche au plus lointain.';
+
+  @override
+  String get catalogReviewEyebrow => 'Élément mis en avant';
+
+  @override
+  String get catalogReviewTitle => 'Examen';
+
+  @override
+  String get catalogNotInWalletTitle => 'Catalogue Accueil';
+
+  @override
+  String get catalogNotInWallet =>
+      'Ceci est l’élément mis en avant sur l’Accueil. Il n’est pas enregistré dans Documents, donc la modification, la suppression et le renouvellement ne sont pas disponibles.';
+
+  @override
+  String get catalogActionLabel => 'Prochaine action';
+
+  @override
+  String get catalogRemainingLabel => 'Temps restant';
+
+  @override
+  String get catalogChargeDate => 'Date du prochain prélèvement';
+
+  @override
+  String get documentStatusLabel => 'Statut';
 }

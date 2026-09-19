@@ -15,6 +15,7 @@ class HomeMetricsRow extends StatelessWidget {
     this.documentSupporting,
     this.subscriptionSupporting,
     this.horizonSupporting,
+    this.onHorizonTap,
   });
 
   final int documentCount;
@@ -23,6 +24,7 @@ class HomeMetricsRow extends StatelessWidget {
   final String? documentSupporting;
   final String? subscriptionSupporting;
   final String? horizonSupporting;
+  final VoidCallback? onHorizonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class HomeMetricsRow extends StatelessWidget {
         value: '$horizonCount',
         supporting: horizonSupporting ?? l10n.snapshotNext90Hint,
         color: status.warningContainer,
-        onTap: null,
+        onTap: onHorizonTap,
       ),
     ];
 
@@ -66,6 +68,7 @@ class HomeMetricsRow extends StatelessWidget {
         ),
       );
       return Material(
+        key: i == 2 ? const ValueKey<String>('metric-horizon') : null,
         color: metric.color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.metric),

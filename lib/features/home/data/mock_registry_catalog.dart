@@ -66,16 +66,32 @@ abstract final class MockRegistryCatalog {
     return [...source]..sort((a, b) => b.impactScore.compareTo(a.impactScore));
   }
 
+  static RegistryItem? byId(String id) {
+    for (final item in items) {
+      if (item.id == id) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   static int withinHorizonCount(
     Iterable<RegistryItem> source, {
     DateTime? now,
   }) {
-    return source
-        .where(
-          (item) =>
-              RegistryDateFormatter.isWithinHorizon(item.actionDate, now: now),
-        )
-        .length;
+    return withinHorizonItems(source, now: now).length;
+  }
+
+  static List<RegistryItem> withinHorizonItems(
+    Iterable<RegistryItem> source, {
+    DateTime? now,
+  }) {
+    return byUpcomingDate(
+      source.where(
+        (item) =>
+            RegistryDateFormatter.isWithinHorizon(item.actionDate, now: now),
+      ),
+    );
   }
 
   /// Nearest action/renewal date first. Ties fall back to the due date.

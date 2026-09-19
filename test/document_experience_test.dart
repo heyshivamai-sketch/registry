@@ -916,6 +916,39 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Overdue visa'), findsOneWidget);
     expect(find.text('Active warranty'), findsOneWidget);
+    expect(find.text('Action needed'), findsWidgets);
+    expect(find.text('Action'), findsNothing);
+  });
+
+  testWidgets('Action needed copy survives large text on wallet chips', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 1600);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.8;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    final overflows = <FlutterErrorDetails>[];
+    final original = FlutterError.onError;
+    FlutterError.onError = (details) {
+      overflows.add(details);
+      original?.call(details);
+    };
+    addTearDown(() => FlutterError.onError = original);
+
+    await seedWallet(documents);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openDocuments(tester);
+
+    expect(find.text('Action needed'), findsWidgets);
+    expect(find.text('Action'), findsNothing);
+    expect(
+      overflows.where((details) => details.toString().contains('overflowed')),
+      isEmpty,
+    );
   });
 
   testWidgets('Digital pass hides missing optional fields', (tester) async {

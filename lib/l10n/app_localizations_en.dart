@@ -111,7 +111,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Filters will be available in a later version.';
 
   @override
-  String get reviewAction => 'Review';
+  String get reviewAction => 'Review now';
 
   @override
   String get actionNeeded => 'Action needed';
@@ -272,7 +272,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeSubscription => 'Subscription';
 
   @override
-  String get statusUrgent => 'Urgent';
+  String get statusUrgent => 'Action needed';
 
   @override
   String get statusUpcoming => 'Upcoming';
@@ -1089,4 +1089,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ocrProcessingHint => 'Text is being recognised on this device.';
+
+  @override
+  String get horizonOpenCalendar => 'Open calendar';
+
+  @override
+  String get horizon90EmptyTitle => 'Nothing in the next 90 days';
+
+  @override
+  String get horizon90EmptyMessage =>
+      'Items with an action or renewal date in the next 90 days will appear here, earliest first.';
+
+  @override
+  String get catalogReviewEyebrow => 'Highlighted item';
+
+  @override
+  String get catalogReviewTitle => 'Review';
+
+  @override
+  String get catalogNotInWalletTitle => 'Home catalog';
+
+  @override
+  String get catalogNotInWallet =>
+      'This is the highlighted Home item. It is not saved in Documents, so editing, deleting and recording a renewal are not available.';
+
+  @override
+  String get catalogActionLabel => 'Next action';
+
+  @override
+  String get catalogRemainingLabel => 'Time remaining';
+
+  @override
+  String get catalogChargeDate => 'Next charge date';
+
+  @override
+  String get documentStatusLabel => 'Status';
 }
