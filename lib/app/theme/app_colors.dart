@@ -25,17 +25,19 @@ abstract final class AppColors {
   static const Color secondaryContainer = Color(0xFFD8F8F1);
   static const Color onSecondaryContainer = Color(0xFF053830);
 
-  static const Color background = Color(0xFFF7F8FC);
+  static const Color background = Color(0xFFF7F4EF);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceContainer = Color(0xFFEEF0F7);
   static const Color onSurface = midnight;
   static const Color onSurfaceVariant = Color(0xFF66718B);
-  static const Color outline = Color(0xFFE7E9F2);
-  static const Color outlineVariant = Color(0xFFE7E9F2);
+  static const Color outline = Color(0xFFE4E0D8);
+  static const Color outlineVariant = Color(0xFFE8E4DC);
+  static const Color mintSurface = Color(0xFFE8F6F0);
+  static const Color lavenderSurface = Color(0xFFECE8FB);
 
-  static const Color heroStart = Color(0xFF111A3D);
-  static const Color heroEnd = Color(0xFF2B4383);
-  static const Color heroHighlight = Color(0xFF806FFF);
+  static const Color heroStart = Color(0xFF18224F);
+  static const Color heroEnd = Color(0xFF4F5CE8);
+  static const Color heroHighlight = Color(0xFF7B86FF);
   static const Color countdownFill = Color(0xFF263D79);
   static const Color countdownRing = Color(0xFF7FE1D1);
   static const Color addStart = Color(0xFF796CFF);
@@ -81,6 +83,9 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     required this.addEnd,
     required this.dock,
     required this.dockForeground,
+    required this.dockSelected,
+    required this.mintSurface,
+    required this.lavenderSurface,
   });
 
   final Color heroStart;
@@ -95,6 +100,9 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
   final Color addEnd;
   final Color dock;
   final Color dockForeground;
+  final Color dockSelected;
+  final Color mintSurface;
+  final Color lavenderSurface;
 
   static const AppBrandColors light = AppBrandColors(
     heroStart: AppColors.heroStart,
@@ -105,10 +113,13 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     heroHighlight: AppColors.heroHighlight,
     countdownFill: AppColors.countdownFill,
     countdownRing: AppColors.countdownRing,
-    addStart: AppColors.addStart,
-    addEnd: AppColors.addEnd,
-    dock: Color(0xEB11162E),
-    dockForeground: Color(0xFF8790AD),
+    addStart: Color(0xFF5B63F5),
+    addEnd: Color(0xFF4A53E6),
+    dock: Color(0xF7FFFCF8),
+    dockForeground: Color(0xFF8D8798),
+    dockSelected: Color(0xFF4F57E8),
+    mintSurface: AppColors.mintSurface,
+    lavenderSurface: AppColors.lavenderSurface,
   );
 
   static const AppBrandColors dark = AppBrandColors(
@@ -122,8 +133,11 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     countdownRing: Color(0xFF7FE1D1),
     addStart: Color(0xFF9A8CFF),
     addEnd: Color(0xFF4A58D6),
-    dock: Color(0xF211162E),
+    dock: Color(0xF21C2038),
     dockForeground: Color(0xFFAEB5CF),
+    dockSelected: Color(0xFFB4BBFF),
+    mintSurface: Color(0xFF1C3D36),
+    lavenderSurface: Color(0xFF2A2848),
   );
 
   static AppBrandColors of(BuildContext context) {
@@ -144,6 +158,9 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     Color? addEnd,
     Color? dock,
     Color? dockForeground,
+    Color? dockSelected,
+    Color? mintSurface,
+    Color? lavenderSurface,
   }) {
     return AppBrandColors(
       heroStart: heroStart ?? this.heroStart,
@@ -158,6 +175,9 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
       addEnd: addEnd ?? this.addEnd,
       dock: dock ?? this.dock,
       dockForeground: dockForeground ?? this.dockForeground,
+      dockSelected: dockSelected ?? this.dockSelected,
+      mintSurface: mintSurface ?? this.mintSurface,
+      lavenderSurface: lavenderSurface ?? this.lavenderSurface,
     );
   }
 
@@ -179,6 +199,9 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
       addEnd: Color.lerp(addEnd, other.addEnd, t)!,
       dock: Color.lerp(dock, other.dock, t)!,
       dockForeground: Color.lerp(dockForeground, other.dockForeground, t)!,
+      dockSelected: Color.lerp(dockSelected, other.dockSelected, t)!,
+      mintSurface: Color.lerp(mintSurface, other.mintSurface, t)!,
+      lavenderSurface: Color.lerp(lavenderSurface, other.lavenderSurface, t)!,
     );
   }
 }

@@ -98,7 +98,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا تُجدول التذكيرات في هذا الإصدار. هذه الشاشة عنصر نائب.';
 
   @override
-  String get searchPlaceholder => 'ابحث في المستندات والاشتراكات';
+  String get searchPlaceholder => 'ابحث في سجلك';
 
   @override
   String get searchClear => 'مسح البحث';
@@ -228,10 +228,10 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get sectionNeedsAttention => 'قائمة الإجراءات';
+  String get sectionNeedsAttention => 'يحتاج انتباهك';
 
   @override
-  String get sectionComingUp => 'الأفق';
+  String get sectionComingUp => 'القادم';
 
   @override
   String get sectionRegistrySnapshot => 'لمحة عن السجل';
@@ -1133,11 +1133,11 @@ class AppLocalizationsAr extends AppLocalizations {
       'أضف مستندًا أو اشتراكًا لبدء تتبع التواريخ المهمة.';
 
   @override
-  String get homeCalmTitle => 'لا يوجد إجراء مطلوب';
+  String get homeCalmTitle => 'لا يوجد ما يحتاج انتباهك الآن';
 
   @override
   String get homeCalmMessage =>
-      'العناصر المحفوظة محدّثة. ستظهر التواريخ القادمة في الأفق.';
+      'العناصر المحفوظة محدّثة. تظهر التواريخ القادمة في قسم القادم.';
 
   @override
   String homeEstimatedMonthly(String amount) {
@@ -1475,4 +1475,128 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get subscriptionTrackingDisclaimer =>
       'يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.';
+
+  @override
+  String homeHeroReview(String title) {
+    return 'راجع $title';
+  }
+
+  @override
+  String get homeHeroRenewalToday => 'يبدأ التجديد اليوم';
+
+  @override
+  String homeHeroRenewalOn(String date) {
+    return 'يبدأ التجديد في $date';
+  }
+
+  @override
+  String get homeHeroDecideToday => 'القرار مستحق اليوم';
+
+  @override
+  String homeHeroDecideOn(String date) {
+    return 'قرّر قبل $date';
+  }
+
+  @override
+  String get homeCalmUpcomingCta => 'عرض القادم';
+
+  @override
+  String get homeEmptyHeadline => 'تنظيم بسيط.\nوطمأنينة كبيرة.';
+
+  @override
+  String get homeEmptySupporting =>
+      'اجمع مستنداتك واشتراكاتك في مكان واحد، واعرف ما يحتاج انتباهك.';
+
+  @override
+  String get homeAddFirstDocument => 'أضف أول مستند';
+
+  @override
+  String get homeAddASubscription => 'أضف اشتراكًا';
+
+  @override
+  String get homeBenefitDatesTitle => 'اطّلع على التواريخ المهمة بنظرة';
+
+  @override
+  String get homeBenefitDatesMessage => 'لا تفوّت ما يهم.';
+
+  @override
+  String get homeBenefitPlansTitle => 'راجع الخطط قبل تجديدها';
+
+  @override
+  String get homeBenefitPlansMessage => 'ابقَ متحكمًا في إنفاقك.';
+
+  @override
+  String get homeEstimatedMonthlyCost => 'التكلفة الشهرية المقدّرة';
+
+  @override
+  String homeSubscriptionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اشتراكات',
+      one: 'اشتراك واحد',
+      zero: 'لا اشتراكات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeViewAll => 'عرض الكل';
+
+  @override
+  String get homeAttentionListTitle => 'يحتاج انتباهك';
+
+  @override
+  String get comingUpFilterAll => 'الكل';
+
+  @override
+  String get comingUpFilterDocuments => 'المستندات';
+
+  @override
+  String get comingUpFilterSubscriptions => 'الاشتراكات';
+
+  @override
+  String comingUpThisWeek(String year) {
+    return 'هذا الأسبوع · $year';
+  }
+
+  @override
+  String comingUpLaterThisMonth(String year) {
+    return 'لاحقًا هذا الشهر · $year';
+  }
+
+  @override
+  String comingUpMonthYear(String month, String year) {
+    return '$month · $year';
+  }
+
+  @override
+  String get comingUpEmptyFilter => 'لا يوجد قادم في هذا العرض.';
+
+  @override
+  String get attentionEmpty => 'لا يوجد ما يحتاج انتباهك الآن.';
+
+  @override
+  String get statusToday => 'اليوم';
+
+  @override
+  String get homeStartRenewal => 'ابدأ التجديد';
+
+  @override
+  String get homeNextPayment => 'الدفعة التالية';
+
+  @override
+  String get homeDecideBeforeRenewal => 'قرّر قبل التجديد';
+
+  @override
+  String get homeSeeAllCurrencies => 'عرض كل إجماليات العملات';
+
+  @override
+  String get homeNoActivePlans => 'لا خطط نشطة';
+
+  @override
+  String get homeCurrencyBreakdownTitle => 'التقديرات الشهرية';
+
+  @override
+  String get homeDocumentsTile => 'المستندات';
 }

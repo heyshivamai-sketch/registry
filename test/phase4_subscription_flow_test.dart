@@ -156,12 +156,13 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
-    expect(find.text('9.00 EUR · 22.00 USD'), findsWidgets);
+    expect(find.text('9.00 EUR'), findsWidgets);
+    expect(find.text('22.00 USD'), findsWidgets);
     expect(find.byType(PriorityHeroCard), findsOneWidget);
     expect(
       find.descendant(
         of: find.byType(PriorityHeroCard),
-        matching: find.text('Monthly Test'),
+        matching: find.textContaining('Monthly Test'),
       ),
       findsOneWidget,
     );

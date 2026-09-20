@@ -117,7 +117,7 @@ void main() {
         .controller!;
     expect(controller.text, isEmpty);
     expect(
-      find.byKey(const ValueKey<String>('home-calm-empty')),
+      find.byKey(const ValueKey<String>('home-first-visit')),
       findsOneWidget,
     );
   });

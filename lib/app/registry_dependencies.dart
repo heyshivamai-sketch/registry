@@ -30,10 +30,13 @@ class RegistryDependencies extends InheritedWidget {
   final Clock clock;
 
   static RegistryDependencies of(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<RegistryDependencies>();
+    final scope = maybeOf(context);
     assert(scope != null, 'RegistryDependencies not found in context');
     return scope!;
+  }
+
+  static RegistryDependencies? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<RegistryDependencies>();
   }
 
   @override

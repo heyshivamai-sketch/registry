@@ -20,6 +20,7 @@ class RegistryPlaceholderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = SafeArea(
+      bottom: !embedded,
       child: ListView(
         padding: EdgeInsetsDirectional.fromSTEB(
           AppSpacing.screenPadding,

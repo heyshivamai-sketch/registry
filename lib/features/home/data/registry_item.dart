@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
 import 'package:the_registry/features/documents/domain/document_status.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
+import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 enum RegistryItemType { document, subscription }
@@ -22,12 +23,16 @@ class RegistryItem {
     this.sourceId,
     this.titleText,
     this.searchTerms = const [],
+    this.amount,
+    this.leadingIcon,
   });
 
   final String id;
   final String? sourceId;
   final String? titleText;
   final List<String> searchTerms;
+  final Money? amount;
+  final IconData? leadingIcon;
   final RegistryItemType type;
   final RegistryStatus status;
   final RegistryImpact impact;
@@ -57,10 +62,10 @@ class RegistryItem {
   }
 
   String heroTitle(AppLocalizations l10n) {
-    return switch (id) {
-      'car_insurance' => l10n.heroCarInsurance,
-      _ => title(l10n),
-    };
+    if (id == 'car_insurance') {
+      return l10n.heroCarInsurance;
+    }
+    return l10n.homeHeroReview(title(l10n));
   }
 
   String actionLabel(AppLocalizations l10n) {
@@ -72,9 +77,34 @@ class RegistryItem {
       'gym' => l10n.actionReviewMembership,
       _ =>
         type == RegistryItemType.subscription
-            ? l10n.actionDecideBeforeCharge
-            : l10n.actionStartRenewalSoon,
+            ? l10n.homeDecideBeforeRenewal
+            : l10n.homeStartRenewal,
     };
+  }
+
+  String compactActionLabel(AppLocalizations l10n) {
+    if (type == RegistryItemType.subscription) {
+      return l10n.homeNextPayment;
+    }
+    return l10n.homeStartRenewal;
+  }
+
+  String heroExplanation(AppLocalizations l10n, {DateTime? now}) {
+    final days = remainingDays(now: now);
+    final date = RegistryDateFormatter.dayMonthYear(
+      actionDate,
+      l10n.localeName,
+    );
+    if (type == RegistryItemType.subscription) {
+      if (days == 0) {
+        return l10n.homeHeroDecideToday;
+      }
+      return l10n.homeHeroDecideOn(date);
+    }
+    if (days == 0) {
+      return l10n.homeHeroRenewalToday;
+    }
+    return l10n.homeHeroRenewalOn(date);
   }
 
   String typeLabel(AppLocalizations l10n) {
@@ -151,6 +181,9 @@ class RegistryItem {
   }
 
   IconData get icon {
+    if (leadingIcon != null) {
+      return leadingIcon!;
+    }
     return switch (id) {
       'car_insurance' => Icons.directions_car_outlined,
       'passport' => Icons.badge_outlined,
@@ -162,5 +195,13 @@ class RegistryItem {
             ? Icons.description_outlined
             : Icons.subscriptions_outlined,
     };
+  }
+
+  String initialBadge() {
+    final value = titleText?.trim();
+    if (value == null || value.isEmpty) {
+      return type == RegistryItemType.subscription ? 'S' : 'D';
+    }
+    return value.substring(0, 1).toUpperCase();
   }
 }

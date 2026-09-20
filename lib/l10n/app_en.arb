@@ -37,7 +37,7 @@
   "notificationsButton": "Notifications",
   "notificationsTitle": "Notifications",
   "notificationsPlaceholderMessage": "Reminders are not scheduled in this version. This screen is a placeholder.",
-  "searchPlaceholder": "Search documents and subscriptions",
+  "searchPlaceholder": "Search your registry",
   "searchClear": "Clear search",
   "filterTooltip": "Filter",
   "filtersComingSoon": "Filters will be available in a later version.",
@@ -99,8 +99,8 @@
       "count": { "type": "int" }
     }
   },
-  "sectionNeedsAttention": "Action queue",
-  "sectionComingUp": "Horizon",
+  "sectionNeedsAttention": "Needs attention",
+  "sectionComingUp": "Coming up",
   "sectionRegistrySnapshot": "Registry snapshot",
   "sectionItemCount": "{count, plural, one{{count} item} other{{count} items}}",
   "@sectionItemCount": {
@@ -431,8 +431,8 @@
   "documentStatusLabel": "Status",
   "homeEmptyTitle": "Your registry is empty",
   "homeEmptyMessage": "Add a document or subscription to start tracking important dates.",
-  "homeCalmTitle": "Nothing needs action",
-  "homeCalmMessage": "Saved items are up to date. Upcoming dates will appear on the Horizon.",
+  "homeCalmTitle": "Nothing needs attention right now",
+  "homeCalmMessage": "Saved items are up to date. Upcoming dates appear in Coming up.",
   "homeEstimatedMonthly": "{amount} / month",
   "@homeEstimatedMonthly": {
     "placeholders": {
@@ -568,5 +568,75 @@
       "name": { "type": "String" }
     }
   },
-  "subscriptionTrackingDisclaimer": "Registry tracks this plan but does not cancel or charge it automatically."
+  "subscriptionTrackingDisclaimer": "Registry tracks this plan but does not cancel or charge it automatically.",
+  "homeHeroReview": "Review {title}",
+  "@homeHeroReview": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "homeHeroRenewalToday": "Renewal starts today",
+  "homeHeroRenewalOn": "Renewal starts {date}",
+  "@homeHeroRenewalOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "homeHeroDecideToday": "Decision due today",
+  "homeHeroDecideOn": "Decide by {date}",
+  "@homeHeroDecideOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "homeCalmUpcomingCta": "View upcoming",
+  "homeEmptyHeadline": "A little organisation.\nA lot of peace of mind.",
+  "homeEmptySupporting": "Keep your documents and subscriptions together, and know what needs attention.",
+  "homeAddFirstDocument": "Add your first document",
+  "homeAddASubscription": "Add a subscription",
+  "homeBenefitDatesTitle": "See important dates at a glance",
+  "homeBenefitDatesMessage": "Never miss what matters.",
+  "homeBenefitPlansTitle": "Review plans before they renew",
+  "homeBenefitPlansMessage": "Stay in control of your spending.",
+  "homeEstimatedMonthlyCost": "Estimated monthly cost",
+  "homeSubscriptionCount": "{count, plural, =0{No subscriptions} one{1 subscription} other{{count} subscriptions}}",
+  "@homeSubscriptionCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "homeViewAll": "View all",
+  "homeAttentionListTitle": "Needs attention",
+  "comingUpFilterAll": "All",
+  "comingUpFilterDocuments": "Documents",
+  "comingUpFilterSubscriptions": "Subscriptions",
+  "comingUpThisWeek": "This week · {year}",
+  "@comingUpThisWeek": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "comingUpLaterThisMonth": "Later this month · {year}",
+  "@comingUpLaterThisMonth": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "comingUpMonthYear": "{month} · {year}",
+  "@comingUpMonthYear": {
+    "placeholders": {
+      "month": { "type": "String" },
+      "year": { "type": "String" }
+    }
+  },
+  "comingUpEmptyFilter": "Nothing coming up in this view.",
+  "attentionEmpty": "Nothing needs attention right now.",
+  "statusToday": "Today",
+  "homeStartRenewal": "Start renewal",
+  "homeNextPayment": "Next payment",
+  "homeDecideBeforeRenewal": "Decide before renewal",
+  "homeSeeAllCurrencies": "See all currency totals",
+  "homeNoActivePlans": "No active plans",
+  "homeCurrencyBreakdownTitle": "Monthly estimates",
+  "homeDocumentsTile": "Documents"
 }

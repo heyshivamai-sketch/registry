@@ -271,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchPlaceholder.
   ///
   /// In en, this message translates to:
-  /// **'Search documents and subscriptions'**
+  /// **'Search your registry'**
   String get searchPlaceholder;
 
   /// No description provided for @searchClear.
@@ -463,13 +463,13 @@ abstract class AppLocalizations {
   /// No description provided for @sectionNeedsAttention.
   ///
   /// In en, this message translates to:
-  /// **'Action queue'**
+  /// **'Needs attention'**
   String get sectionNeedsAttention;
 
   /// No description provided for @sectionComingUp.
   ///
   /// In en, this message translates to:
-  /// **'Horizon'**
+  /// **'Coming up'**
   String get sectionComingUp;
 
   /// No description provided for @sectionRegistrySnapshot.
@@ -2119,13 +2119,13 @@ abstract class AppLocalizations {
   /// No description provided for @homeCalmTitle.
   ///
   /// In en, this message translates to:
-  /// **'Nothing needs action'**
+  /// **'Nothing needs attention right now'**
   String get homeCalmTitle;
 
   /// No description provided for @homeCalmMessage.
   ///
   /// In en, this message translates to:
-  /// **'Saved items are up to date. Upcoming dates will appear on the Horizon.'**
+  /// **'Saved items are up to date. Upcoming dates appear in Coming up.'**
   String get homeCalmMessage;
 
   /// No description provided for @homeEstimatedMonthly.
@@ -2703,6 +2703,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Registry tracks this plan but does not cancel or charge it automatically.'**
   String get subscriptionTrackingDisclaimer;
+
+  /// No description provided for @homeHeroReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review {title}'**
+  String homeHeroReview(String title);
+
+  /// No description provided for @homeHeroRenewalToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal starts today'**
+  String get homeHeroRenewalToday;
+
+  /// No description provided for @homeHeroRenewalOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal starts {date}'**
+  String homeHeroRenewalOn(String date);
+
+  /// No description provided for @homeHeroDecideToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Decision due today'**
+  String get homeHeroDecideToday;
+
+  /// No description provided for @homeHeroDecideOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide by {date}'**
+  String homeHeroDecideOn(String date);
+
+  /// No description provided for @homeCalmUpcomingCta.
+  ///
+  /// In en, this message translates to:
+  /// **'View upcoming'**
+  String get homeCalmUpcomingCta;
+
+  /// No description provided for @homeEmptyHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'A little organisation.\nA lot of peace of mind.'**
+  String get homeEmptyHeadline;
+
+  /// No description provided for @homeEmptySupporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your documents and subscriptions together, and know what needs attention.'**
+  String get homeEmptySupporting;
+
+  /// No description provided for @homeAddFirstDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first document'**
+  String get homeAddFirstDocument;
+
+  /// No description provided for @homeAddASubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a subscription'**
+  String get homeAddASubscription;
+
+  /// No description provided for @homeBenefitDatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See important dates at a glance'**
+  String get homeBenefitDatesTitle;
+
+  /// No description provided for @homeBenefitDatesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Never miss what matters.'**
+  String get homeBenefitDatesMessage;
+
+  /// No description provided for @homeBenefitPlansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review plans before they renew'**
+  String get homeBenefitPlansTitle;
+
+  /// No description provided for @homeBenefitPlansMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay in control of your spending.'**
+  String get homeBenefitPlansMessage;
+
+  /// No description provided for @homeEstimatedMonthlyCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated monthly cost'**
+  String get homeEstimatedMonthlyCost;
+
+  /// No description provided for @homeSubscriptionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No subscriptions} one{1 subscription} other{{count} subscriptions}}'**
+  String homeSubscriptionCount(int count);
+
+  /// No description provided for @homeViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get homeViewAll;
+
+  /// No description provided for @homeAttentionListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention'**
+  String get homeAttentionListTitle;
+
+  /// No description provided for @comingUpFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get comingUpFilterAll;
+
+  /// No description provided for @comingUpFilterDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get comingUpFilterDocuments;
+
+  /// No description provided for @comingUpFilterSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions'**
+  String get comingUpFilterSubscriptions;
+
+  /// No description provided for @comingUpThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week · {year}'**
+  String comingUpThisWeek(String year);
+
+  /// No description provided for @comingUpLaterThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Later this month · {year}'**
+  String comingUpLaterThisMonth(String year);
+
+  /// No description provided for @comingUpMonthYear.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} · {year}'**
+  String comingUpMonthYear(String month, String year);
+
+  /// No description provided for @comingUpEmptyFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing coming up in this view.'**
+  String get comingUpEmptyFilter;
+
+  /// No description provided for @attentionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs attention right now.'**
+  String get attentionEmpty;
+
+  /// No description provided for @statusToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get statusToday;
+
+  /// No description provided for @homeStartRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Start renewal'**
+  String get homeStartRenewal;
+
+  /// No description provided for @homeNextPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Next payment'**
+  String get homeNextPayment;
+
+  /// No description provided for @homeDecideBeforeRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide before renewal'**
+  String get homeDecideBeforeRenewal;
+
+  /// No description provided for @homeSeeAllCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'See all currency totals'**
+  String get homeSeeAllCurrencies;
+
+  /// No description provided for @homeNoActivePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No active plans'**
+  String get homeNoActivePlans;
+
+  /// No description provided for @homeCurrencyBreakdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly estimates'**
+  String get homeCurrencyBreakdownTitle;
+
+  /// No description provided for @homeDocumentsTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get homeDocumentsTile;
 }
 
 class _AppLocalizationsDelegate

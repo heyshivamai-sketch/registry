@@ -22,7 +22,7 @@ abstract final class AppSpacing {
   static const double dockInset = md;
   static const double dockBottom = 15;
   static const double addButtonSize = 52;
-  static const double addButtonLift = 11;
+  static const double addButtonLift = 8;
   static const double headerButton = 42;
   static const double searchHeight = 48;
   static const double buttonHeight = 48;
@@ -34,25 +34,34 @@ abstract final class AppSpacing {
       dockHeight + addButtonLift + addButtonLift;
 
   /// Extra ListView padding so the floating dock does not cover the last item.
-  static const double scrollDockClearance = overlayDockExtent + minTapTarget;
+  /// Matches dock chrome plus a small gap; system inset is added at use sites.
+  static const double scrollDockClearance = overlayDockExtent + sm;
 
   static const double scrollFabClearance = scrollDockClearance;
 
+  /// Gesture-area plus dock chrome. Uses [viewPadding] because `extendBody`
+  /// zeroes [MediaQuery.padding] at the bottom of tab bodies.
+  static double dockSafeBottom(BuildContext context) {
+    final viewBottom = MediaQuery.viewPaddingOf(context).bottom;
+    return viewBottom > dockBottom ? viewBottom : dockBottom;
+  }
+
   /// Space the shell keeps below tab bodies so the lifted add button stays clear.
   static double dockOverlayExtent(BuildContext context) {
-    return overlayDockExtent + minTapTarget;
+    return dockSafeBottom(context) + overlayDockExtent;
   }
 
   /// Bottom inset so a floating snackbar sits above the dock and system gesture area.
   static double snackBarDockInset(BuildContext context) {
-    final safeBottom = MediaQuery.paddingOf(context).bottom;
-    final dockSafeBottom = safeBottom > dockBottom ? safeBottom : dockBottom;
-    return dockSafeBottom + overlayDockExtent + xs;
+    return dockSafeBottom(context) + overlayDockExtent + xs;
   }
 
-  /// Compact list padding; the shell already offsets tab bodies by [dockOverlayExtent].
+  /// Extra list padding so the last row can scroll fully above the dock pill.
+  ///
+  /// Tab bodies use [extendBody], so this is the only reserved space; the shell
+  /// must not also inset the IndexedStack or the last rows clip above a blank band.
   static double scrollClearanceForDock(BuildContext context) {
-    return md;
+    return dockOverlayExtent(context);
   }
 
   /// Extra scroll padding so a focused field stays clear of the pinned wizard bar.

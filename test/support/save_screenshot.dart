@@ -16,6 +16,7 @@ Future<void> saveScreenshot(
   String filename, {
   String folder = 'add_document',
   bool settle = true,
+  double pixelRatio = 1.5,
 }) async {
   if (settle) {
     await tester.pumpAndSettle();
@@ -26,7 +27,7 @@ Future<void> saveScreenshot(
     find.byKey(screenshotRootKey),
   );
   await tester.runAsync(() async {
-    final image = await boundary.toImage(pixelRatio: 1.5);
+    final image = await boundary.toImage(pixelRatio: pixelRatio);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
     final file = File('screenshots/$folder/$filename.png');
     file.parent.createSync(recursive: true);

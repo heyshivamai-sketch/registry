@@ -51,6 +51,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     final now = deps.clock.now();
 
     return SafeArea(
+      bottom: false,
       child: ListenableBuilder(
         listenable: deps.subscriptions,
         builder: (context, _) {

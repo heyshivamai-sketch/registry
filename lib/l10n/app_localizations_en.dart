@@ -98,7 +98,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reminders are not scheduled in this version. This screen is a placeholder.';
 
   @override
-  String get searchPlaceholder => 'Search documents and subscriptions';
+  String get searchPlaceholder => 'Search your registry';
 
   @override
   String get searchClear => 'Clear search';
@@ -226,10 +226,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sectionNeedsAttention => 'Action queue';
+  String get sectionNeedsAttention => 'Needs attention';
 
   @override
-  String get sectionComingUp => 'Horizon';
+  String get sectionComingUp => 'Coming up';
 
   @override
   String get sectionRegistrySnapshot => 'Registry snapshot';
@@ -1133,11 +1133,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add a document or subscription to start tracking important dates.';
 
   @override
-  String get homeCalmTitle => 'Nothing needs action';
+  String get homeCalmTitle => 'Nothing needs attention right now';
 
   @override
   String get homeCalmMessage =>
-      'Saved items are up to date. Upcoming dates will appear on the Horizon.';
+      'Saved items are up to date. Upcoming dates appear in Coming up.';
 
   @override
   String homeEstimatedMonthly(String amount) {
@@ -1477,4 +1477,129 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscriptionTrackingDisclaimer =>
       'Registry tracks this plan but does not cancel or charge it automatically.';
+
+  @override
+  String homeHeroReview(String title) {
+    return 'Review $title';
+  }
+
+  @override
+  String get homeHeroRenewalToday => 'Renewal starts today';
+
+  @override
+  String homeHeroRenewalOn(String date) {
+    return 'Renewal starts $date';
+  }
+
+  @override
+  String get homeHeroDecideToday => 'Decision due today';
+
+  @override
+  String homeHeroDecideOn(String date) {
+    return 'Decide by $date';
+  }
+
+  @override
+  String get homeCalmUpcomingCta => 'View upcoming';
+
+  @override
+  String get homeEmptyHeadline =>
+      'A little organisation.\nA lot of peace of mind.';
+
+  @override
+  String get homeEmptySupporting =>
+      'Keep your documents and subscriptions together, and know what needs attention.';
+
+  @override
+  String get homeAddFirstDocument => 'Add your first document';
+
+  @override
+  String get homeAddASubscription => 'Add a subscription';
+
+  @override
+  String get homeBenefitDatesTitle => 'See important dates at a glance';
+
+  @override
+  String get homeBenefitDatesMessage => 'Never miss what matters.';
+
+  @override
+  String get homeBenefitPlansTitle => 'Review plans before they renew';
+
+  @override
+  String get homeBenefitPlansMessage => 'Stay in control of your spending.';
+
+  @override
+  String get homeEstimatedMonthlyCost => 'Estimated monthly cost';
+
+  @override
+  String homeSubscriptionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count subscriptions',
+      one: '1 subscription',
+      zero: 'No subscriptions',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeViewAll => 'View all';
+
+  @override
+  String get homeAttentionListTitle => 'Needs attention';
+
+  @override
+  String get comingUpFilterAll => 'All';
+
+  @override
+  String get comingUpFilterDocuments => 'Documents';
+
+  @override
+  String get comingUpFilterSubscriptions => 'Subscriptions';
+
+  @override
+  String comingUpThisWeek(String year) {
+    return 'This week · $year';
+  }
+
+  @override
+  String comingUpLaterThisMonth(String year) {
+    return 'Later this month · $year';
+  }
+
+  @override
+  String comingUpMonthYear(String month, String year) {
+    return '$month · $year';
+  }
+
+  @override
+  String get comingUpEmptyFilter => 'Nothing coming up in this view.';
+
+  @override
+  String get attentionEmpty => 'Nothing needs attention right now.';
+
+  @override
+  String get statusToday => 'Today';
+
+  @override
+  String get homeStartRenewal => 'Start renewal';
+
+  @override
+  String get homeNextPayment => 'Next payment';
+
+  @override
+  String get homeDecideBeforeRenewal => 'Decide before renewal';
+
+  @override
+  String get homeSeeAllCurrencies => 'See all currency totals';
+
+  @override
+  String get homeNoActivePlans => 'No active plans';
+
+  @override
+  String get homeCurrencyBreakdownTitle => 'Monthly estimates';
+
+  @override
+  String get homeDocumentsTile => 'Documents';
 }

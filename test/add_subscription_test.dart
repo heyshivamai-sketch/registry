@@ -325,7 +325,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey<String>('home-hero')), findsNothing);
+    expect(find.byKey(const ValueKey<String>('home-hero')), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('hero-review')), findsNothing);
   });
 
   testWidgets('Arabic and large text keep the form usable', (tester) async {

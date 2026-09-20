@@ -48,6 +48,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     final documents = RegistryDependencies.of(context).documents;
 
     return SafeArea(
+      bottom: false,
       child: ListenableBuilder(
         listenable: documents,
         builder: (context, _) {

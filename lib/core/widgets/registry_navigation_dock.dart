@@ -17,10 +17,6 @@ class RegistryAuraNavigationDock extends StatelessWidget {
   });
 
   /// 0 Home, 1 Documents, 2 Subscriptions, 3 Profile.
-  ///
-  /// Prototype glyphs are custom Unicode (⌂ ▱ ＋ ◎ ◉). Material icons below
-  /// are the closest production equivalents: house, document card, plus,
-  /// concentric plan mark, and circular profile.
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final VoidCallback onAddPressed;
@@ -38,10 +34,10 @@ class RegistryAuraNavigationDock extends StatelessWidget {
       required IconData icon,
       required IconData selectedIcon,
       required String label,
-      required String shortLabel,
       required Key key,
     }) {
       final selected = selectedIndex == index;
+      final color = selected ? brand.dockSelected : brand.dockForeground;
       return Semantics(
         button: true,
         selected: selected,
@@ -64,56 +60,35 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                   horizontal: 2,
                   vertical: AppSpacing.xxs,
                 ),
-                decoration: BoxDecoration(
-                  color: selected
-                      ? colorScheme.onPrimary.withValues(alpha: 0.075)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      selected ? selectedIcon : icon,
-                      size: 18,
-                      color: selected
-                          ? colorScheme.onPrimary
-                          : brand.dockForeground,
-                    ),
-                    if (!compact) ...[
-                      const SizedBox(height: 2),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          shortLabel,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        selected ? selectedIcon : icon,
+                        size: 20,
+                        color: color,
+                      ),
+                      if (!compact) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          label,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
-                                color: selected
-                                    ? colorScheme.onPrimary
-                                    : brand.dockForeground,
+                                color: color,
                                 fontSize: 10,
                                 letterSpacing: 0,
+                                fontWeight: selected
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
                               ),
                         ),
-                      ),
-                    ] else if (selected) ...[
-                      const SizedBox(height: 2),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          shortLabel,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                color: colorScheme.onPrimary,
-                                fontSize: 10,
-                                letterSpacing: 0,
-                              ),
-                        ),
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -127,33 +102,35 @@ class RegistryAuraNavigationDock extends StatelessWidget {
       label: l10n.addFabTooltip,
       child: Tooltip(
         message: l10n.addFabTooltip,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            key: const ValueKey<String>('home-fab'),
-            onTap: onAddPressed,
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Ink(
-              width: AppSpacing.addButtonSize,
-              height: AppSpacing.addButtonSize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [brand.addStart, brand.addEnd],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF444FC6).withValues(alpha: 0.42),
-                    blurRadius: 22,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+        child: SizedBox(
+          width: AppSpacing.addButtonSize,
+          height: AppSpacing.addButtonSize,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [brand.addStart, brand.addEnd],
               ),
-              child: Icon(Icons.add, color: colorScheme.onPrimary, size: 25),
+              boxShadow: [
+                BoxShadow(
+                  color: brand.dockSelected.withValues(alpha: 0.34),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Material(
+              type: MaterialType.circle,
+              color: Colors.transparent,
+              elevation: 0,
+              child: InkWell(
+                key: const ValueKey<String>('home-fab'),
+                customBorder: const CircleBorder(),
+                onTap: onAddPressed,
+                child: Icon(Icons.add, color: colorScheme.onPrimary, size: 26),
+              ),
             ),
           ),
         ),
@@ -176,13 +153,15 @@ class RegistryAuraNavigationDock extends StatelessWidget {
             ClipRRect(
               borderRadius: AppRadius.dockBorder,
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: brand.dock,
                     borderRadius: AppRadius.dockBorder,
-                    border: Border.all(
-                      color: colorScheme.onPrimary.withValues(alpha: 0.125),
+                    border: Border(
+                      top: BorderSide(
+                        color: colorScheme.outline.withValues(alpha: 0.8),
+                      ),
                     ),
                     boxShadow: AppShadows.dock(context),
                   ),
@@ -198,17 +177,15 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                               icon: Icons.home_outlined,
                               selectedIcon: Icons.home_rounded,
                               label: l10n.navHome,
-                              shortLabel: l10n.navHome,
                               key: const ValueKey<String>('nav-home'),
                             ),
                           ),
                           Expanded(
                             child: destination(
                               index: 1,
-                              icon: Icons.article_outlined,
-                              selectedIcon: Icons.article_rounded,
+                              icon: Icons.description_outlined,
+                              selectedIcon: Icons.description_rounded,
                               label: l10n.navDocuments,
-                              shortLabel: l10n.navDocumentsShort,
                               key: const ValueKey<String>('nav-documents'),
                             ),
                           ),
@@ -216,20 +193,18 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                           Expanded(
                             child: destination(
                               index: 2,
-                              icon: Icons.circle_outlined,
-                              selectedIcon: Icons.adjust,
+                              icon: Icons.account_balance_wallet_outlined,
+                              selectedIcon: Icons.account_balance_wallet,
                               label: l10n.navSubscriptions,
-                              shortLabel: l10n.navSubscriptionsShort,
                               key: const ValueKey<String>('nav-subscriptions'),
                             ),
                           ),
                           Expanded(
                             child: destination(
                               index: 3,
-                              icon: Icons.account_circle_outlined,
-                              selectedIcon: Icons.account_circle,
+                              icon: Icons.person_outline,
+                              selectedIcon: Icons.person,
                               label: l10n.navProfile,
-                              shortLabel: l10n.navProfileShort,
                               key: const ValueKey<String>('nav-profile'),
                             ),
                           ),

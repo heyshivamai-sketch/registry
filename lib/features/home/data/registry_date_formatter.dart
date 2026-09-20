@@ -30,9 +30,28 @@ abstract final class RegistryDateFormatter {
 
   static String weekdayDateLine(DateTime date, String locale) {
     final local = DateTime(date.year, date.month, date.day);
-    final weekday = DateFormat.EEEE(locale).format(local);
-    final rest = DateFormat.yMMMMd(locale).format(local);
-    return '$weekday · $rest';
+    return DateFormat('EEEE, d MMMM y', locale).format(local);
+  }
+
+  static DateTime startOfWeek(DateTime date, String locale) {
+    final day = dateOnly(date);
+    final firstDay = DateFormat.y(locale).dateSymbols.FIRSTDAYOFWEEK;
+    final mondayBased = day.weekday - 1;
+    final delta = (mondayBased - firstDay) % 7;
+    return day.subtract(Duration(days: delta));
+  }
+
+  static DateTime endOfWeek(DateTime date, String locale) {
+    return startOfWeek(date, locale).add(const Duration(days: 6));
+  }
+
+  static bool isSameDay(DateTime a, DateTime b) {
+    return dateOnly(a) == dateOnly(b);
+  }
+
+  static bool isInRange(DateTime date, DateTime start, DateTime end) {
+    final day = dateOnly(date);
+    return !day.isBefore(dateOnly(start)) && !day.isAfter(dateOnly(end));
   }
 
   static bool isWithinHorizon(DateTime date, {DateTime? now}) {

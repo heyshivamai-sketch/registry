@@ -74,19 +74,14 @@ class AppShellState extends State<AppShell> {
               ),
               child: Scaffold(
                 extendBody: true,
-                body: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: AppSpacing.dockOverlayExtent(context),
-                  ),
-                  child: IndexedStack(
-                    index: _index,
-                    children: const [
-                      HomeScreen(),
-                      DocumentsScreen(),
-                      SubscriptionsScreen(),
-                      ProfilePlaceholderScreen(embedded: true),
-                    ],
-                  ),
+                body: IndexedStack(
+                  index: _index,
+                  children: const [
+                    HomeScreen(),
+                    DocumentsScreen(),
+                    SubscriptionsScreen(),
+                    ProfilePlaceholderScreen(embedded: true),
+                  ],
                 ),
                 bottomNavigationBar: AnimatedSwitcher(
                   duration: AppMotion.short,

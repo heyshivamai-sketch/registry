@@ -29,9 +29,9 @@ abstract final class AppShadows {
   static List<BoxShadow> dock(BuildContext context) {
     return [
       BoxShadow(
-        color: AppColors.midnight.withValues(alpha: 0.3),
-        blurRadius: 30,
-        offset: const Offset(0, 14),
+        color: AppColors.midnight.withValues(alpha: 0.08),
+        blurRadius: 24,
+        offset: const Offset(0, -4),
       ),
     ];
   }

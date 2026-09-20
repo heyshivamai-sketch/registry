@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:the_registry/core/widgets/registry_status_chip.dart';
+import 'package:the_registry/features/documents/domain/document_icons.dart';
 import 'package:the_registry/features/documents/domain/document_status.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/home/data/mock_registry_catalog.dart';
@@ -53,6 +55,9 @@ abstract final class RegistryReadModel {
       dueDate: document.expiryDate,
       isHero: false,
       needsAttention: DocumentStatus.isAttentionStatus(status),
+      leadingIcon: document.category == DocumentCategory.insurance
+          ? Icons.directions_car_outlined
+          : DocumentIcons.forCategory(document.category),
       searchTerms: [
         document.name,
         document.ownerName ?? '',
@@ -79,6 +84,8 @@ abstract final class RegistryReadModel {
       dueDate: subscription.nextPaymentDate,
       isHero: false,
       needsAttention: SubscriptionStatus.needsAttention(subscription, now: now),
+      amount: subscription.amount,
+      leadingIcon: SubscriptionCopy.iconFor(subscription.category),
       searchTerms: [
         subscription.serviceName,
         subscription.planName ?? '',
