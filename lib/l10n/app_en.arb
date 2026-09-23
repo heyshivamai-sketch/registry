@@ -235,7 +235,7 @@
   "requiredMarker": "Required",
   "optionalMarker": "Optional",
   "hasAttachment": "Has attachment",
-  "selectDate": "Select date",
+  "selectDate": "Choose date",
   "statusOverdue": "Overdue",
   "documentDetailsTitle": "Document details",
   "editDocumentTitle": "Edit document",
@@ -281,6 +281,7 @@
   "discardChangesMessage": "Your edits will not be kept.",
   "moreActions": "More actions",
   "editAction": "Edit",
+  "renewAction": "Renew",
   "maskedDocumentNumberLabel": "Masked document number {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
@@ -302,9 +303,10 @@
   "documentsFilterEmptyMessage": "Choose another status, or select All to see every saved document.",
   "documentsRemainingHeader": "All documents",
   "documentPassTitle": "Document pass",
-  "documentPassEyebrow": "Verified details",
+  "documentPassEyebrow": "Document details",
   "viewScan": "View scan",
   "remindersTitle": "Reminders",
+  "reminderPreferencesTitle": "Reminder preferences",
   "renewalHistoryEmptyTitle": "No renewals yet",
   "wizardStepOf": "Step {current} of {total}",
   "@wizardStepOf": {
@@ -316,7 +318,7 @@
   "wizardContinue": "Continue",
   "wizardBack": "Back",
   "stepSourceTitle": "Scan or manual entry",
-  "stepIdentityTitle": "Document identity",
+  "stepIdentityTitle": "Make it yours",
   "stepDatesTitle": "Important dates",
   "stepRenewalTitle": "Renewal planning",
   "stepReviewTitle": "Review and save",
@@ -335,7 +337,7 @@
   "ocrFailedTitle": "We could not read this scan",
   "ocrFailedMessage": "Keep the photo and enter details manually, or try another image.",
   "ocrRetry": "Try again",
-  "ocrReviewTitle": "Review scan",
+  "ocrReviewTitle": "Review your scan",
   "ocrFieldsFound": "{count, plural, =0{No fields found} one{1 field found} other{{count} fields found}}",
   "@ocrFieldsFound": {
     "placeholders": {
@@ -345,12 +347,12 @@
   "ocrConfidenceHigh": "High confidence",
   "ocrConfidenceReview": "Review",
   "ocrConfidenceMissing": "Not detected",
-  "ocrReviewField": "Review this field",
+  "ocrReviewField": "Check this value",
   "ocrSuggestedCountry": "Suggested country",
   "ocrSuggestedType": "Suggested document type",
   "ocrAddMissingField": "Add missing field",
-  "ocrConfirmContinue": "Confirm and continue",
-  "ocrRetake": "Retake or replace",
+  "ocrConfirmContinue": "Confirm details",
+  "ocrRetake": "Retake scan",
   "fieldCountry": "Country or region",
   "schemaChangeTitle": "Change document type?",
   "schemaChangeMessage": "Some details you entered do not belong to the new type and will be removed.",
@@ -408,7 +410,7 @@
   "guidedSetup": "Guided setup",
   "ocrOnDeviceEyebrow": "On-device extraction",
   "howToAddBody": "Scan for a faster start, or enter the details yourself.",
-  "identityIntro": "We show only the fields relevant to this document.",
+  "identityIntro": "A few details to organise your document.",
   "datesIntro": "Dates always include day, month and year.",
   "planningIntro": "Optional details help you decide what deserves attention.",
   "reviewIntro": "Review the important details. You can edit everything later.",
@@ -501,8 +503,8 @@
   "subscriptionCategoryOther": "Other",
   "subscriptionServiceIntroTitle": "What are you tracking?",
   "subscriptionServiceIntro": "Start with the service and category.",
-  "subscriptionBillingIntroTitle": "Billing details",
-  "subscriptionBillingIntro": "Add only what you know. Everything can be edited later.",
+  "subscriptionBillingIntroTitle": "Set your billing",
+  "subscriptionBillingIntro": "Track your subscription details.",
   "subscriptionPreferencesIntroTitle": "Stay ahead of the charge",
   "subscriptionPreferencesIntro": "Choose when you want to make a decision.",
   "subscriptionReviewIntroTitle": "Ready to track",
@@ -638,5 +640,28 @@
   "homeSeeAllCurrencies": "See all currency totals",
   "homeNoActivePlans": "No active plans",
   "homeCurrencyBreakdownTitle": "Monthly estimates",
-  "homeDocumentsTile": "Documents"
+  "homeDocumentsTile": "Documents",
+  "changeSelection": "Change",
+  "fromScan": "From scan",
+  "checkThisDate": "Check this date",
+  "searchListHint": "Search",
+  "identityExtrasTitle": "Additional details (optional)",
+  "identityExtrasSubtitle": "Number, issuer and custom fields",
+  "ocrReviewSubtitle": "Check the extracted details before continuing.",
+  "ocrNothingSavedHint": "Nothing is saved until you choose Save document.",
+  "remindMePrefix": "Remind me",
+  "attachmentAddedOn": "Added {date}",
+  "@attachmentAddedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "estimatedMonthlyCostValue": "Estimated monthly cost {amount}",
+  "@estimatedMonthlyCostValue": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "selectedDocumentType": "Selected document type",
+  "chooseOption": "Choose"
 }

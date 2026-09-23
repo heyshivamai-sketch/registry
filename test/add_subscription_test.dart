@@ -166,7 +166,7 @@ void main() {
         find.byKey(const ValueKey<String>('sub-wizard-continue')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Billing details'), findsOneWidget);
+      expect(find.text('Set your billing'), findsOneWidget);
 
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();

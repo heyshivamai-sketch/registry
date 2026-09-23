@@ -590,7 +590,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hasAttachment => 'Has attachment';
 
   @override
-  String get selectDate => 'Select date';
+  String get selectDate => 'Choose date';
 
   @override
   String get statusOverdue => 'Overdue';
@@ -720,6 +720,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editAction => 'Edit';
 
   @override
+  String get renewAction => 'Renew';
+
+  @override
   String maskedDocumentNumberLabel(String number) {
     return 'Masked document number $number';
   }
@@ -772,13 +775,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentPassTitle => 'Document pass';
 
   @override
-  String get documentPassEyebrow => 'Verified details';
+  String get documentPassEyebrow => 'Document details';
 
   @override
   String get viewScan => 'View scan';
 
   @override
   String get remindersTitle => 'Reminders';
+
+  @override
+  String get reminderPreferencesTitle => 'Reminder preferences';
 
   @override
   String get renewalHistoryEmptyTitle => 'No renewals yet';
@@ -798,7 +804,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stepSourceTitle => 'Scan or manual entry';
 
   @override
-  String get stepIdentityTitle => 'Document identity';
+  String get stepIdentityTitle => 'Make it yours';
 
   @override
   String get stepDatesTitle => 'Important dates';
@@ -861,7 +867,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrRetry => 'Try again';
 
   @override
-  String get ocrReviewTitle => 'Review scan';
+  String get ocrReviewTitle => 'Review your scan';
 
   @override
   String ocrFieldsFound(int count) {
@@ -885,7 +891,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrConfidenceMissing => 'Not detected';
 
   @override
-  String get ocrReviewField => 'Review this field';
+  String get ocrReviewField => 'Check this value';
 
   @override
   String get ocrSuggestedCountry => 'Suggested country';
@@ -897,10 +903,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrAddMissingField => 'Add missing field';
 
   @override
-  String get ocrConfirmContinue => 'Confirm and continue';
+  String get ocrConfirmContinue => 'Confirm details';
 
   @override
-  String get ocrRetake => 'Retake or replace';
+  String get ocrRetake => 'Retake scan';
 
   @override
   String get fieldCountry => 'Country or region';
@@ -1057,8 +1063,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Scan for a faster start, or enter the details yourself.';
 
   @override
-  String get identityIntro =>
-      'We show only the fields relevant to this document.';
+  String get identityIntro => 'A few details to organise your document.';
 
   @override
   String get datesIntro => 'Dates always include day, month and year.';
@@ -1301,11 +1306,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionServiceIntro => 'Start with the service and category.';
 
   @override
-  String get subscriptionBillingIntroTitle => 'Billing details';
+  String get subscriptionBillingIntroTitle => 'Set your billing';
 
   @override
-  String get subscriptionBillingIntro =>
-      'Add only what you know. Everything can be edited later.';
+  String get subscriptionBillingIntro => 'Track your subscription details.';
 
   @override
   String get subscriptionPreferencesIntroTitle => 'Stay ahead of the charge';
@@ -1602,4 +1606,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeDocumentsTile => 'Documents';
+
+  @override
+  String get changeSelection => 'Change';
+
+  @override
+  String get fromScan => 'From scan';
+
+  @override
+  String get checkThisDate => 'Check this date';
+
+  @override
+  String get searchListHint => 'Search';
+
+  @override
+  String get identityExtrasTitle => 'Additional details (optional)';
+
+  @override
+  String get identityExtrasSubtitle => 'Number, issuer and custom fields';
+
+  @override
+  String get ocrReviewSubtitle =>
+      'Check the extracted details before continuing.';
+
+  @override
+  String get ocrNothingSavedHint =>
+      'Nothing is saved until you choose Save document.';
+
+  @override
+  String get remindMePrefix => 'Remind me';
+
+  @override
+  String attachmentAddedOn(String date) {
+    return 'Added $date';
+  }
+
+  @override
+  String estimatedMonthlyCostValue(String amount) {
+    return 'Estimated monthly cost $amount';
+  }
+
+  @override
+  String get selectedDocumentType => 'Selected document type';
+
+  @override
+  String get chooseOption => 'Choose';
 }

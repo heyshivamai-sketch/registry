@@ -34,6 +34,9 @@ abstract final class AppColors {
   static const Color outlineVariant = Color(0xFFE8E4DC);
   static const Color mintSurface = Color(0xFFE8F6F0);
   static const Color lavenderSurface = Color(0xFFECE8FB);
+  static const Color inputFill = Color(0xFFF3F1FB);
+  static const Color inputBorder = Color(0xFFDCD7EE);
+  static const Color inputFocus = Color(0xFF6558F5);
 
   static const Color heroStart = Color(0xFF18224F);
   static const Color heroEnd = Color(0xFF4F5CE8);

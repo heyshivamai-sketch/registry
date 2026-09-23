@@ -63,20 +63,10 @@ class _SubscriptionDetailBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: AppSpacing.xs,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.planDetailsEyebrow,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.tertiary,
-              ),
-            ),
-            Text(
-              l10n.subscriptionDetailsTitle,
-              style: theme.textTheme.titleLarge,
-            ),
-          ],
+        title: Text(
+          subscription.serviceName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
       body: SafeArea(
@@ -119,7 +109,7 @@ class _SubscriptionDetailBody extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       subscription.serviceName,
-                      style: theme.textTheme.headlineMedium,
+                      style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
                     ),
                     if (subscription.planName != null) ...[
                       const SizedBox(height: AppSpacing.xxs),
@@ -137,42 +127,7 @@ class _SubscriptionDetailBody extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: [
-                  _ActionChipButton(
-                    key: const ValueKey<String>('subscription-edit'),
-                    icon: Icons.edit_outlined,
-                    label: l10n.editAction,
-                    onPressed: () => AppRoutes.openEditSubscription(
-                      context,
-                      subscription.id,
-                    ),
-                  ),
-                  if (subscription.isActive)
-                    _ActionChipButton(
-                      key: const ValueKey<String>('subscription-cancel'),
-                      icon: Icons.cancel_outlined,
-                      label: l10n.markCancelled,
-                      onPressed: () => _confirmCancel(context, subscription),
-                    )
-                  else
-                    _ActionChipButton(
-                      key: const ValueKey<String>('subscription-reactivate'),
-                      icon: Icons.restart_alt_outlined,
-                      label: l10n.reactivatePlan,
-                      onPressed: () =>
-                          _confirmReactivate(context, subscription),
-                    ),
-                  _ActionChipButton(
-                    key: const ValueKey<String>('subscription-delete'),
-                    icon: Icons.delete_outline,
-                    label: l10n.deleteSubscription,
-                    onPressed: () => _confirmDelete(context, subscription),
-                  ),
-                ],
-              ),
+              _PlanActions(subscription: subscription),
               const SizedBox(height: AppSpacing.md),
               RegistrySurface(
                 padding: const EdgeInsets.all(14),
@@ -259,26 +214,24 @@ class _SubscriptionDetailBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegistrySectionHeader(title: l10n.remindersTitle),
-                    const SizedBox(height: AppSpacing.sm),
+                    RegistrySectionHeader(title: l10n.reminderPreferencesTitle),
+                    const SizedBox(height: AppSpacing.xs),
                     if (subscription.reminders.isEmpty)
-                      Text(
-                        l10n.noRemindersSelected,
-                        style: theme.textTheme.bodyMedium,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          l10n.noRemindersSelected,
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       )
                     else
-                      Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
-                        children: [
+                      RegistryInfoRow(
+                        label: l10n.remindMePrefix,
+                        value: [
                           for (final reminder in SubscriptionReminder.values)
                             if (subscription.reminders.contains(reminder))
-                              Chip(
-                                label: Text(
-                                  SubscriptionCopy.reminder(l10n, reminder),
-                                ),
-                              ),
-                        ],
+                              SubscriptionCopy.reminder(l10n, reminder),
+                        ].join(', '),
                       ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -336,28 +289,73 @@ class _DetailGrid extends StatelessWidget {
       ),
     ];
 
+    return Column(
+      children: [
+        for (final cell in cells)
+          RegistryInfoRow(label: cell.$1, value: cell.$2),
+      ],
+    );
+  }
+}
+
+class _PlanActions extends StatelessWidget {
+  const _PlanActions({required this.subscription});
+
+  final RegistrySubscription subscription;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final actions = <Widget>[
+      _PlanAction(
+        key: const ValueKey<String>('subscription-edit'),
+        icon: Icons.edit_outlined,
+        label: l10n.editAction,
+        onPressed: () =>
+            AppRoutes.openEditSubscription(context, subscription.id),
+      ),
+      if (subscription.isActive)
+        _PlanAction(
+          key: const ValueKey<String>('subscription-cancel'),
+          icon: Icons.cancel_outlined,
+          label: l10n.markCancelled,
+          onPressed: () => _confirmCancel(context, subscription),
+        )
+      else
+        _PlanAction(
+          key: const ValueKey<String>('subscription-reactivate'),
+          icon: Icons.restart_alt_outlined,
+          label: l10n.reactivatePlan,
+          onPressed: () => _confirmReactivate(context, subscription),
+        ),
+      _PlanAction(
+        key: const ValueKey<String>('subscription-delete'),
+        icon: Icons.delete_outline,
+        label: l10n.deleteSubscription,
+        onPressed: () => _confirmDelete(context, subscription),
+      ),
+    ];
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        final stacked = constraints.maxWidth < 320;
+        final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        final stacked = constraints.maxWidth < 360 || scale >= 1.3;
         if (stacked) {
           return Column(
             children: [
-              for (final cell in cells) ...[
-                _GridCell(label: cell.$1, value: cell.$2),
-                const SizedBox(height: AppSpacing.xs),
+              for (var i = 0; i < actions.length; i++) ...[
+                if (i != 0) const SizedBox(height: AppSpacing.xs),
+                actions[i],
               ],
             ],
           );
         }
-        return Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
+        return Row(
           children: [
-            for (final cell in cells)
-              SizedBox(
-                width: (constraints.maxWidth - AppSpacing.sm) / 2,
-                child: _GridCell(label: cell.$1, value: cell.$2),
-              ),
+            for (var i = 0; i < actions.length; i++) ...[
+              if (i != 0) const SizedBox(width: 7),
+              Expanded(child: actions[i]),
+            ],
           ],
         );
       },
@@ -365,47 +363,8 @@ class _DetailGrid extends StatelessWidget {
   }
 }
 
-class _GridCell extends StatelessWidget {
-  const _GridCell({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                letterSpacing: 0.6,
-                fontSize: 10,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionChipButton extends StatelessWidget {
-  const _ActionChipButton({
+class _PlanAction extends StatelessWidget {
+  const _PlanAction({
     super.key,
     required this.icon,
     required this.label,
@@ -418,12 +377,45 @@ class _ActionChipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
-      child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon, size: 18),
-        label: Text(label),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Material(
+      color: colorScheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(18),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.xs,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: colorScheme.primary),
+                const SizedBox(width: AppSpacing.xxs),
+                Flexible(
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

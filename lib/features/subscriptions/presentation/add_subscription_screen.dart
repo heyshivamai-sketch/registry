@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
+import 'package:the_registry/app/theme/app_colors.dart';
+import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_amount_field.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
+import 'package:the_registry/core/widgets/registry_form_field.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import 'package:the_registry/core/widgets/registry_searchable_sheet.dart';
 import 'package:the_registry/core/widgets/registry_secondary_button.dart';
 import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
 import 'package:the_registry/core/widgets/registry_selector_field.dart';
@@ -12,6 +17,7 @@ import 'package:the_registry/features/documents/presentation/document_copy.dart'
 import 'package:the_registry/features/documents/widgets/document_date_field.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
+import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_controller.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
@@ -67,6 +73,13 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
     _notes.text = _controller.notes;
   }
 
+  void _flushEditors() {
+    _controller.setServiceName(_service.text);
+    _controller.setPlanName(_plan.text);
+    _controller.setAmountText(_amount.text);
+    _controller.setNotes(_notes.text);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -110,37 +123,18 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
 
   Future<void> _pickCategory() async {
     final l10n = AppLocalizations.of(context);
-    final selected = await showModalBottomSheet<SubscriptionCategory>(
+    final selected = await RegistrySearchableSheet.show<SubscriptionCategory>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screenPadding,
-                  0,
-                  AppSpacing.screenPadding,
-                  AppSpacing.sm,
-                ),
-                child: Text(
-                  l10n.fieldCategory,
-                  style: Theme.of(sheetContext).textTheme.titleMedium,
-                ),
-              ),
-              for (final category in SubscriptionCategory.values)
-                ListTile(
-                  key: ValueKey<String>('sub-category-${category.name}'),
-                  title: Text(SubscriptionCopy.category(l10n, category)),
-                  selected: _controller.category == category,
-                  onTap: () => Navigator.of(sheetContext).pop(category),
-                ),
-            ],
+      title: l10n.fieldCategory,
+      selected: _controller.category,
+      options: [
+        for (final category in SubscriptionCategory.values)
+          RegistrySearchableOption(
+            value: category,
+            label: SubscriptionCopy.category(l10n, category),
+            itemKey: 'sub-category-${category.name}',
           ),
-        );
-      },
+      ],
     );
     if (selected != null) {
       _controller.setCategory(selected);
@@ -149,37 +143,18 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
 
   Future<void> _pickCurrency() async {
     final l10n = AppLocalizations.of(context);
-    final selected = await showModalBottomSheet<String>(
+    final selected = await RegistrySearchableSheet.show<String>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screenPadding,
-                  0,
-                  AppSpacing.screenPadding,
-                  AppSpacing.sm,
-                ),
-                child: Text(
-                  l10n.fieldCurrency,
-                  style: Theme.of(sheetContext).textTheme.titleMedium,
-                ),
-              ),
-              for (final code in CurrencyInfo.supportedCodes)
-                ListTile(
-                  key: ValueKey<String>('currency-$code'),
-                  title: Text(code),
-                  selected: _controller.currencyCode == code,
-                  onTap: () => Navigator.of(sheetContext).pop(code),
-                ),
-            ],
+      title: l10n.fieldCurrency,
+      selected: _controller.currencyCode,
+      options: [
+        for (final code in CurrencyInfo.supportedCodes)
+          RegistrySearchableOption(
+            value: code,
+            label: code,
+            itemKey: 'currency-$code',
           ),
-        );
-      },
+      ],
     );
     if (selected != null) {
       _controller.setCurrencyCode(selected);
@@ -217,6 +192,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
   }
 
   Future<void> _save() async {
+    _flushEditors();
     final l10n = AppLocalizations.of(context);
     final deps = RegistryDependencies.of(context);
     final saved = await _controller.submit(
@@ -227,22 +203,6 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
     if (saved && mounted) {
       Navigator.of(context).pop(true);
     }
-  }
-
-  InputDecoration _decoration({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField = false,
-  }) {
-    return InputDecoration(
-      labelText: requiredField ? '$label *' : label,
-      errorText: errorText,
-      errorMaxLines: 4,
-      helperText: helperText,
-      helperMaxLines: 4,
-      border: const OutlineInputBorder(),
-    );
   }
 
   @override
@@ -349,6 +309,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
                       _controller.backStep();
                     },
                     onContinue: () {
+                      _flushEditors();
                       if (_controller.step == AddSubscriptionStep.review) {
                         _save();
                         return;
@@ -371,20 +332,17 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
         controller: _controller,
         service: _service,
         plan: _plan,
-        decoration: _decoration,
         onPickCategory: _pickCategory,
       ),
       AddSubscriptionStep.billing => _BillingStep(
         controller: _controller,
         amount: _amount,
-        decoration: _decoration,
         onPickCurrency: _pickCurrency,
         onPickDate: _pickDate,
       ),
       AddSubscriptionStep.preferences => _PreferencesStep(
         controller: _controller,
         notes: _notes,
-        decoration: _decoration,
         onPickDate: _pickDate,
       ),
       AddSubscriptionStep.review => _ReviewStep(
@@ -403,31 +361,12 @@ class _ProgressHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final current = controller.stepIndex + 1;
-    return Row(
-      children: [
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: current / controller.stepCount,
-              minHeight: 5,
-              backgroundColor: const Color(0xFFE1E3EB),
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          l10n.wizardStepOf(current, controller.stepCount),
-          key: const ValueKey<String>('sub-wizard-progress'),
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            letterSpacing: 0,
-          ),
-        ),
-      ],
+    return RegistryWizardProgress(
+      current: current,
+      total: controller.stepCount,
+      label: l10n.wizardStepOf(current, controller.stepCount),
+      labelKey: const ValueKey<String>('sub-wizard-progress'),
     );
   }
 }
@@ -452,9 +391,10 @@ class _ActionBar extends StatelessWidget {
     final continueLabel = onReview
         ? (isEditing ? l10n.saveChanges : l10n.saveSubscription)
         : l10n.wizardContinue;
+    final scheme = Theme.of(context).colorScheme;
 
     return Material(
-      color: Theme.of(context).colorScheme.surface,
+      color: scheme.surface,
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpacing.screenPadding,
@@ -470,7 +410,7 @@ class _ActionBar extends StatelessWidget {
                 controller.saveError!,
                 key: const ValueKey<String>('subscription-save-error'),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
+                  color: scheme.error,
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -494,6 +434,8 @@ class _ActionBar extends StatelessWidget {
                       onReview ? 'save-subscription' : 'sub-wizard-continue',
                     ),
                     label: continueLabel,
+                    backgroundColor: scheme.tertiary,
+                    foregroundColor: scheme.onTertiary,
                     trailing: onReview
                         ? null
                         : const Icon(Icons.arrow_forward_rounded, size: 18),
@@ -514,20 +456,12 @@ class _ServiceStep extends StatelessWidget {
     required this.controller,
     required this.service,
     required this.plan,
-    required this.decoration,
     required this.onPickCategory,
   });
 
   final AddSubscriptionController controller;
   final TextEditingController service;
   final TextEditingController plan;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-  })
-  decoration;
   final VoidCallback onPickCategory;
 
   @override
@@ -539,23 +473,20 @@ class _ServiceStep extends StatelessWidget {
       children: [
         Text(
           l10n.subscriptionServiceIntroTitle,
-          style: theme.textTheme.titleLarge,
+          style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(l10n.subscriptionServiceIntro, style: theme.textTheme.bodyMedium),
         const SizedBox(height: AppSpacing.md),
-        TextField(
-          key: const ValueKey<String>('field-service-name'),
+        RegistryTextField(
+          label: l10n.fieldServiceName,
           controller: service,
+          fieldKey: const ValueKey<String>('field-service-name'),
+          requiredField: true,
+          errorText: controller.serviceNameError,
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.next,
-          scrollPadding: AppSpacing.wizardFieldScrollPadding,
           onChanged: controller.setServiceName,
-          decoration: decoration(
-            label: l10n.fieldServiceName,
-            errorText: controller.serviceNameError,
-            requiredField: true,
-          ),
         ),
         const SizedBox(height: AppSpacing.md),
         RegistrySelectorField(
@@ -567,19 +498,17 @@ class _ServiceStep extends StatelessWidget {
           empty: controller.category == null,
           requiredField: true,
           errorText: controller.categoryError,
+          placeholder: l10n.chooseOption,
           onTap: onPickCategory,
         ),
         const SizedBox(height: AppSpacing.md),
-        TextField(
-          key: const ValueKey<String>('field-plan-name'),
+        RegistryTextField(
+          label: l10n.fieldPlanName,
           controller: plan,
+          fieldKey: const ValueKey<String>('field-plan-name'),
+          helperText: l10n.optionalMarker,
           textCapitalization: TextCapitalization.sentences,
-          scrollPadding: AppSpacing.wizardFieldScrollPadding,
           onChanged: controller.setPlanName,
-          decoration: decoration(
-            label: l10n.fieldPlanName,
-            helperText: l10n.optionalMarker,
-          ),
         ),
       ],
     );
@@ -590,62 +519,111 @@ class _BillingStep extends StatelessWidget {
   const _BillingStep({
     required this.controller,
     required this.amount,
-    required this.decoration,
     required this.onPickCurrency,
     required this.onPickDate,
   });
 
   final AddSubscriptionController controller;
   final TextEditingController amount;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-  })
-  decoration;
   final VoidCallback onPickCurrency;
   final ValueChanged<String> onPickDate;
+
+  String? _estimate(AppLocalizations l10n) {
+    if (controller.currencyCode == null ||
+        controller.billingCycle == null ||
+        controller.amountText.trim().isEmpty) {
+      return null;
+    }
+    try {
+      final money = MoneyParser.parse(
+        controller.amountText,
+        controller.currencyCode!,
+      );
+      final draft = RegistrySubscription(
+        id: 'draft',
+        createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+        serviceName: controller.serviceName,
+        category: controller.category ?? SubscriptionCategory.other,
+        amount: money,
+        billingCycle: controller.billingCycle!,
+        nextPaymentDate: controller.nextPaymentDate ?? DateTime(2000),
+        autoRenew: controller.autoRenew,
+        lifecycle: SubscriptionLifecycle.active,
+        impact: DocumentImpact.low,
+      );
+      final share = SubscriptionEstimate.monthlyShare(draft).roundHalfUp();
+      return MoneyFormat.format(share, l10n.localeName);
+    } on MoneyParseException {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final estimate = _estimate(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           l10n.subscriptionBillingIntroTitle,
-          style: theme.textTheme.titleLarge,
+          style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(l10n.subscriptionBillingIntro, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.md),
-        TextField(
-          key: const ValueKey<String>('field-amount'),
-          controller: amount,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          textInputAction: TextInputAction.done,
-          scrollPadding: AppSpacing.wizardFieldScrollPadding,
-          onChanged: controller.setAmountText,
-          decoration: decoration(
-            label: l10n.fieldAmount,
-            errorText: controller.amountError,
-            requiredField: true,
+        if (controller.serviceName.trim().isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.md),
+          RegistrySurface(
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            borderRadius: BorderRadius.circular(AppRadius.input),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 18,
+                  backgroundColor: AppColors.lavenderSurface,
+                  child: Text(
+                    controller.serviceName.trim().substring(0, 1).toUpperCase(),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.serviceName.trim(),
+                        style: theme.textTheme.titleSmall,
+                      ),
+                      if (controller.planName.trim().isNotEmpty)
+                        Text(
+                          controller.planName.trim(),
+                          style: theme.textTheme.bodySmall,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+        ],
+        const SizedBox(height: AppSpacing.md),
+        RegistryAmountCurrencyField(
+          amountLabel: l10n.fieldAmount,
+          currencyLabel: l10n.fieldCurrency,
+          amount: amount,
+          currencyCode: controller.currencyCode ?? '',
+          currencyEmpty: controller.currencyCode == null,
+          amountError: controller.amountError,
+          currencyError: controller.currencyError,
+          onAmountChanged: controller.setAmountText,
+          onPickCurrency: onPickCurrency,
         ),
         const SizedBox(height: AppSpacing.md),
-        RegistrySelectorField(
-          fieldKey: 'field-currency',
-          label: l10n.fieldCurrency,
-          value: controller.currencyCode ?? '',
-          empty: controller.currencyCode == null,
-          requiredField: true,
-          errorText: controller.currencyError,
-          onTap: onPickCurrency,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(l10n.fieldBillingCycle, style: theme.textTheme.titleSmall),
+        RegistryFieldLabel(label: l10n.fieldBillingCycle, requiredField: true),
         if (controller.cycleError != null)
           Text(
             controller.cycleError!,
@@ -663,6 +641,9 @@ class _BillingStep extends StatelessWidget {
                 key: ValueKey<String>('cycle-${cycle.name}'),
                 label: SubscriptionCopy.cycle(l10n, cycle),
                 selected: controller.billingCycle == cycle,
+                selectedColor: theme.colorScheme.tertiary,
+                selectedForegroundColor: theme.colorScheme.onTertiary,
+                showCheckmark: false,
                 onSelected: (_) => controller.setBillingCycle(cycle),
               ),
           ],
@@ -677,6 +658,45 @@ class _BillingStep extends StatelessWidget {
           helperText: l10n.nextPaymentHelper,
           onTap: () => onPickDate('next-payment'),
         ),
+        if (estimate != null) ...[
+          const SizedBox(height: AppSpacing.md),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.lavenderSurface,
+              borderRadius: BorderRadius.circular(AppRadius.input),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: AppColors.violet,
+                    size: 20,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.estimatedMonthlyCostValue(estimate),
+                          style: theme.textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.estimatedMonthlyDisclaimer,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -686,19 +706,11 @@ class _PreferencesStep extends StatelessWidget {
   const _PreferencesStep({
     required this.controller,
     required this.notes,
-    required this.decoration,
     required this.onPickDate,
   });
 
   final AddSubscriptionController controller;
   final TextEditingController notes;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-  })
-  decoration;
   final ValueChanged<String> onPickDate;
 
   @override
@@ -789,17 +801,14 @@ class _PreferencesStep extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        TextField(
-          key: const ValueKey<String>('field-subscription-notes'),
+        RegistryTextField(
+          label: l10n.fieldNotes,
           controller: notes,
+          fieldKey: const ValueKey<String>('field-subscription-notes'),
+          helperText: l10n.optionalMarker,
           minLines: 3,
           maxLines: 5,
-          scrollPadding: AppSpacing.wizardFieldScrollPadding,
           onChanged: controller.setNotes,
-          decoration: decoration(
-            label: l10n.fieldNotes,
-            helperText: l10n.optionalMarker,
-          ),
         ),
         const SizedBox(height: AppSpacing.md),
         RegistryCallout(

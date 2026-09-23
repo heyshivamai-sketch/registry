@@ -1129,7 +1129,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectDate.
   ///
   /// In en, this message translates to:
-  /// **'Select date'**
+  /// **'Choose date'**
   String get selectDate;
 
   /// No description provided for @statusOverdue.
@@ -1372,6 +1372,12 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get editAction;
 
+  /// No description provided for @renewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew'**
+  String get renewAction;
+
   /// No description provided for @maskedDocumentNumberLabel.
   ///
   /// In en, this message translates to:
@@ -1471,7 +1477,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentPassEyebrow.
   ///
   /// In en, this message translates to:
-  /// **'Verified details'**
+  /// **'Document details'**
   String get documentPassEyebrow;
 
   /// No description provided for @viewScan.
@@ -1485,6 +1491,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminders'**
   String get remindersTitle;
+
+  /// No description provided for @reminderPreferencesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder preferences'**
+  String get reminderPreferencesTitle;
 
   /// No description provided for @renewalHistoryEmptyTitle.
   ///
@@ -1519,7 +1531,7 @@ abstract class AppLocalizations {
   /// No description provided for @stepIdentityTitle.
   ///
   /// In en, this message translates to:
-  /// **'Document identity'**
+  /// **'Make it yours'**
   String get stepIdentityTitle;
 
   /// No description provided for @stepDatesTitle.
@@ -1633,7 +1645,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrReviewTitle.
   ///
   /// In en, this message translates to:
-  /// **'Review scan'**
+  /// **'Review your scan'**
   String get ocrReviewTitle;
 
   /// No description provided for @ocrFieldsFound.
@@ -1663,7 +1675,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrReviewField.
   ///
   /// In en, this message translates to:
-  /// **'Review this field'**
+  /// **'Check this value'**
   String get ocrReviewField;
 
   /// No description provided for @ocrSuggestedCountry.
@@ -1687,13 +1699,13 @@ abstract class AppLocalizations {
   /// No description provided for @ocrConfirmContinue.
   ///
   /// In en, this message translates to:
-  /// **'Confirm and continue'**
+  /// **'Confirm details'**
   String get ocrConfirmContinue;
 
   /// No description provided for @ocrRetake.
   ///
   /// In en, this message translates to:
-  /// **'Retake or replace'**
+  /// **'Retake scan'**
   String get ocrRetake;
 
   /// No description provided for @fieldCountry.
@@ -1981,7 +1993,7 @@ abstract class AppLocalizations {
   /// No description provided for @identityIntro.
   ///
   /// In en, this message translates to:
-  /// **'We show only the fields relevant to this document.'**
+  /// **'A few details to organise your document.'**
   String get identityIntro;
 
   /// No description provided for @datesIntro.
@@ -2389,13 +2401,13 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionBillingIntroTitle.
   ///
   /// In en, this message translates to:
-  /// **'Billing details'**
+  /// **'Set your billing'**
   String get subscriptionBillingIntroTitle;
 
   /// No description provided for @subscriptionBillingIntro.
   ///
   /// In en, this message translates to:
-  /// **'Add only what you know. Everything can be edited later.'**
+  /// **'Track your subscription details.'**
   String get subscriptionBillingIntro;
 
   /// No description provided for @subscriptionPreferencesIntroTitle.
@@ -2907,6 +2919,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Documents'**
   String get homeDocumentsTile;
+
+  /// No description provided for @changeSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get changeSelection;
+
+  /// No description provided for @fromScan.
+  ///
+  /// In en, this message translates to:
+  /// **'From scan'**
+  String get fromScan;
+
+  /// No description provided for @checkThisDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Check this date'**
+  String get checkThisDate;
+
+  /// No description provided for @searchListHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchListHint;
+
+  /// No description provided for @identityExtrasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional details (optional)'**
+  String get identityExtrasTitle;
+
+  /// No description provided for @identityExtrasSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Number, issuer and custom fields'**
+  String get identityExtrasSubtitle;
+
+  /// No description provided for @ocrReviewSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the extracted details before continuing.'**
+  String get ocrReviewSubtitle;
+
+  /// No description provided for @ocrNothingSavedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is saved until you choose Save document.'**
+  String get ocrNothingSavedHint;
+
+  /// No description provided for @remindMePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get remindMePrefix;
+
+  /// No description provided for @attachmentAddedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {date}'**
+  String attachmentAddedOn(String date);
+
+  /// No description provided for @estimatedMonthlyCostValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated monthly cost {amount}'**
+  String estimatedMonthlyCostValue(String amount);
+
+  /// No description provided for @selectedDocumentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected document type'**
+  String get selectedDocumentType;
+
+  /// No description provided for @chooseOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get chooseOption;
 }
 
 class _AppLocalizationsDelegate

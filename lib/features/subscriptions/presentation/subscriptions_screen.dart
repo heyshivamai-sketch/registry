@@ -168,6 +168,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     child: Text(l10n.addSubscription),
                   ),
                 ),
+                SizedBox(
+                  height: AppSpacing.minTapTarget *
+                      MediaQuery.textScalerOf(context).scale(1),
+                ),
               ],
             ],
           );

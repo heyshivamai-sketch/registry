@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_form_field.dart';
 
-/// Outline selector that keeps the label and selected value on separate lines.
-///
-/// [InputDecorator] defaults can draw a selected value such as "Other" on top
-/// of the floating label. This widget always floats the label and never uses
-/// the label (or a fallback such as "Other") as the empty-state value.
+/// Filled selector with a persistent label above the value, never overlaid.
 class RegistrySelectorField extends StatelessWidget {
   const RegistrySelectorField({
     super.key,
@@ -16,6 +12,9 @@ class RegistrySelectorField extends StatelessWidget {
     required this.onTap,
     this.errorText,
     this.requiredField = false,
+    this.enabled = true,
+    this.placeholder,
+    this.trailingIcon = Icons.expand_more,
   });
 
   final String fieldKey;
@@ -25,44 +24,45 @@ class RegistrySelectorField extends StatelessWidget {
   final VoidCallback onTap;
   final String? errorText;
   final bool requiredField;
+  final bool enabled;
+  final String? placeholder;
+  final IconData trailingIcon;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final shownLabel = requiredField ? '$label *' : label;
+    final display = empty ? (placeholder ?? '') : value;
 
-    return Semantics(
-      button: true,
-      label: shownLabel,
-      value: empty ? null : value,
-      child: InkWell(
-        key: ValueKey<String>(fieldKey),
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(4),
-        child: InputDecorator(
-          isEmpty: empty,
-          decoration: InputDecoration(
-            labelText: shownLabel,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            errorText: errorText,
-            errorMaxLines: 4,
-            suffixIcon: const Icon(Icons.arrow_drop_down),
-            border: const OutlineInputBorder(),
-            alignLabelWithHint: false,
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: AppSpacing.minTapTarget - 24,
-            ),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                empty ? '' : value,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyLarge,
+    return RegistryLabeledField(
+      key: ValueKey<String>(fieldKey),
+      label: label,
+      requiredField: requiredField,
+      errorText: errorText,
+      child: Semantics(
+        button: enabled,
+        label: shownLabel,
+        value: empty ? null : value,
+        child: RegistryFieldSurface(
+          enabled: enabled,
+          error: errorText != null,
+          onTap: enabled ? onTap : null,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  display,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: empty
+                        ? theme.colorScheme.onSurfaceVariant
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
               ),
-            ),
+              Icon(trailingIcon, color: theme.colorScheme.onSurfaceVariant),
+            ],
           ),
         ),
       ),

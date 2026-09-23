@@ -26,6 +26,7 @@ abstract final class AppSpacing {
   static const double headerButton = 42;
   static const double searchHeight = 48;
   static const double buttonHeight = 48;
+  static const double inputHeight = 54;
   static const double pulseRadius = 27;
   static const double passRadius = 25;
 
@@ -60,8 +61,10 @@ abstract final class AppSpacing {
   ///
   /// Tab bodies use [extendBody], so this is the only reserved space; the shell
   /// must not also inset the IndexedStack or the last rows clip above a blank band.
+  /// Text scale is included so wrapping cards at 1.8× still clear the overlay.
   static double scrollClearanceForDock(BuildContext context) {
-    return dockOverlayExtent(context);
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+    return dockOverlayExtent(context) + minTapTarget * textScale;
   }
 
   /// Extra scroll padding so a focused field stays clear of the pinned wizard bar.

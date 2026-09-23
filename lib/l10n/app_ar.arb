@@ -217,6 +217,7 @@
   "discardChangesMessage": "لن تُحفظ تعديلاتك.",
   "moreActions": "المزيد من الإجراءات",
   "editAction": "تعديل",
+  "renewAction": "تجديد",
   "maskedDocumentNumberLabel": "رقم المستند المخفي {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
@@ -238,9 +239,10 @@
   "documentsFilterEmptyMessage": "اختر حالة أخرى، أو حدد الكل لعرض كل المستندات المحفوظة.",
   "documentsRemainingHeader": "كل المستندات",
   "documentPassTitle": "بطاقة المستند",
-  "documentPassEyebrow": "تفاصيل موثّقة",
+  "documentPassEyebrow": "تفاصيل المستند",
   "viewScan": "عرض المسح",
   "remindersTitle": "التذكيرات",
+  "reminderPreferencesTitle": "تفضيلات التذكير",
   "renewalHistoryEmptyTitle": "لا توجد تجديدات بعد",
   "wizardStepOf": "الخطوة {current} من {total}",
   "@wizardStepOf": {
@@ -252,7 +254,7 @@
   "wizardContinue": "متابعة",
   "wizardBack": "رجوع",
   "stepSourceTitle": "مسح أو إدخال يدوي",
-  "stepIdentityTitle": "هوية المستند",
+  "stepIdentityTitle": "اجعله خاصًا بك",
   "stepDatesTitle": "التواريخ المهمة",
   "stepRenewalTitle": "تخطيط التجديد",
   "stepReviewTitle": "مراجعة وحفظ",
@@ -271,7 +273,7 @@
   "ocrFailedTitle": "تعذر قراءة هذا المسح",
   "ocrFailedMessage": "احتفظ بالصورة وأدخل التفاصيل يدويًا، أو جرّب صورة أخرى.",
   "ocrRetry": "إعادة المحاولة",
-  "ocrReviewTitle": "مراجعة المسح",
+  "ocrReviewTitle": "راجع المسح",
   "ocrFieldsFound": "{count, plural, =0{لم يتم العثور على حقول} one{تم العثور على حقل واحد} two{تم العثور على حقلين} few{تم العثور على {count} حقول} other{تم العثور على {count} حقلًا}}",
   "@ocrFieldsFound": {
     "placeholders": {
@@ -281,12 +283,12 @@
   "ocrConfidenceHigh": "ثقة عالية",
   "ocrConfidenceReview": "راجع",
   "ocrConfidenceMissing": "غير مكتشَف",
-  "ocrReviewField": "راجع هذا الحقل",
+  "ocrReviewField": "تحقق من هذه القيمة",
   "ocrSuggestedCountry": "البلد المقترح",
   "ocrSuggestedType": "نوع المستند المقترح",
   "ocrAddMissingField": "إضافة حقل ناقص",
-  "ocrConfirmContinue": "تأكيد ومتابعة",
-  "ocrRetake": "إعادة الالتقاط أو الاستبدال",
+  "ocrConfirmContinue": "تأكيد التفاصيل",
+  "ocrRetake": "إعادة المسح",
   "fieldCountry": "البلد أو المنطقة",
   "schemaChangeTitle": "تغيير نوع المستند؟",
   "schemaChangeMessage": "بعض التفاصيل التي أدخلتها لا تنتمي إلى النوع الجديد وسيتم حذفها.",
@@ -344,7 +346,7 @@
   "guidedSetup": "إعداد موجّه",
   "ocrOnDeviceEyebrow": "استخراج على الجهاز",
   "howToAddBody": "امسح للبدء بسرعة، أو أدخل التفاصيل بنفسك.",
-  "identityIntro": "نعرض فقط الحقول المناسبة لهذا المستند.",
+  "identityIntro": "بعض التفاصيل لتنظيم مستندك.",
   "datesIntro": "تشمل التواريخ دائمًا اليوم والشهر والسنة.",
   "planningIntro": "التفاصيل الاختيارية تساعدك على معرفة ما يستحق الانتباه.",
   "reviewIntro": "راجع التفاصيل المهمة. يمكنك تعديل كل شيء لاحقًا.",
@@ -412,8 +414,8 @@
   "subscriptionCategoryOther": "أخرى",
   "subscriptionServiceIntroTitle": "ماذا تتابع؟",
   "subscriptionServiceIntro": "ابدأ باسم الخدمة والفئة.",
-  "subscriptionBillingIntroTitle": "تفاصيل الفوترة",
-  "subscriptionBillingIntro": "أضف ما تعرفه فقط. يمكن تعديل كل شيء لاحقًا.",
+  "subscriptionBillingIntroTitle": "عيّن الفوترة",
+  "subscriptionBillingIntro": "تتبع تفاصيل اشتراكك.",
   "subscriptionPreferencesIntroTitle": "ابقَ سابقًا للدفعة",
   "subscriptionPreferencesIntro": "اختر متى تريد اتخاذ القرار.",
   "subscriptionReviewIntroTitle": "جاهز للمتابعة",
@@ -498,5 +500,28 @@
   "homeSeeAllCurrencies": "عرض كل إجماليات العملات",
   "homeNoActivePlans": "لا خطط نشطة",
   "homeCurrencyBreakdownTitle": "التقديرات الشهرية",
-  "homeDocumentsTile": "المستندات"
+  "homeDocumentsTile": "المستندات",
+  "changeSelection": "تغيير",
+  "fromScan": "من المسح",
+  "checkThisDate": "تحقق من هذا التاريخ",
+  "searchListHint": "بحث",
+  "identityExtrasTitle": "تفاصيل إضافية (اختياري)",
+  "identityExtrasSubtitle": "الرقم والجهة المصدرة والحقول المخصصة",
+  "ocrReviewSubtitle": "تحقق من التفاصيل المستخرجة قبل المتابعة.",
+  "ocrNothingSavedHint": "لن يُحفظ شيء حتى تختار حفظ المستند.",
+  "remindMePrefix": "ذكّرني",
+  "attachmentAddedOn": "أُضيف في {date}",
+  "@attachmentAddedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "estimatedMonthlyCostValue": "التكلفة الشهرية التقديرية {amount}",
+  "@estimatedMonthlyCostValue": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "selectedDocumentType": "نوع المستند المحدد",
+  "chooseOption": "اختر"
 }

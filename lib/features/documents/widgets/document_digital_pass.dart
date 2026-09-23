@@ -17,12 +17,14 @@ class DocumentDigitalPass extends StatelessWidget {
     this.onTap,
     this.showExpiry = true,
     this.large = false,
+    this.compact = false,
   });
 
   final RegistryDocument document;
   final VoidCallback? onTap;
   final bool showExpiry;
   final bool large;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class DocumentDigitalPass extends StatelessWidget {
     );
 
     final content = Padding(
-      padding: EdgeInsets.all(large ? 19 : 17),
+      padding: EdgeInsets.all(compact ? 14 : (large ? 19 : 17)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -66,7 +68,7 @@ class DocumentDigitalPass extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: compact ? 12 : 20),
           Wrap(
             spacing: 6,
             children: [
@@ -114,7 +116,7 @@ class DocumentDigitalPass extends StatelessWidget {
             ),
           ],
           if (showExpiry) ...[
-            const SizedBox(height: 26),
+            SizedBox(height: compact ? 16 : 26),
             Wrap(
               spacing: AppSpacing.md,
               runSpacing: AppSpacing.sm,

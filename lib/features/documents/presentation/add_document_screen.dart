@@ -3,13 +3,16 @@ import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
+import 'package:the_registry/core/widgets/registry_form_field.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import 'package:the_registry/core/widgets/registry_searchable_sheet.dart';
 import 'package:the_registry/core/widgets/registry_secondary_button.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
 import 'package:the_registry/core/widgets/registry_selector_field.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/features/documents/domain/document_field_value.dart';
+import 'package:the_registry/features/documents/domain/document_icons.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
@@ -79,6 +82,20 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     _syncDynamicControllers();
   }
 
+  void _flushEditors() {
+    _controller.setName(_name.text);
+    _controller.setOwnerName(_owner.text);
+    _controller.setIssuingAuthority(_issuer.text);
+    _controller.setDocumentNumber(_number.text);
+    _controller.setCostOfLapsing(_cost.text);
+    _controller.setDependency(_dependency.text);
+    _controller.setExpectedChanges(_changes.text);
+    _controller.setNotes(_notes.text);
+    for (final entry in _dynamicInputs.entries) {
+      _controller.setDynamicFieldValue(entry.key, entry.value.text);
+    }
+  }
+
   void _syncDynamicControllers() {
     final ids = {for (final field in _controller.dynamicFields) field.id};
     for (final id in _dynamicInputs.keys.toList()) {
@@ -146,37 +163,18 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
 
   Future<void> _pickCountry() async {
     final l10n = AppLocalizations.of(context);
-    final selected = await showModalBottomSheet<String>(
+    final selected = await RegistrySearchableSheet.show<String>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screenPadding,
-                  0,
-                  AppSpacing.screenPadding,
-                  AppSpacing.sm,
-                ),
-                child: Text(
-                  l10n.fieldCountry,
-                  style: Theme.of(sheetContext).textTheme.titleMedium,
-                ),
-              ),
-              for (final code in DocumentCountryCodes.all)
-                ListTile(
-                  key: ValueKey<String>('country-$code'),
-                  title: Text(DocumentCopy.country(l10n, code)),
-                  selected: _controller.countryCode == code,
-                  onTap: () => Navigator.of(sheetContext).pop(code),
-                ),
-            ],
+      title: l10n.fieldCountry,
+      selected: _controller.countryCode,
+      options: [
+        for (final code in DocumentCountryCodes.all)
+          RegistrySearchableOption(
+            value: code,
+            label: DocumentCopy.country(l10n, code),
+            itemKey: 'country-$code',
           ),
-        );
-      },
+      ],
     );
     if (selected != null) {
       if (_controller.ocrStatus == OcrUiStatus.review) {
@@ -190,37 +188,18 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
 
   Future<void> _pickCategory() async {
     final l10n = AppLocalizations.of(context);
-    final selected = await showModalBottomSheet<DocumentCategory>(
+    final selected = await RegistrySearchableSheet.show<DocumentCategory>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screenPadding,
-                  0,
-                  AppSpacing.screenPadding,
-                  AppSpacing.sm,
-                ),
-                child: Text(
-                  l10n.fieldCategory,
-                  style: Theme.of(sheetContext).textTheme.titleMedium,
-                ),
-              ),
-              for (final category in DocumentCategory.values)
-                ListTile(
-                  key: ValueKey<String>('category-${category.name}'),
-                  title: Text(DocumentCopy.category(l10n, category)),
-                  selected: _controller.category == category,
-                  onTap: () => Navigator.of(sheetContext).pop(category),
-                ),
-            ],
+      title: l10n.fieldCategory,
+      selected: _controller.category,
+      options: [
+        for (final category in DocumentCategory.values)
+          RegistrySearchableOption(
+            value: category,
+            label: DocumentCopy.category(l10n, category),
+            itemKey: 'category-${category.name}',
           ),
-        );
-      },
+      ],
     );
     if (selected != null) {
       await _applySchema(
@@ -235,37 +214,18 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     final schemas = AddDocumentController.schemaRegistry.byCountry(
       _controller.countryCode,
     );
-    final selected = await showModalBottomSheet<String>(
+    final selected = await RegistrySearchableSheet.show<String>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screenPadding,
-                  0,
-                  AppSpacing.screenPadding,
-                  AppSpacing.sm,
-                ),
-                child: Text(
-                  l10n.fieldDocumentType,
-                  style: Theme.of(sheetContext).textTheme.titleMedium,
-                ),
-              ),
-              for (final schema in schemas)
-                ListTile(
-                  key: ValueKey<String>('schema-${schema.id}'),
-                  title: Text(DocumentCopy.schema(l10n, schema.id)),
-                  selected: _controller.schemaId == schema.id,
-                  onTap: () => Navigator.of(sheetContext).pop(schema.id),
-                ),
-            ],
+      title: l10n.fieldDocumentType,
+      selected: _controller.schemaId,
+      options: [
+        for (final schema in schemas)
+          RegistrySearchableOption(
+            value: schema.id,
+            label: DocumentCopy.schema(l10n, schema.id),
+            itemKey: 'schema-${schema.id}',
           ),
-        );
-      },
+      ],
     );
     if (selected != null) {
       if (_controller.ocrStatus == OcrUiStatus.review) {
@@ -425,6 +385,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
   }
 
   Future<void> _save() async {
+    _flushEditors();
     final deps = RegistryDependencies.of(context);
     final l10n = AppLocalizations.of(context);
     final saved = await _controller.submit(
@@ -437,24 +398,14 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     }
   }
 
-  InputDecoration _decoration({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField = false,
-    Widget? suffixIcon,
-    bool alignLabelWithHint = false,
-  }) {
-    return InputDecoration(
-      labelText: requiredField ? '$label *' : label,
-      errorText: errorText,
-      errorMaxLines: 4,
-      helperText: helperText,
-      helperMaxLines: 4,
-      alignLabelWithHint: alignLabelWithHint,
-      suffixIcon: suffixIcon,
-      border: const OutlineInputBorder(),
-    );
+  bool _dismissKeyboardIfOpen() {
+    final insets = MediaQuery.viewInsetsOf(context).bottom;
+    final editing = FocusManager.instance.primaryFocus is EditableTextState;
+    if (insets <= 0 && !editing) {
+      return false;
+    }
+    FocusScope.of(context).unfocus();
+    return true;
   }
 
   @override
@@ -478,14 +429,20 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       listenable: _controller,
       builder: (context, _) {
         _syncDynamicControllers();
+        final viewInsets = MediaQuery.viewInsetsOf(context).bottom;
         return PopScope(
-          canPop: !_controller.isDirty,
+          canPop: !_controller.isDirty && viewInsets <= 0,
           onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) {
-              _confirmDiscard();
+            if (didPop) {
+              return;
             }
+            if (_dismissKeyboardIfOpen()) {
+              return;
+            }
+            _confirmDiscard();
           },
           child: Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
               titleSpacing: AppSpacing.xs,
               title: Column(
@@ -497,6 +454,8 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                         : l10n.guidedSetup),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.tertiary,
+                      letterSpacing: 0.4,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
@@ -505,7 +464,10 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                         : (_isEditing
                               ? l10n.editDocumentTitle
                               : l10n.addDocumentTitle),
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -527,11 +489,11 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                       key: const ValueKey<String>('add-document-scroll'),
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: EdgeInsetsDirectional.fromSTEB(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
                         AppSpacing.screenPadding,
                         AppSpacing.md,
                         AppSpacing.screenPadding,
-                        AppSpacing.xl + MediaQuery.viewInsetsOf(context).bottom,
+                        AppSpacing.xl,
                       ),
                       child: _body(l10n),
                     ),
@@ -543,6 +505,9 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
               controller: _controller,
               isEditing: _isEditing,
               onBack: () {
+                if (_dismissKeyboardIfOpen()) {
+                  return;
+                }
                 if (_controller.step == AddDocumentStep.source &&
                     _controller.ocrStatus != OcrUiStatus.review) {
                   if (_controller.isDirty) {
@@ -555,6 +520,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                 _controller.backStep();
               },
               onContinue: () {
+                _flushEditors();
                 if (_controller.ocrStatus == OcrUiStatus.review) {
                   _controller.confirmOcr();
                   _syncTextControllers();
@@ -581,7 +547,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     if (_controller.ocrStatus == OcrUiStatus.review) {
       return _OcrReview(
         controller: _controller,
-        decoration: _decoration,
         onSchema: _pickSchema,
         onCategory: _pickCategory,
         onCountry: _pickCountry,
@@ -613,7 +578,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         issuer: _issuer,
         number: _number,
         dynamicInputs: _dynamicInputs,
-        decoration: _decoration,
         onPickCountry: _pickCountry,
         onPickCategory: _pickCategory,
         onPickSchema: _pickSchema,
@@ -628,7 +592,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         dependency: _dependency,
         changes: _changes,
         notes: _notes,
-        decoration: _decoration,
       ),
       AddDocumentStep.review => _ReviewStep(
         controller: _controller,
@@ -646,38 +609,14 @@ class _ProgressHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final current = controller.ocrStatus == OcrUiStatus.review
         ? 1
         : controller.stepIndex + 1;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: LinearProgressIndicator(
-                  value: current / controller.stepCount,
-                  minHeight: 5,
-                  backgroundColor: const Color(0xFFE1E3EB),
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              l10n.wizardStepOf(current, controller.stepCount),
-              key: const ValueKey<String>('wizard-progress'),
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                letterSpacing: 0,
-              ),
-            ),
-          ],
-        ),
-      ],
+    return RegistryWizardProgress(
+      current: current,
+      total: controller.stepCount,
+      label: l10n.wizardStepOf(current, controller.stepCount),
+      labelKey: const ValueKey<String>('wizard-progress'),
     );
   }
 }
@@ -701,14 +640,17 @@ class _ActionBar extends StatelessWidget {
     final processing = controller.ocrStatus == OcrUiStatus.processing;
     final reviewing = controller.ocrStatus == OcrUiStatus.review;
     final onReview = controller.step == AddDocumentStep.review && !reviewing;
+    final showBack =
+        !reviewing && (controller.canGoBack || controller.stepIndex > 0);
     final continueLabel = reviewing
         ? l10n.ocrConfirmContinue
         : onReview
         ? (isEditing ? l10n.saveChanges : l10n.saveDocument)
         : l10n.wizardContinue;
+    final scheme = Theme.of(context).colorScheme;
 
     return Material(
-      color: Theme.of(context).colorScheme.surface,
+      color: scheme.surface,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -719,7 +661,7 @@ class _ActionBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              if (controller.canGoBack || controller.stepIndex > 0)
+              if (showBack)
                 Expanded(
                   child: RegistrySecondaryButton(
                     key: const ValueKey<String>('wizard-back'),
@@ -727,8 +669,7 @@ class _ActionBar extends StatelessWidget {
                     onPressed: processing ? null : onBack,
                   ),
                 ),
-              if (controller.canGoBack || controller.stepIndex > 0)
-                const SizedBox(width: AppSpacing.sm),
+              if (showBack) const SizedBox(width: AppSpacing.sm),
               Expanded(
                 flex: 2,
                 child: RegistryPrimaryButton(
@@ -740,6 +681,8 @@ class _ActionBar extends StatelessWidget {
                         : 'wizard-continue',
                   ),
                   label: continueLabel,
+                  backgroundColor: scheme.tertiary,
+                  foregroundColor: scheme.onTertiary,
                   trailing: reviewing || onReview
                       ? null
                       : const Icon(
@@ -888,34 +831,33 @@ class _WizardIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 17),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
             DecoratedBox(
               decoration: BoxDecoration(
                 color: const Color(0xFFEDEAFF),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(14),
               ),
               child: SizedBox(
-                width: 55,
-                height: 55,
-                child: Icon(icon, color: theme.colorScheme.tertiary, size: 27),
+                width: 40,
+                height: 40,
+                child: Icon(icon, color: theme.colorScheme.tertiary, size: 22),
               ),
             ),
             const SizedBox(height: 8),
           ],
           Text(
             title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(fontSize: 20),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          const SizedBox(height: 5),
-          Text(
-            body,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall,
-          ),
+          const SizedBox(height: 6),
+          Text(body, style: theme.textTheme.bodyMedium),
         ],
       ),
     );
@@ -1020,7 +962,6 @@ class _IdentityStep extends StatelessWidget {
     required this.issuer,
     required this.number,
     required this.dynamicInputs,
-    required this.decoration,
     required this.onPickCountry,
     required this.onPickCategory,
     required this.onPickSchema,
@@ -1032,147 +973,133 @@ class _IdentityStep extends StatelessWidget {
   final TextEditingController issuer;
   final TextEditingController number;
   final Map<String, TextEditingController> dynamicInputs;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-    Widget? suffixIcon,
-    bool alignLabelWithHint,
-  })
-  decoration;
   final VoidCallback onPickCountry;
   final VoidCallback onPickCategory;
   final VoidCallback onPickSchema;
 
+  Widget _editorFor(DocumentFieldValue field) {
+    return _DynamicFieldEditor(
+      key: ValueKey<String>('dynamic-editor-${field.id}'),
+      field: field,
+      controller:
+          dynamicInputs[field.id] ?? TextEditingController(text: field.value),
+      onChanged: (value) => controller.setDynamicFieldValue(field.id, value),
+      onLabelChanged: field.isCustom
+          ? (value) => controller.setDynamicFieldLabel(field.id, value)
+          : null,
+      onToggleSensitive: () => controller.toggleDynamicFieldSensitive(field.id),
+      onRemove: field.isCustom
+          ? () => controller.removeDynamicField(field.id)
+          : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final extrasOpen = controller.identityExtrasOpen;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _WizardIntro(title: l10n.stepIdentityTitle, body: l10n.identityIntro),
-        RegistrySurface(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        _SelectedTypeTile(
+          schemaLabel: DocumentCopy.schema(l10n, controller.schemaId),
+          icon: DocumentIcons.forCategory(
+            controller.category ?? DocumentCategory.other,
+          ),
+          typeLabel: l10n.fieldDocumentType,
+          changeLabel: l10n.changeSelection,
+          onChange: onPickSchema,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        RegistrySelectorField(
+          fieldKey: 'field-country',
+          label: l10n.fieldCountry,
+          value: DocumentCopy.country(l10n, controller.countryCode),
+          empty: controller.countryCode == null,
+          placeholder: l10n.chooseOption,
+          onTap: onPickCountry,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        RegistrySelectorField(
+          fieldKey: 'field-category',
+          label: l10n.fieldCategory,
+          value: controller.category == null
+              ? ''
+              : DocumentCopy.category(l10n, controller.category!),
+          empty: controller.category == null,
+          requiredField: true,
+          errorText: controller.categoryError,
+          placeholder: l10n.chooseOption,
+          onTap: onPickCategory,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        RegistryTextField(
+          label: l10n.fieldDocumentName,
+          controller: name,
+          fieldKey: const ValueKey<String>('field-name'),
+          requiredField: true,
+          errorText: controller.nameError,
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: controller.setName,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        RegistryTextField(
+          label: l10n.fieldOwnerName,
+          controller: owner,
+          fieldKey: const ValueKey<String>('field-owner'),
+          textCapitalization: TextCapitalization.words,
+          onChanged: controller.setOwnerName,
+        ),
+        for (final field in controller.requiredDynamicFields) ...[
+          const SizedBox(height: AppSpacing.md),
+          _editorFor(field),
+        ],
+        const SizedBox(height: AppSpacing.md),
+        RegistryExpandableSection(
+          toggleKey: const ValueKey<String>('section-identity-extras'),
+          title: l10n.identityExtrasTitle,
+          subtitle: l10n.identityExtrasSubtitle,
+          expanded: extrasOpen,
+          onToggle: controller.toggleIdentityExtras,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              RegistrySectionHeader(
-                icon: Icons.badge_outlined,
-                title: l10n.sectionEssential,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              RegistrySelectorField(
-                fieldKey: 'field-country',
-                label: l10n.fieldCountry,
-                value: DocumentCopy.country(l10n, controller.countryCode),
-                empty: controller.countryCode == null,
-                onTap: onPickCountry,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              RegistrySelectorField(
-                fieldKey: 'field-schema',
-                label: l10n.fieldDocumentType,
-                value: DocumentCopy.schema(l10n, controller.schemaId),
-                empty: false,
-                onTap: onPickSchema,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              RegistrySelectorField(
-                fieldKey: 'field-category',
-                label: l10n.fieldCategory,
-                value: controller.category == null
-                    ? ''
-                    : DocumentCopy.category(l10n, controller.category!),
-                empty: controller.category == null,
-                requiredField: true,
-                errorText: controller.categoryError,
-                onTap: onPickCategory,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextField(
-                key: const ValueKey<String>('field-name'),
-                controller: name,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: decoration(
-                  label: l10n.fieldDocumentName,
-                  errorText: controller.nameError,
-                  requiredField: true,
-                ),
-                onChanged: controller.setName,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextField(
-                key: const ValueKey<String>('field-owner'),
-                controller: owner,
-                textCapitalization: TextCapitalization.words,
-                decoration: decoration(label: l10n.fieldOwnerName),
-                onChanged: controller.setOwnerName,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextField(
-                key: const ValueKey<String>('field-issuer'),
-                controller: issuer,
-                textCapitalization: TextCapitalization.words,
-                decoration: decoration(label: l10n.fieldIssuingAuthority),
-                onChanged: controller.setIssuingAuthority,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextField(
-                key: const ValueKey<String>('field-number'),
+              const SizedBox(height: AppSpacing.sm),
+              RegistryTextField(
+                label: l10n.fieldDocumentNumber,
                 controller: number,
+                fieldKey: const ValueKey<String>('field-number'),
                 obscureText: controller.obscureDocumentNumber,
-                decoration: decoration(
-                  label: l10n.fieldDocumentNumber,
-                  suffixIcon: IconButton(
-                    key: const ValueKey<String>('toggle-number'),
-                    tooltip: controller.obscureDocumentNumber
-                        ? l10n.showDocumentNumber
-                        : l10n.hideDocumentNumber,
-                    onPressed: controller.toggleDocumentNumberVisibility,
-                    icon: Icon(
-                      controller.obscureDocumentNumber
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
+                textInputAction: TextInputAction.next,
+                suffixIcon: IconButton(
+                  key: const ValueKey<String>('toggle-number'),
+                  tooltip: controller.obscureDocumentNumber
+                      ? l10n.showDocumentNumber
+                      : l10n.hideDocumentNumber,
+                  onPressed: controller.toggleDocumentNumberVisibility,
+                  icon: Icon(
+                    controller.obscureDocumentNumber
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
                   ),
                 ),
                 onChanged: controller.setDocumentNumber,
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        RegistrySurface(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RegistrySectionHeader(
-                icon: Icons.tune_outlined,
-                title: l10n.addCustomField,
-              ),
               const SizedBox(height: AppSpacing.md),
-              for (final field in controller.dynamicFields) ...[
-                _DynamicFieldEditor(
-                  field: field,
-                  controller:
-                      dynamicInputs[field.id] ??
-                      TextEditingController(text: field.value),
-                  onChanged: (value) =>
-                      controller.setDynamicFieldValue(field.id, value),
-                  onLabelChanged: field.isCustom
-                      ? (value) =>
-                            controller.setDynamicFieldLabel(field.id, value)
-                      : null,
-                  onToggleSensitive: () =>
-                      controller.toggleDynamicFieldSensitive(field.id),
-                  onRemove: field.isCustom
-                      ? () => controller.removeDynamicField(field.id)
-                      : null,
-                ),
+              RegistryTextField(
+                label: l10n.fieldIssuingAuthority,
+                controller: issuer,
+                fieldKey: const ValueKey<String>('field-issuer'),
+                textCapitalization: TextCapitalization.words,
+                onChanged: controller.setIssuingAuthority,
+              ),
+              for (final field in controller.optionalDynamicFields) ...[
                 const SizedBox(height: AppSpacing.md),
+                _editorFor(field),
               ],
+              const SizedBox(height: AppSpacing.md),
               RegistrySecondaryButton(
                 key: const ValueKey<String>('add-custom-field'),
                 label: l10n.addCustomField,
@@ -1181,13 +1108,73 @@ class _IdentityStep extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(l10n.requiredFieldsHint, style: theme.textTheme.bodySmall),
       ],
     );
   }
 }
 
-class _DynamicFieldEditor extends StatelessWidget {
+class _SelectedTypeTile extends StatelessWidget {
+  const _SelectedTypeTile({
+    required this.schemaLabel,
+    required this.icon,
+    required this.typeLabel,
+    required this.changeLabel,
+    required this.onChange,
+  });
+
+  final String schemaLabel;
+  final IconData icon;
+  final String typeLabel;
+  final String changeLabel;
+  final VoidCallback onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return RegistryLabeledField(
+      key: const ValueKey<String>('field-schema'),
+      label: typeLabel,
+      child: RegistryFieldSurface(
+        onTap: onChange,
+        child: Row(
+          children: [
+            RegistryIconBadge(
+              icon: icon,
+              size: 40,
+              background: const Color(0xFFEDEBFF),
+              foreground: theme.colorScheme.tertiary,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                schemaLabel,
+                style: theme.textTheme.titleSmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            TextButton(
+              onPressed: onChange,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(
+                  AppSpacing.minTapTarget,
+                  AppSpacing.minTapTarget,
+                ),
+              ),
+              child: Text(changeLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DynamicFieldEditor extends StatefulWidget {
   const _DynamicFieldEditor({
+    super.key,
     required this.field,
     required this.controller,
     required this.onChanged,
@@ -1204,51 +1191,81 @@ class _DynamicFieldEditor extends StatelessWidget {
   final VoidCallback? onRemove;
 
   @override
+  State<_DynamicFieldEditor> createState() => _DynamicFieldEditorState();
+}
+
+class _DynamicFieldEditorState extends State<_DynamicFieldEditor> {
+  TextEditingController? _label;
+  final FocusNode _labelFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.onLabelChanged != null) {
+      _label = TextEditingController(text: widget.field.customLabel ?? '');
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _DynamicFieldEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final label = _label;
+    final next = widget.field.customLabel ?? '';
+    if (label != null && !_labelFocus.hasFocus && label.text != next) {
+      label.text = next;
+    }
+  }
+
+  @override
+  void dispose() {
+    _label?.dispose();
+    _labelFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final field = widget.field;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (onLabelChanged != null)
-          TextField(
-            key: ValueKey<String>('custom-label-${field.id}'),
-            controller: TextEditingController(text: field.customLabel ?? ''),
-            decoration: InputDecoration(
-              labelText: l10n.customFieldLabel,
-              border: const OutlineInputBorder(),
-            ),
-            onChanged: onLabelChanged,
+        if (widget.onLabelChanged != null && _label != null)
+          RegistryTextField(
+            label: l10n.customFieldLabel,
+            fieldKey: ValueKey<String>('custom-label-${field.id}'),
+            controller: _label,
+            focusNode: _labelFocus,
+            onChanged: widget.onLabelChanged,
           ),
-        if (onLabelChanged != null) const SizedBox(height: AppSpacing.sm),
-        TextField(
-          key: ValueKey<String>('dynamic-${field.id}'),
-          controller: controller,
+        if (widget.onLabelChanged != null)
+          const SizedBox(height: AppSpacing.sm),
+        RegistryTextField(
+          label: DocumentCopy.fieldLabel(l10n, field),
+          fieldKey: ValueKey<String>('dynamic-${field.id}'),
+          controller: widget.controller,
           obscureText: field.sensitive,
           keyboardType: field.isDate
               ? TextInputType.datetime
               : TextInputType.text,
           maxLines: field.isDate || field.sensitive ? 1 : null,
-          decoration: InputDecoration(
-            labelText: DocumentCopy.fieldLabel(l10n, field),
-            border: const OutlineInputBorder(),
-            suffixIcon: IconButton(
-              tooltip: l10n.markFieldSensitive,
-              onPressed: onToggleSensitive,
-              icon: Icon(
-                field.sensitive
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-              ),
+          suffixIcon: IconButton(
+            tooltip: l10n.markFieldSensitive,
+            onPressed: widget.onToggleSensitive,
+            icon: Icon(
+              field.sensitive
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
             ),
           ),
-          onChanged: onChanged,
+          onChanged: widget.onChanged,
         ),
-        if (onRemove != null)
+        if (widget.onRemove != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton(
               key: ValueKey<String>('remove-custom-${field.id}'),
-              onPressed: onRemove,
+              onPressed: widget.onRemove,
               child: Text(l10n.removeCustomField),
             ),
           ),
@@ -1271,65 +1288,52 @@ class _DatesStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _WizardIntro(title: l10n.sectionImportantDates, body: l10n.datesIntro),
-        RegistrySurface(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RegistrySectionHeader(
-                icon: Icons.event_outlined,
-                title: l10n.sectionImportantDates,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DocumentDateField(
-                fieldId: 'issue',
-                label: l10n.fieldIssueDate,
-                value: controller.issueDate,
-                errorText: controller.issueDateError,
-                onTap: () => onPick('issue'),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DocumentDateField(
-                fieldId: 'expiry',
-                label: l10n.fieldExpiryDate,
-                value: controller.expiryDate,
-                requiredField: true,
-                errorText: controller.expiryError,
-                onTap: () => onPick('expiry'),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DocumentDateField(
-                fieldId: 'action',
-                label: l10n.fieldActionDate,
-                value: controller.actionDate,
-                helperText: l10n.actionDateHelper,
-                errorText: controller.actionDateError,
-                onTap: () => onPick('action'),
-              ),
-              if (controller.suggestedActionDate != null &&
-                  !controller.actionDateUserSet) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  l10n.suggestedActionDate(
-                    RegistryDateFormatter.dayMonthYear(
-                      controller.suggestedActionDate!,
-                      locale,
-                    ),
-                  ),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: TextButton(
-                    key: const ValueKey<String>('use-suggested-action'),
-                    onPressed: controller.applySuggestedActionDate,
-                    child: Text(l10n.useSuggestedActionDate),
-                  ),
-                ),
-              ],
-            ],
-          ),
+        DocumentDateField(
+          fieldId: 'issue',
+          label: l10n.fieldIssueDate,
+          value: controller.issueDate,
+          errorText: controller.issueDateError,
+          onTap: () => onPick('issue'),
         ),
+        const SizedBox(height: AppSpacing.md),
+        DocumentDateField(
+          fieldId: 'expiry',
+          label: l10n.fieldExpiryDate,
+          value: controller.expiryDate,
+          requiredField: true,
+          errorText: controller.expiryError,
+          onTap: () => onPick('expiry'),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        DocumentDateField(
+          fieldId: 'action',
+          label: l10n.fieldActionDate,
+          value: controller.actionDate,
+          helperText: l10n.actionDateHelper,
+          errorText: controller.actionDateError,
+          onTap: () => onPick('action'),
+        ),
+        if (controller.suggestedActionDate != null &&
+            !controller.actionDateUserSet) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l10n.suggestedActionDate(
+              RegistryDateFormatter.dayMonthYear(
+                controller.suggestedActionDate!,
+                locale,
+              ),
+            ),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              key: const ValueKey<String>('use-suggested-action'),
+              onPressed: controller.applySuggestedActionDate,
+              child: Text(l10n.useSuggestedActionDate),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -1342,7 +1346,6 @@ class _RenewalStep extends StatelessWidget {
     required this.dependency,
     required this.changes,
     required this.notes,
-    required this.decoration,
   });
 
   final AddDocumentController controller;
@@ -1350,15 +1353,6 @@ class _RenewalStep extends StatelessWidget {
   final TextEditingController dependency;
   final TextEditingController changes;
   final TextEditingController notes;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-    Widget? suffixIcon,
-    bool alignLabelWithHint,
-  })
-  decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -1464,42 +1458,37 @@ class _RenewalStep extends StatelessWidget {
               ),
               if (controller.additionalOpen) ...[
                 const SizedBox(height: AppSpacing.md),
-                TextField(
-                  key: const ValueKey<String>('field-cost'),
+                RegistryTextField(
+                  label: l10n.fieldCostOfLapsing,
                   controller: cost,
-                  decoration: decoration(
-                    label: l10n.fieldCostOfLapsing,
-                    helperText: l10n.fieldCostHelper,
-                  ),
+                  fieldKey: const ValueKey<String>('field-cost'),
+                  helperText: l10n.fieldCostHelper,
                   onChanged: controller.setCostOfLapsing,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                TextField(
-                  key: const ValueKey<String>('field-dependency'),
+                RegistryTextField(
+                  label: l10n.fieldDependency,
                   controller: dependency,
-                  decoration: decoration(
-                    label: l10n.fieldDependency,
-                    helperText: l10n.fieldDependencyHelper,
-                  ),
+                  fieldKey: const ValueKey<String>('field-dependency'),
+                  helperText: l10n.fieldDependencyHelper,
                   onChanged: controller.setDependency,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                TextField(
-                  key: const ValueKey<String>('field-changes'),
+                RegistryTextField(
+                  label: l10n.fieldExpectedChanges,
                   controller: changes,
+                  fieldKey: const ValueKey<String>('field-changes'),
                   maxLines: 3,
-                  decoration: decoration(label: l10n.fieldExpectedChanges),
+                  minLines: 3,
                   onChanged: controller.setExpectedChanges,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                TextField(
-                  key: const ValueKey<String>('field-notes'),
+                RegistryTextField(
+                  label: l10n.fieldNotes,
                   controller: notes,
+                  fieldKey: const ValueKey<String>('field-notes'),
                   maxLines: 4,
-                  decoration: decoration(
-                    label: l10n.fieldNotes,
-                    alignLabelWithHint: true,
-                  ),
+                  minLines: 3,
                   onChanged: controller.setNotes,
                 ),
               ],
@@ -1826,7 +1815,6 @@ class _OcrProcessing extends StatelessWidget {
 class _OcrReview extends StatelessWidget {
   const _OcrReview({
     required this.controller,
-    required this.decoration,
     required this.onSchema,
     required this.onCategory,
     required this.onCountry,
@@ -1834,15 +1822,6 @@ class _OcrReview extends StatelessWidget {
   });
 
   final AddDocumentController controller;
-  final InputDecoration Function({
-    required String label,
-    String? errorText,
-    String? helperText,
-    bool requiredField,
-    Widget? suffixIcon,
-    bool alignLabelWithHint,
-  })
-  decoration;
   final VoidCallback onSchema;
   final VoidCallback onCategory;
   final VoidCallback onCountry;
@@ -1852,72 +1831,71 @@ class _OcrReview extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final colors = AppStatusColors.of(context);
     final result = controller.ocrResult;
+    final typeLabel = DocumentCopy.schema(
+      l10n,
+      result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
+    );
     return Column(
       key: const ValueKey<String>('ocr-review'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(l10n.ocrReviewTitle, style: theme.textTheme.headlineMedium),
-        const SizedBox(height: AppSpacing.sm),
-        if (controller.hasAttachment)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.memory(
-              controller.attachmentBytes!,
-              height: 145,
-              width: double.infinity,
-              fit: BoxFit.cover,
+        Text(
+          l10n.ocrReviewTitle,
+          style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
+        ),
+        const SizedBox(height: 4),
+        Text(l10n.ocrReviewSubtitle, style: theme.textTheme.bodyMedium),
+        if (controller.hasAttachment) ...[
+          const SizedBox(height: AppSpacing.md),
+          RegistrySurface(
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            borderRadius: BorderRadius.circular(18),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(
+                    controller.attachmentBytes!,
+                    height: 72,
+                    width: 56,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(typeLabel, style: theme.textTheme.titleSmall),
+                      const SizedBox(height: 2),
+                      Text(
+                        l10n.ocrFieldsFound(result?.detectedFieldCount ?? 0),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        const SizedBox(height: AppSpacing.md),
-        RegistrySurface(
-          padding: const EdgeInsets.all(10),
-          borderRadius: BorderRadius.circular(14),
-          child: Row(
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF42D8B7),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFDAF7F0),
-                      blurRadius: 0,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: const SizedBox(width: 10, height: 10),
-              ),
-              const SizedBox(width: 9),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.ocrFieldsFound(result?.detectedFieldCount ?? 0),
-                      style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-                    ),
-                    Text(l10n.ocrReviewHint, style: theme.textTheme.bodySmall),
-                  ],
-                ),
-              ),
-              Text(
-                _confidenceLabel(l10n, result?.overallConfidence),
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: const Color(0xFF16836C),
-                ),
-              ),
-            ],
+        ],
+        if (!controller.hasAttachment) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l10n.ocrFieldsFound(result?.detectedFieldCount ?? 0),
+            style: theme.textTheme.bodySmall,
           ),
-        ),
+        ],
         const SizedBox(height: AppSpacing.md),
         RegistrySelectorField(
           fieldKey: 'ocr-country',
           label: l10n.fieldCountry,
           value: DocumentCopy.country(l10n, result?.classification.countryCode),
           empty: result == null,
+          placeholder: l10n.chooseOption,
           onTap: onCountry,
         ),
         const SizedBox(height: AppSpacing.md),
@@ -1929,6 +1907,7 @@ class _OcrReview extends StatelessWidget {
             result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
           ),
           empty: result == null,
+          placeholder: l10n.chooseOption,
           onTap: onSchema,
         ),
         const SizedBox(height: AppSpacing.md),
@@ -1940,21 +1919,15 @@ class _OcrReview extends StatelessWidget {
             result?.classification.category ?? DocumentCategory.other,
           ),
           empty: result == null,
+          placeholder: l10n.chooseOption,
           onTap: onCategory,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        RegistryCallout(
-          tone: RegistryCalloutTone.tip,
-          title: l10n.ocrDynamicTemplateTitle,
-          message: l10n.ocrDynamicTemplateBody,
         ),
         const SizedBox(height: AppSpacing.md),
         for (final field in controller.ocrFields) ...[
           _OcrFieldCard(
+            key: ValueKey<String>('ocr-card-${field.id}'),
             field: field,
-            colors: colors,
             onChanged: (value) => controller.setOcrFieldValue(field.id, value),
-            onClear: () => controller.clearOcrField(field.id),
             onRemove: field.removable
                 ? () => controller.removeOcrField(field.id)
                 : null,
@@ -1967,101 +1940,223 @@ class _OcrReview extends StatelessWidget {
           onPressed: () => controller.addOcrCustomField(),
         ),
         const SizedBox(height: AppSpacing.sm),
-        RegistrySecondaryButton(
-          key: const ValueKey<String>('ocr-retake'),
-          label: l10n.ocrRetake,
-          onPressed: onRetake,
+        Align(
+          alignment: Alignment.center,
+          child: TextButton(
+            key: const ValueKey<String>('ocr-retake'),
+            style: TextButton.styleFrom(
+              minimumSize: const Size(
+                AppSpacing.minTapTarget,
+                AppSpacing.minTapTarget,
+              ),
+              foregroundColor: theme.colorScheme.tertiary,
+            ),
+            onPressed: onRetake,
+            child: Text(l10n.ocrRetake),
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(l10n.ocrReviewPrivacy, style: theme.textTheme.bodySmall),
+        Text(l10n.ocrNothingSavedHint, style: theme.textTheme.bodySmall),
       ],
     );
   }
-
-  String _confidenceLabel(AppLocalizations l10n, OcrConfidence? confidence) {
-    return switch (confidence) {
-      OcrConfidence.high => l10n.ocrConfidenceHigh,
-      OcrConfidence.review => l10n.ocrConfidenceReview,
-      OcrConfidence.notDetected => l10n.ocrConfidenceMissing,
-      null => l10n.ocrConfidenceReview,
-    };
-  }
 }
 
-class _OcrFieldCard extends StatelessWidget {
+class _OcrFieldCard extends StatefulWidget {
   const _OcrFieldCard({
+    super.key,
     required this.field,
-    required this.colors,
     required this.onChanged,
-    required this.onClear,
     this.onRemove,
   });
 
   final ExtractedDocumentField field;
-  final AppStatusColors colors;
   final ValueChanged<String> onChanged;
-  final VoidCallback onClear;
   final VoidCallback? onRemove;
+
+  @override
+  State<_OcrFieldCard> createState() => _OcrFieldCardState();
+}
+
+class _OcrFieldCardState extends State<_OcrFieldCard> {
+  late final TextEditingController _controller;
+  late final FocusNode _focus;
+  var _revealSensitive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.field.value);
+    _focus = FocusNode();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncDisplay(force: !_focus.hasFocus);
+  }
+
+  @override
+  void didUpdateWidget(covariant _OcrFieldCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.field.value != widget.field.value ||
+        oldWidget.field.isDate != widget.field.isDate) {
+      _syncDisplay(force: !_focus.hasFocus);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  String _displayValue() {
+    final field = widget.field;
+    if (!field.isDate) {
+      return field.value;
+    }
+    final parsed = AddDocumentController.tryParseLooseDate(field.value);
+    if (parsed == null) {
+      return field.value;
+    }
+    return RegistryDateFormatter.dayMonthYear(
+      parsed,
+      Localizations.localeOf(context).toString(),
+    );
+  }
+
+  void _syncDisplay({required bool force}) {
+    if (!force) {
+      return;
+    }
+    final display = _displayValue();
+    if (_controller.text == display) {
+      return;
+    }
+    _controller.value = TextEditingValue(
+      text: display,
+      selection: TextSelection.collapsed(offset: display.length),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final review = field.confidence == OcrConfidence.review;
-    final missing = field.confidence == OcrConfidence.notDetected;
-    final background = review ? const Color(0xFFFFFAF0) : Colors.white;
-    final border = review
-        ? const Color(0xFFF1BF57)
-        : missing
-        ? Theme.of(context).colorScheme.outline
-        : colors.success;
+    final field = widget.field;
     final label = field.isCustom
         ? (field.customLabel?.trim().isNotEmpty == true
               ? field.customLabel!
               : l10n.customFieldValue)
         : DocumentCopy.schemaFieldLabel(l10n, field.fieldKey);
     final status = switch (field.confidence) {
-      OcrConfidence.high => l10n.ocrConfidenceHigh,
-      OcrConfidence.review => l10n.ocrReviewField,
+      OcrConfidence.high => l10n.fromScan,
+      OcrConfidence.review =>
+        field.isDate ? l10n.checkThisDate : l10n.ocrReviewField,
       OcrConfidence.notDetected => l10n.ocrConfidenceMissing,
     };
+    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+    final inlineChip = !field.sensitive && scale < 1.4;
+    final chip = _OcrStatusChip(
+      label: status,
+      review: field.confidence == OcrConfidence.review,
+    );
     return Semantics(
       label: '$label. $status',
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: background,
-          border: Border.all(color: border, width: review ? 1.5 : 1),
-          borderRadius: BorderRadius.circular(14),
+      child: RegistryTextField(
+        label: label,
+        fieldKey: ValueKey<String>('ocr-field-${field.id}'),
+        controller: _controller,
+        focusNode: _focus,
+        obscureText: field.sensitive && !_revealSensitive,
+        keyboardType: field.isDate
+            ? TextInputType.datetime
+            : TextInputType.text,
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: 24,
+          minHeight: AppSpacing.minTapTarget,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(label, style: Theme.of(context).textTheme.titleSmall),
-              Text(status, style: Theme.of(context).textTheme.labelMedium),
-              TextField(
-                key: ValueKey<String>('ocr-field-${field.id}'),
-                controller: TextEditingController(text: field.value),
-                onChanged: onChanged,
-                decoration: InputDecoration(
-                  hintText: l10n.customFieldValue,
-                  suffixIcon: IconButton(
-                    tooltip: l10n.attachmentRemove,
-                    onPressed: onClear,
-                    icon: const Icon(Icons.backspace_outlined),
-                  ),
+        suffixIcon: inlineChip || field.sensitive
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (inlineChip)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10),
+                      child: chip,
+                    ),
+                  if (field.sensitive)
+                    IconButton(
+                      tooltip: _revealSensitive
+                          ? l10n.hideDocumentNumber
+                          : l10n.showDocumentNumber,
+                      onPressed: () =>
+                          setState(() => _revealSensitive = !_revealSensitive),
+                      icon: Icon(
+                        _revealSensitive
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                    ),
+                ],
+              )
+            : null,
+        onChanged: widget.onChanged,
+        footer: !inlineChip || widget.onRemove != null
+            ? Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.xxs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (!inlineChip) chip,
+                    if (widget.onRemove != null)
+                      TextButton(
+                        onPressed: widget.onRemove,
+                        child: Text(l10n.removeCustomField),
+                      ),
+                  ],
                 ),
-              ),
-              if (onRemove != null)
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: TextButton(
-                    onPressed: onRemove,
-                    child: Text(l10n.removeCustomField),
-                  ),
-                ),
-            ],
-          ),
+              )
+            : null,
+      ),
+    );
+  }
+}
+
+class _OcrStatusChip extends StatelessWidget {
+  const _OcrStatusChip({required this.label, required this.review});
+
+  final String label;
+  final bool review;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final background = review
+        ? AppColors.warningContainer
+        : AppColors.lavenderSurface;
+    final foreground = review
+        ? const Color(0xFF8A5A00)
+        : theme.colorScheme.tertiary;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: 5,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Text(
+        label,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: foreground,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

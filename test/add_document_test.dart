@@ -1025,6 +1025,10 @@ Name: SAMPLE NAME
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
     await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('section-identity-extras')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('add-custom-field')));
     await tester.pumpAndSettle();
     expect(find.text('Field name'), findsOneWidget);
@@ -1083,6 +1087,14 @@ Name: SAMPLE NAME
     await tester.tap(find.byKey(const ValueKey<String>('field-category')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.pumpAndSettle();
+    await reveal(
+      tester,
+      find.byKey(const ValueKey<String>('section-identity-extras')),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('section-identity-extras')),
+    );
     await tester.pumpAndSettle();
     await reveal(
       tester,

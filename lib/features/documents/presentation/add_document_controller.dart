@@ -46,6 +46,7 @@ class AddDocumentController extends ChangeNotifier {
   Uint8List? attachmentBytes;
   List<DocumentFieldValue> dynamicFields = const [];
   bool additionalOpen = false;
+  bool identityExtrasOpen = false;
 
   OcrUiStatus ocrStatus = OcrUiStatus.idle;
   DocumentOcrResult? ocrResult;
@@ -67,6 +68,33 @@ class AddDocumentController extends ChangeNotifier {
 
   bool get hasAttachment =>
       attachmentBytes != null && attachmentBytes!.isNotEmpty;
+
+  bool get hasIdentityExtras {
+    return issuingAuthority.trim().isNotEmpty ||
+        documentNumber.trim().isNotEmpty ||
+        optionalDynamicFields.any((field) => !field.isEmpty);
+  }
+
+  List<DocumentFieldValue> get requiredDynamicFields => [
+    for (final field in dynamicFields)
+      if (_isRequiredDynamic(field)) field,
+  ];
+
+  List<DocumentFieldValue> get optionalDynamicFields => [
+    for (final field in dynamicFields)
+      if (!_isRequiredDynamic(field)) field,
+  ];
+
+  bool _isRequiredDynamic(DocumentFieldValue field) {
+    if (field.isCustom) {
+      return false;
+    }
+    final spec = schema.fieldById(field.fieldKey);
+    if (spec == null) {
+      return false;
+    }
+    return spec.required || !spec.optional;
+  }
 
   bool get hasAdditionalDetails {
     return costOfLapsing.trim().isNotEmpty ||
@@ -136,6 +164,7 @@ class AddDocumentController extends ChangeNotifier {
       document.dynamicFields,
     );
     additionalOpen = hasAdditionalDetails;
+    identityExtrasOpen = hasIdentityExtras;
     step = AddDocumentStep.source;
     ocrStatus = OcrUiStatus.idle;
     ocrConfirmed = false;
@@ -402,6 +431,7 @@ class AddDocumentController extends ChangeNotifier {
       isCustom: true,
     );
     dynamicFields = [...dynamicFields, field];
+    identityExtrasOpen = true;
     notifyListeners();
   }
 
@@ -490,6 +520,11 @@ class AddDocumentController extends ChangeNotifier {
 
   void toggleAdditional() {
     additionalOpen = !additionalOpen;
+    notifyListeners();
+  }
+
+  void toggleIdentityExtras() {
+    identityExtrasOpen = !identityExtrasOpen;
     notifyListeners();
   }
 
@@ -620,10 +655,14 @@ class AddDocumentController extends ChangeNotifier {
     ocrConfirmed = true;
     ocrStatus = OcrUiStatus.idle;
     step = AddDocumentStep.identity;
+    identityExtrasOpen = hasIdentityExtras;
     notifyListeners();
   }
 
-  DateTime? _tryParseDate(String raw) {
+  DateTime? _tryParseDate(String raw) => tryParseLooseDate(raw);
+
+  /// Parses ISO dates, numeric dates, and day-month-year text.
+  static DateTime? tryParseLooseDate(String raw) {
     final value = raw.trim();
     if (value.isEmpty) {
       return null;
@@ -633,7 +672,8 @@ class AddDocumentController extends ChangeNotifier {
       return DateTime(iso.year, iso.month, iso.day);
     }
     final match = RegExp(
-      r'^(\d{1,2})[./\-\s](\d{1,2}|[A-Za-z]{3,})[./\-\s](\d{2,4})$',
+      r'^(\d{1,2})[./\-\s](\d{1,2}|\p{L}{2,})[./\-\s](\d{2,4})$',
+      unicode: true,
     ).firstMatch(value);
     if (match == null) {
       if (RegExp(r'^(19|20)\d{2}$').hasMatch(value)) {
@@ -649,28 +689,85 @@ class AddDocumentController extends ChangeNotifier {
     final year = yearRaw < 100 ? 2000 + yearRaw : yearRaw;
     final monthToken = match.group(2)!;
     final month = int.tryParse(monthToken) ?? _monthFromName(monthToken);
-    if (month == null) {
+    if (month == null || day < 1 || day > 31) {
       return null;
     }
     return DateTime(year, month, day);
   }
 
-  int? _monthFromName(String token) {
+  static int? _monthFromName(String token) {
+    final folded = token
+        .toLowerCase()
+        .replaceAll('.', '')
+        .replaceAll('é', 'e')
+        .replaceAll('è', 'e')
+        .replaceAll('ê', 'e')
+        .replaceAll('û', 'u')
+        .replaceAll('ô', 'o')
+        .replaceAll('à', 'a')
+        .replaceAll('ù', 'u')
+        .replaceAll('ï', 'i')
+        .replaceAll('ç', 'c');
     const months = {
       'jan': 1,
+      'janv': 1,
+      'january': 1,
+      'janvier': 1,
+      'يناير': 1,
       'feb': 2,
+      'fev': 2,
+      'fevr': 2,
+      'february': 2,
+      'fevrier': 2,
+      'فبراير': 2,
       'mar': 3,
+      'mars': 3,
+      'march': 3,
+      'مارس': 3,
       'apr': 4,
+      'avr': 4,
+      'avril': 4,
+      'april': 4,
+      'أبريل': 4,
+      'ابريل': 4,
       'may': 5,
+      'mai': 5,
+      'مايو': 5,
       'jun': 6,
+      'juin': 6,
+      'june': 6,
+      'يونيو': 6,
       'jul': 7,
+      'juil': 7,
+      'juillet': 7,
+      'july': 7,
+      'يوليو': 7,
       'aug': 8,
+      'aou': 8,
+      'aout': 8,
+      'august': 8,
+      'أغسطس': 8,
+      'اغسطس': 8,
       'sep': 9,
+      'sept': 9,
+      'septembre': 9,
+      'september': 9,
+      'سبتمبر': 9,
       'oct': 10,
+      'octobre': 10,
+      'october': 10,
+      'أكتوبر': 10,
+      'اكتوبر': 10,
       'nov': 11,
+      'novembre': 11,
+      'november': 11,
+      'نوفمبر': 11,
       'dec': 12,
+      'decembre': 12,
+      'december': 12,
+      'ديسمبر': 12,
     };
-    return months[token.substring(0, 3).toLowerCase()];
+    return months[folded] ?? months[token];
   }
 
   bool _validateIdentity(AppLocalizations l10n) {

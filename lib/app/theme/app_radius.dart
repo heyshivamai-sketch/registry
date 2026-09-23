@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 abstract final class AppRadius {
   static const double sm = 8;
   static const double md = 12;
+  static const double input = 16;
   static const double card = 18;
   static const double lg = 24;
   static const double xl = 28;

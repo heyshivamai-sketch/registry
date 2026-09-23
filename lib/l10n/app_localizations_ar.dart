@@ -720,6 +720,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editAction => 'تعديل';
 
   @override
+  String get renewAction => 'تجديد';
+
+  @override
   String maskedDocumentNumberLabel(String number) {
     return 'رقم المستند المخفي $number';
   }
@@ -772,13 +775,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get documentPassTitle => 'بطاقة المستند';
 
   @override
-  String get documentPassEyebrow => 'تفاصيل موثّقة';
+  String get documentPassEyebrow => 'تفاصيل المستند';
 
   @override
   String get viewScan => 'عرض المسح';
 
   @override
   String get remindersTitle => 'التذكيرات';
+
+  @override
+  String get reminderPreferencesTitle => 'تفضيلات التذكير';
 
   @override
   String get renewalHistoryEmptyTitle => 'لا توجد تجديدات بعد';
@@ -798,7 +804,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stepSourceTitle => 'مسح أو إدخال يدوي';
 
   @override
-  String get stepIdentityTitle => 'هوية المستند';
+  String get stepIdentityTitle => 'اجعله خاصًا بك';
 
   @override
   String get stepDatesTitle => 'التواريخ المهمة';
@@ -860,7 +866,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ocrRetry => 'إعادة المحاولة';
 
   @override
-  String get ocrReviewTitle => 'مراجعة المسح';
+  String get ocrReviewTitle => 'راجع المسح';
 
   @override
   String ocrFieldsFound(int count) {
@@ -886,7 +892,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ocrConfidenceMissing => 'غير مكتشَف';
 
   @override
-  String get ocrReviewField => 'راجع هذا الحقل';
+  String get ocrReviewField => 'تحقق من هذه القيمة';
 
   @override
   String get ocrSuggestedCountry => 'البلد المقترح';
@@ -898,10 +904,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ocrAddMissingField => 'إضافة حقل ناقص';
 
   @override
-  String get ocrConfirmContinue => 'تأكيد ومتابعة';
+  String get ocrConfirmContinue => 'تأكيد التفاصيل';
 
   @override
-  String get ocrRetake => 'إعادة الالتقاط أو الاستبدال';
+  String get ocrRetake => 'إعادة المسح';
 
   @override
   String get fieldCountry => 'البلد أو المنطقة';
@@ -1059,7 +1065,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get howToAddBody => 'امسح للبدء بسرعة، أو أدخل التفاصيل بنفسك.';
 
   @override
-  String get identityIntro => 'نعرض فقط الحقول المناسبة لهذا المستند.';
+  String get identityIntro => 'بعض التفاصيل لتنظيم مستندك.';
 
   @override
   String get datesIntro => 'تشمل التواريخ دائمًا اليوم والشهر والسنة.';
@@ -1301,11 +1307,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subscriptionServiceIntro => 'ابدأ باسم الخدمة والفئة.';
 
   @override
-  String get subscriptionBillingIntroTitle => 'تفاصيل الفوترة';
+  String get subscriptionBillingIntroTitle => 'عيّن الفوترة';
 
   @override
-  String get subscriptionBillingIntro =>
-      'أضف ما تعرفه فقط. يمكن تعديل كل شيء لاحقًا.';
+  String get subscriptionBillingIntro => 'تتبع تفاصيل اشتراكك.';
 
   @override
   String get subscriptionPreferencesIntroTitle => 'ابقَ سابقًا للدفعة';
@@ -1599,4 +1604,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get homeDocumentsTile => 'المستندات';
+
+  @override
+  String get changeSelection => 'تغيير';
+
+  @override
+  String get fromScan => 'من المسح';
+
+  @override
+  String get checkThisDate => 'تحقق من هذا التاريخ';
+
+  @override
+  String get searchListHint => 'بحث';
+
+  @override
+  String get identityExtrasTitle => 'تفاصيل إضافية (اختياري)';
+
+  @override
+  String get identityExtrasSubtitle => 'الرقم والجهة المصدرة والحقول المخصصة';
+
+  @override
+  String get ocrReviewSubtitle => 'تحقق من التفاصيل المستخرجة قبل المتابعة.';
+
+  @override
+  String get ocrNothingSavedHint => 'لن يُحفظ شيء حتى تختار حفظ المستند.';
+
+  @override
+  String get remindMePrefix => 'ذكّرني';
+
+  @override
+  String attachmentAddedOn(String date) {
+    return 'أُضيف في $date';
+  }
+
+  @override
+  String estimatedMonthlyCostValue(String amount) {
+    return 'التكلفة الشهرية التقديرية $amount';
+  }
+
+  @override
+  String get selectedDocumentType => 'نوع المستند المحدد';
+
+  @override
+  String get chooseOption => 'اختر';
 }

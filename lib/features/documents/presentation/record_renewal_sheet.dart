@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
+import 'package:the_registry/core/widgets/registry_form_field.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/features/documents/domain/document_renewal.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
@@ -184,20 +185,22 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
               onTap: () => _pick('new-action'),
             ),
             const SizedBox(height: AppSpacing.md),
-            TextField(
-              key: const ValueKey<String>('renewal-note'),
-              controller: _note,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: l10n.renewalNoteOptional,
-                alignLabelWithHint: true,
-                border: const OutlineInputBorder(),
+            RegistryLabeledField(
+              label: l10n.renewalNoteOptional,
+              child: TextField(
+                key: const ValueKey<String>('renewal-note'),
+                controller: _note,
+                maxLines: 3,
+                minLines: 3,
+                decoration: RegistryFieldStyle.decoration(context),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             RegistryPrimaryButton(
               key: const ValueKey<String>('save-renewal'),
               label: l10n.saveRenewal,
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              foregroundColor: Theme.of(context).colorScheme.onTertiary,
               onPressed: _submit,
             ),
           ],

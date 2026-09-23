@@ -8,12 +8,16 @@ class RegistryPrimaryButton extends StatelessWidget {
     this.onPressed,
     this.trailing,
     this.expanded = true,
+    this.backgroundColor,
+    this.foregroundColor,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final Widget? trailing;
   final bool expanded;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,8 @@ class RegistryPrimaryButton extends StatelessWidget {
     final button = FilledButton(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
         minimumSize: Size(
           expanded ? double.infinity : AppSpacing.minTapTarget,
           AppSpacing.buttonHeight,

@@ -217,6 +217,7 @@
   "discardChangesMessage": "Vos modifications ne seront pas conservées.",
   "moreActions": "Autres actions",
   "editAction": "Modifier",
+  "renewAction": "Renouveler",
   "maskedDocumentNumberLabel": "Numéro de document masqué {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
@@ -238,9 +239,10 @@
   "documentsFilterEmptyMessage": "Choisissez un autre statut, ou sélectionnez Tous pour voir chaque document enregistré.",
   "documentsRemainingHeader": "Tous les documents",
   "documentPassTitle": "Passe documentaire",
-  "documentPassEyebrow": "Détails vérifiés",
+  "documentPassEyebrow": "Détails du document",
   "viewScan": "Voir le scan",
   "remindersTitle": "Rappels",
+  "reminderPreferencesTitle": "Préférences de rappel",
   "renewalHistoryEmptyTitle": "Aucun renouvellement",
   "wizardStepOf": "Étape {current} sur {total}",
   "@wizardStepOf": {
@@ -252,7 +254,7 @@
   "wizardContinue": "Continuer",
   "wizardBack": "Retour",
   "stepSourceTitle": "Scan ou saisie manuelle",
-  "stepIdentityTitle": "Identité du document",
+  "stepIdentityTitle": "Faites-le vôtre",
   "stepDatesTitle": "Dates importantes",
   "stepRenewalTitle": "Préparation du renouvellement",
   "stepReviewTitle": "Vérifier et enregistrer",
@@ -271,7 +273,7 @@
   "ocrFailedTitle": "Ce scan n’a pas pu être lu",
   "ocrFailedMessage": "Conservez la photo et saisissez les informations manuellement, ou essayez une autre image.",
   "ocrRetry": "Réessayer",
-  "ocrReviewTitle": "Vérifier le scan",
+  "ocrReviewTitle": "Vérifiez votre scan",
   "ocrFieldsFound": "{count, plural, =0{Aucun champ trouvé} one{1 champ trouvé} other{{count} champs trouvés}}",
   "@ocrFieldsFound": {
     "placeholders": {
@@ -281,12 +283,12 @@
   "ocrConfidenceHigh": "Confiance élevée",
   "ocrConfidenceReview": "À vérifier",
   "ocrConfidenceMissing": "Non détecté",
-  "ocrReviewField": "Vérifier ce champ",
+  "ocrReviewField": "Vérifier cette valeur",
   "ocrSuggestedCountry": "Pays suggéré",
   "ocrSuggestedType": "Type de document suggéré",
   "ocrAddMissingField": "Ajouter un champ manquant",
-  "ocrConfirmContinue": "Confirmer et continuer",
-  "ocrRetake": "Reprendre ou remplacer",
+  "ocrConfirmContinue": "Confirmer les détails",
+  "ocrRetake": "Reprendre le scan",
   "fieldCountry": "Pays ou région",
   "schemaChangeTitle": "Changer le type de document ?",
   "schemaChangeMessage": "Certaines informations saisies ne correspondent pas au nouveau type et seront retirées.",
@@ -344,7 +346,7 @@
   "guidedSetup": "Configuration guidée",
   "ocrOnDeviceEyebrow": "Extraction sur l’appareil",
   "howToAddBody": "Scannez pour gagner du temps, ou saisissez les détails vous-même.",
-  "identityIntro": "Seuls les champs utiles pour ce document sont affichés.",
+  "identityIntro": "Quelques détails pour organiser votre document.",
   "datesIntro": "Les dates incluent toujours le jour, le mois et l’année.",
   "planningIntro": "Les détails optionnels aident à décider ce qui mérite votre attention.",
   "reviewIntro": "Vérifiez les informations importantes. Vous pourrez tout modifier plus tard.",
@@ -412,8 +414,8 @@
   "subscriptionCategoryOther": "Autre",
   "subscriptionServiceIntroTitle": "Que suivez-vous ?",
   "subscriptionServiceIntro": "Commencez par le service et la catégorie.",
-  "subscriptionBillingIntroTitle": "Détails de facturation",
-  "subscriptionBillingIntro": "Ajoutez seulement ce que vous savez. Tout pourra être modifié plus tard.",
+  "subscriptionBillingIntroTitle": "Définissez la facturation",
+  "subscriptionBillingIntro": "Suivez les détails de votre abonnement.",
   "subscriptionPreferencesIntroTitle": "Anticipez le prélèvement",
   "subscriptionPreferencesIntro": "Choisissez quand vous voulez décider.",
   "subscriptionReviewIntroTitle": "Prêt à suivre",
@@ -498,5 +500,28 @@
   "homeSeeAllCurrencies": "Voir tous les totaux par devise",
   "homeNoActivePlans": "Aucun abonnement actif",
   "homeCurrencyBreakdownTitle": "Estimations mensuelles",
-  "homeDocumentsTile": "Documents"
+  "homeDocumentsTile": "Documents",
+  "changeSelection": "Modifier",
+  "fromScan": "Issu du scan",
+  "checkThisDate": "Vérifier cette date",
+  "searchListHint": "Rechercher",
+  "identityExtrasTitle": "Détails supplémentaires (facultatif)",
+  "identityExtrasSubtitle": "Numéro, organisme et champs personnalisés",
+  "ocrReviewSubtitle": "Vérifiez les informations extraites avant de continuer.",
+  "ocrNothingSavedHint": "Rien n’est enregistré tant que vous n’avez pas choisi Enregistrer le document.",
+  "remindMePrefix": "Me rappeler",
+  "attachmentAddedOn": "Ajouté le {date}",
+  "@attachmentAddedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "estimatedMonthlyCostValue": "Coût mensuel estimé {amount}",
+  "@estimatedMonthlyCostValue": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "selectedDocumentType": "Type de document sélectionné",
+  "chooseOption": "Choisir"
 }

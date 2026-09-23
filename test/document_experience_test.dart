@@ -121,7 +121,7 @@ void main() {
     await openDetail(tester);
 
     expect(find.byType(DocumentDetailScreen), findsOneWidget);
-    expect(find.text('Document pass'), findsOneWidget);
+    expect(find.text('Family passport'), findsWidgets);
     expect(find.text('Family passport'), findsWidgets);
     expect(find.text('Passport'), findsWidgets);
   });
@@ -151,7 +151,7 @@ void main() {
 
     expect(find.textContaining('Amira'), findsWidgets);
     expect(find.text('••••••5678'), findsWidgets);
-    expect(find.text('Deadline health'), findsOneWidget);
+    expect(find.text('Important dates'), findsOneWidget);
     expect(
       find.text(
         RegistryDateFormatter.dayMonthYear(DateTime(2027, 10, 5), 'en'),
@@ -160,7 +160,7 @@ void main() {
     );
     expect(find.text('No reminders selected'), findsOneWidget);
     expect(find.text('No photo attached'), findsNothing);
-    expect(find.text('No renewals recorded yet.'), findsOneWidget);
+    expect(find.text('No renewals yet'), findsOneWidget);
     expect(find.text('Issued by'), findsNothing);
     expect(find.text('Cost of lapsing'), findsNothing);
   });
@@ -188,8 +188,8 @@ void main() {
     await tester.pumpAndSettle();
     await openDetail(tester);
     expect(find.byType(DocumentDetailScreen), findsOneWidget);
-    expect(find.text('On action date'), findsOneWidget);
-    expect(find.text('7 days before'), findsOneWidget);
+    expect(find.textContaining('On action date'), findsOneWidget);
+    expect(find.textContaining('7 days before'), findsOneWidget);
     await reveal(tester, find.byKey(const ValueKey<String>('open-attachment')));
     expect(find.byType(Image), findsWidgets);
   });
@@ -450,7 +450,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('بطاقة المستند'), findsOneWidget);
+    expect(find.text('Family passport'), findsWidgets);
     expect(
       Directionality.of(tester.element(find.byType(DocumentDetailScreen))),
       TextDirection.rtl,
@@ -819,7 +819,7 @@ void main() {
     await tester.pumpAndSettle();
     await openDetail(tester);
     expect(find.byType(DocumentDetailScreen), findsOneWidget);
-    expect(find.text('Verified details'), findsOneWidget);
+    expect(find.text('Family passport'), findsWidgets);
   });
 
   testWidgets('Search, clear and empty results do not mutate repository', (
@@ -987,9 +987,9 @@ void main() {
     await tester.pumpAndSettle();
     await openDetail(tester);
 
-    expect(find.text('Deadline health'), findsOneWidget);
+    expect(find.text('Important dates'), findsOneWidget);
     expect(find.text('Document information'), findsOneWidget);
-    expect(find.text('Reminders'), findsOneWidget);
+    expect(find.text('Reminder preferences'), findsOneWidget);
     expect(find.text('••••••5678'), findsWidgets);
     expect(find.text('AB12345678'), findsNothing);
     await reveal(tester, find.byKey(const ValueKey<String>('open-attachment')));

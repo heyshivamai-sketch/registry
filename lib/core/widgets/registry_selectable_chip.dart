@@ -11,6 +11,7 @@ class RegistrySelectableChip extends StatelessWidget {
     this.selectedColor,
     this.selectedForegroundColor,
     this.checkmarkColor,
+    this.showCheckmark = true,
   });
 
   final String label;
@@ -19,6 +20,7 @@ class RegistrySelectableChip extends StatelessWidget {
   final Color? selectedColor;
   final Color? selectedForegroundColor;
   final Color? checkmarkColor;
+  final bool showCheckmark;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class RegistrySelectableChip extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       selected: selected,
-      showCheckmark: true,
+      showCheckmark: showCheckmark,
       onSelected: onSelected,
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.padded,

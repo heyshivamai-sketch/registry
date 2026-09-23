@@ -1,9 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/navigation/app_routes.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/features/documents/domain/document_status.dart';
@@ -64,17 +65,10 @@ class _DocumentDetailBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: AppSpacing.xs,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.documentPassEyebrow,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.tertiary,
-              ),
-            ),
-            Text(l10n.documentPassTitle, style: theme.textTheme.titleLarge),
-          ],
+        title: Text(
+          document.name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         actions: [
           SizedBox(
@@ -117,7 +111,11 @@ class _DocumentDetailBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DocumentDigitalPass(document: document, large: true),
+              DocumentDigitalPass(
+                document: document,
+                large: true,
+                compact: true,
+              ),
               const SizedBox(height: AppSpacing.md),
               _QuickActions(document: document),
               const SizedBox(height: AppSpacing.md),
@@ -128,7 +126,7 @@ class _DocumentDetailBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RegistrySectionHeader(
-                      title: l10n.deadlineHealth,
+                      title: l10n.sectionImportantDates,
                       actionLabel: DocumentStatus.remainingLabel(
                         l10n,
                         document,
@@ -146,7 +144,12 @@ class _DocumentDetailBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RegistrySectionHeader(title: l10n.documentInformation),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.sm),
+                    if (document.countryCode != null)
+                      RegistryInfoRow(
+                        label: l10n.fieldCountry,
+                        value: DocumentCopy.country(l10n, document.countryCode),
+                      ),
                     RegistryInfoRow(
                       label: l10n.fieldDocumentType,
                       value: DocumentCopy.schema(l10n, document.schemaId),
@@ -170,12 +173,16 @@ class _DocumentDetailBody extends StatelessWidget {
                         label: l10n.fieldDocumentNumber,
                         value: document.maskedDocumentNumber,
                       ),
-                    if (document.issueDate != null)
+                    RegistryInfoRow(
+                      label: l10n.fieldImpact,
+                      value: DocumentCopy.impact(l10n, document.impact),
+                    ),
+                    if (document.renewalEffort != null)
                       RegistryInfoRow(
-                        label: l10n.fieldIssueDate,
-                        value: RegistryDateFormatter.dayMonthYear(
-                          document.issueDate!,
-                          locale,
+                        label: l10n.fieldRenewalEffort,
+                        value: DocumentCopy.effort(
+                          l10n,
+                          document.renewalEffort!,
                         ),
                       ),
                     if (_present(document.costOfLapsing))
@@ -214,26 +221,25 @@ class _DocumentDetailBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegistrySectionHeader(title: l10n.remindersTitle),
-                    const SizedBox(height: AppSpacing.sm),
+                    RegistrySectionHeader(title: l10n.reminderPreferencesTitle),
+                    const SizedBox(height: AppSpacing.xs),
                     if (document.reminders.isEmpty)
-                      Text(
-                        l10n.noRemindersSelected,
-                        style: theme.textTheme.bodyMedium,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          l10n.noRemindersSelected,
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       )
                     else
-                      Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
-                        children: [
-                          for (final reminder in ReminderPreference.values)
-                            if (document.reminders.contains(reminder))
-                              Chip(
-                                label: Text(
+                      RegistryInfoRow(
+                        label: l10n.remindMePrefix,
+                        value: document.reminders
+                            .map(
+                              (reminder) =>
                                   DocumentCopy.reminder(l10n, reminder),
-                                ),
-                              ),
-                        ],
+                            )
+                            .join(', '),
                       ),
                   ],
                 ),
@@ -241,29 +247,18 @@ class _DocumentDetailBody extends StatelessWidget {
               if (document.hasAttachment) ...[
                 const SizedBox(height: AppSpacing.md),
                 RegistrySurface(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RegistrySectionHeader(title: l10n.attachmentSectionTitle),
-                      const SizedBox(height: AppSpacing.sm),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.memory(
-                          key: const ValueKey<String>('attachment-thumbnail'),
-                          document.attachmentBytes!,
-                          height: 160,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 4, 8),
+                  child: _AttachmentRow(
+                    bytes: document.attachmentBytes!,
+                    title: l10n.attachmentSectionTitle,
+                    subtitle: l10n.attachmentAddedOn(
+                      RegistryDateFormatter.dayMonthYear(
+                        document.createdAt,
+                        locale,
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextButton(
-                        key: const ValueKey<String>('open-attachment'),
-                        onPressed: () => _openAttachment(context),
-                        child: Text(l10n.viewAttachment),
-                      ),
-                    ],
+                    ),
+                    actionLabel: l10n.viewScan,
+                    onView: () => _openAttachment(context),
                   ),
                 ),
               ],
@@ -276,27 +271,32 @@ class _DocumentDetailBody extends StatelessWidget {
                     RegistrySectionHeader(title: l10n.renewalHistory),
                     const SizedBox(height: AppSpacing.sm),
                     if (history.isEmpty)
-                      RegistryEmptyState(
+                      _InlineActionRow(
                         key: const ValueKey<String>('renewal-history-empty'),
-                        title: l10n.renewalHistoryEmptyTitle,
-                        message: l10n.noRenewalHistory,
-                        icon: Icons.history_toggle_off_outlined,
-                      )
-                    else
-                      for (final entry in history) ...[
-                        _HistoryItem(entry: entry),
-                        const SizedBox(height: AppSpacing.sm),
-                      ],
-                    const SizedBox(height: AppSpacing.sm),
-                    SizedBox(
-                      width: double.infinity,
-                      child: RegistryPrimaryButton(
-                        key: const ValueKey<String>('record-renewal'),
-                        label: l10n.recordRenewal,
+                        label: l10n.renewalHistoryEmptyTitle,
+                        actionKey: const ValueKey<String>('record-renewal'),
+                        actionLabel: l10n.recordRenewal,
                         onPressed: () =>
                             RecordRenewalSheet.show(context, document),
+                      )
+                    else ...[
+                      for (final entry in history) _HistoryItem(entry: entry),
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton(
+                          key: const ValueKey<String>('record-renewal'),
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(
+                              AppSpacing.minTapTarget,
+                              AppSpacing.minTapTarget,
+                            ),
+                          ),
+                          onPressed: () =>
+                              RecordRenewalSheet.show(context, document),
+                          child: Text(l10n.recordRenewal),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
@@ -375,6 +375,126 @@ class _DocumentDetailBody extends StatelessWidget {
   }
 }
 
+class _AttachmentRow extends StatelessWidget {
+  const _AttachmentRow({
+    required this.bytes,
+    required this.title,
+    required this.subtitle,
+    required this.actionLabel,
+    required this.onView,
+  });
+
+  final Uint8List bytes;
+  final String title;
+  final String subtitle;
+  final String actionLabel;
+  final VoidCallback onView;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final preview = ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Image.memory(
+        key: const ValueKey<String>('attachment-thumbnail'),
+        bytes,
+        height: 48,
+        width: 40,
+        fit: BoxFit.cover,
+      ),
+    );
+    final copy = Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: theme.textTheme.titleSmall),
+          Text(
+            subtitle,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall,
+          ),
+        ],
+      ),
+    );
+    final action = TextButton(
+      key: const ValueKey<String>('open-attachment'),
+      style: TextButton.styleFrom(
+        minimumSize: const Size(
+          AppSpacing.minTapTarget,
+          AppSpacing.minTapTarget,
+        ),
+      ),
+      onPressed: onView,
+      child: Text(actionLabel),
+    );
+    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+    if (scale >= 1.4) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              preview,
+              const SizedBox(width: AppSpacing.sm),
+              copy,
+            ],
+          ),
+          Align(alignment: AlignmentDirectional.centerEnd, child: action),
+        ],
+      );
+    }
+    return Row(
+      children: [
+        preview,
+        const SizedBox(width: AppSpacing.sm),
+        copy,
+        action,
+      ],
+    );
+  }
+}
+
+class _InlineActionRow extends StatelessWidget {
+  const _InlineActionRow({
+    super.key,
+    required this.label,
+    required this.actionKey,
+    required this.actionLabel,
+    required this.onPressed,
+  });
+
+  final String label;
+  final Key actionKey;
+  final String actionLabel;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final action = TextButton(
+      key: actionKey,
+      style: TextButton.styleFrom(
+        minimumSize: const Size(
+          AppSpacing.minTapTarget,
+          AppSpacing.minTapTarget,
+        ),
+      ),
+      onPressed: onPressed,
+      child: Text(actionLabel, textAlign: TextAlign.center),
+    );
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xxs,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        action,
+      ],
+    );
+  }
+}
+
 class _QuickActions extends StatelessWidget {
   const _QuickActions({required this.document});
 
@@ -384,6 +504,12 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final actions = <Widget>[
+      _QuickAction(
+        key: const ValueKey<String>('quick-edit'),
+        icon: Icons.edit_outlined,
+        label: l10n.editAction,
+        onPressed: () => AppRoutes.openEditDocument(context, document.id),
+      ),
       if (document.hasAttachment)
         _QuickAction(
           key: const ValueKey<String>('quick-view-scan'),
@@ -400,15 +526,9 @@ class _QuickActions extends StatelessWidget {
           },
         ),
       _QuickAction(
-        key: const ValueKey<String>('quick-edit'),
-        icon: Icons.edit_outlined,
-        label: l10n.editAction,
-        onPressed: () => AppRoutes.openEditDocument(context, document.id),
-      ),
-      _QuickAction(
         key: const ValueKey<String>('quick-renew'),
         icon: Icons.autorenew_rounded,
-        label: l10n.recordRenewal,
+        label: l10n.renewAction,
         onPressed: () => RecordRenewalSheet.show(context, document),
       ),
     ];
@@ -451,7 +571,7 @@ class _QuickAction extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(18),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 59),
+          constraints: const BoxConstraints(minHeight: 48),
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.xxs,
@@ -465,10 +585,11 @@ class _QuickAction extends StatelessWidget {
                 Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.labelSmall?.copyWith(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     letterSpacing: 0,
-                    fontSize: 11,
                   ),
                 ),
               ],
@@ -490,9 +611,14 @@ class _DeadlineGrid extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final locale = l10n.localeName;
     final cells = <(String, String)>[
+      if (document.issueDate != null)
+        (
+          l10n.fieldIssueDate,
+          RegistryDateFormatter.dayMonthYear(document.issueDate!, locale),
+        ),
       if (document.hasDistinctActionDate)
         (
-          l10n.pulseStartByEyebrow,
+          l10n.homeStartRenewal,
           RegistryDateFormatter.dayMonthYear(
             document.displayActionDate,
             locale,
@@ -502,78 +628,13 @@ class _DeadlineGrid extends StatelessWidget {
         l10n.pulseExpiresEyebrow,
         RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),
       ),
-      (l10n.fieldImpact, DocumentCopy.impact(l10n, document.impact)),
-      if (document.renewalEffort != null)
-        (
-          l10n.fieldRenewalEffort,
-          DocumentCopy.effort(l10n, document.renewalEffort!),
-        ),
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final wide = constraints.maxWidth >= 280;
-        if (!wide) {
-          return Column(
-            children: [
-              for (var i = 0; i < cells.length; i++) ...[
-                if (i != 0) const SizedBox(height: 8),
-                _DeadlineCell(label: cells[i].$1, value: cells[i].$2),
-              ],
-            ],
-          );
-        }
-        return Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final cell in cells)
-              SizedBox(
-                width: (constraints.maxWidth - 8) / 2,
-                child: _DeadlineCell(label: cell.$1, value: cell.$2),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _DeadlineCell extends StatelessWidget {
-  const _DeadlineCell({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7F8FB),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                letterSpacing: 0.8,
-                fontSize: 10,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-            ),
-          ],
-        ),
-      ),
+    return Column(
+      children: [
+        for (var i = 0; i < cells.length; i++)
+          RegistryInfoRow(label: cells[i].$1, value: cells[i].$2),
+      ],
     );
   }
 }
@@ -616,18 +677,9 @@ class _HistoryItem extends StatelessWidget {
             Wrap(
               spacing: 6,
               children: [
-                Text(
-                  previous,
-                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-                ),
-                Text(
-                  '→',
-                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-                ),
-                Text(
-                  next,
-                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
-                ),
+                Text(previous, style: theme.textTheme.titleSmall),
+                Text('→', style: theme.textTheme.titleSmall),
+                Text(next, style: theme.textTheme.titleSmall),
               ],
             ),
             const SizedBox(height: 3),

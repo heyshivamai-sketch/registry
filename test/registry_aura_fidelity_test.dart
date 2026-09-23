@@ -124,7 +124,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     await saveScreenshot(tester, 'document_pass', folder: _folder);
-    await reveal(tester, find.text('Deadline health'));
+    await reveal(tester, find.text('Important dates'));
     await saveScreenshot(tester, 'document_deadline', folder: _folder);
     await reveal(tester, find.text('Document information'));
     await saveScreenshot(tester, 'document_information', folder: _folder);

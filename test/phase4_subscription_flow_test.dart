@@ -234,6 +234,55 @@ void main() {
     }
   });
 
+  testWidgets('single wrapping subscription card clears the dock at 1.8x', (
+    tester,
+  ) async {
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    tester.platformDispatcher.textScaleFactorTestValue = 1.8;
+    await subscriptions.save(
+      sampleSubscription(
+        id: 'solo_wrap',
+        serviceName: 'Reachable plan with a wrapping title for dock QA',
+        planName: 'Enterprise collaboration suite wrapping onto two lines',
+      ),
+    );
+    await phone(tester);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
+    await tester.pumpAndSettle();
+
+    final cardFinder = find.byKey(const ValueKey<String>('solo_wrap'));
+    final scrollable = find.descendant(
+      of: find.byType(SubscriptionsScreen),
+      matching: find.byType(Scrollable),
+    );
+    await tester.scrollUntilVisible(
+      cardFinder,
+      90,
+      scrollable: scrollable.first,
+    );
+    await tester.pumpAndSettle();
+
+    var card = tester.getRect(cardFinder);
+    final dock = tester.getRect(find.byKey(const ValueKey<String>('nav-dock')));
+    if (card.bottom > dock.top) {
+      await tester.drag(
+        scrollable.first,
+        Offset(0, -(card.bottom - dock.top + 24)),
+      );
+      await tester.pumpAndSettle();
+      card = tester.getRect(cardFinder);
+    }
+
+    expect(card.bottom, lessThanOrEqualTo(dock.top + 1));
+    expect(cardFinder.hitTestable(), findsOneWidget);
+
+    await tester.tap(cardFinder);
+    await tester.pumpAndSettle();
+    expect(find.byType(SubscriptionDetailScreen), findsOneWidget);
+  });
+
   test('attention copy stays natural in English, French, and Arabic', () {
     final en = lookupAppLocalizations(const Locale('en'));
     final fr = lookupAppLocalizations(const Locale('fr'));
