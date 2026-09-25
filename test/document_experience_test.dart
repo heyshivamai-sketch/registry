@@ -363,7 +363,7 @@ void main() {
 
     expect(find.byType(DocumentDetailScreen), findsOneWidget);
     expect(find.text('Updated passport'), findsWidgets);
-    expect(find.text('Document updated for this session.'), findsOneWidget);
+    expect(find.text('Document updated on this device.'), findsOneWidget);
     expect(documents.documents, hasLength(1));
     expect(documents.documents.single.id, 'doc_1');
 
@@ -409,7 +409,7 @@ void main() {
 
     expect(find.byType(DocumentDetailScreen), findsNothing);
     expect(find.byType(DocumentListCard), findsNothing);
-    expect(find.text('Document deleted from this session.'), findsOneWidget);
+    expect(find.text('Document deleted from this device.'), findsOneWidget);
     expect(find.text('No documents yet'), findsOneWidget);
     expect(
       tester
@@ -480,7 +480,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('save-renewal')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Renewal recorded for this session.'), findsOneWidget);
+    expect(find.text('Renewal recorded on this device.'), findsOneWidget);
     expect(find.text('Embassy visit'), findsOneWidget);
     expect(find.text('05 Oct 2032'), findsWidgets);
     expect(documents.documents.single.renewalHistory, hasLength(1));

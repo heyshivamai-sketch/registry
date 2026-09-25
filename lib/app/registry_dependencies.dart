@@ -50,10 +50,15 @@ class RegistryDependencies extends InheritedWidget {
   }
 }
 
+/// In-memory default used when a test or preview constructs RegistryApp
+/// without repositories. Production startup injects the SQLite repositories
+/// and must not fall back to these after a storage error.
 DocumentRepository createDefaultDocumentRepository() {
   return InMemoryDocumentRepository();
 }
 
+/// In-memory default used when a test or preview constructs RegistryApp
+/// without repositories. Production startup injects the SQLite repositories.
 SubscriptionRepository createDefaultSubscriptionRepository() {
   return InMemorySubscriptionRepository();
 }

@@ -169,7 +169,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: AppSpacing.minTapTarget *
+                  height:
+                      AppSpacing.minTapTarget *
                       MediaQuery.textScalerOf(context).scale(1),
                 ),
               ],

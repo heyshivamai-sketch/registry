@@ -514,7 +514,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get saveDocument => 'Enregistrer le document';
 
   @override
-  String get documentSaved => 'Document enregistré pour cette session.';
+  String get documentSaved => 'Document enregistré sur cet appareil.';
 
   @override
   String get discardDraftTitle => 'Abandonner ce brouillon ?';
@@ -611,7 +611,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editDocumentSubtitle =>
-      'Les modifications restent sur cet appareil pour cette session.';
+      'Les modifications restent sur cet appareil.';
 
   @override
   String get requiredFieldsHint =>
@@ -631,7 +631,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String deleteDocumentMessage(String name) {
-    return '$name sera retiré de cette session.';
+    return '$name sera retiré de cet appareil.';
   }
 
   @override
@@ -641,10 +641,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteDocumentCancel => 'Annuler';
 
   @override
-  String get documentUpdated => 'Document mis à jour pour cette session.';
+  String get documentUpdated => 'Document mis à jour sur cet appareil.';
 
   @override
-  String get documentDeleted => 'Document supprimé de cette session.';
+  String get documentDeleted => 'Document supprimé de cet appareil.';
 
   @override
   String get deadlineHealth => 'État des échéances';
@@ -676,7 +676,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get recordRenewalSubtitle =>
-      'Ajoutez un renouvellement à cette session. Les autres informations restent inchangées, sauf si vous choisissez une nouvelle date de début.';
+      'Ajoutez un renouvellement sur cet appareil. Les autres informations restent inchangées, sauf si vous choisissez une nouvelle date de début.';
 
   @override
   String get previousExpiry => 'Expiration précédente';
@@ -691,7 +691,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get renewalNoteOptional => 'Note (facultatif)';
 
   @override
-  String get renewalRecorded => 'Renouvellement enregistré pour cette session.';
+  String get renewalRecorded => 'Renouvellement enregistré sur cet appareil.';
 
   @override
   String get errorNewExpiryNotAfterPrevious =>
@@ -710,7 +710,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get documentUnavailableMessage =>
-      'Ce document n’est plus dans cette session.';
+      'Ce document n’est plus sur cet appareil.';
 
   @override
   String get saveChanges => 'Enregistrer les modifications';
@@ -1344,13 +1344,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get saveSubscription => 'Enregistrer l’abonnement';
 
   @override
-  String get subscriptionSaved => 'Abonnement enregistré pour cette session.';
+  String get subscriptionSaved => 'Abonnement enregistré sur cet appareil.';
 
   @override
-  String get subscriptionUpdated => 'Abonnement mis à jour pour cette session.';
+  String get subscriptionUpdated => 'Abonnement mis à jour sur cet appareil.';
 
   @override
-  String get subscriptionDeleted => 'Abonnement supprimé de cette session.';
+  String get subscriptionDeleted => 'Abonnement supprimé de cet appareil.';
 
   @override
   String get subscriptionSaveFailed =>
@@ -1376,7 +1376,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get subscriptionUnavailableMessage =>
-      'Cet abonnement n’est plus dans cette session.';
+      'Cet abonnement n’est plus sur cet appareil.';
 
   @override
   String get nextPaymentHelper =>
@@ -1429,7 +1429,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get subscriptionSessionNote =>
-      'Les abonnements restent sur cet appareil pour cette session. Il n’y a ni connexion bancaire ni paiement.';
+      'Les abonnements restent sur cet appareil. Il n’y a ni connexion bancaire ni paiement.';
 
   @override
   String get errorDecideByAfterPayment =>
@@ -1468,7 +1468,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get planMarkedCancelled =>
-      'Abonnement marqué comme annulé pour cette session.';
+      'Abonnement marqué comme annulé sur cet appareil.';
 
   @override
   String get reactivatePlan => 'Réactiver';
@@ -1482,7 +1482,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get planReactivated => 'Abonnement réactivé pour cette session.';
+  String get planReactivated => 'Abonnement réactivé sur cet appareil.';
 
   @override
   String get deleteSubscription => 'Supprimer l’abonnement';
@@ -1492,7 +1492,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String deleteSubscriptionMessage(String name) {
-    return '$name sera retiré de cette session.';
+    return '$name sera retiré de cet appareil.';
   }
 
   @override
@@ -1671,4 +1671,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chooseOption => 'Choisir';
+
+  @override
+  String get storageLoadingLabel => 'Chargement des enregistrements';
+
+  @override
+  String get storageErrorTitle => 'Impossible d’ouvrir les enregistrements';
+
+  @override
+  String get storageErrorMessage =>
+      'Registry n’a pas pu ouvrir les enregistrements déjà stockés sur cet appareil. Ils ont été laissés en place. Réessayez sans réinitialiser l’application.';
+
+  @override
+  String get storageErrorRetry => 'Réessayer';
 }

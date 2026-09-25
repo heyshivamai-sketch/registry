@@ -308,7 +308,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Family passport'), findsOneWidget);
-    expect(find.text('Document saved to this session.'), findsOneWidget);
+    expect(find.text('Document saved on this device.'), findsOneWidget);
     expect(find.textContaining('1 saved'), findsOneWidget);
     expect(find.textContaining('need attention'), findsOneWidget);
     expect(

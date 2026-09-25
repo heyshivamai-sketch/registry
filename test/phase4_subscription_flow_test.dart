@@ -354,9 +354,9 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('save-subscription')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Subscription saved to this session.'), findsOneWidget);
+    expect(find.text('Subscription saved on this device.'), findsOneWidget);
     final message = tester.getRect(
-      find.text('Subscription saved to this session.'),
+      find.text('Subscription saved on this device.'),
     );
     final fab = tester.getRect(find.byKey(const ValueKey<String>('home-fab')));
     expect(message.bottom, lessThanOrEqualTo(fab.top + 1));
@@ -408,7 +408,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final message = tester.getRect(
-      find.text('Subscription saved to this session.'),
+      find.text('Subscription saved on this device.'),
     );
     final fab = tester.getRect(find.byKey(const ValueKey<String>('home-fab')));
     expect(message.bottom, lessThanOrEqualTo(fab.top + 1));

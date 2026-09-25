@@ -209,7 +209,7 @@
   "reminder7Days": "7 days before",
   "reminder30Days": "30 days before",
   "saveDocument": "Save document",
-  "documentSaved": "Document saved to this session.",
+  "documentSaved": "Document saved on this device.",
   "discardDraftTitle": "Discard this draft?",
   "discardDraftMessage": "Your entered details and selected image will not be kept.",
   "discardDraftConfirm": "Discard",
@@ -240,13 +240,13 @@
   "documentDetailsTitle": "Document details",
   "editDocumentTitle": "Edit document",
   "editDocumentHeadline": "Update this document",
-  "editDocumentSubtitle": "Changes stay on this device for this session.",
+  "editDocumentSubtitle": "Changes stay on this device.",
   "requiredFieldsHint": "Fields marked with * are required.",
   "sectionEssential": "Essential information",
   "sectionAdditional": "Additional details",
   "deleteDocument": "Delete document",
   "deleteDocumentTitle": "Delete this document?",
-  "deleteDocumentMessage": "{name} will be removed from this session.",
+  "deleteDocumentMessage": "{name} will be removed from this device.",
   "@deleteDocumentMessage": {
     "placeholders": {
       "name": { "type": "String" }
@@ -254,8 +254,8 @@
   },
   "deleteDocumentConfirm": "Delete",
   "deleteDocumentCancel": "Cancel",
-  "documentUpdated": "Document updated for this session.",
-  "documentDeleted": "Document deleted from this session.",
+  "documentUpdated": "Document updated on this device.",
+  "documentDeleted": "Document deleted from this device.",
   "deadlineHealth": "Deadline health",
   "deadlineRemaining": "Time remaining",
   "issuedBy": "Issued by",
@@ -265,17 +265,17 @@
   "renewalHistory": "Renewal history",
   "noRenewalHistory": "No renewals recorded yet.",
   "recordRenewal": "Record renewal",
-  "recordRenewalSubtitle": "Add one renewal to this session. Other document details stay as they are unless you set a new start date.",
+  "recordRenewalSubtitle": "Add one renewal on this device. Other document details stay as they are unless you set a new start date.",
   "previousExpiry": "Previous expiry",
   "newExpiry": "New expiry",
   "renewalDate": "Renewal date",
   "renewalNoteOptional": "Note (optional)",
-  "renewalRecorded": "Renewal recorded for this session.",
+  "renewalRecorded": "Renewal recorded on this device.",
   "errorNewExpiryNotAfterPrevious": "New expiry date must be after the previous expiry date.",
   "errorNewExpiryRequired": "New expiry date is required.",
   "errorActionAfterNewExpiry": "Renewal start date cannot be after the new expiry date.",
   "documentUnavailableTitle": "Document not available",
-  "documentUnavailableMessage": "This document is no longer in this session.",
+  "documentUnavailableMessage": "This document is no longer on this device.",
   "saveChanges": "Save changes",
   "discardChangesTitle": "Discard changes?",
   "discardChangesMessage": "Your edits will not be kept.",
@@ -510,9 +510,9 @@
   "subscriptionReviewIntroTitle": "Ready to track",
   "subscriptionReviewIntro": "Confirm the plan before adding it to your Registry.",
   "saveSubscription": "Save subscription",
-  "subscriptionSaved": "Subscription saved to this session.",
-  "subscriptionUpdated": "Subscription updated for this session.",
-  "subscriptionDeleted": "Subscription deleted from this session.",
+  "subscriptionSaved": "Subscription saved on this device.",
+  "subscriptionUpdated": "Subscription updated on this device.",
+  "subscriptionDeleted": "Subscription deleted from this device.",
   "subscriptionSaveFailed": "The plan could not be saved. Your draft is still here. Try again.",
   "editSubscriptionTitle": "Edit subscription",
   "subscriptionDetailsTitle": "Subscription",
@@ -520,7 +520,7 @@
   "planInformation": "Plan information",
   "nextDecision": "Next decision",
   "subscriptionUnavailableTitle": "Plan not available",
-  "subscriptionUnavailableMessage": "This plan is no longer in this session.",
+  "subscriptionUnavailableMessage": "This plan is no longer on this device.",
   "nextPaymentHelper": "Past dates stay as unresolved tracking. Dates are not advanced automatically.",
   "decideByHelper": "Must be on or before the next payment date.",
   "clearDecideBy": "Clear decide-by date",
@@ -536,7 +536,7 @@
   "reviewJumpService": "Edit service",
   "reviewJumpBilling": "Edit billing",
   "reviewJumpPreferences": "Edit preferences",
-  "subscriptionSessionNote": "Plans stay on this device for this session. There is no bank connection or payment processing.",
+  "subscriptionSessionNote": "Plans stay on this device. There is no bank connection or payment processing.",
   "errorDecideByAfterPayment": "Decide-by date must be on or before the next payment date.",
   "errorAmountNegative": "Amount cannot be negative.",
   "errorAmountInvalid": "Enter a valid amount for this currency.",
@@ -552,7 +552,7 @@
       "name": { "type": "String" }
     }
   },
-  "planMarkedCancelled": "Plan marked as cancelled in this session.",
+  "planMarkedCancelled": "Plan marked as cancelled on this device.",
   "reactivatePlan": "Reactivate",
   "reactivatePlanTitle": "Reactivate this plan?",
   "reactivatePlanMessage": "Confirm the next payment date for {name}. This only resumes tracking in this app.",
@@ -561,10 +561,10 @@
       "name": { "type": "String" }
     }
   },
-  "planReactivated": "Plan reactivated in this session.",
+  "planReactivated": "Plan reactivated on this device.",
   "deleteSubscription": "Delete plan",
   "deleteSubscriptionTitle": "Delete this plan?",
-  "deleteSubscriptionMessage": "{name} will be removed from this session.",
+  "deleteSubscriptionMessage": "{name} will be removed from this device.",
   "@deleteSubscriptionMessage": {
     "placeholders": {
       "name": { "type": "String" }
@@ -663,5 +663,9 @@
     }
   },
   "selectedDocumentType": "Selected document type",
-  "chooseOption": "Choose"
+  "chooseOption": "Choose",
+  "storageLoadingLabel": "Loading saved records",
+  "storageErrorTitle": "Saved records could not be opened",
+  "storageErrorMessage": "Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.",
+  "storageErrorRetry": "Try again"
 }

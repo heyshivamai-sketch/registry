@@ -973,7 +973,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentSaved.
   ///
   /// In en, this message translates to:
-  /// **'Document saved to this session.'**
+  /// **'Document saved on this device.'**
   String get documentSaved;
 
   /// No description provided for @discardDraftTitle.
@@ -1159,7 +1159,7 @@ abstract class AppLocalizations {
   /// No description provided for @editDocumentSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Changes stay on this device for this session.'**
+  /// **'Changes stay on this device.'**
   String get editDocumentSubtitle;
 
   /// No description provided for @requiredFieldsHint.
@@ -1195,7 +1195,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteDocumentMessage.
   ///
   /// In en, this message translates to:
-  /// **'{name} will be removed from this session.'**
+  /// **'{name} will be removed from this device.'**
   String deleteDocumentMessage(String name);
 
   /// No description provided for @deleteDocumentConfirm.
@@ -1213,13 +1213,13 @@ abstract class AppLocalizations {
   /// No description provided for @documentUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Document updated for this session.'**
+  /// **'Document updated on this device.'**
   String get documentUpdated;
 
   /// No description provided for @documentDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Document deleted from this session.'**
+  /// **'Document deleted from this device.'**
   String get documentDeleted;
 
   /// No description provided for @deadlineHealth.
@@ -1279,7 +1279,7 @@ abstract class AppLocalizations {
   /// No description provided for @recordRenewalSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Add one renewal to this session. Other document details stay as they are unless you set a new start date.'**
+  /// **'Add one renewal on this device. Other document details stay as they are unless you set a new start date.'**
   String get recordRenewalSubtitle;
 
   /// No description provided for @previousExpiry.
@@ -1309,7 +1309,7 @@ abstract class AppLocalizations {
   /// No description provided for @renewalRecorded.
   ///
   /// In en, this message translates to:
-  /// **'Renewal recorded for this session.'**
+  /// **'Renewal recorded on this device.'**
   String get renewalRecorded;
 
   /// No description provided for @errorNewExpiryNotAfterPrevious.
@@ -1339,7 +1339,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentUnavailableMessage.
   ///
   /// In en, this message translates to:
-  /// **'This document is no longer in this session.'**
+  /// **'This document is no longer on this device.'**
   String get documentUnavailableMessage;
 
   /// No description provided for @saveChanges.
@@ -2443,19 +2443,19 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionSaved.
   ///
   /// In en, this message translates to:
-  /// **'Subscription saved to this session.'**
+  /// **'Subscription saved on this device.'**
   String get subscriptionSaved;
 
   /// No description provided for @subscriptionUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Subscription updated for this session.'**
+  /// **'Subscription updated on this device.'**
   String get subscriptionUpdated;
 
   /// No description provided for @subscriptionDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Subscription deleted from this session.'**
+  /// **'Subscription deleted from this device.'**
   String get subscriptionDeleted;
 
   /// No description provided for @subscriptionSaveFailed.
@@ -2503,7 +2503,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionUnavailableMessage.
   ///
   /// In en, this message translates to:
-  /// **'This plan is no longer in this session.'**
+  /// **'This plan is no longer on this device.'**
   String get subscriptionUnavailableMessage;
 
   /// No description provided for @nextPaymentHelper.
@@ -2599,7 +2599,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionSessionNote.
   ///
   /// In en, this message translates to:
-  /// **'Plans stay on this device for this session. There is no bank connection or payment processing.'**
+  /// **'Plans stay on this device. There is no bank connection or payment processing.'**
   String get subscriptionSessionNote;
 
   /// No description provided for @errorDecideByAfterPayment.
@@ -2665,7 +2665,7 @@ abstract class AppLocalizations {
   /// No description provided for @planMarkedCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Plan marked as cancelled in this session.'**
+  /// **'Plan marked as cancelled on this device.'**
   String get planMarkedCancelled;
 
   /// No description provided for @reactivatePlan.
@@ -2689,7 +2689,7 @@ abstract class AppLocalizations {
   /// No description provided for @planReactivated.
   ///
   /// In en, this message translates to:
-  /// **'Plan reactivated in this session.'**
+  /// **'Plan reactivated on this device.'**
   String get planReactivated;
 
   /// No description provided for @deleteSubscription.
@@ -2707,7 +2707,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteSubscriptionMessage.
   ///
   /// In en, this message translates to:
-  /// **'{name} will be removed from this session.'**
+  /// **'{name} will be removed from this device.'**
   String deleteSubscriptionMessage(String name);
 
   /// No description provided for @subscriptionTrackingDisclaimer.
@@ -2997,6 +2997,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose'**
   String get chooseOption;
+
+  /// No description provided for @storageLoadingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading saved records'**
+  String get storageLoadingLabel;
+
+  /// No description provided for @storageErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved records could not be opened'**
+  String get storageErrorTitle;
+
+  /// No description provided for @storageErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.'**
+  String get storageErrorMessage;
+
+  /// No description provided for @storageErrorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get storageErrorRetry;
 }
 
 class _AppLocalizationsDelegate

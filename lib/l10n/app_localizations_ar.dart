@@ -509,7 +509,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveDocument => 'حفظ المستند';
 
   @override
-  String get documentSaved => 'تم حفظ المستند لهذه الجلسة.';
+  String get documentSaved => 'تم حفظ المستند على هذا الجهاز.';
 
   @override
   String get discardDraftTitle => 'تجاهل هذه المسودة؟';
@@ -605,8 +605,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editDocumentHeadline => 'حدّث هذا المستند';
 
   @override
-  String get editDocumentSubtitle =>
-      'تبقى التغييرات على هذا الجهاز لهذه الجلسة.';
+  String get editDocumentSubtitle => 'تبقى التغييرات على هذا الجهاز.';
 
   @override
   String get requiredFieldsHint => 'الحقول التي تحمل * مطلوبة.';
@@ -625,7 +624,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String deleteDocumentMessage(String name) {
-    return 'ستتم إزالة $name من هذه الجلسة.';
+    return 'ستتم إزالة $name من هذا الجهاز.';
   }
 
   @override
@@ -635,10 +634,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteDocumentCancel => 'إلغاء';
 
   @override
-  String get documentUpdated => 'تم تحديث المستند لهذه الجلسة.';
+  String get documentUpdated => 'تم تحديث المستند على هذا الجهاز.';
 
   @override
-  String get documentDeleted => 'تم حذف المستند من هذه الجلسة.';
+  String get documentDeleted => 'تم حذف المستند من هذا الجهاز.';
 
   @override
   String get deadlineHealth => 'حالة المواعيد';
@@ -669,7 +668,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get recordRenewalSubtitle =>
-      'أضف تجديدًا واحدًا لهذه الجلسة. تبقى بقية التفاصيل كما هي ما لم تختر تاريخ بدء جديد.';
+      'أضف تجديدًا واحدًا على هذا الجهاز. تبقى بقية التفاصيل كما هي ما لم تختر تاريخ بدء جديد.';
 
   @override
   String get previousExpiry => 'تاريخ الانتهاء السابق';
@@ -684,7 +683,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get renewalNoteOptional => 'ملاحظة (اختياري)';
 
   @override
-  String get renewalRecorded => 'تم تسجيل التجديد لهذه الجلسة.';
+  String get renewalRecorded => 'تم تسجيل التجديد على هذا الجهاز.';
 
   @override
   String get errorNewExpiryNotAfterPrevious =>
@@ -702,7 +701,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get documentUnavailableMessage =>
-      'لم يعد هذا المستند موجودًا في هذه الجلسة.';
+      'لم يعد هذا المستند موجودًا على هذا الجهاز.';
 
   @override
   String get saveChanges => 'حفظ التغييرات';
@@ -1328,13 +1327,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveSubscription => 'حفظ الاشتراك';
 
   @override
-  String get subscriptionSaved => 'تم حفظ الاشتراك لهذه الجلسة.';
+  String get subscriptionSaved => 'تم حفظ الاشتراك على هذا الجهاز.';
 
   @override
-  String get subscriptionUpdated => 'تم تحديث الاشتراك لهذه الجلسة.';
+  String get subscriptionUpdated => 'تم تحديث الاشتراك على هذا الجهاز.';
 
   @override
-  String get subscriptionDeleted => 'تم حذف الاشتراك من هذه الجلسة.';
+  String get subscriptionDeleted => 'تم حذف الاشتراك من هذا الجهاز.';
 
   @override
   String get subscriptionSaveFailed =>
@@ -1360,7 +1359,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get subscriptionUnavailableMessage =>
-      'هذه الخطة لم تعد في هذه الجلسة.';
+      'هذه الخطة لم تعد على هذا الجهاز.';
 
   @override
   String get nextPaymentHelper =>
@@ -1413,7 +1412,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get subscriptionSessionNote =>
-      'تبقى الخطط على هذا الجهاز لهذه الجلسة. لا يوجد ربط بنكي ولا معالجة دفع.';
+      'تبقى الخطط على هذا الجهاز. لا يوجد ربط بنكي ولا معالجة دفع.';
 
   @override
   String get errorDecideByAfterPayment =>
@@ -1450,7 +1449,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get planMarkedCancelled => 'تم تعليم الخطة كملغاة في هذه الجلسة.';
+  String get planMarkedCancelled => 'تم تعليم الخطة كملغاة على هذا الجهاز.';
 
   @override
   String get reactivatePlan => 'إعادة التفعيل';
@@ -1464,7 +1463,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get planReactivated => 'أُعيد تفعيل الخطة في هذه الجلسة.';
+  String get planReactivated => 'أُعيد تفعيل الخطة على هذا الجهاز.';
 
   @override
   String get deleteSubscription => 'حذف الخطة';
@@ -1474,7 +1473,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String deleteSubscriptionMessage(String name) {
-    return 'ستُزال $name من هذه الجلسة.';
+    return 'ستُزال $name من هذا الجهاز.';
   }
 
   @override
@@ -1647,4 +1646,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chooseOption => 'اختر';
+
+  @override
+  String get storageLoadingLabel => 'جارٍ تحميل السجلات المحفوظة';
+
+  @override
+  String get storageErrorTitle => 'تعذر فتح السجلات المحفوظة';
+
+  @override
+  String get storageErrorMessage =>
+      'تعذر على Registry فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.';
+
+  @override
+  String get storageErrorRetry => 'إعادة المحاولة';
 }

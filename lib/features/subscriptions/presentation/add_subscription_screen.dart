@@ -409,9 +409,9 @@ class _ActionBar extends StatelessWidget {
               Text(
                 controller.saveError!,
                 key: const ValueKey<String>('subscription-save-error'),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: scheme.error,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: scheme.error),
               ),
               const SizedBox(height: AppSpacing.xs),
             ],
@@ -670,11 +670,7 @@ class _BillingStep extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: AppColors.violet,
-                    size: 20,
-                  ),
+                  Icon(Icons.info_outline, color: AppColors.violet, size: 20),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Column(
