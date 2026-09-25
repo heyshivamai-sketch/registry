@@ -7,6 +7,7 @@ import 'package:the_registry/features/documents/domain/date_picker_service.dart'
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_repository.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
+import 'package:the_registry/features/reminders/reminder_coordinator.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
 
@@ -19,6 +20,7 @@ class RegistryDependencies extends InheritedWidget {
     required this.datePicker,
     required this.documentOcr,
     required this.clock,
+    required this.reminders,
     required super.child,
   });
 
@@ -28,6 +30,7 @@ class RegistryDependencies extends InheritedWidget {
   final DatePickerService datePicker;
   final DocumentOcrService documentOcr;
   final Clock clock;
+  final ReminderCoordinator reminders;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -46,7 +49,8 @@ class RegistryDependencies extends InheritedWidget {
         imagePicker != oldWidget.imagePicker ||
         datePicker != oldWidget.datePicker ||
         documentOcr != oldWidget.documentOcr ||
-        clock != oldWidget.clock;
+        clock != oldWidget.clock ||
+        reminders != oldWidget.reminders;
   }
 }
 

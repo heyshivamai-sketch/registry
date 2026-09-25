@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
@@ -22,6 +24,7 @@ import 'package:the_registry/features/documents/presentation/document_copy.dart'
 import 'package:the_registry/features/documents/widgets/document_attachment_card.dart';
 import 'package:the_registry/features/documents/widgets/document_date_field.dart';
 import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
+import 'package:the_registry/features/reminders/presentation/reminder_permission_note.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -384,10 +387,22 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     await _pickImage(fromCamera: fromCamera, runOcr: runOcr);
   }
 
+  void _toggleReminder(ReminderPreference preference) {
+    final enabling = !_controller.reminders.contains(preference);
+    _controller.toggleReminder(preference);
+    if (enabling) {
+      final reminders = RegistryDependencies.of(context).reminders;
+      unawaited(reminders.requestPermission());
+    }
+  }
+
   Future<void> _save() async {
     _flushEditors();
     final deps = RegistryDependencies.of(context);
     final l10n = AppLocalizations.of(context);
+    if (_controller.reminders.isNotEmpty) {
+      await deps.reminders.requestPermission();
+    }
     final saved = await _controller.submit(
       l10n: l10n,
       save: deps.documents.save,
@@ -592,6 +607,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         dependency: _dependency,
         changes: _changes,
         notes: _notes,
+        onToggleReminder: _toggleReminder,
       ),
       AddDocumentStep.review => _ReviewStep(
         controller: _controller,
@@ -1346,6 +1362,7 @@ class _RenewalStep extends StatelessWidget {
     required this.dependency,
     required this.changes,
     required this.notes,
+    required this.onToggleReminder,
   });
 
   final AddDocumentController controller;
@@ -1353,6 +1370,7 @@ class _RenewalStep extends StatelessWidget {
   final TextEditingController dependency;
   final TextEditingController changes;
   final TextEditingController notes;
+  final ValueChanged<ReminderPreference> onToggleReminder;
 
   @override
   Widget build(BuildContext context) {
@@ -1518,9 +1536,8 @@ class _RenewalStep extends StatelessWidget {
                     selected: controller.reminders.contains(
                       ReminderPreference.onActionDate,
                     ),
-                    onSelected: (_) => controller.toggleReminder(
-                      ReminderPreference.onActionDate,
-                    ),
+                    onSelected: (_) =>
+                        onToggleReminder(ReminderPreference.onActionDate),
                   ),
                   RegistrySelectableChip(
                     key: const ValueKey<String>('reminder-7'),
@@ -1528,9 +1545,8 @@ class _RenewalStep extends StatelessWidget {
                     selected: controller.reminders.contains(
                       ReminderPreference.sevenDaysBefore,
                     ),
-                    onSelected: (_) => controller.toggleReminder(
-                      ReminderPreference.sevenDaysBefore,
-                    ),
+                    onSelected: (_) =>
+                        onToggleReminder(ReminderPreference.sevenDaysBefore),
                   ),
                   RegistrySelectableChip(
                     key: const ValueKey<String>('reminder-30'),
@@ -1538,12 +1554,12 @@ class _RenewalStep extends StatelessWidget {
                     selected: controller.reminders.contains(
                       ReminderPreference.thirtyDaysBefore,
                     ),
-                    onSelected: (_) => controller.toggleReminder(
-                      ReminderPreference.thirtyDaysBefore,
-                    ),
+                    onSelected: (_) =>
+                        onToggleReminder(ReminderPreference.thirtyDaysBefore),
                   ),
                 ],
               ),
+              ReminderPermissionNote(visible: controller.reminders.isNotEmpty),
             ],
           ),
         ),
@@ -1672,6 +1688,7 @@ class _ReviewStep extends StatelessWidget {
                           .map((item) => DocumentCopy.reminder(l10n, item))
                           .join(', '),
               ),
+              ReminderPermissionNote(visible: controller.reminders.isNotEmpty),
               _ReviewRow(
                 label: l10n.attachmentSectionTitle,
                 value: controller.hasAttachment

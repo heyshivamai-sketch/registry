@@ -95,7 +95,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notificationsPlaceholderMessage =>
-      'لا تُجدول التذكيرات في هذا الإصدار. هذه الشاشة عنصر نائب.';
+      'تبقى التذكيرات على هذا الجهاز. لا توجد رسائل عبر خادم.';
 
   @override
   String get searchPlaceholder => 'ابحث في سجلك';
@@ -494,7 +494,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'تُحفظ هذه الخيارات مع المستند. لن تُجدول الإشعارات بعد.';
+      'يُحفظ مع هذا المستند. يطلب Registry من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
 
   @override
   String get reminderOnActionDate => 'في تاريخ الإجراء';
@@ -1383,7 +1383,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get subscriptionRemindersHelper =>
-      'تُحفظ هذه الخيارات مع الخطة. لا تُجدول الإشعارات.';
+      'يُحفظ مع هذه الخطة. قبل 7 أيام وقبل يوم يتبعان تاريخ القرار، أو تاريخ الدفع إذا كان تاريخ القرار فارغًا. يوم الدفعة يتبع تاريخ الدفع. يُطلب كل تذكير للساعة 9:00 بتوقيتك المحلي فقط إذا كان ذلك الوقت لم يأتِ بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
 
   @override
   String get subscriptionReminder7Days => 'قبل 7 أيام';
@@ -1659,4 +1659,132 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get storageErrorRetry => 'إعادة المحاولة';
+
+  @override
+  String get reminderPermissionDenied =>
+      'الإشعارات متوقفة، لذلك لن يُجدول أي تذكير. يمكنك الحفظ رغم ذلك. فعّلها من إعدادات الإشعارات عندما تريد التذكيرات.';
+
+  @override
+  String get reminderStatusScheduled =>
+      'تمت جدولة تذكير محلي على هذا الجهاز. لا يضمن النظام التسليم في تمام الساعة 9:00.';
+
+  @override
+  String get reminderStatusPermissionOff =>
+      'هذه الخيارات محفوظة. الإشعارات غير مسموح بها، لذلك لا يوجد تذكير مجدول.';
+
+  @override
+  String get reminderStatusPast =>
+      'هذه الخيارات محفوظة. لا يوجد تذكير مجدول لأن كل وقت محدد قد مضى.';
+
+  @override
+  String get reminderStatusLimited =>
+      'هذه الخيارات محفوظة. لا يوجد تذكير مجدول لهذا السجل لأن هذا الجهاز يحتفظ بعدد محدود من التذكيرات المحلية المنتظرة.';
+
+  @override
+  String get reminderStatusCancelled =>
+      'هذه الخيارات محفوظة. لا يوجد تذكير مجدول بينما هذه الخطة معلّمة كملغاة.';
+
+  @override
+  String get reminderStatusUnavailable =>
+      'هذه الخيارات محفوظة. لا يمكن جدولة تذكيرات محلية على هذا الجهاز الآن.';
+
+  @override
+  String notificationsScheduledCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تذكيرات محلية مجدولة على هذا الجهاز.',
+      one: 'تذكير محلي واحد مجدول على هذا الجهاز.',
+      zero: 'لا توجد تذكيرات محلية مجدولة على هذا الجهاز.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsPermissionOff =>
+      'الإشعارات متوقفة. تبقى خيارات التذكير محفوظة مع كل سجل، ولا يُجدول شيء حتى تُفعَّل الإشعارات من إعدادات النظام.';
+
+  @override
+  String get notificationsLimits =>
+      'تبقى التذكيرات على هذا الجهاز. لا يوجد خادم ولا رسائل سحابية. يطلب التطبيق الساعة 9:00 بتوقيتك الحالي، بما في ذلك التوقيت الصيفي، لكن أندرويد قد يسلّم التذكير لاحقًا. يستعيد أندرويد التذكيرات المجدولة بعد إعادة التشغيل العادية، ويسقطها بعد الإيقاف الإجباري إلى أن تفتح التطبيق مرة أخرى. يمكن لـ iOS الاحتفاظ بالتذكيرات المحلية المنتظرة بعد إعادة التشغيل، حتى 64. يجدول التطبيق 64 على الأكثر، الأقرب أولًا.';
+
+  @override
+  String notificationsOmittedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'لم تُجدول $count تذكيرات محفوظة بسبب هذا الحد.',
+      one: 'لم يُجدول تذكير محفوظ واحد بسبب هذا الحد.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsAllow => 'السماح بالإشعارات';
+
+  @override
+  String get notificationsOpenSettings => 'إعدادات الإشعارات';
+
+  @override
+  String get notificationsUnavailable =>
+      'لا يمكن لهذا الجهاز جدولة تذكيرات محلية الآن. خيارات التذكير المحفوظة لم تتغير.';
+
+  @override
+  String get notificationChannelName => 'تذكيرات السجل';
+
+  @override
+  String get notificationChannelDescription =>
+      'تذكيرات محلية لتواريخ المستندات ومدفوعات الاشتراكات. وقت التسليم ليس دقيقًا.';
+
+  @override
+  String get notificationTitle => 'تذكير';
+
+  @override
+  String get reminderDocumentActionToday => 'تاريخ إجراء مستند هو اليوم.';
+
+  @override
+  String reminderDocumentActionIn7(String date) {
+    return 'تاريخ إجراء مستند بعد 7 أيام، في $date.';
+  }
+
+  @override
+  String reminderDocumentActionIn30(String date) {
+    return 'تاريخ إجراء مستند بعد 30 يومًا، في $date.';
+  }
+
+  @override
+  String get reminderDocumentExpiryToday => 'تاريخ انتهاء مستند هو اليوم.';
+
+  @override
+  String reminderDocumentExpiryIn7(String date) {
+    return 'ينتهي مستند بعد 7 أيام، في $date.';
+  }
+
+  @override
+  String reminderDocumentExpiryIn30(String date) {
+    return 'ينتهي مستند بعد 30 يومًا، في $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn7(String date) {
+    return 'قرار اشتراك مستحق بعد 7 أيام، في $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn1(String date) {
+    return 'قرار اشتراك مستحق غدًا، في $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn7(String date) {
+    return 'دفعة اشتراك بعد 7 أيام، في $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn1(String date) {
+    return 'دفعة اشتراك غدًا، في $date.';
+  }
+
+  @override
+  String get reminderSubscriptionChargeToday => 'تاريخ دفع اشتراك هو اليوم.';
 }

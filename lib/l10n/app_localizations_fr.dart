@@ -97,7 +97,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notificationsPlaceholderMessage =>
-      'Les rappels ne sont pas planifiés dans cette version. Cet écran est un espace réservé.';
+      'Les rappels restent sur cet appareil. Il n’y a pas de messagerie sur un serveur.';
 
   @override
   String get searchPlaceholder => 'Rechercher dans votre registre';
@@ -499,7 +499,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'Ces options sont enregistrées avec le document. Les notifications ne sont pas encore planifiées.';
+      'Enregistré avec ce document. Registry demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.';
 
   @override
   String get reminderOnActionDate => 'Le jour de l’action';
@@ -1400,7 +1400,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get subscriptionRemindersHelper =>
-      'Ces options sont enregistrées avec l’abonnement. Les notifications ne sont pas planifiées.';
+      'Enregistré avec cet abonnement. Sept jours et un jour avant suivent la date de décision, ou la date de paiement si elle est vide. Le jour du prélèvement suit la date de paiement. Chaque rappel est demandé pour 9:00 dans votre fuseau horaire seulement si cette heure est encore à venir. Le système peut le remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.';
 
   @override
   String get subscriptionReminder7Days => '7 jours avant';
@@ -1684,4 +1684,136 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get storageErrorRetry => 'Réessayer';
+
+  @override
+  String get reminderPermissionDenied =>
+      'Les notifications sont désactivées, donc aucun rappel ne sera planifié. Vous pouvez quand même enregistrer. Activez-les dans les réglages des notifications lorsque vous voulez des rappels.';
+
+  @override
+  String get reminderStatusScheduled =>
+      'Un rappel local est planifié sur cet appareil. La remise n’est pas garantie à 9:00 précises.';
+
+  @override
+  String get reminderStatusPermissionOff =>
+      'Ces choix sont enregistrés. Les notifications ne sont pas autorisées, donc aucun rappel n’est planifié.';
+
+  @override
+  String get reminderStatusPast =>
+      'Ces choix sont enregistrés. Aucun rappel n’est planifié, car chaque heure sélectionnée est déjà passée.';
+
+  @override
+  String get reminderStatusLimited =>
+      'Ces choix sont enregistrés. Aucun rappel n’est planifié pour cet enregistrement, car cet appareil ne conserve qu’un nombre limité de rappels locaux en attente.';
+
+  @override
+  String get reminderStatusCancelled =>
+      'Ces choix sont enregistrés. Aucun rappel n’est planifié tant que cet abonnement est marqué comme annulé.';
+
+  @override
+  String get reminderStatusUnavailable =>
+      'Ces choix sont enregistrés. Les rappels locaux ne peuvent pas être planifiés sur cet appareil pour le moment.';
+
+  @override
+  String notificationsScheduledCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rappels locaux sont planifiés sur cet appareil.',
+      one: '1 rappel local est planifié sur cet appareil.',
+      zero: 'Aucun rappel local n’est planifié sur cet appareil.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsPermissionOff =>
+      'Les notifications sont désactivées. Les choix de rappel restent enregistrés avec chaque dossier, et rien n’est planifié tant que vous ne les activez pas dans les réglages du système.';
+
+  @override
+  String get notificationsLimits =>
+      'Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Registry demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Registry. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Registry en planifie au plus 64, les plus proches d’abord.';
+
+  @override
+  String notificationsOmittedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count rappels enregistrés n’ont pas été planifiés à cause de cette limite.',
+      one: '1 rappel enregistré n’a pas été planifié à cause de cette limite.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsAllow => 'Autoriser les notifications';
+
+  @override
+  String get notificationsOpenSettings => 'Réglages des notifications';
+
+  @override
+  String get notificationsUnavailable =>
+      'Cet appareil ne peut pas planifier de rappels locaux pour le moment. Les choix enregistrés ne sont pas modifiés.';
+
+  @override
+  String get notificationChannelName => 'Rappels Registry';
+
+  @override
+  String get notificationChannelDescription =>
+      'Rappels locaux pour les dates de documents et les paiements d’abonnements. L’heure de remise n’est pas exacte.';
+
+  @override
+  String get notificationTitle => 'Rappel Registry';
+
+  @override
+  String get reminderDocumentActionToday =>
+      'La date d’action d’un document est aujourd’hui.';
+
+  @override
+  String reminderDocumentActionIn7(String date) {
+    return 'La date d’action d’un document est dans 7 jours, le $date.';
+  }
+
+  @override
+  String reminderDocumentActionIn30(String date) {
+    return 'La date d’action d’un document est dans 30 jours, le $date.';
+  }
+
+  @override
+  String get reminderDocumentExpiryToday =>
+      'La date d’expiration d’un document est aujourd’hui.';
+
+  @override
+  String reminderDocumentExpiryIn7(String date) {
+    return 'Un document expire dans 7 jours, le $date.';
+  }
+
+  @override
+  String reminderDocumentExpiryIn30(String date) {
+    return 'Un document expire dans 30 jours, le $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn7(String date) {
+    return 'Une décision d’abonnement est due dans 7 jours, le $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn1(String date) {
+    return 'Une décision d’abonnement est due demain, le $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn7(String date) {
+    return 'Un paiement d’abonnement est dans 7 jours, le $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn1(String date) {
+    return 'Un paiement d’abonnement est demain, le $date.';
+  }
+
+  @override
+  String get reminderSubscriptionChargeToday =>
+      'La date de paiement d’un abonnement est aujourd’hui.';
 }

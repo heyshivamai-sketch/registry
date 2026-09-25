@@ -15,6 +15,7 @@ import 'package:the_registry/features/documents/presentation/record_renewal_shee
 import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
 import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
+import 'package:the_registry/features/reminders/presentation/reminder_status_line.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class DocumentDetailScreen extends StatelessWidget {
@@ -231,7 +232,7 @@ class _DocumentDetailBody extends StatelessWidget {
                           style: theme.textTheme.bodyMedium,
                         ),
                       )
-                    else
+                    else ...[
                       RegistryInfoRow(
                         label: l10n.remindMePrefix,
                         value: document.reminders
@@ -241,6 +242,17 @@ class _DocumentDetailBody extends StatelessWidget {
                             )
                             .join(', '),
                       ),
+                      ListenableBuilder(
+                        listenable: RegistryDependencies.of(context).reminders,
+                        builder: (context, _) {
+                          return ReminderStatusLine(
+                            status: RegistryDependencies.of(
+                              context,
+                            ).reminders.statusForDocument(document),
+                          );
+                        },
+                      ),
+                    ],
                   ],
                 ),
               ),

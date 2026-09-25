@@ -265,7 +265,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsPlaceholderMessage.
   ///
   /// In en, this message translates to:
-  /// **'Reminders are not scheduled in this version. This screen is a placeholder.'**
+  /// **'Reminders stay on this device. There is no server or cloud messaging.'**
   String get notificationsPlaceholderMessage;
 
   /// No description provided for @searchPlaceholder.
@@ -943,7 +943,7 @@ abstract class AppLocalizations {
   /// No description provided for @remindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'These options are saved with the document. Notifications are not scheduled yet.'**
+  /// **'Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
   String get remindersHelper;
 
   /// No description provided for @reminderOnActionDate.
@@ -2545,7 +2545,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionRemindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'These options are saved with the plan. Notifications are not scheduled.'**
+  /// **'Saved with this plan. Seven and one day before follow the decide-by date, or the payment date when decide-by is empty. Charge day follows the payment date. Each one is requested for 9:00 in your time zone only while that time is still ahead. The system may deliver it later. You can save if notifications are off.'**
   String get subscriptionRemindersHelper;
 
   /// No description provided for @subscriptionReminder7Days.
@@ -3021,6 +3021,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get storageErrorRetry;
+
+  /// No description provided for @reminderPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off, so no reminder will be scheduled. You can still save. Turn them on from Notification settings when you want reminders.'**
+  String get reminderPermissionDenied;
+
+  /// No description provided for @reminderStatusScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'A local reminder is scheduled on this device. Delivery is not guaranteed at exactly 9:00.'**
+  String get reminderStatusScheduled;
+
+  /// No description provided for @reminderStatusPermissionOff.
+  ///
+  /// In en, this message translates to:
+  /// **'These choices are saved. Notifications are not allowed, so no reminder is scheduled.'**
+  String get reminderStatusPermissionOff;
+
+  /// No description provided for @reminderStatusPast.
+  ///
+  /// In en, this message translates to:
+  /// **'These choices are saved. No reminder is scheduled because each selected time has already passed.'**
+  String get reminderStatusPast;
+
+  /// No description provided for @reminderStatusLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'These choices are saved. No reminder is scheduled for this record because this device only keeps a limited number of pending local reminders.'**
+  String get reminderStatusLimited;
+
+  /// No description provided for @reminderStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'These choices are saved. No reminder is scheduled while this plan is marked cancelled.'**
+  String get reminderStatusCancelled;
+
+  /// No description provided for @reminderStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'These choices are saved. Local reminders cannot be scheduled on this device right now.'**
+  String get reminderStatusUnavailable;
+
+  /// No description provided for @notificationsScheduledCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No local reminders are scheduled on this device.} one{1 local reminder is scheduled on this device.} other{{count} local reminders are scheduled on this device.}}'**
+  String notificationsScheduledCount(int count);
+
+  /// No description provided for @notificationsPermissionOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.'**
+  String get notificationsPermissionOff;
+
+  /// No description provided for @notificationsLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.'**
+  String get notificationsLimits;
+
+  /// No description provided for @notificationsOmittedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 saved reminder was not scheduled because of that pending limit.} other{{count} saved reminders were not scheduled because of that pending limit.}}'**
+  String notificationsOmittedCount(int count);
+
+  /// No description provided for @notificationsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get notificationsAllow;
+
+  /// No description provided for @notificationsOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification settings'**
+  String get notificationsOpenSettings;
+
+  /// No description provided for @notificationsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device cannot schedule local reminders right now. Saved reminder choices are unchanged.'**
+  String get notificationsUnavailable;
+
+  /// No description provided for @notificationChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry reminders'**
+  String get notificationChannelName;
+
+  /// No description provided for @notificationChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Local reminders for document dates and subscription payments. Delivery time is not exact.'**
+  String get notificationChannelDescription;
+
+  /// No description provided for @notificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry reminder'**
+  String get notificationTitle;
+
+  /// No description provided for @reminderDocumentActionToday.
+  ///
+  /// In en, this message translates to:
+  /// **'A document action date is today.'**
+  String get reminderDocumentActionToday;
+
+  /// No description provided for @reminderDocumentActionIn7.
+  ///
+  /// In en, this message translates to:
+  /// **'A document action date is in 7 days, on {date}.'**
+  String reminderDocumentActionIn7(String date);
+
+  /// No description provided for @reminderDocumentActionIn30.
+  ///
+  /// In en, this message translates to:
+  /// **'A document action date is in 30 days, on {date}.'**
+  String reminderDocumentActionIn30(String date);
+
+  /// No description provided for @reminderDocumentExpiryToday.
+  ///
+  /// In en, this message translates to:
+  /// **'A document expiry date is today.'**
+  String get reminderDocumentExpiryToday;
+
+  /// No description provided for @reminderDocumentExpiryIn7.
+  ///
+  /// In en, this message translates to:
+  /// **'A document expires in 7 days, on {date}.'**
+  String reminderDocumentExpiryIn7(String date);
+
+  /// No description provided for @reminderDocumentExpiryIn30.
+  ///
+  /// In en, this message translates to:
+  /// **'A document expires in 30 days, on {date}.'**
+  String reminderDocumentExpiryIn30(String date);
+
+  /// No description provided for @reminderSubscriptionDecideIn7.
+  ///
+  /// In en, this message translates to:
+  /// **'A subscription decision is due in 7 days, on {date}.'**
+  String reminderSubscriptionDecideIn7(String date);
+
+  /// No description provided for @reminderSubscriptionDecideIn1.
+  ///
+  /// In en, this message translates to:
+  /// **'A subscription decision is due tomorrow, on {date}.'**
+  String reminderSubscriptionDecideIn1(String date);
+
+  /// No description provided for @reminderSubscriptionPaymentIn7.
+  ///
+  /// In en, this message translates to:
+  /// **'A subscription payment is in 7 days, on {date}.'**
+  String reminderSubscriptionPaymentIn7(String date);
+
+  /// No description provided for @reminderSubscriptionPaymentIn1.
+  ///
+  /// In en, this message translates to:
+  /// **'A subscription payment is tomorrow, on {date}.'**
+  String reminderSubscriptionPaymentIn1(String date);
+
+  /// No description provided for @reminderSubscriptionChargeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'A subscription payment date is today.'**
+  String get reminderSubscriptionChargeToday;
 }
 
 class _AppLocalizationsDelegate

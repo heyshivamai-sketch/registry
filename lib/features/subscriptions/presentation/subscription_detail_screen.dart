@@ -11,6 +11,7 @@ import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
+import 'package:the_registry/features/reminders/presentation/reminder_status_line.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -224,7 +225,7 @@ class _SubscriptionDetailBody extends StatelessWidget {
                           style: theme.textTheme.bodyMedium,
                         ),
                       )
-                    else
+                    else ...[
                       RegistryInfoRow(
                         label: l10n.remindMePrefix,
                         value: [
@@ -233,6 +234,17 @@ class _SubscriptionDetailBody extends StatelessWidget {
                               SubscriptionCopy.reminder(l10n, reminder),
                         ].join(', '),
                       ),
+                      ListenableBuilder(
+                        listenable: RegistryDependencies.of(context).reminders,
+                        builder: (context, _) {
+                          return ReminderStatusLine(
+                            status: RegistryDependencies.of(
+                              context,
+                            ).reminders.statusForSubscription(subscription),
+                          );
+                        },
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       l10n.subscriptionRemindersHelper,

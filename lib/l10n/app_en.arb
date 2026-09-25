@@ -36,7 +36,7 @@
   "homeTitle": "Your Registry",
   "notificationsButton": "Notifications",
   "notificationsTitle": "Notifications",
-  "notificationsPlaceholderMessage": "Reminders are not scheduled in this version. This screen is a placeholder.",
+  "notificationsPlaceholderMessage": "Reminders stay on this device. There is no server or cloud messaging.",
   "searchPlaceholder": "Search your registry",
   "searchClear": "Clear search",
   "filterTooltip": "Filter",
@@ -204,7 +204,7 @@
   "fieldExpectedChanges": "Expected changes at renewal",
   "fieldNotes": "Notes",
   "sectionReminders": "Reminder preference",
-  "remindersHelper": "These options are saved with the document. Notifications are not scheduled yet.",
+  "remindersHelper": "Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.",
   "reminderOnActionDate": "On action date",
   "reminder7Days": "7 days before",
   "reminder30Days": "30 days before",
@@ -527,7 +527,7 @@
   "autoRenewHelper": "A preference you track in this app. It does not change the provider.",
   "autoRenewOn": "On",
   "autoRenewOff": "Off",
-  "subscriptionRemindersHelper": "These options are saved with the plan. Notifications are not scheduled.",
+  "subscriptionRemindersHelper": "Saved with this plan. Seven and one day before follow the decide-by date, or the payment date when decide-by is empty. Charge day follows the payment date. Each one is requested for 9:00 in your time zone only while that time is still ahead. The system may deliver it later. You can save if notifications are off.",
   "subscriptionReminder7Days": "7 days before",
   "subscriptionReminder1Day": "1 day before",
   "subscriptionReminderOnCharge": "On charge day",
@@ -667,5 +667,83 @@
   "storageLoadingLabel": "Loading saved records",
   "storageErrorTitle": "Saved records could not be opened",
   "storageErrorMessage": "Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.",
-  "storageErrorRetry": "Try again"
+  "storageErrorRetry": "Try again",
+  "reminderPermissionDenied": "Notifications are off, so no reminder will be scheduled. You can still save. Turn them on from Notification settings when you want reminders.",
+  "reminderStatusScheduled": "A local reminder is scheduled on this device. Delivery is not guaranteed at exactly 9:00.",
+  "reminderStatusPermissionOff": "These choices are saved. Notifications are not allowed, so no reminder is scheduled.",
+  "reminderStatusPast": "These choices are saved. No reminder is scheduled because each selected time has already passed.",
+  "reminderStatusLimited": "These choices are saved. No reminder is scheduled for this record because this device only keeps a limited number of pending local reminders.",
+  "reminderStatusCancelled": "These choices are saved. No reminder is scheduled while this plan is marked cancelled.",
+  "reminderStatusUnavailable": "These choices are saved. Local reminders cannot be scheduled on this device right now.",
+  "notificationsScheduledCount": "{count, plural, =0{No local reminders are scheduled on this device.} one{1 local reminder is scheduled on this device.} other{{count} local reminders are scheduled on this device.}}",
+  "@notificationsScheduledCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationsPermissionOff": "Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.",
+  "notificationsLimits": "Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.",
+  "notificationsOmittedCount": "{count, plural, one{1 saved reminder was not scheduled because of that pending limit.} other{{count} saved reminders were not scheduled because of that pending limit.}}",
+  "@notificationsOmittedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationsAllow": "Allow notifications",
+  "notificationsOpenSettings": "Notification settings",
+  "notificationsUnavailable": "This device cannot schedule local reminders right now. Saved reminder choices are unchanged.",
+  "notificationChannelName": "Registry reminders",
+  "notificationChannelDescription": "Local reminders for document dates and subscription payments. Delivery time is not exact.",
+  "notificationTitle": "Registry reminder",
+  "reminderDocumentActionToday": "A document action date is today.",
+  "reminderDocumentActionIn7": "A document action date is in 7 days, on {date}.",
+  "@reminderDocumentActionIn7": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderDocumentActionIn30": "A document action date is in 30 days, on {date}.",
+  "@reminderDocumentActionIn30": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderDocumentExpiryToday": "A document expiry date is today.",
+  "reminderDocumentExpiryIn7": "A document expires in 7 days, on {date}.",
+  "@reminderDocumentExpiryIn7": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderDocumentExpiryIn30": "A document expires in 30 days, on {date}.",
+  "@reminderDocumentExpiryIn30": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderSubscriptionDecideIn7": "A subscription decision is due in 7 days, on {date}.",
+  "@reminderSubscriptionDecideIn7": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderSubscriptionDecideIn1": "A subscription decision is due tomorrow, on {date}.",
+  "@reminderSubscriptionDecideIn1": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderSubscriptionPaymentIn7": "A subscription payment is in 7 days, on {date}.",
+  "@reminderSubscriptionPaymentIn7": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderSubscriptionPaymentIn1": "A subscription payment is tomorrow, on {date}.",
+  "@reminderSubscriptionPaymentIn1": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "reminderSubscriptionChargeToday": "A subscription payment date is today."
 }

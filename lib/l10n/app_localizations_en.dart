@@ -95,7 +95,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsPlaceholderMessage =>
-      'Reminders are not scheduled in this version. This screen is a placeholder.';
+      'Reminders stay on this device. There is no server or cloud messaging.';
 
   @override
   String get searchPlaceholder => 'Search your registry';
@@ -494,7 +494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'These options are saved with the document. Notifications are not scheduled yet.';
+      'Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.';
 
   @override
   String get reminderOnActionDate => 'On action date';
@@ -1384,7 +1384,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionRemindersHelper =>
-      'These options are saved with the plan. Notifications are not scheduled.';
+      'Saved with this plan. Seven and one day before follow the decide-by date, or the payment date when decide-by is empty. Charge day follows the payment date. Each one is requested for 9:00 in your time zone only while that time is still ahead. The system may deliver it later. You can save if notifications are off.';
 
   @override
   String get subscriptionReminder7Days => '7 days before';
@@ -1663,4 +1663,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storageErrorRetry => 'Try again';
+
+  @override
+  String get reminderPermissionDenied =>
+      'Notifications are off, so no reminder will be scheduled. You can still save. Turn them on from Notification settings when you want reminders.';
+
+  @override
+  String get reminderStatusScheduled =>
+      'A local reminder is scheduled on this device. Delivery is not guaranteed at exactly 9:00.';
+
+  @override
+  String get reminderStatusPermissionOff =>
+      'These choices are saved. Notifications are not allowed, so no reminder is scheduled.';
+
+  @override
+  String get reminderStatusPast =>
+      'These choices are saved. No reminder is scheduled because each selected time has already passed.';
+
+  @override
+  String get reminderStatusLimited =>
+      'These choices are saved. No reminder is scheduled for this record because this device only keeps a limited number of pending local reminders.';
+
+  @override
+  String get reminderStatusCancelled =>
+      'These choices are saved. No reminder is scheduled while this plan is marked cancelled.';
+
+  @override
+  String get reminderStatusUnavailable =>
+      'These choices are saved. Local reminders cannot be scheduled on this device right now.';
+
+  @override
+  String notificationsScheduledCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count local reminders are scheduled on this device.',
+      one: '1 local reminder is scheduled on this device.',
+      zero: 'No local reminders are scheduled on this device.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsPermissionOff =>
+      'Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.';
+
+  @override
+  String get notificationsLimits =>
+      'Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.';
+
+  @override
+  String notificationsOmittedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count saved reminders were not scheduled because of that pending limit.',
+      one: '1 saved reminder was not scheduled because of that pending limit.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsAllow => 'Allow notifications';
+
+  @override
+  String get notificationsOpenSettings => 'Notification settings';
+
+  @override
+  String get notificationsUnavailable =>
+      'This device cannot schedule local reminders right now. Saved reminder choices are unchanged.';
+
+  @override
+  String get notificationChannelName => 'Registry reminders';
+
+  @override
+  String get notificationChannelDescription =>
+      'Local reminders for document dates and subscription payments. Delivery time is not exact.';
+
+  @override
+  String get notificationTitle => 'Registry reminder';
+
+  @override
+  String get reminderDocumentActionToday => 'A document action date is today.';
+
+  @override
+  String reminderDocumentActionIn7(String date) {
+    return 'A document action date is in 7 days, on $date.';
+  }
+
+  @override
+  String reminderDocumentActionIn30(String date) {
+    return 'A document action date is in 30 days, on $date.';
+  }
+
+  @override
+  String get reminderDocumentExpiryToday => 'A document expiry date is today.';
+
+  @override
+  String reminderDocumentExpiryIn7(String date) {
+    return 'A document expires in 7 days, on $date.';
+  }
+
+  @override
+  String reminderDocumentExpiryIn30(String date) {
+    return 'A document expires in 30 days, on $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn7(String date) {
+    return 'A subscription decision is due in 7 days, on $date.';
+  }
+
+  @override
+  String reminderSubscriptionDecideIn1(String date) {
+    return 'A subscription decision is due tomorrow, on $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn7(String date) {
+    return 'A subscription payment is in 7 days, on $date.';
+  }
+
+  @override
+  String reminderSubscriptionPaymentIn1(String date) {
+    return 'A subscription payment is tomorrow, on $date.';
+  }
+
+  @override
+  String get reminderSubscriptionChargeToday =>
+      'A subscription payment date is today.';
 }

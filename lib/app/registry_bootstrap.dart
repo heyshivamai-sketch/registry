@@ -5,6 +5,8 @@ import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/persistence/registry_store.dart';
+import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
+import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/data/shared_preferences_onboarding_repository.dart';
@@ -22,6 +24,8 @@ class RegistryBootstrap extends StatefulWidget {
     this.onboardingRepository,
     this.locale,
     this.resetOnboarding = false,
+    this.reminderScheduler,
+    this.timeZoneSource,
   });
 
   final Future<RegistryStore> Function()? openStore;
@@ -31,6 +35,8 @@ class RegistryBootstrap extends StatefulWidget {
   final OnboardingRepository? onboardingRepository;
   final Locale? locale;
   final bool resetOnboarding;
+  final LocalReminderScheduler? reminderScheduler;
+  final TimeZoneSource? timeZoneSource;
 
   @override
   State<RegistryBootstrap> createState() => _RegistryBootstrapState();
@@ -40,6 +46,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
   _StartupPhase _phase = _StartupPhase.loading;
   RegistryStore? _store;
   OnboardingRepository? _onboarding;
+  NotificationPromptStore? _notificationPrompts;
   int _generation = 0;
 
   @override
@@ -57,11 +64,13 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
     try {
       store = await opener();
       final OnboardingRepository onboarding;
+      NotificationPromptStore? prompts;
       final injected = widget.onboardingRepository;
       if (injected != null) {
         onboarding = injected;
       } else {
         final preferences = await loadPreferences();
+        prompts = PreferencesNotificationPromptStore(preferences);
         final stored = SharedPreferencesOnboardingRepository(preferences);
         if (widget.resetOnboarding) {
           await stored.reset();
@@ -75,6 +84,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
       setState(() {
         _store = store;
         _onboarding = onboarding;
+        _notificationPrompts = prompts;
         _phase = _StartupPhase.ready;
       });
     } catch (_) {
@@ -105,6 +115,9 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         documentRepository: store.documents,
         subscriptionRepository: store.subscriptions,
         locale: widget.locale,
+        reminderScheduler: widget.reminderScheduler,
+        timeZoneSource: widget.timeZoneSource,
+        notificationPromptStore: _notificationPrompts,
       );
     }
 

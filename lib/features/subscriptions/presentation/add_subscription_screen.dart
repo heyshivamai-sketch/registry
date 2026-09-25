@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
@@ -20,6 +22,7 @@ import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_controller.dart';
+import 'package:the_registry/features/reminders/presentation/reminder_permission_note.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -191,10 +194,21 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
     return true;
   }
 
+  void _toggleReminder(SubscriptionReminder reminder) {
+    final enabling = !_controller.reminders.contains(reminder);
+    _controller.toggleReminder(reminder);
+    if (enabling) {
+      unawaited(RegistryDependencies.of(context).reminders.requestPermission());
+    }
+  }
+
   Future<void> _save() async {
     _flushEditors();
     final l10n = AppLocalizations.of(context);
     final deps = RegistryDependencies.of(context);
+    if (_controller.reminders.isNotEmpty) {
+      await deps.reminders.requestPermission();
+    }
     final saved = await _controller.submit(
       l10n: l10n,
       save: deps.subscriptions.save,
@@ -344,6 +358,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
         controller: _controller,
         notes: _notes,
         onPickDate: _pickDate,
+        onToggleReminder: _toggleReminder,
       ),
       AddSubscriptionStep.review => _ReviewStep(
         controller: _controller,
@@ -703,11 +718,13 @@ class _PreferencesStep extends StatelessWidget {
     required this.controller,
     required this.notes,
     required this.onPickDate,
+    required this.onToggleReminder,
   });
 
   final AddSubscriptionController controller;
   final TextEditingController notes;
   final ValueChanged<String> onPickDate;
+  final ValueChanged<SubscriptionReminder> onToggleReminder;
 
   @override
   Widget build(BuildContext context) {
@@ -792,10 +809,11 @@ class _PreferencesStep extends StatelessWidget {
                 key: ValueKey<String>('sub-reminder-${reminder.name}'),
                 label: SubscriptionCopy.reminder(l10n, reminder),
                 selected: controller.reminders.contains(reminder),
-                onSelected: (_) => controller.toggleReminder(reminder),
+                onSelected: (_) => onToggleReminder(reminder),
               ),
           ],
         ),
+        ReminderPermissionNote(visible: controller.reminders.isNotEmpty),
         const SizedBox(height: AppSpacing.md),
         RegistryTextField(
           label: l10n.fieldNotes,
@@ -915,6 +933,7 @@ class _ReviewStep extends StatelessWidget {
             ],
           ),
         ),
+        ReminderPermissionNote(visible: controller.reminders.isNotEmpty),
         const SizedBox(height: AppSpacing.sm),
         Wrap(
           spacing: AppSpacing.xs,
