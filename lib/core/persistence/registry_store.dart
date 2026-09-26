@@ -6,7 +6,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:the_registry/core/persistence/document_attachment_store.dart';
 import 'package:the_registry/core/persistence/registry_database.dart';
 import 'package:the_registry/features/documents/data/sqlite_document_repository.dart';
+import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/subscriptions/data/sqlite_subscription_repository.dart';
+import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 
 /// Opens the on-device database and returns repositories that are already loaded.
 ///
@@ -54,13 +56,81 @@ class RegistryStore {
     }
   }
 
+  /// Replaces documents and subscriptions in one database transaction.
+  ///
+  /// New attachment files are written and flushed before that transaction.
+  /// If staging, cancellation, or the transaction fails, those new files are
+  /// deleted and the previous rows stay in place. There is no merge.
+  ///
+  /// A process kill after the transaction commits and before old attachment
+  /// files are deleted leaves the restored registry in place. The next open
+  /// drops attachment files that no row references. A kill after the new
+  /// files are written and before the transaction commits leaves the previous
+  /// registry; the next open drops the unreferenced new files. SQLite rolls
+  /// back a kill during the transaction. The database file and the attachment
+  /// directory cannot be committed as one filesystem operation.
+  Future<void> replaceAll({
+    required List<RegistryDocument> documents,
+    required List<RegistrySubscription> subscriptions,
+    bool Function()? isCancelled,
+    Future<void> Function()? beforeCommit,
+  }) async {
+    if (isCancelled?.call() ?? false) {
+      throw const RegistryReplaceCancelled();
+    }
+    final previousFiles = {...this.documents.attachmentFileNames};
+    final staged = await this.documents.stageReplacementAttachments(documents);
+    try {
+      if (isCancelled?.call() ?? false) {
+        throw const RegistryReplaceCancelled();
+      }
+      await _database.transaction((txn) async {
+        if (beforeCommit != null) {
+          await beforeCommit();
+        }
+        if (isCancelled?.call() ?? false) {
+          throw const RegistryReplaceCancelled();
+        }
+        await this.documents.insertReplacement(txn, documents, staged);
+        await this.subscriptions.insertReplacement(txn, subscriptions);
+      });
+    } catch (error) {
+      await this.documents.discardStagedAttachments(staged);
+      rethrow;
+    }
+    this.documents.adoptReplacement(documents, staged, notify: false);
+    this.subscriptions.adoptReplacement(subscriptions, notify: false);
+    this.documents.notifyReplacement();
+    this.subscriptions.notifyReplacement();
+    final kept = staged.whereType<String>().toSet();
+    await this.documents.deleteAttachmentNames(previousFiles.difference(kept));
+  }
+
   Future<void> close() => _database.close();
+}
+
+/// Thrown when a replacement stops before the database transaction commits.
+class RegistryReplaceCancelled implements Exception {
+  const RegistryReplaceCancelled();
 }
 
 Future<RegistryStore> openDefaultRegistryStore() async {
   final root = await getApplicationDocumentsDirectory();
-  return RegistryStore.open(
-    databasePath: p.join(root.path, 'registry.db'),
-    attachmentsDirectory: Directory(p.join(root.path, 'registry_attachments')),
+  final storeId = _safeStoreId(
+    const String.fromEnvironment('REGISTRY_STORE_ID'),
   );
+  final suffix = storeId.isEmpty ? '' : '_$storeId';
+  return RegistryStore.open(
+    databasePath: p.join(root.path, 'registry$suffix.db'),
+    attachmentsDirectory: Directory(
+      p.join(root.path, 'registry_attachments$suffix'),
+    ),
+  );
+}
+
+String _safeStoreId(String value) {
+  if (RegExp(r'^[A-Za-z0-9_-]{1,32}$').hasMatch(value)) {
+    return value;
+  }
+  return '';
 }

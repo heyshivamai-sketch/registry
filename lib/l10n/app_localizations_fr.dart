@@ -1816,4 +1816,160 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get reminderSubscriptionChargeToday =>
       'La date de paiement d’un abonnement est aujourd’hui.';
+
+  @override
+  String get backupSectionTitle => 'Sauvegarde et restauration';
+
+  @override
+  String get backupSectionBody =>
+      'Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Registry ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.';
+
+  @override
+  String get backupExportAction => 'Exporter une sauvegarde';
+
+  @override
+  String get backupImportAction => 'Importer une sauvegarde';
+
+  @override
+  String get backupExportTitle => 'Exporter une sauvegarde';
+
+  @override
+  String get backupIncluded =>
+      'Le fichier comprend les documents, les abonnements, les champs personnalisés, l’historique des renouvellements, les choix de rappel, les dates, les montants et les images des documents.';
+
+  @override
+  String get backupPasswordWarning =>
+      'Choisissez un mot de passe pour ce fichier. Si vous le perdez, cette sauvegarde ne pourra pas être restaurée. Registry n’enregistre pas le mot de passe.';
+
+  @override
+  String get backupPasswordLabel => 'Mot de passe de la sauvegarde';
+
+  @override
+  String get backupConfirmPasswordLabel => 'Confirmer le mot de passe';
+
+  @override
+  String get backupPasswordTooShort => 'Utilisez au moins 8 caractères.';
+
+  @override
+  String get backupPasswordMismatch =>
+      'Ces mots de passe ne correspondent pas.';
+
+  @override
+  String get backupShowPassword => 'Afficher le mot de passe';
+
+  @override
+  String get backupHidePassword => 'Masquer le mot de passe';
+
+  @override
+  String get backupChooseSave => 'Choisir où enregistrer';
+
+  @override
+  String get backupImportTitle => 'Importer une sauvegarde';
+
+  @override
+  String get backupImportIntro =>
+      'Choisissez un fichier de sauvegarde Registry et saisissez son mot de passe. L’importation remplace chaque document et chaque abonnement de cet appareil.';
+
+  @override
+  String get backupChooseFile => 'Choisir un fichier de sauvegarde';
+
+  @override
+  String get backupSelectedFile => 'Fichier de sauvegarde sélectionné';
+
+  @override
+  String get backupNoFile => 'Choisissez d’abord un fichier de sauvegarde.';
+
+  @override
+  String get backupCheckAction => 'Vérifier la sauvegarde';
+
+  @override
+  String backupPreview(int documents, int subscriptions, int attachments) {
+    return 'Cette sauvegarde contient $documents documents, $subscriptions abonnements et $attachments images. Remplacer le registre de cet appareil retire les enregistrements stockés ici et met cette sauvegarde à leur place. Les enregistrements ne sont pas fusionnés.';
+  }
+
+  @override
+  String get backupReplaceAction => 'Remplacer le registre de cet appareil';
+
+  @override
+  String get backupReplaceTitle => 'Remplacer le registre de cet appareil ?';
+
+  @override
+  String get backupReplaceBody =>
+      'Les documents, les abonnements et les images de cet appareil seront remplacés par cette sauvegarde.';
+
+  @override
+  String get backupCancel => 'Annuler';
+
+  @override
+  String get backupPhaseProtecting => 'Protection de la sauvegarde…';
+
+  @override
+  String get backupPhaseWriting => 'Enregistrement du fichier de sauvegarde…';
+
+  @override
+  String get backupPhaseChecking => 'Vérification de la sauvegarde…';
+
+  @override
+  String get backupPhaseRestoring =>
+      'Remplacement du registre de cet appareil…';
+
+  @override
+  String get backupExportSaved => 'Sauvegarde enregistrée.';
+
+  @override
+  String get backupExportCancelled =>
+      'Exportation annulée. Aucun fichier de sauvegarde n’a été enregistré.';
+
+  @override
+  String get backupExportNotSaved =>
+      'Le fichier de sauvegarde n’a pas été enregistré. La destination n’a pas pu être écrite.';
+
+  @override
+  String get backupExportStorage =>
+      'Il n’y a pas assez d’espace libre pour enregistrer cette sauvegarde. Aucun fichier n’a été enregistré.';
+
+  @override
+  String get backupExportTooLarge =>
+      'Ce registre est trop volumineux pour une seule sauvegarde. Aucun fichier n’a été enregistré.';
+
+  @override
+  String get backupExportFailed =>
+      'La sauvegarde n’a pas pu être créée. Aucun fichier n’a été enregistré.';
+
+  @override
+  String get backupImportReplaced =>
+      'Le registre de cet appareil a été remplacé à partir de la sauvegarde.';
+
+  @override
+  String get backupImportCancelled => 'Importation annulée.';
+
+  @override
+  String get backupWrongPassword =>
+      'Ce mot de passe n’ouvre pas cette sauvegarde.';
+
+  @override
+  String get backupUnsupportedVersion =>
+      'Cette sauvegarde a été créée par une version plus récente de Registry.';
+
+  @override
+  String get backupInvalidFile =>
+      'Ce fichier n’est pas une sauvegarde Registry valide.';
+
+  @override
+  String get backupTampered =>
+      'Ce fichier de sauvegarde est endommagé ou a été modifié.';
+
+  @override
+  String get backupImportTooLarge =>
+      'Cette sauvegarde est trop volumineuse pour être restaurée.';
+
+  @override
+  String get backupImportStorage =>
+      'Il n’y a pas assez d’espace libre pour restaurer cette sauvegarde.';
+
+  @override
+  String get backupImportFailed => 'La restauration ne s’est pas terminée.';
+
+  @override
+  String get backupImportUnchanged => 'Rien n’a été modifié sur cet appareil.';
 }

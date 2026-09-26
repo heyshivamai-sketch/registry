@@ -1793,4 +1793,155 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reminderSubscriptionChargeToday =>
       'A subscription payment date is today.';
+
+  @override
+  String get backupSectionTitle => 'Backup & restore';
+
+  @override
+  String get backupSectionBody =>
+      'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Registry does not store that password, and this does not encrypt the registry database already on this device.';
+
+  @override
+  String get backupExportAction => 'Export backup';
+
+  @override
+  String get backupImportAction => 'Import backup';
+
+  @override
+  String get backupExportTitle => 'Export backup';
+
+  @override
+  String get backupIncluded =>
+      'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.';
+
+  @override
+  String get backupPasswordWarning =>
+      'Choose a password for this file. If you lose it, this backup cannot be restored. Registry does not save the password.';
+
+  @override
+  String get backupPasswordLabel => 'Backup password';
+
+  @override
+  String get backupConfirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get backupPasswordTooShort => 'Use at least 8 characters.';
+
+  @override
+  String get backupPasswordMismatch => 'Those passwords do not match.';
+
+  @override
+  String get backupShowPassword => 'Show password';
+
+  @override
+  String get backupHidePassword => 'Hide password';
+
+  @override
+  String get backupChooseSave => 'Choose where to save';
+
+  @override
+  String get backupImportTitle => 'Import backup';
+
+  @override
+  String get backupImportIntro =>
+      'Choose a Registry backup file and enter its password. Importing replaces every document and subscription on this device.';
+
+  @override
+  String get backupChooseFile => 'Choose backup file';
+
+  @override
+  String get backupSelectedFile => 'Backup file selected';
+
+  @override
+  String get backupNoFile => 'Choose a backup file first.';
+
+  @override
+  String get backupCheckAction => 'Check backup';
+
+  @override
+  String backupPreview(int documents, int subscriptions, int attachments) {
+    return 'This backup contains $documents documents, $subscriptions subscriptions, and $attachments images. Replacing this device\'s registry removes the records stored here and puts this backup in their place. Records are not merged.';
+  }
+
+  @override
+  String get backupReplaceAction => 'Replace this device\'s registry';
+
+  @override
+  String get backupReplaceTitle => 'Replace this device\'s registry?';
+
+  @override
+  String get backupReplaceBody =>
+      'Documents, subscriptions, and images on this device will be replaced by this backup.';
+
+  @override
+  String get backupCancel => 'Cancel';
+
+  @override
+  String get backupPhaseProtecting => 'Protecting the backup…';
+
+  @override
+  String get backupPhaseWriting => 'Saving the backup file…';
+
+  @override
+  String get backupPhaseChecking => 'Checking the backup…';
+
+  @override
+  String get backupPhaseRestoring => 'Replacing this device\'s registry…';
+
+  @override
+  String get backupExportSaved => 'Backup saved.';
+
+  @override
+  String get backupExportCancelled =>
+      'Export cancelled. No backup file was saved.';
+
+  @override
+  String get backupExportNotSaved =>
+      'The backup file was not saved. The destination could not be written.';
+
+  @override
+  String get backupExportStorage =>
+      'There is not enough free space to save this backup. No backup file was saved.';
+
+  @override
+  String get backupExportTooLarge =>
+      'This registry is too large to export in one backup. No backup file was saved.';
+
+  @override
+  String get backupExportFailed =>
+      'The backup could not be created. No backup file was saved.';
+
+  @override
+  String get backupImportReplaced =>
+      'This device\'s registry was replaced from the backup.';
+
+  @override
+  String get backupImportCancelled => 'Import cancelled.';
+
+  @override
+  String get backupWrongPassword => 'That password does not open this backup.';
+
+  @override
+  String get backupUnsupportedVersion =>
+      'This backup was made by a newer version of Registry.';
+
+  @override
+  String get backupInvalidFile => 'This file is not a valid Registry backup.';
+
+  @override
+  String get backupTampered =>
+      'This backup file is damaged or has been changed.';
+
+  @override
+  String get backupImportTooLarge => 'This backup is too large to restore.';
+
+  @override
+  String get backupImportStorage =>
+      'There is not enough free space to restore this backup.';
+
+  @override
+  String get backupImportFailed => 'The restore did not finish.';
+
+  @override
+  String get backupImportUnchanged => 'Nothing on this device was changed.';
 }

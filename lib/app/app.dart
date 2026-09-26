@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -6,6 +7,10 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/time/clock.dart';
+import 'package:the_registry/features/backup/backup_service.dart';
+import 'package:the_registry/features/backup/platform_backup_file_gateway.dart';
+import 'package:the_registry/features/backup/registry_archive.dart';
+import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/reminders/data/memory_reminder_scheduler.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
@@ -16,6 +21,7 @@ import 'package:the_registry/features/documents/domain/document_repository.dart'
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/presentation/onboarding_gate.dart';
+import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -32,6 +38,10 @@ class RegistryApp extends StatefulWidget {
     this.reminderScheduler,
     this.timeZoneSource,
     this.notificationPromptStore,
+    this.backupArchive,
+    this.backupFiles,
+    this.backupService,
+    this.backupTempDirectory,
     this.locale,
   });
 
@@ -45,6 +55,10 @@ class RegistryApp extends StatefulWidget {
   final LocalReminderScheduler? reminderScheduler;
   final TimeZoneSource? timeZoneSource;
   final NotificationPromptStore? notificationPromptStore;
+  final RegistryArchive? backupArchive;
+  final BackupFileGateway? backupFiles;
+  final RegistryBackupService? backupService;
+  final Directory? backupTempDirectory;
 
   /// When null, the device locale is used. Unsupported languages fall back
   /// to English via [localeListResolutionCallback].
@@ -84,6 +98,17 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
   late final DocumentOcrService _ocr =
       widget.documentOcrService ?? createDefaultDocumentOcr();
   late final Clock _clock = widget.clock ?? const Clock();
+  late final RegistryArchive _archive = _createArchive();
+  late final BackupFileGateway _backupFiles =
+      widget.backupFiles ?? const PlatformBackupFileGateway();
+  late final RegistryBackupService _backups =
+      widget.backupService ??
+      RegistryBackupService(
+        archive: _archive,
+        files: _backupFiles,
+        clock: _clock,
+        tempDirectory: widget.backupTempDirectory ?? Directory.systemTemp,
+      );
   late final ReminderCoordinator _reminders = ReminderCoordinator(
     documents: _documents,
     subscriptions: _subscriptions,
@@ -133,6 +158,25 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  RegistryArchive _createArchive() {
+    final provided = widget.backupArchive;
+    if (provided != null) {
+      return provided;
+    }
+    final documents = _documents;
+    final subscriptions = _subscriptions;
+    if (documents is InMemoryDocumentRepository &&
+        subscriptions is InMemorySubscriptionRepository) {
+      return MemoryRegistryArchive(
+        documentsRepository: documents,
+        subscriptionsRepository: subscriptions,
+      );
+    }
+    throw StateError(
+      'A saved registry needs the archive created with its database.',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return RegistryDependencies(
@@ -143,6 +187,8 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       documentOcr: _ocr,
       clock: _clock,
       reminders: _reminders,
+      backups: _backups,
+      backupFiles: _backupFiles,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Registry',
         debugShowCheckedModeBanner: false,

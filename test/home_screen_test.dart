@@ -23,7 +23,7 @@ import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
 import 'package:the_registry/features/home/widgets/home_search_field.dart';
 import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
 import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
-import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
+import 'package:the_registry/features/backup/presentation/profile_screen.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -373,7 +373,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('home-profile')));
     await tester.pumpAndSettle();
-    expect(find.byType(ProfilePlaceholderScreen), findsWidgets);
+    expect(find.byType(ProfileScreen), findsWidgets);
   });
 
   testWidgets('Empty CTAs open real add forms', (tester) async {

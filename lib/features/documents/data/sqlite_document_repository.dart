@@ -167,6 +167,101 @@ class SqliteDocumentRepository extends ChangeNotifier
     return true;
   }
 
+  /// Writes replacement images before the database transaction.
+  ///
+  /// Names are generated inside the private attachment directory. A failure
+  /// deletes any files this call created.
+  Future<List<String?>> stageReplacementAttachments(
+    List<RegistryDocument> documents,
+  ) async {
+    final staged = <String?>[];
+    try {
+      for (final document in documents) {
+        final bytes = document.attachmentBytes;
+        if (bytes == null || bytes.isEmpty) {
+          staged.add(null);
+          continue;
+        }
+        staged.add(
+          await _attachments.writeAtomically(
+            documentId: document.id,
+            bytes: bytes,
+          ),
+        );
+      }
+      return staged;
+    } catch (error) {
+      await discardStagedAttachments(staged);
+      rethrow;
+    }
+  }
+
+  Future<void> discardStagedAttachments(List<String?> names) async {
+    for (final name in names) {
+      await _attachments.deleteIfPresent(name);
+    }
+  }
+
+  Future<void> deleteAttachmentNames(Set<String> names) async {
+    for (final name in names) {
+      try {
+        await _attachments.deleteIfPresent(name);
+      } on IOException {
+        // The restored rows are already committed. The next open drops leftovers.
+      }
+    }
+  }
+
+  Future<void> insertReplacement(
+    DatabaseExecutor txn,
+    List<RegistryDocument> documents,
+    List<String?> fileNames,
+  ) async {
+    await txn.delete('document_fields');
+    await txn.delete('renewal_history');
+    await txn.delete('documents');
+    final count = documents.length;
+    for (var index = 0; index < count; index++) {
+      final document = documents[index];
+      final fileName = fileNames[index];
+      final bytes = document.attachmentBytes;
+      final stored = _StoredAttachment(
+        fileName: fileName,
+        byteLength: fileName == null || bytes == null ? null : bytes.length,
+      );
+      await txn.insert('documents', _row(document, stored, count - index));
+      await _insertChildren(txn, document);
+    }
+  }
+
+  void adoptReplacement(
+    List<RegistryDocument> documents,
+    List<String?> fileNames, {
+    bool notify = true,
+  }) {
+    _documents
+      ..clear()
+      ..addAll(documents);
+    _attachmentNames.clear();
+    _attachmentLengths.clear();
+    for (var index = 0; index < documents.length; index++) {
+      final fileName = fileNames[index];
+      final bytes = documents[index].attachmentBytes;
+      if (fileName == null || bytes == null || bytes.isEmpty) {
+        continue;
+      }
+      _attachmentNames[documents[index].id] = fileName;
+      _attachmentLengths[documents[index].id] = bytes.length;
+    }
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void notifyReplacement() {
+    notifyListeners();
+  }
+
   Future<void> _readAll() async {
     final rows = await _database.query('documents', orderBy: 'sort_rank DESC');
     final fieldRows = await _database.query(

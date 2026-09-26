@@ -3189,6 +3189,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A subscription payment date is today.'**
   String get reminderSubscriptionChargeToday;
+
+  /// No description provided for @backupSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & restore'**
+  String get backupSectionTitle;
+
+  /// No description provided for @backupSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Registry does not store that password, and this does not encrypt the registry database already on this device.'**
+  String get backupSectionBody;
+
+  /// No description provided for @backupExportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export backup'**
+  String get backupExportAction;
+
+  /// No description provided for @backupImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import backup'**
+  String get backupImportAction;
+
+  /// No description provided for @backupExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export backup'**
+  String get backupExportTitle;
+
+  /// No description provided for @backupIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.'**
+  String get backupIncluded;
+
+  /// No description provided for @backupPasswordWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a password for this file. If you lose it, this backup cannot be restored. Registry does not save the password.'**
+  String get backupPasswordWarning;
+
+  /// No description provided for @backupPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password'**
+  String get backupPasswordLabel;
+
+  /// No description provided for @backupConfirmPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get backupConfirmPasswordLabel;
+
+  /// No description provided for @backupPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters.'**
+  String get backupPasswordTooShort;
+
+  /// No description provided for @backupPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Those passwords do not match.'**
+  String get backupPasswordMismatch;
+
+  /// No description provided for @backupShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get backupShowPassword;
+
+  /// No description provided for @backupHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get backupHidePassword;
+
+  /// No description provided for @backupChooseSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose where to save'**
+  String get backupChooseSave;
+
+  /// No description provided for @backupImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import backup'**
+  String get backupImportTitle;
+
+  /// No description provided for @backupImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a Registry backup file and enter its password. Importing replaces every document and subscription on this device.'**
+  String get backupImportIntro;
+
+  /// No description provided for @backupChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose backup file'**
+  String get backupChooseFile;
+
+  /// No description provided for @backupSelectedFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file selected'**
+  String get backupSelectedFile;
+
+  /// No description provided for @backupNoFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a backup file first.'**
+  String get backupNoFile;
+
+  /// No description provided for @backupCheckAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check backup'**
+  String get backupCheckAction;
+
+  /// No description provided for @backupPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup contains {documents} documents, {subscriptions} subscriptions, and {attachments} images. Replacing this device\'s registry removes the records stored here and puts this backup in their place. Records are not merged.'**
+  String backupPreview(int documents, int subscriptions, int attachments);
+
+  /// No description provided for @backupReplaceAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this device\'s registry'**
+  String get backupReplaceAction;
+
+  /// No description provided for @backupReplaceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this device\'s registry?'**
+  String get backupReplaceTitle;
+
+  /// No description provided for @backupReplaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents, subscriptions, and images on this device will be replaced by this backup.'**
+  String get backupReplaceBody;
+
+  /// No description provided for @backupCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get backupCancel;
+
+  /// No description provided for @backupPhaseProtecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Protecting the backup…'**
+  String get backupPhaseProtecting;
+
+  /// No description provided for @backupPhaseWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving the backup file…'**
+  String get backupPhaseWriting;
+
+  /// No description provided for @backupPhaseChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the backup…'**
+  String get backupPhaseChecking;
+
+  /// No description provided for @backupPhaseRestoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Replacing this device\'s registry…'**
+  String get backupPhaseRestoring;
+
+  /// No description provided for @backupExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved.'**
+  String get backupExportSaved;
+
+  /// No description provided for @backupExportCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Export cancelled. No backup file was saved.'**
+  String get backupExportCancelled;
+
+  /// No description provided for @backupExportNotSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup file was not saved. The destination could not be written.'**
+  String get backupExportNotSaved;
+
+  /// No description provided for @backupExportStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'There is not enough free space to save this backup. No backup file was saved.'**
+  String get backupExportStorage;
+
+  /// No description provided for @backupExportTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This registry is too large to export in one backup. No backup file was saved.'**
+  String get backupExportTooLarge;
+
+  /// No description provided for @backupExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup could not be created. No backup file was saved.'**
+  String get backupExportFailed;
+
+  /// No description provided for @backupImportReplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'This device\'s registry was replaced from the backup.'**
+  String get backupImportReplaced;
+
+  /// No description provided for @backupImportCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Import cancelled.'**
+  String get backupImportCancelled;
+
+  /// No description provided for @backupWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'That password does not open this backup.'**
+  String get backupWrongPassword;
+
+  /// No description provided for @backupUnsupportedVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup was made by a newer version of Registry.'**
+  String get backupUnsupportedVersion;
+
+  /// No description provided for @backupInvalidFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a valid Registry backup.'**
+  String get backupInvalidFile;
+
+  /// No description provided for @backupTampered.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup file is damaged or has been changed.'**
+  String get backupTampered;
+
+  /// No description provided for @backupImportTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is too large to restore.'**
+  String get backupImportTooLarge;
+
+  /// No description provided for @backupImportStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'There is not enough free space to restore this backup.'**
+  String get backupImportStorage;
+
+  /// No description provided for @backupImportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The restore did not finish.'**
+  String get backupImportFailed;
+
+  /// No description provided for @backupImportUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on this device was changed.'**
+  String get backupImportUnchanged;
 }
 
 class _AppLocalizationsDelegate

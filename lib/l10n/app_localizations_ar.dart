@@ -1787,4 +1787,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reminderSubscriptionChargeToday => 'تاريخ دفع اشتراك هو اليوم.';
+
+  @override
+  String get backupSectionTitle => 'النسخ الاحتياطي والاستعادة';
+
+  @override
+  String get backupSectionBody =>
+      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Registry كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
+
+  @override
+  String get backupExportAction => 'تصدير نسخة احتياطية';
+
+  @override
+  String get backupImportAction => 'استيراد نسخة احتياطية';
+
+  @override
+  String get backupExportTitle => 'تصدير نسخة احتياطية';
+
+  @override
+  String get backupIncluded =>
+      'يتضمن الملف المستندات والاشتراكات والحقول المخصصة وسجل التجديد وخيارات التذكير والتواريخ والمبالغ وصور المستندات.';
+
+  @override
+  String get backupPasswordWarning =>
+      'اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Registry كلمة المرور.';
+
+  @override
+  String get backupPasswordLabel => 'كلمة مرور النسخة الاحتياطية';
+
+  @override
+  String get backupConfirmPasswordLabel => 'تأكيد كلمة المرور';
+
+  @override
+  String get backupPasswordTooShort => 'استخدم 8 أحرف على الأقل.';
+
+  @override
+  String get backupPasswordMismatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get backupShowPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get backupHidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get backupChooseSave => 'اختر مكان الحفظ';
+
+  @override
+  String get backupImportTitle => 'استيراد نسخة احتياطية';
+
+  @override
+  String get backupImportIntro =>
+      'اختر ملف نسخة احتياطية وأدخل كلمة مروره. الاستيراد يستبدل كل مستند وكل اشتراك على هذا الجهاز.';
+
+  @override
+  String get backupChooseFile => 'اختيار ملف النسخة الاحتياطية';
+
+  @override
+  String get backupSelectedFile => 'تم اختيار ملف النسخة الاحتياطية';
+
+  @override
+  String get backupNoFile => 'اختر ملف نسخة احتياطية أولًا.';
+
+  @override
+  String get backupCheckAction => 'التحقق من النسخة';
+
+  @override
+  String backupPreview(int documents, int subscriptions, int attachments) {
+    return 'تحتوي هذه النسخة على $documents مستندات و$subscriptions اشتراكات و$attachments صور. استبدال سجل هذا الجهاز يزيل السجلات المخزنة هنا ويضع هذه النسخة مكانها. لا تُدمج السجلات.';
+  }
+
+  @override
+  String get backupReplaceAction => 'استبدال سجل هذا الجهاز';
+
+  @override
+  String get backupReplaceTitle => 'استبدال سجل هذا الجهاز؟';
+
+  @override
+  String get backupReplaceBody =>
+      'ستُستبدل المستندات والاشتراكات والصور على هذا الجهاز بهذه النسخة الاحتياطية.';
+
+  @override
+  String get backupCancel => 'إلغاء';
+
+  @override
+  String get backupPhaseProtecting => 'جارٍ حماية النسخة الاحتياطية…';
+
+  @override
+  String get backupPhaseWriting => 'جارٍ حفظ ملف النسخة الاحتياطية…';
+
+  @override
+  String get backupPhaseChecking => 'جارٍ التحقق من النسخة الاحتياطية…';
+
+  @override
+  String get backupPhaseRestoring => 'جارٍ استبدال سجل هذا الجهاز…';
+
+  @override
+  String get backupExportSaved => 'تم حفظ النسخة الاحتياطية.';
+
+  @override
+  String get backupExportCancelled =>
+      'أُلغي التصدير. لم يُحفظ ملف نسخة احتياطية.';
+
+  @override
+  String get backupExportNotSaved =>
+      'لم يُحفظ ملف النسخة الاحتياطية. تعذر الكتابة إلى الوجهة.';
+
+  @override
+  String get backupExportStorage =>
+      'لا توجد مساحة كافية لحفظ هذه النسخة. لم يُحفظ ملف.';
+
+  @override
+  String get backupExportTooLarge =>
+      'هذا السجل أكبر من أن يُصدَّر في نسخة واحدة. لم يُحفظ ملف.';
+
+  @override
+  String get backupExportFailed =>
+      'تعذر إنشاء النسخة الاحتياطية. لم يُحفظ ملف.';
+
+  @override
+  String get backupImportReplaced =>
+      'استُبدل سجل هذا الجهاز من النسخة الاحتياطية.';
+
+  @override
+  String get backupImportCancelled => 'أُلغي الاستيراد.';
+
+  @override
+  String get backupWrongPassword => 'كلمة المرور هذه لا تفتح هذه النسخة.';
+
+  @override
+  String get backupUnsupportedVersion =>
+      'أُنشئت هذه النسخة بإصدار أحدث من Registry.';
+
+  @override
+  String get backupInvalidFile =>
+      'هذا الملف ليس نسخة احتياطية صالحة من Registry.';
+
+  @override
+  String get backupTampered => 'ملف النسخة الاحتياطية تالف أو تم تغييره.';
+
+  @override
+  String get backupImportTooLarge => 'هذه النسخة أكبر من أن تُستعاد.';
+
+  @override
+  String get backupImportStorage => 'لا توجد مساحة كافية لاستعادة هذه النسخة.';
+
+  @override
+  String get backupImportFailed => 'لم تكتمل الاستعادة.';
+
+  @override
+  String get backupImportUnchanged => 'لم يتغير شيء على هذا الجهاز.';
 }

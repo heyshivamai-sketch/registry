@@ -186,6 +186,9 @@ class RegistryTextField extends StatelessWidget {
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
     this.autofillHints,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.enableIMEPersonalizedLearning = true,
     this.suffixIcon,
     this.prefixIcon,
     this.suffixIconConstraints,
@@ -213,6 +216,9 @@ class RegistryTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
   final Iterable<String>? autofillHints;
+  final bool autocorrect;
+  final bool enableSuggestions;
+  final bool enableIMEPersonalizedLearning;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final BoxConstraints? suffixIconConstraints;
@@ -252,6 +258,9 @@ class RegistryTextField extends StatelessWidget {
               (multiline ? TextInputAction.newline : TextInputAction.next),
           textCapitalization: textCapitalization,
           autofillHints: autofillHints,
+          autocorrect: autocorrect,
+          enableSuggestions: enableSuggestions,
+          enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
           inputFormatters: inputFormatters,
           scrollPadding: scrollPadding,
           onChanged: onChanged,

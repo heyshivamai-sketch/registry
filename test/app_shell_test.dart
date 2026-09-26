@@ -5,7 +5,7 @@ import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
-import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
+import 'package:the_registry/features/backup/presentation/profile_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
 
 import 'support/fake_onboarding_repository.dart';
@@ -55,7 +55,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('home-profile')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ProfilePlaceholderScreen), findsWidgets);
+    expect(find.byType(ProfileScreen), findsWidgets);
     expect(
       find.text(
         'There is no account in this version. Registry will keep your records private on this device.',

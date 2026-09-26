@@ -49,4 +49,20 @@ class InMemorySubscriptionRepository extends ChangeNotifier
     notifyListeners();
     return true;
   }
+
+  void replaceContents(
+    List<RegistrySubscription> subscriptions, {
+    bool notify = true,
+  }) {
+    _subscriptions
+      ..clear()
+      ..addAll(subscriptions);
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void notifyReplacement() {
+    notifyListeners();
+  }
 }

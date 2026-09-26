@@ -5,6 +5,7 @@ import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/persistence/registry_store.dart';
+import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
@@ -114,6 +115,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         onboardingRepository: onboarding,
         documentRepository: store.documents,
         subscriptionRepository: store.subscriptions,
+        backupArchive: SqliteRegistryArchive(store),
         locale: widget.locale,
         reminderScheduler: widget.reminderScheduler,
         timeZoneSource: widget.timeZoneSource,

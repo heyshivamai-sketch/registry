@@ -5,7 +5,7 @@ import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
 import 'package:the_registry/features/documents/presentation/documents_screen.dart';
 import 'package:the_registry/features/home/presentation/home_screen.dart';
-import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
+import 'package:the_registry/features/backup/presentation/profile_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscriptions_screen.dart';
 
 class RegistryTabScope extends InheritedWidget {
@@ -80,7 +80,7 @@ class AppShellState extends State<AppShell> {
                     HomeScreen(),
                     DocumentsScreen(),
                     SubscriptionsScreen(),
-                    ProfilePlaceholderScreen(embedded: true),
+                    ProfileScreen(embedded: true),
                   ],
                 ),
                 bottomNavigationBar: AnimatedSwitcher(

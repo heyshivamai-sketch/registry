@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/core/time/clock.dart';
+import 'package:the_registry/features/backup/backup_service.dart';
 import 'package:the_registry/features/documents/data/image_picker_image_service.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/data/ml_kit_document_ocr_service.dart';
@@ -21,6 +22,8 @@ class RegistryDependencies extends InheritedWidget {
     required this.documentOcr,
     required this.clock,
     required this.reminders,
+    required this.backups,
+    required this.backupFiles,
     required super.child,
   });
 
@@ -31,6 +34,8 @@ class RegistryDependencies extends InheritedWidget {
   final DocumentOcrService documentOcr;
   final Clock clock;
   final ReminderCoordinator reminders;
+  final RegistryBackupService backups;
+  final BackupFileGateway backupFiles;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -50,7 +55,9 @@ class RegistryDependencies extends InheritedWidget {
         datePicker != oldWidget.datePicker ||
         documentOcr != oldWidget.documentOcr ||
         clock != oldWidget.clock ||
-        reminders != oldWidget.reminders;
+        reminders != oldWidget.reminders ||
+        backups != oldWidget.backups ||
+        backupFiles != oldWidget.backupFiles;
   }
 }
 

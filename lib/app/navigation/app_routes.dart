@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/features/backup/presentation/export_backup_screen.dart';
+import 'package:the_registry/features/backup/presentation/import_backup_screen.dart';
+import 'package:the_registry/features/backup/presentation/profile_screen.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
@@ -6,16 +9,27 @@ import 'package:the_registry/features/home/presentation/attention_list_screen.da
 import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
 import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
 import 'package:the_registry/features/notifications/presentation/notifications_screen.dart';
-import 'package:the_registry/features/profile/presentation/profile_placeholder_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_detail_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 abstract final class AppRoutes {
   static Future<void> openProfile(BuildContext context) {
-    return Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const ProfilePlaceholderScreen()),
-    );
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const ProfileScreen()));
+  }
+
+  static Future<void> openExportBackup(BuildContext context) {
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const ExportBackupScreen()));
+  }
+
+  static Future<void> openImportBackup(BuildContext context) {
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const ImportBackupScreen()));
   }
 
   static Future<void> openNotifications(BuildContext context) {

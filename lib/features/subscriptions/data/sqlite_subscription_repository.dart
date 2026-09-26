@@ -79,6 +79,36 @@ class SqliteSubscriptionRepository extends ChangeNotifier
     return true;
   }
 
+  Future<void> insertReplacement(
+    DatabaseExecutor txn,
+    List<RegistrySubscription> subscriptions,
+  ) async {
+    await txn.delete('subscriptions');
+    final count = subscriptions.length;
+    for (var index = 0; index < count; index++) {
+      await txn.insert(
+        'subscriptions',
+        _row(subscriptions[index], count - index),
+      );
+    }
+  }
+
+  void adoptReplacement(
+    List<RegistrySubscription> subscriptions, {
+    bool notify = true,
+  }) {
+    _subscriptions
+      ..clear()
+      ..addAll(subscriptions);
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void notifyReplacement() {
+    notifyListeners();
+  }
+
   Future<void> _readAll() async {
     final rows = await _database.query(
       'subscriptions',

@@ -46,4 +46,17 @@ class InMemoryDocumentRepository extends ChangeNotifier
     notifyListeners();
     return true;
   }
+
+  void replaceContents(List<RegistryDocument> documents, {bool notify = true}) {
+    _documents
+      ..clear()
+      ..addAll(documents);
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void notifyReplacement() {
+    notifyListeners();
+  }
 }
