@@ -1944,4 +1944,311 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupImportUnchanged => 'Nothing on this device was changed.';
+
+  @override
+  String get appLockSectionTitle => 'App lock';
+
+  @override
+  String get appLockSectionBody =>
+      'Ask for this device\'s biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.';
+
+  @override
+  String get appLockEnabled => 'App lock is on';
+
+  @override
+  String get appLockDisabled => 'App lock is off';
+
+  @override
+  String get appLockReason => 'Unlock Registry to view records on this device.';
+
+  @override
+  String get appLockEnableReason =>
+      'Confirm it is you before turning on app lock.';
+
+  @override
+  String get appLockUnavailable =>
+      'This device has no biometrics or passcode Registry can use. App lock was not turned on.';
+
+  @override
+  String get appLockCancelled =>
+      'Authentication was cancelled. App lock was not turned on.';
+
+  @override
+  String get appLockFailed =>
+      'Authentication failed. App lock was not turned on.';
+
+  @override
+  String get appLockPlatformError =>
+      'Registry could not use this device\'s authentication. App lock was not changed.';
+
+  @override
+  String get appLockDisableReason =>
+      'Confirm it is you before turning off app lock.';
+
+  @override
+  String get appLockDisableCancelled =>
+      'Authentication was cancelled. App lock stays on.';
+
+  @override
+  String get appLockDisableFailed =>
+      'Authentication failed. App lock stays on.';
+
+  @override
+  String get appLockDisableUnavailable =>
+      'This device cannot authenticate right now. App lock stays on.';
+
+  @override
+  String get appLockUnlock => 'Unlock';
+
+  @override
+  String get appLockLockedTitle => 'Registry is locked';
+
+  @override
+  String get appLockLockedBody =>
+      'Authenticate with this device to view your records. App lock does not encrypt the database.';
+
+  @override
+  String get appLockUnlockCancelled =>
+      'Authentication was cancelled. Your records stay hidden.';
+
+  @override
+  String get appLockUnlockFailed =>
+      'Authentication failed. Your records stay hidden.';
+
+  @override
+  String get appLockUnlockUnavailable =>
+      'This device cannot authenticate right now. Your records stay hidden.';
+
+  @override
+  String get appLockUnlockPlatformError =>
+      'Registry could not use this device\'s authentication. Your records stay hidden.';
+
+  @override
+  String get appLockPrivacyCover => 'Registry';
+
+  @override
+  String get localProTitle => 'Local Pro';
+
+  @override
+  String get localProAction => 'View Local Pro';
+
+  @override
+  String get localProEyebrow => 'One-time purchase';
+
+  @override
+  String get localProHeadline => 'Keep more records on this device';
+
+  @override
+  String get localProIntro =>
+      'Local Pro is a one-time purchase for the local features listed here. Future cloud services are separate and are not part of this purchase.';
+
+  @override
+  String get localProIncludedTitle => 'Included';
+
+  @override
+  String localProIncludedDocuments(int count) {
+    return 'Removes the free limit of $count documents.';
+  }
+
+  @override
+  String localProIncludedSubscriptions(int count) {
+    return 'Removes the free limit of $count subscription records.';
+  }
+
+  @override
+  String get localProTechnicalLimits =>
+      'Device storage, backup size, and the local reminder cap still apply.';
+
+  @override
+  String get localProNotIncludedTitle => 'Not included';
+
+  @override
+  String get localProNotIncludedCloud =>
+      'Cloud sync, cloud backup, and online accounts are not part of this purchase.';
+
+  @override
+  String get localProFreeTitle => 'Stays free';
+
+  @override
+  String get localProFreeBody =>
+      'Viewing, editing, renewing, deleting, reminders, app lock, export, and restore stay available for records you already have.';
+
+  @override
+  String get localProCurrentFree => 'Current plan: Free';
+
+  @override
+  String get localProCurrentPro => 'Current plan: Local Pro';
+
+  @override
+  String get localProPriceUnavailable =>
+      'The store price is unavailable until Local Pro is configured. There is nothing to buy yet.';
+
+  @override
+  String get localProBuy => 'Buy Local Pro';
+
+  @override
+  String get localProOwned => 'Local Pro is active on this device.';
+
+  @override
+  String get localProPurchasePending =>
+      'The store did not return a verified purchase. Local Pro stays off.';
+
+  @override
+  String get profilePlanFree =>
+      'Free plan. New documents and subscriptions stop at the free limits. Records you already have stay usable.';
+
+  @override
+  String freeLimitDocuments(int count) {
+    return 'The free plan includes $count documents. Local Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.';
+  }
+
+  @override
+  String freeLimitSubscriptions(int count) {
+    return 'The free plan includes $count subscription records. Local Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.';
+  }
+
+  @override
+  String get recordAlreadyExists =>
+      'That record already exists, so it was not saved again.';
+
+  @override
+  String get csvImportAction => 'Import charges from CSV';
+
+  @override
+  String get csvImportTitle => 'Import charges';
+
+  @override
+  String get csvImportIntro =>
+      'Choose one generic charge CSV. This is not a connection to your bank, and it does not read every bank statement format.';
+
+  @override
+  String get csvFormatTitle => 'File format';
+
+  @override
+  String csvFormatBody(int megabytes, int maxRows) {
+    return 'UTF-8 text, at most $megabytes MB and $maxRows data rows, with a header row and comma-separated columns. You choose the date, merchant, amount, and currency columns. A usable example header is date, merchant, amount_minor, currency. Dates must be YYYY-MM-DD. Amounts must be whole minor units, such as cents, with no decimal point.';
+  }
+
+  @override
+  String get csvChooseFile => 'Choose CSV file';
+
+  @override
+  String get csvCancelled => 'Import cancelled. No subscriptions were added.';
+
+  @override
+  String get csvFileTooLarge =>
+      'This file is over the size limit. Nothing was added.';
+
+  @override
+  String csvTooManyRows(int count) {
+    return 'This file has more than $count charge rows. Nothing was added.';
+  }
+
+  @override
+  String csvTooManyColumns(int count) {
+    return 'This file has more than $count columns. Nothing was added.';
+  }
+
+  @override
+  String get csvInvalidFile =>
+      'This file is not a usable CSV. Nothing was added.';
+
+  @override
+  String get csvMapTitle => 'Map columns';
+
+  @override
+  String get csvMapHelp =>
+      'Pick a different column for the date, merchant, amount in minor units, and currency.';
+
+  @override
+  String get csvMapDate => 'Date';
+
+  @override
+  String get csvMapMerchant => 'Merchant';
+
+  @override
+  String get csvMapAmount => 'Amount in minor units';
+
+  @override
+  String get csvMapCurrency => 'Currency';
+
+  @override
+  String get csvMapRequired => 'Choose a different column for each field.';
+
+  @override
+  String get csvContinue => 'Review suggestions';
+
+  @override
+  String get csvNoCharges => 'No charge rows could be read. Nothing was added.';
+
+  @override
+  String csvRowErrors(int count) {
+    return '$count rows were skipped because the date, amount, merchant, or currency was not valid.';
+  }
+
+  @override
+  String get csvSuggestionsTitle => 'Suggested recurring charges';
+
+  @override
+  String get csvSuggestionsBody =>
+      'These groups look regular. That is a suggestion, not a confirmed subscription. Nothing is saved until you create the ones you select.';
+
+  @override
+  String get csvNoSuggestions =>
+      'No recurring charge was suggested. One-off and irregular rows are not turned into subscriptions. Nothing was added.';
+
+  @override
+  String csvSourceRows(String rows) {
+    return 'Source rows $rows';
+  }
+
+  @override
+  String csvNextDate(String date) {
+    return 'Suggested next date $date';
+  }
+
+  @override
+  String get csvDuplicate =>
+      'Possible duplicate of a subscription already on this device.';
+
+  @override
+  String get csvEditCandidate => 'Correct suggestion';
+
+  @override
+  String get csvMerchantLabel => 'Merchant';
+
+  @override
+  String get csvAmountMinorLabel => 'Amount in minor units';
+
+  @override
+  String get csvNextDateLabel => 'Next payment date (YYYY-MM-DD)';
+
+  @override
+  String get csvEditSave => 'Save correction';
+
+  @override
+  String get csvInvalidCandidate =>
+      'Use a merchant, a whole number of minor units, a supported currency, and a YYYY-MM-DD date.';
+
+  @override
+  String get csvConfirmCreate => 'Create selected subscriptions';
+
+  @override
+  String get csvNothingSelected =>
+      'Select at least one suggestion. Nothing was added.';
+
+  @override
+  String csvCreated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count subscriptions added.',
+      one: '1 subscription added.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get csvSuggestionNote =>
+      'Suggested from a charge CSV. Recurrence was not confirmed.';
 }

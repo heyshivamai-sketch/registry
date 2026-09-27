@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:the_registry/features/backup/presentation/export_backup_screen.dart';
 import 'package:the_registry/features/backup/presentation/import_backup_screen.dart';
 import 'package:the_registry/features/backup/presentation/profile_screen.dart';
+import 'package:the_registry/features/csv_import/presentation/import_charges_screen.dart';
+import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
 import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
@@ -26,10 +28,27 @@ abstract final class AppRoutes {
     ).push(MaterialPageRoute<void>(builder: (_) => const ExportBackupScreen()));
   }
 
-  static Future<void> openImportBackup(BuildContext context) {
+  /// Pushes Import backup. Returns true only after a replace has committed,
+  /// the repositories have refreshed, and reminder reconciliation has finished.
+  static Future<bool> openImportBackup(BuildContext context) async {
+    final replaced = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const ImportBackupScreen()),
+    );
+    return replaced ?? false;
+  }
+
+  static Future<void> openLocalPro(BuildContext context) {
     return Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const ImportBackupScreen()));
+    ).push(MaterialPageRoute<void>(builder: (_) => const LocalProScreen()));
+  }
+
+  /// Returns how many subscriptions were created. Zero means nothing changed.
+  static Future<int> openImportCharges(BuildContext context) async {
+    final created = await Navigator.of(context).push<int>(
+      MaterialPageRoute<int>(builder: (_) => const ImportChargesScreen()),
+    );
+    return created ?? 0;
   }
 
   static Future<void> openNotifications(BuildContext context) {

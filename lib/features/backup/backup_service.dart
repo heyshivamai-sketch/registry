@@ -110,6 +110,10 @@ class RegistryBackupService {
     }
   }
 
+  /// Replaces the on-device registry with the opened backup.
+  ///
+  /// Commercial plan limits are not consulted. A restore keeps every record
+  /// in the backup, including when a Free plan would block new records.
   Future<void> restoreBackup({
     required OpenedBackup opened,
     required BackupCancelToken cancel,

@@ -7,9 +7,19 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/time/clock.dart';
+import 'package:the_registry/features/app_lock/app_lock_controller.dart';
+import 'package:the_registry/features/app_lock/app_lock_store.dart';
+import 'package:the_registry/features/app_lock/device_authenticator.dart';
+import 'package:the_registry/features/app_lock/platform_device_authenticator.dart';
+import 'package:the_registry/features/app_lock/presentation/app_lock_gate.dart';
+import 'package:the_registry/features/app_lock/privacy_flag.dart';
 import 'package:the_registry/features/backup/backup_service.dart';
 import 'package:the_registry/features/backup/platform_backup_file_gateway.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
+import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
+import 'package:the_registry/features/entitlements/entitlement_service.dart';
+import 'package:the_registry/features/entitlements/purchase_service.dart';
+import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/reminders/data/memory_reminder_scheduler.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
@@ -43,6 +53,13 @@ class RegistryApp extends StatefulWidget {
     this.backupService,
     this.backupTempDirectory,
     this.locale,
+    this.appLockStore,
+    this.deviceAuthenticator,
+    this.privacyFlag,
+    this.verifiedEntitlements,
+    this.storeProducts,
+    this.purchaseService,
+    this.csvFiles,
   });
 
   final OnboardingRepository onboardingRepository;
@@ -59,6 +76,13 @@ class RegistryApp extends StatefulWidget {
   final BackupFileGateway? backupFiles;
   final RegistryBackupService? backupService;
   final Directory? backupTempDirectory;
+  final AppLockStore? appLockStore;
+  final DeviceAuthenticator? deviceAuthenticator;
+  final PrivacyFlag? privacyFlag;
+  final VerifiedEntitlementSource? verifiedEntitlements;
+  final StoreProductSource? storeProducts;
+  final PurchaseService? purchaseService;
+  final CsvFileGateway? csvFiles;
 
   /// When null, the device locale is used. Unsupported languages fall back
   /// to English via [localeListResolutionCallback].
@@ -109,6 +133,32 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
         clock: _clock,
         tempDirectory: widget.backupTempDirectory ?? Directory.systemTemp,
       );
+  late final AppLockStore _appLockStore =
+      widget.appLockStore ?? MemoryAppLockStore();
+  late final VerifiedEntitlementSource _entitlementSource =
+      widget.verifiedEntitlements ?? ProductionVerifiedEntitlementSource();
+  late final StoreProductSource _storeProducts =
+      widget.storeProducts ?? const ProductionStoreProductSource();
+  late final PurchaseService _purchases =
+      widget.purchaseService ?? const ProductionPurchaseService();
+  late final CsvFileGateway _csvFiles =
+      widget.csvFiles ?? const PlatformCsvFileGateway();
+  late final EntitlementService _entitlements = EntitlementService(
+    documents: _documents,
+    subscriptions: _subscriptions,
+    source: _entitlementSource,
+  );
+  late final RegistryWrites _writes = RegistryWrites(
+    documents: _documents,
+    subscriptions: _subscriptions,
+    entitlements: _entitlements,
+  );
+  late final AppLockController _appLock = AppLockController(
+    store: _appLockStore,
+    authenticator: widget.deviceAuthenticator ?? PlatformDeviceAuthenticator(),
+    clock: _clock,
+    privacy: widget.privacyFlag,
+  );
   late final ReminderCoordinator _reminders = ReminderCoordinator(
     documents: _documents,
     subscriptions: _subscriptions,
@@ -128,6 +178,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _appLock.onLifecycle(state);
     if (state == AppLifecycleState.resumed) {
       unawaited(_reminders.reconcile());
     }
@@ -155,6 +206,14 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _reminders.dispose();
+    _appLock.dispose();
+    _entitlements.dispose();
+    if (widget.appLockStore == null) {
+      (_appLockStore as ChangeNotifier).dispose();
+    }
+    if (widget.verifiedEntitlements == null) {
+      (_entitlementSource as ChangeNotifier).dispose();
+    }
     super.dispose();
   }
 
@@ -189,6 +248,12 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       reminders: _reminders,
       backups: _backups,
       backupFiles: _backupFiles,
+      entitlements: _entitlements,
+      writes: _writes,
+      appLock: _appLock,
+      storeProducts: _storeProducts,
+      purchases: _purchases,
+      csvFiles: _csvFiles,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Registry',
         debugShowCheckedModeBanner: false,
@@ -204,7 +269,9 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: OnboardingGate(repository: widget.onboardingRepository),
+        home: AppLockGate(
+          child: OnboardingGate(repository: widget.onboardingRepository),
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
+import 'package:the_registry/app/navigation/app_shell.dart';
 import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/backup/backup_models.dart';
 import 'package:the_registry/features/backup/backup_service.dart';
@@ -38,7 +39,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.textContaining('does not encrypt the registry database'),
+      find.textContaining(
+        'does not encrypt the registry database already on this device',
+      ),
       findsOneWidget,
     );
     expect(find.text('Export backup'), findsOneWidget);
@@ -150,6 +153,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pumpAndSettle();
+      expect(find.byType(ImportBackupScreen), findsOneWidget);
+      expect(_selectedTab(tester), 3);
       expect(find.textContaining('does not open this backup'), findsOneWidget);
       expect(
         find.textContaining('Nothing on this device was changed'),
@@ -181,6 +186,8 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(scripted.restored, isFalse);
+      expect(find.byType(ImportBackupScreen), findsOneWidget);
+      expect(_selectedTab(tester), 3);
       expect(find.text('Import cancelled.'), findsOneWidget);
       expect(find.textContaining('was replaced'), findsNothing);
 
@@ -193,12 +200,29 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pumpAndSettle();
       expect(scripted.restored, isTrue);
+      expect(find.byType(ImportBackupScreen), findsNothing);
+      expect(_selectedTab(tester), 0);
+      expect(find.text('Your Registry'), findsOneWidget);
       expect(
         find.textContaining('was replaced from the backup'),
         findsOneWidget,
       );
+      expect(
+        find.byKey(const ValueKey<String>('import-password')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('import-preview')),
+        findsNothing,
+      );
     },
   );
+}
+
+int _selectedTab(WidgetTester tester) {
+  return tester
+      .state<AppShellState>(find.byType(AppShell, skipOffstage: false))
+      .selectedIndex;
 }
 
 Widget _app(Locale locale, [_ScriptedBackup? backups]) {

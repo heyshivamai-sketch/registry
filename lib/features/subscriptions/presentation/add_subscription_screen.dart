@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
+import 'package:the_registry/features/entitlements/entitlement_copy.dart';
+import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
@@ -209,14 +211,32 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
     if (_controller.reminders.isNotEmpty) {
       await deps.reminders.requestPermission();
     }
-    final saved = await _controller.submit(
-      l10n: l10n,
-      save: deps.subscriptions.save,
-      update: deps.subscriptions.update,
-    );
-    if (saved && mounted) {
-      Navigator.of(context).pop(true);
+    try {
+      final saved = await _controller.submit(
+        l10n: l10n,
+        save: deps.writes.createSubscription,
+        update: deps.subscriptions.update,
+      );
+      if (saved && mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } on EntitlementDenied catch (error) {
+      if (!mounted) {
+        return;
+      }
+      _showSaveMessage(entitlementDenialMessage(l10n, error.decision));
+    } on DuplicateRecordId {
+      if (!mounted) {
+        return;
+      }
+      _showSaveMessage(l10n.recordAlreadyExists);
     }
+  }
+
+  void _showSaveMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

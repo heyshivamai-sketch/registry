@@ -49,6 +49,32 @@ class SqliteSubscriptionRepository extends ChangeNotifier
   }
 
   @override
+  Future<void> saveAll(List<RegistrySubscription> subscriptions) async {
+    if (subscriptions.isEmpty) {
+      return;
+    }
+    final seen = <String>{};
+    for (final subscription in subscriptions) {
+      if (!seen.add(subscription.id) || findById(subscription.id) != null) {
+        throw StateError(
+          'A subscription with id ${subscription.id} already exists.',
+        );
+      }
+    }
+    await _database.transaction((txn) async {
+      var rank = await _nextRank(txn);
+      for (final subscription in subscriptions.reversed) {
+        await txn.insert('subscriptions', _row(subscription, rank));
+        rank += 1;
+      }
+    });
+    for (final subscription in subscriptions.reversed) {
+      _subscriptions.insert(0, subscription);
+    }
+    notifyListeners();
+  }
+
+  @override
   Future<bool> update(RegistrySubscription subscription) async {
     final index = _subscriptions.indexWhere(
       (item) => item.id == subscription.id,

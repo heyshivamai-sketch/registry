@@ -1972,4 +1972,316 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupImportUnchanged => 'Rien n’a été modifié sur cet appareil.';
+
+  @override
+  String get appLockSectionTitle => 'Verrouillage de l’application';
+
+  @override
+  String get appLockSectionBody =>
+      'Demandez la biométrie ou le code de cet appareil avant que Registry n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.';
+
+  @override
+  String get appLockEnabled => 'Le verrouillage est activé';
+
+  @override
+  String get appLockDisabled => 'Le verrouillage est désactivé';
+
+  @override
+  String get appLockReason =>
+      'Déverrouillez Registry pour voir les enregistrements de cet appareil.';
+
+  @override
+  String get appLockEnableReason =>
+      'Confirmez que c’est bien vous avant d’activer le verrouillage.';
+
+  @override
+  String get appLockUnavailable =>
+      'Cet appareil n’a pas de biométrie ni de code que Registry peut utiliser. Le verrouillage n’a pas été activé.';
+
+  @override
+  String get appLockCancelled =>
+      'L’authentification a été annulée. Le verrouillage n’a pas été activé.';
+
+  @override
+  String get appLockFailed =>
+      'L’authentification a échoué. Le verrouillage n’a pas été activé.';
+
+  @override
+  String get appLockPlatformError =>
+      'Registry n’a pas pu utiliser l’authentification de cet appareil. Le verrouillage n’a pas été modifié.';
+
+  @override
+  String get appLockDisableReason =>
+      'Confirmez que c’est bien vous avant de désactiver le verrouillage.';
+
+  @override
+  String get appLockDisableCancelled =>
+      'L’authentification a été annulée. Le verrouillage reste activé.';
+
+  @override
+  String get appLockDisableFailed =>
+      'L’authentification a échoué. Le verrouillage reste activé.';
+
+  @override
+  String get appLockDisableUnavailable =>
+      'Cet appareil ne peut pas authentifier pour le moment. Le verrouillage reste activé.';
+
+  @override
+  String get appLockUnlock => 'Déverrouiller';
+
+  @override
+  String get appLockLockedTitle => 'Registry est verrouillé';
+
+  @override
+  String get appLockLockedBody =>
+      'Authentifiez-vous avec cet appareil pour voir vos enregistrements. Le verrouillage ne chiffre pas la base.';
+
+  @override
+  String get appLockUnlockCancelled =>
+      'L’authentification a été annulée. Vos enregistrements restent masqués.';
+
+  @override
+  String get appLockUnlockFailed =>
+      'L’authentification a échoué. Vos enregistrements restent masqués.';
+
+  @override
+  String get appLockUnlockUnavailable =>
+      'Cet appareil ne peut pas authentifier pour le moment. Vos enregistrements restent masqués.';
+
+  @override
+  String get appLockUnlockPlatformError =>
+      'Registry n’a pas pu utiliser l’authentification de cet appareil. Vos enregistrements restent masqués.';
+
+  @override
+  String get appLockPrivacyCover => 'Registry';
+
+  @override
+  String get localProTitle => 'Local Pro';
+
+  @override
+  String get localProAction => 'Voir Local Pro';
+
+  @override
+  String get localProEyebrow => 'Achat unique';
+
+  @override
+  String get localProHeadline =>
+      'Gardez plus d’enregistrements sur cet appareil';
+
+  @override
+  String get localProIntro =>
+      'Local Pro est un achat unique pour les fonctions locales indiquées ici. Les futurs services dans le nuage sont distincts et ne font pas partie de cet achat.';
+
+  @override
+  String get localProIncludedTitle => 'Inclus';
+
+  @override
+  String localProIncludedDocuments(int count) {
+    return 'Retire la limite gratuite de $count documents.';
+  }
+
+  @override
+  String localProIncludedSubscriptions(int count) {
+    return 'Retire la limite gratuite de $count abonnements.';
+  }
+
+  @override
+  String get localProTechnicalLimits =>
+      'Le stockage de l’appareil, la taille des sauvegardes et le plafond des rappels locaux s’appliquent toujours.';
+
+  @override
+  String get localProNotIncludedTitle => 'Non inclus';
+
+  @override
+  String get localProNotIncludedCloud =>
+      'La synchronisation dans le nuage, la sauvegarde dans le nuage et les comptes en ligne ne font pas partie de cet achat.';
+
+  @override
+  String get localProFreeTitle => 'Reste gratuit';
+
+  @override
+  String get localProFreeBody =>
+      'La consultation, la modification, le renouvellement, la suppression, les rappels, le verrouillage, l’exportation et la restauration restent disponibles pour les enregistrements que vous avez déjà.';
+
+  @override
+  String get localProCurrentFree => 'Offre actuelle : Gratuit';
+
+  @override
+  String get localProCurrentPro => 'Offre actuelle : Local Pro';
+
+  @override
+  String get localProPriceUnavailable =>
+      'Le prix de la boutique n’est pas disponible tant que Local Pro n’est pas configuré. Il n’y a rien à acheter pour le moment.';
+
+  @override
+  String get localProBuy => 'Acheter Local Pro';
+
+  @override
+  String get localProOwned => 'Local Pro est actif sur cet appareil.';
+
+  @override
+  String get localProPurchasePending =>
+      'La boutique n’a pas renvoyé un achat vérifié. Local Pro reste inactif.';
+
+  @override
+  String get profilePlanFree =>
+      'Offre gratuite. Les nouveaux documents et abonnements s’arrêtent aux limites gratuites. Les enregistrements déjà présents restent utilisables.';
+
+  @override
+  String freeLimitDocuments(int count) {
+    return 'L’offre gratuite comprend $count documents. Local Pro retire cette limite pour les nouveaux documents. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés et supprimés.';
+  }
+
+  @override
+  String freeLimitSubscriptions(int count) {
+    return 'L’offre gratuite comprend $count abonnements. Local Pro retire cette limite pour les nouveaux abonnements. Les enregistrements déjà présents peuvent encore être consultés, modifiés et supprimés.';
+  }
+
+  @override
+  String get recordAlreadyExists =>
+      'Cet enregistrement existe déjà, il n’a donc pas été enregistré une seconde fois.';
+
+  @override
+  String get csvImportAction => 'Importer des charges depuis un CSV';
+
+  @override
+  String get csvImportTitle => 'Importer des charges';
+
+  @override
+  String get csvImportIntro =>
+      'Choisissez un CSV générique de charges. Ce n’est pas une connexion à votre banque, et cela ne lit pas tous les formats de relevé.';
+
+  @override
+  String get csvFormatTitle => 'Format du fichier';
+
+  @override
+  String csvFormatBody(int megabytes, int maxRows) {
+    return 'Texte UTF-8, au plus $megabytes Mo et $maxRows lignes de charges, avec une ligne d’en-tête et des colonnes séparées par des virgules. Vous choisissez les colonnes date, commerçant, montant et devise. Un en-tête utilisable est date, merchant, amount_minor, currency. Les dates doivent être AAAA-MM-JJ. Les montants doivent être des unités mineures entières, comme des centimes, sans séparateur décimal.';
+  }
+
+  @override
+  String get csvChooseFile => 'Choisir un fichier CSV';
+
+  @override
+  String get csvCancelled =>
+      'Importation annulée. Aucun abonnement n’a été ajouté.';
+
+  @override
+  String get csvFileTooLarge =>
+      'Ce fichier dépasse la taille limite. Rien n’a été ajouté.';
+
+  @override
+  String csvTooManyRows(int count) {
+    return 'Ce fichier contient plus de $count lignes de charges. Rien n’a été ajouté.';
+  }
+
+  @override
+  String csvTooManyColumns(int count) {
+    return 'Ce fichier contient plus de $count colonnes. Rien n’a été ajouté.';
+  }
+
+  @override
+  String get csvInvalidFile =>
+      'Ce fichier n’est pas un CSV utilisable. Rien n’a été ajouté.';
+
+  @override
+  String get csvMapTitle => 'Associer les colonnes';
+
+  @override
+  String get csvMapHelp =>
+      'Choisissez une colonne différente pour la date, le commerçant, le montant en unités mineures et la devise.';
+
+  @override
+  String get csvMapDate => 'Date';
+
+  @override
+  String get csvMapMerchant => 'Commerçant';
+
+  @override
+  String get csvMapAmount => 'Montant en unités mineures';
+
+  @override
+  String get csvMapCurrency => 'Devise';
+
+  @override
+  String get csvMapRequired =>
+      'Choisissez une colonne différente pour chaque champ.';
+
+  @override
+  String get csvContinue => 'Voir les suggestions';
+
+  @override
+  String get csvNoCharges =>
+      'Aucune ligne de charge n’a pu être lue. Rien n’a été ajouté.';
+
+  @override
+  String csvRowErrors(int count) {
+    return '$count lignes ont été ignorées parce que la date, le montant, le commerçant ou la devise n’était pas valide.';
+  }
+
+  @override
+  String get csvSuggestionsTitle => 'Charges récurrentes suggérées';
+
+  @override
+  String get csvSuggestionsBody =>
+      'Ces groupes semblent réguliers. C’est une suggestion, pas un abonnement confirmé. Rien n’est enregistré tant que vous ne créez pas ceux que vous sélectionnez.';
+
+  @override
+  String get csvNoSuggestions =>
+      'Aucune charge récurrente n’a été suggérée. Les lignes isolées ou irrégulières ne deviennent pas des abonnements. Rien n’a été ajouté.';
+
+  @override
+  String csvSourceRows(String rows) {
+    return 'Lignes sources $rows';
+  }
+
+  @override
+  String csvNextDate(String date) {
+    return 'Prochaine date suggérée $date';
+  }
+
+  @override
+  String get csvDuplicate =>
+      'Doublon possible d’un abonnement déjà présent sur cet appareil.';
+
+  @override
+  String get csvEditCandidate => 'Corriger la suggestion';
+
+  @override
+  String get csvMerchantLabel => 'Commerçant';
+
+  @override
+  String get csvAmountMinorLabel => 'Montant en unités mineures';
+
+  @override
+  String get csvNextDateLabel => 'Prochaine date de paiement (AAAA-MM-JJ)';
+
+  @override
+  String get csvEditSave => 'Enregistrer la correction';
+
+  @override
+  String get csvInvalidCandidate =>
+      'Indiquez un commerçant, un nombre entier d’unités mineures, une devise prise en charge et une date AAAA-MM-JJ.';
+
+  @override
+  String get csvConfirmCreate => 'Créer les abonnements sélectionnés';
+
+  @override
+  String get csvNothingSelected =>
+      'Sélectionnez au moins une suggestion. Rien n’a été ajouté.';
+
+  @override
+  String csvCreated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count abonnements ajoutés.',
+      one: '1 abonnement ajouté.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get csvSuggestionNote =>
+      'Suggéré à partir d’un CSV de charges. La récurrence n’a pas été confirmée.';
 }

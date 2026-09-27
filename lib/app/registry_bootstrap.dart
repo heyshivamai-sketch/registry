@@ -5,6 +5,7 @@ import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/persistence/registry_store.dart';
+import 'package:the_registry/features/app_lock/app_lock_store.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
@@ -48,6 +49,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
   RegistryStore? _store;
   OnboardingRepository? _onboarding;
   NotificationPromptStore? _notificationPrompts;
+  AppLockStore? _appLockStore;
   int _generation = 0;
 
   @override
@@ -66,12 +68,14 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
       store = await opener();
       final OnboardingRepository onboarding;
       NotificationPromptStore? prompts;
+      AppLockStore? appLockStore;
       final injected = widget.onboardingRepository;
       if (injected != null) {
         onboarding = injected;
       } else {
         final preferences = await loadPreferences();
         prompts = PreferencesNotificationPromptStore(preferences);
+        appLockStore = PreferencesAppLockStore(preferences);
         final stored = SharedPreferencesOnboardingRepository(preferences);
         if (widget.resetOnboarding) {
           await stored.reset();
@@ -86,6 +90,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         _store = store;
         _onboarding = onboarding;
         _notificationPrompts = prompts;
+        _appLockStore = appLockStore;
         _phase = _StartupPhase.ready;
       });
     } catch (_) {
@@ -120,6 +125,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         reminderScheduler: widget.reminderScheduler,
         timeZoneSource: widget.timeZoneSource,
         notificationPromptStore: _notificationPrompts,
+        appLockStore: _appLockStore,
       );
     }
 

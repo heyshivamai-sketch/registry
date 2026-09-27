@@ -1937,4 +1937,301 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupImportUnchanged => 'لم يتغير شيء على هذا الجهاز.';
+
+  @override
+  String get appLockSectionTitle => 'قفل التطبيق';
+
+  @override
+  String get appLockSectionBody =>
+      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Registry سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
+
+  @override
+  String get appLockEnabled => 'قفل التطبيق مفعّل';
+
+  @override
+  String get appLockDisabled => 'قفل التطبيق متوقف';
+
+  @override
+  String get appLockReason => 'افتح قفل Registry لعرض السجلات على هذا الجهاز.';
+
+  @override
+  String get appLockEnableReason => 'أكّد أنك أنت قبل تشغيل قفل التطبيق.';
+
+  @override
+  String get appLockUnavailable =>
+      'لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Registry استخدامه. لم يُفعَّل القفل.';
+
+  @override
+  String get appLockCancelled => 'أُلغي التحقق. لم يُفعَّل قفل التطبيق.';
+
+  @override
+  String get appLockFailed => 'فشل التحقق. لم يُفعَّل قفل التطبيق.';
+
+  @override
+  String get appLockPlatformError =>
+      'تعذّر على Registry استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.';
+
+  @override
+  String get appLockDisableReason => 'أكّد أنك أنت قبل إيقاف قفل التطبيق.';
+
+  @override
+  String get appLockDisableCancelled =>
+      'أُلغي التحقق. يبقى قفل التطبيق مفعّلاً.';
+
+  @override
+  String get appLockDisableFailed => 'فشل التحقق. يبقى قفل التطبيق مفعّلاً.';
+
+  @override
+  String get appLockDisableUnavailable =>
+      'لا يمكن لهذا الجهاز التحقق الآن. يبقى قفل التطبيق مفعّلاً.';
+
+  @override
+  String get appLockUnlock => 'فتح القفل';
+
+  @override
+  String get appLockLockedTitle => 'Registry مقفل';
+
+  @override
+  String get appLockLockedBody =>
+      'تحقق عبر هذا الجهاز لعرض سجلاتك. قفل التطبيق لا يشفّر قاعدة البيانات.';
+
+  @override
+  String get appLockUnlockCancelled => 'أُلغي التحقق. تبقى سجلاتك مخفية.';
+
+  @override
+  String get appLockUnlockFailed => 'فشل التحقق. تبقى سجلاتك مخفية.';
+
+  @override
+  String get appLockUnlockUnavailable =>
+      'لا يمكن لهذا الجهاز التحقق الآن. تبقى سجلاتك مخفية.';
+
+  @override
+  String get appLockUnlockPlatformError =>
+      'تعذّر على Registry استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.';
+
+  @override
+  String get appLockPrivacyCover => 'Registry';
+
+  @override
+  String get localProTitle => 'Local Pro';
+
+  @override
+  String get localProAction => 'عرض Local Pro';
+
+  @override
+  String get localProEyebrow => 'شراء لمرة واحدة';
+
+  @override
+  String get localProHeadline => 'احتفظ بمزيد من السجلات على هذا الجهاز';
+
+  @override
+  String get localProIntro =>
+      'Local Pro شراء لمرة واحدة للميزات المحلية المذكورة هنا. خدمات السحابة اللاحقة منفصلة وليست جزءًا من هذا الشراء.';
+
+  @override
+  String get localProIncludedTitle => 'المشمول';
+
+  @override
+  String localProIncludedDocuments(int count) {
+    return 'يلغي الحد المجاني البالغ $count مستندات.';
+  }
+
+  @override
+  String localProIncludedSubscriptions(int count) {
+    return 'يلغي الحد المجاني البالغ $count اشتراكات.';
+  }
+
+  @override
+  String get localProTechnicalLimits =>
+      'تبقى حدود تخزين الجهاز وحجم النسخة الاحتياطية وسقف التذكيرات المحلية سارية.';
+
+  @override
+  String get localProNotIncludedTitle => 'غير مشمول';
+
+  @override
+  String get localProNotIncludedCloud =>
+      'المزامنة السحابية والنسخ الاحتياطي السحابي والحسابات عبر الإنترنت ليست جزءًا من هذا الشراء.';
+
+  @override
+  String get localProFreeTitle => 'يبقى مجانيًا';
+
+  @override
+  String get localProFreeBody =>
+      'يبقى العرض والتعديل والتجديد والحذف والتذكيرات وقفل التطبيق والتصدير والاستعادة متاحة للسجلات الموجودة لديك.';
+
+  @override
+  String get localProCurrentFree => 'الخطة الحالية: مجاني';
+
+  @override
+  String get localProCurrentPro => 'الخطة الحالية: Local Pro';
+
+  @override
+  String get localProPriceUnavailable =>
+      'سعر المتجر غير متاح إلى أن يُضبط Local Pro. لا يوجد ما يمكن شراؤه بعد.';
+
+  @override
+  String get localProBuy => 'شراء Local Pro';
+
+  @override
+  String get localProOwned => 'Local Pro مفعّل على هذا الجهاز.';
+
+  @override
+  String get localProPurchasePending =>
+      'لم يُرجع المتجر عملية شراء موثّقة. يبقى Local Pro متوقفًا.';
+
+  @override
+  String get profilePlanFree =>
+      'الخطة المجانية. تتوقف المستندات والاشتراكات الجديدة عند الحدود المجانية. تبقى السجلات الموجودة قابلة للاستخدام.';
+
+  @override
+  String freeLimitDocuments(int count) {
+    return 'تشمل الخطة المجانية $count مستندات. يلغي Local Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.';
+  }
+
+  @override
+  String freeLimitSubscriptions(int count) {
+    return 'تشمل الخطة المجانية $count اشتراكات. يلغي Local Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.';
+  }
+
+  @override
+  String get recordAlreadyExists =>
+      'هذا السجل موجود بالفعل، لذلك لم يُحفظ مرة أخرى.';
+
+  @override
+  String get csvImportAction => 'استيراد رسوم من CSV';
+
+  @override
+  String get csvImportTitle => 'استيراد الرسوم';
+
+  @override
+  String get csvImportIntro =>
+      'اختر ملف CSV عامًا للرسوم. هذا ليس اتصالًا بمصرفك، ولا يقرأ كل صيغ كشوف الحساب.';
+
+  @override
+  String get csvFormatTitle => 'صيغة الملف';
+
+  @override
+  String csvFormatBody(int megabytes, int maxRows) {
+    return 'نص UTF-8، بحد أقصى $megabytes ميغابايت و$maxRows صفوف رسوم، مع صف عناوين وأعمدة مفصولة بفواصل. تختار أعمدة التاريخ والتاجر والمبلغ والعملة. عنوان صالح كمثال: date, merchant, amount_minor, currency. يجب أن تكون التواريخ بصيغة YYYY-MM-DD. يجب أن تكون المبالغ وحدات صغرى صحيحة، مثل السنتات، من دون فاصلة عشرية.';
+  }
+
+  @override
+  String get csvChooseFile => 'اختيار ملف CSV';
+
+  @override
+  String get csvCancelled => 'أُلغي الاستيراد. لم تُضف اشتراكات.';
+
+  @override
+  String get csvFileTooLarge => 'يتجاوز هذا الملف حد الحجم. لم يُضف شيء.';
+
+  @override
+  String csvTooManyRows(int count) {
+    return 'يحتوي هذا الملف على أكثر من $count صفوف رسوم. لم يُضف شيء.';
+  }
+
+  @override
+  String csvTooManyColumns(int count) {
+    return 'يحتوي هذا الملف على أكثر من $count أعمدة. لم يُضف شيء.';
+  }
+
+  @override
+  String get csvInvalidFile =>
+      'هذا الملف ليس CSV قابلًا للاستخدام. لم يُضف شيء.';
+
+  @override
+  String get csvMapTitle => 'تعيين الأعمدة';
+
+  @override
+  String get csvMapHelp =>
+      'اختر عمودًا مختلفًا للتاريخ والتاجر والمبلغ بالوحدات الصغرى والعملة.';
+
+  @override
+  String get csvMapDate => 'التاريخ';
+
+  @override
+  String get csvMapMerchant => 'التاجر';
+
+  @override
+  String get csvMapAmount => 'المبلغ بالوحدات الصغرى';
+
+  @override
+  String get csvMapCurrency => 'العملة';
+
+  @override
+  String get csvMapRequired => 'اختر عمودًا مختلفًا لكل حقل.';
+
+  @override
+  String get csvContinue => 'مراجعة الاقتراحات';
+
+  @override
+  String get csvNoCharges => 'تعذرت قراءة صفوف الرسوم. لم يُضف شيء.';
+
+  @override
+  String csvRowErrors(int count) {
+    return 'تم تخطي $count صفوف لأن التاريخ أو المبلغ أو التاجر أو العملة لم يكن صالحًا.';
+  }
+
+  @override
+  String get csvSuggestionsTitle => 'رسوم متكررة مقترحة';
+
+  @override
+  String get csvSuggestionsBody =>
+      'تبدو هذه المجموعات منتظمة. هذا اقتراح وليس اشتراكًا مؤكدًا. لا يُحفظ شيء إلى أن تنشئ ما تحدده.';
+
+  @override
+  String get csvNoSuggestions =>
+      'لم يُقترح أي رسم متكرر. الصفوف المنفردة أو غير المنتظمة لا تتحول إلى اشتراكات. لم يُضف شيء.';
+
+  @override
+  String csvSourceRows(String rows) {
+    return 'صفوف المصدر $rows';
+  }
+
+  @override
+  String csvNextDate(String date) {
+    return 'التاريخ التالي المقترح $date';
+  }
+
+  @override
+  String get csvDuplicate => 'تكرار محتمل لاشتراك موجود بالفعل على هذا الجهاز.';
+
+  @override
+  String get csvEditCandidate => 'تصحيح الاقتراح';
+
+  @override
+  String get csvMerchantLabel => 'التاجر';
+
+  @override
+  String get csvAmountMinorLabel => 'المبلغ بالوحدات الصغرى';
+
+  @override
+  String get csvNextDateLabel => 'تاريخ الدفع التالي (YYYY-MM-DD)';
+
+  @override
+  String get csvEditSave => 'حفظ التصحيح';
+
+  @override
+  String get csvInvalidCandidate =>
+      'أدخل تاجرًا وعددًا صحيحًا من الوحدات الصغرى وعملة مدعومة وتاريخًا بصيغة YYYY-MM-DD.';
+
+  @override
+  String get csvConfirmCreate => 'إنشاء الاشتراكات المحددة';
+
+  @override
+  String get csvNothingSelected =>
+      'حدد اقتراحًا واحدًا على الأقل. لم يُضف شيء.';
+
+  @override
+  String csvCreated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُضيف $count اشتراكات.',
+      one: 'أُضيف اشتراك واحد.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get csvSuggestionNote => 'مقترح من ملف CSV للرسوم. لم يُؤكد التكرار.';
 }

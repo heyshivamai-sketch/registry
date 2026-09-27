@@ -27,14 +27,34 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
   String? _passwordError;
   String? _status;
   var _statusIsError = false;
+  var _secretsReleased = false;
 
   @override
   void dispose() {
+    _releaseSecrets();
+    _password.dispose();
+    super.dispose();
+  }
+
+  void _releaseSecrets() {
+    if (_secretsReleased) {
+      return;
+    }
+    _secretsReleased = true;
     _clearOpened();
     _password.clear();
-    _password.dispose();
+    final bytes = _bytes;
     _bytes = null;
-    super.dispose();
+    if (bytes != null) {
+      try {
+        bytes.fillRange(0, bytes.length, 0);
+      } on UnsupportedError {
+        // Some picked buffers cannot be overwritten. The reference is gone.
+      }
+    }
+    _fileName = null;
+    _passwordError = null;
+    _status = null;
   }
 
   void _clearOpened() {
@@ -214,11 +234,12 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
       if (!mounted) {
         return;
       }
-      _password.clear();
-      setState(() {
-        _status = l10n.backupImportReplaced;
-        _statusIsError = false;
-      });
+      await RegistryDependencies.of(context).reminders.reconcile();
+      if (!mounted) {
+        return;
+      }
+      _releaseSecrets();
+      Navigator.of(context).pop(true);
     } on BackupException catch (error) {
       if (!mounted) {
         return;

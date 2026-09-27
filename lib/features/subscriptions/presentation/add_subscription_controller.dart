@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
@@ -332,6 +333,10 @@ class AddSubscriptionController extends ChangeNotifier {
       }
       await save(subscription);
       return true;
+    } on EntitlementDenied {
+      rethrow;
+    } on DuplicateRecordId {
+      rethrow;
     } catch (_) {
       saveError = l10n.subscriptionSaveFailed;
       return false;

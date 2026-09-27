@@ -3459,6 +3459,498 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing on this device was changed.'**
   String get backupImportUnchanged;
+
+  /// No description provided for @appLockSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get appLockSectionTitle;
+
+  /// No description provided for @appLockSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for this device\'s biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
+  String get appLockSectionBody;
+
+  /// No description provided for @appLockEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock is on'**
+  String get appLockEnabled;
+
+  /// No description provided for @appLockDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock is off'**
+  String get appLockDisabled;
+
+  /// No description provided for @appLockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Registry to view records on this device.'**
+  String get appLockReason;
+
+  /// No description provided for @appLockEnableReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it is you before turning on app lock.'**
+  String get appLockEnableReason;
+
+  /// No description provided for @appLockUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no biometrics or passcode Registry can use. App lock was not turned on.'**
+  String get appLockUnavailable;
+
+  /// No description provided for @appLockCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication was cancelled. App lock was not turned on.'**
+  String get appLockCancelled;
+
+  /// No description provided for @appLockFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. App lock was not turned on.'**
+  String get appLockFailed;
+
+  /// No description provided for @appLockPlatformError.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry could not use this device\'s authentication. App lock was not changed.'**
+  String get appLockPlatformError;
+
+  /// No description provided for @appLockDisableReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it is you before turning off app lock.'**
+  String get appLockDisableReason;
+
+  /// No description provided for @appLockDisableCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication was cancelled. App lock stays on.'**
+  String get appLockDisableCancelled;
+
+  /// No description provided for @appLockDisableFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. App lock stays on.'**
+  String get appLockDisableFailed;
+
+  /// No description provided for @appLockDisableUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device cannot authenticate right now. App lock stays on.'**
+  String get appLockDisableUnavailable;
+
+  /// No description provided for @appLockUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get appLockUnlock;
+
+  /// No description provided for @appLockLockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry is locked'**
+  String get appLockLockedTitle;
+
+  /// No description provided for @appLockLockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate with this device to view your records. App lock does not encrypt the database.'**
+  String get appLockLockedBody;
+
+  /// No description provided for @appLockUnlockCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication was cancelled. Your records stay hidden.'**
+  String get appLockUnlockCancelled;
+
+  /// No description provided for @appLockUnlockFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. Your records stay hidden.'**
+  String get appLockUnlockFailed;
+
+  /// No description provided for @appLockUnlockUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device cannot authenticate right now. Your records stay hidden.'**
+  String get appLockUnlockUnavailable;
+
+  /// No description provided for @appLockUnlockPlatformError.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry could not use this device\'s authentication. Your records stay hidden.'**
+  String get appLockUnlockPlatformError;
+
+  /// No description provided for @appLockPrivacyCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry'**
+  String get appLockPrivacyCover;
+
+  /// No description provided for @localProTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Pro'**
+  String get localProTitle;
+
+  /// No description provided for @localProAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View Local Pro'**
+  String get localProAction;
+
+  /// No description provided for @localProEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time purchase'**
+  String get localProEyebrow;
+
+  /// No description provided for @localProHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep more records on this device'**
+  String get localProHeadline;
+
+  /// No description provided for @localProIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Pro is a one-time purchase for the local features listed here. Future cloud services are separate and are not part of this purchase.'**
+  String get localProIntro;
+
+  /// No description provided for @localProIncludedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Included'**
+  String get localProIncludedTitle;
+
+  /// No description provided for @localProIncludedDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes the free limit of {count} documents.'**
+  String localProIncludedDocuments(int count);
+
+  /// No description provided for @localProIncludedSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes the free limit of {count} subscription records.'**
+  String localProIncludedSubscriptions(int count);
+
+  /// No description provided for @localProTechnicalLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Device storage, backup size, and the local reminder cap still apply.'**
+  String get localProTechnicalLimits;
+
+  /// No description provided for @localProNotIncludedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not included'**
+  String get localProNotIncludedTitle;
+
+  /// No description provided for @localProNotIncludedCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync, cloud backup, and online accounts are not part of this purchase.'**
+  String get localProNotIncludedCloud;
+
+  /// No description provided for @localProFreeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays free'**
+  String get localProFreeTitle;
+
+  /// No description provided for @localProFreeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewing, editing, renewing, deleting, reminders, app lock, export, and restore stay available for records you already have.'**
+  String get localProFreeBody;
+
+  /// No description provided for @localProCurrentFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Current plan: Free'**
+  String get localProCurrentFree;
+
+  /// No description provided for @localProCurrentPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Current plan: Local Pro'**
+  String get localProCurrentPro;
+
+  /// No description provided for @localProPriceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The store price is unavailable until Local Pro is configured. There is nothing to buy yet.'**
+  String get localProPriceUnavailable;
+
+  /// No description provided for @localProBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Local Pro'**
+  String get localProBuy;
+
+  /// No description provided for @localProOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Pro is active on this device.'**
+  String get localProOwned;
+
+  /// No description provided for @localProPurchasePending.
+  ///
+  /// In en, this message translates to:
+  /// **'The store did not return a verified purchase. Local Pro stays off.'**
+  String get localProPurchasePending;
+
+  /// No description provided for @profilePlanFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan. New documents and subscriptions stop at the free limits. Records you already have stay usable.'**
+  String get profilePlanFree;
+
+  /// No description provided for @freeLimitDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'The free plan includes {count} documents. Local Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.'**
+  String freeLimitDocuments(int count);
+
+  /// No description provided for @freeLimitSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'The free plan includes {count} subscription records. Local Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.'**
+  String freeLimitSubscriptions(int count);
+
+  /// No description provided for @recordAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'That record already exists, so it was not saved again.'**
+  String get recordAlreadyExists;
+
+  /// No description provided for @csvImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import charges from CSV'**
+  String get csvImportAction;
+
+  /// No description provided for @csvImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import charges'**
+  String get csvImportTitle;
+
+  /// No description provided for @csvImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one generic charge CSV. This is not a connection to your bank, and it does not read every bank statement format.'**
+  String get csvImportIntro;
+
+  /// No description provided for @csvFormatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'File format'**
+  String get csvFormatTitle;
+
+  /// No description provided for @csvFormatBody.
+  ///
+  /// In en, this message translates to:
+  /// **'UTF-8 text, at most {megabytes} MB and {maxRows} data rows, with a header row and comma-separated columns. You choose the date, merchant, amount, and currency columns. A usable example header is date, merchant, amount_minor, currency. Dates must be YYYY-MM-DD. Amounts must be whole minor units, such as cents, with no decimal point.'**
+  String csvFormatBody(int megabytes, int maxRows);
+
+  /// No description provided for @csvChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose CSV file'**
+  String get csvChooseFile;
+
+  /// No description provided for @csvCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Import cancelled. No subscriptions were added.'**
+  String get csvCancelled;
+
+  /// No description provided for @csvFileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is over the size limit. Nothing was added.'**
+  String get csvFileTooLarge;
+
+  /// No description provided for @csvTooManyRows.
+  ///
+  /// In en, this message translates to:
+  /// **'This file has more than {count} charge rows. Nothing was added.'**
+  String csvTooManyRows(int count);
+
+  /// No description provided for @csvTooManyColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'This file has more than {count} columns. Nothing was added.'**
+  String csvTooManyColumns(int count);
+
+  /// No description provided for @csvInvalidFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a usable CSV. Nothing was added.'**
+  String get csvInvalidFile;
+
+  /// No description provided for @csvMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map columns'**
+  String get csvMapTitle;
+
+  /// No description provided for @csvMapHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a different column for the date, merchant, amount in minor units, and currency.'**
+  String get csvMapHelp;
+
+  /// No description provided for @csvMapDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get csvMapDate;
+
+  /// No description provided for @csvMapMerchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant'**
+  String get csvMapMerchant;
+
+  /// No description provided for @csvMapAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount in minor units'**
+  String get csvMapAmount;
+
+  /// No description provided for @csvMapCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get csvMapCurrency;
+
+  /// No description provided for @csvMapRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a different column for each field.'**
+  String get csvMapRequired;
+
+  /// No description provided for @csvContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Review suggestions'**
+  String get csvContinue;
+
+  /// No description provided for @csvNoCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'No charge rows could be read. Nothing was added.'**
+  String get csvNoCharges;
+
+  /// No description provided for @csvRowErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} rows were skipped because the date, amount, merchant, or currency was not valid.'**
+  String csvRowErrors(int count);
+
+  /// No description provided for @csvSuggestionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested recurring charges'**
+  String get csvSuggestionsTitle;
+
+  /// No description provided for @csvSuggestionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These groups look regular. That is a suggestion, not a confirmed subscription. Nothing is saved until you create the ones you select.'**
+  String get csvSuggestionsBody;
+
+  /// No description provided for @csvNoSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring charge was suggested. One-off and irregular rows are not turned into subscriptions. Nothing was added.'**
+  String get csvNoSuggestions;
+
+  /// No description provided for @csvSourceRows.
+  ///
+  /// In en, this message translates to:
+  /// **'Source rows {rows}'**
+  String csvSourceRows(String rows);
+
+  /// No description provided for @csvNextDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested next date {date}'**
+  String csvNextDate(String date);
+
+  /// No description provided for @csvDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible duplicate of a subscription already on this device.'**
+  String get csvDuplicate;
+
+  /// No description provided for @csvEditCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct suggestion'**
+  String get csvEditCandidate;
+
+  /// No description provided for @csvMerchantLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant'**
+  String get csvMerchantLabel;
+
+  /// No description provided for @csvAmountMinorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount in minor units'**
+  String get csvAmountMinorLabel;
+
+  /// No description provided for @csvNextDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next payment date (YYYY-MM-DD)'**
+  String get csvNextDateLabel;
+
+  /// No description provided for @csvEditSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save correction'**
+  String get csvEditSave;
+
+  /// No description provided for @csvInvalidCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a merchant, a whole number of minor units, a supported currency, and a YYYY-MM-DD date.'**
+  String get csvInvalidCandidate;
+
+  /// No description provided for @csvConfirmCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create selected subscriptions'**
+  String get csvConfirmCreate;
+
+  /// No description provided for @csvNothingSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one suggestion. Nothing was added.'**
+  String get csvNothingSelected;
+
+  /// No description provided for @csvCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 subscription added.} other{{count} subscriptions added.}}'**
+  String csvCreated(int count);
+
+  /// No description provided for @csvSuggestionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested from a charge CSV. Recurrence was not confirmed.'**
+  String get csvSuggestionNote;
 }
 
 class _AppLocalizationsDelegate

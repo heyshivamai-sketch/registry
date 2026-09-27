@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
+import 'package:the_registry/features/entitlements/entitlement_copy.dart';
+import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
@@ -403,14 +405,32 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     if (_controller.reminders.isNotEmpty) {
       await deps.reminders.requestPermission();
     }
-    final saved = await _controller.submit(
-      l10n: l10n,
-      save: deps.documents.save,
-      update: deps.documents.update,
-    );
-    if (saved && mounted) {
-      Navigator.of(context).pop(true);
+    try {
+      final saved = await _controller.submit(
+        l10n: l10n,
+        save: deps.writes.createDocument,
+        update: deps.documents.update,
+      );
+      if (saved && mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } on EntitlementDenied catch (error) {
+      if (!mounted) {
+        return;
+      }
+      _showSaveMessage(entitlementDenialMessage(l10n, error.decision));
+    } on DuplicateRecordId {
+      if (!mounted) {
+        return;
+      }
+      _showSaveMessage(l10n.recordAlreadyExists);
     }
+  }
+
+  void _showSaveMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   bool _dismissKeyboardIfOpen() {

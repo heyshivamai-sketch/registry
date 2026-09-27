@@ -76,11 +76,18 @@ class AppShellState extends State<AppShell> {
                 extendBody: true,
                 body: IndexedStack(
                   index: _index,
-                  children: const [
-                    HomeScreen(),
-                    DocumentsScreen(),
-                    SubscriptionsScreen(),
-                    ProfileScreen(embedded: true),
+                  children: [
+                    const HomeScreen(),
+                    const DocumentsScreen(),
+                    const SubscriptionsScreen(),
+                    ProfileScreen(
+                      embedded: true,
+                      onRegistryReplaced: () {
+                        if (mounted) {
+                          selectTab(0);
+                        }
+                      },
+                    ),
                   ],
                 ),
                 bottomNavigationBar: AnimatedSwitcher(

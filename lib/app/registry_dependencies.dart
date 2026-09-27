@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/core/time/clock.dart';
+import 'package:the_registry/features/app_lock/app_lock_controller.dart';
 import 'package:the_registry/features/backup/backup_service.dart';
+import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
 import 'package:the_registry/features/documents/data/image_picker_image_service.dart';
+import 'package:the_registry/features/entitlements/entitlement_service.dart';
+import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/data/ml_kit_document_ocr_service.dart';
 import 'package:the_registry/features/documents/domain/date_picker_service.dart';
@@ -24,6 +28,12 @@ class RegistryDependencies extends InheritedWidget {
     required this.reminders,
     required this.backups,
     required this.backupFiles,
+    required this.entitlements,
+    required this.writes,
+    required this.appLock,
+    required this.storeProducts,
+    required this.purchases,
+    required this.csvFiles,
     required super.child,
   });
 
@@ -36,6 +46,12 @@ class RegistryDependencies extends InheritedWidget {
   final ReminderCoordinator reminders;
   final RegistryBackupService backups;
   final BackupFileGateway backupFiles;
+  final EntitlementService entitlements;
+  final RegistryWrites writes;
+  final AppLockController appLock;
+  final StoreProductSource storeProducts;
+  final PurchaseService purchases;
+  final CsvFileGateway csvFiles;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -57,7 +73,13 @@ class RegistryDependencies extends InheritedWidget {
         clock != oldWidget.clock ||
         reminders != oldWidget.reminders ||
         backups != oldWidget.backups ||
-        backupFiles != oldWidget.backupFiles;
+        backupFiles != oldWidget.backupFiles ||
+        entitlements != oldWidget.entitlements ||
+        writes != oldWidget.writes ||
+        appLock != oldWidget.appLock ||
+        storeProducts != oldWidget.storeProducts ||
+        purchases != oldWidget.purchases ||
+        csvFiles != oldWidget.csvFiles;
   }
 }
 
