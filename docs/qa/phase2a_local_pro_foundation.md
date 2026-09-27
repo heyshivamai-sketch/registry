@@ -1,8 +1,8 @@
 # Phase 2A — Local Pro foundation
 
-**Date:** 27 September 2026  
-**Branch:** `feature/phase2-local-pro-foundation`  
-**HEAD:** `70fd5466287d945f76e1c7cd83b477ece224248a` (`feat: add encrypted registry backup and restore`)  
+**Date:** 27 September 2026
+**Branch:** `feature/phase2-local-pro-foundation`
+**HEAD:** `70fd5466287d945f76e1c7cd83b477ece224248a` (`feat: add encrypted registry backup and restore`)
 **Remote:** not pushed. Nothing in this phase was committed.
 
 Two device passes used `adb install -r`. Neither cleared, uninstalled, or replaced the emulator’s production registry.
