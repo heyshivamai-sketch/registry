@@ -58,7 +58,7 @@ void main() {
     expect(find.byType(ProfileScreen), findsWidgets);
     expect(
       find.text(
-        'There is no account in this version. Registry will keep your records private on this device.',
+        'Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.',
       ),
       findsOneWidget,
     );

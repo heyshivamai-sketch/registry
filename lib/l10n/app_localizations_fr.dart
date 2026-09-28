@@ -360,7 +360,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'Il n’y a pas de compte dans cette version. Registry conservera vos dossiers en privé sur cet appareil.';
+      'Vos dossiers restent privés sur cet appareil. Local Pro peut utiliser un e-mail vérifié facultatif pour restaurer cet achat. Il ne synchronise ni les documents ni les abonnements.';
 
   @override
   String get profileButton => 'Ouvrir le profil';
@@ -2094,7 +2094,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'La synchronisation dans le nuage, la sauvegarde dans le nuage et les comptes en ligne ne font pas partie de cet achat.';
+      'La synchronisation et la sauvegarde dans le nuage ne sont pas incluses. Un e-mail facultatif peut seulement restaurer l’achat Local Pro de cette boutique. Il ne synchronise pas vos dossiers.';
 
   @override
   String get localProFreeTitle => 'Reste gratuit';
@@ -2140,14 +2140,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProBindingMismatch =>
-      'Cet achat est lié à une autre installation. Local Pro reste désactivé ici. Restaurer les achats sur la même boutique ne le déplace qu’avec le code de restauration de cette installation.';
+      'Cet achat est lié à une autre installation. Local Pro reste désactivé ici. S’il est lié à votre e-mail vérifié, connectez-vous et restaurez à nouveau pour que la boutique soit vérifiée. Sinon, utilisez le code de restauration de cette installation. Android et iOS restent séparés.';
 
   @override
   String get localProRecoveryTitle => 'Conservez ce code de restauration';
 
   @override
   String get localProRecoveryBody =>
-      'Registry n’a pas de compte, et les boutiques n’envoient ni le compte Google ni l’identifiant Apple. Après une réinstallation, Restaurer les achats vérifie à nouveau la boutique et demande ce code. Il ne transfère pas un achat entre Android et iOS.';
+      'Si cet achat est lié à un e-mail vérifié, connectez-vous sur la nouvelle installation et utilisez Restaurer les achats. L’application demande l’achat actuel à la boutique, et le serveur le vérifie avant d’activer Local Pro. Un achat fait avant un compte, ou non lié, a encore besoin du code de restauration de cette installation. Android et iOS restent séparés. Vérifier un e-mail n’active pas Local Pro à lui seul.';
 
   @override
   String get localProRecoveryPrompt => 'Code de restauration';
@@ -2166,6 +2166,85 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get localProNotIncludedTransfer =>
       'Un achat Google Play ne déverrouille pas l’application iOS, et un achat App Store ne déverrouille pas Android.';
+
+  @override
+  String get localProAccountTitle => 'E-mail facultatif';
+
+  @override
+  String get localProAccountBody =>
+      'Vous pouvez continuer à utiliser Registry sans compte. Pour retrouver un nouvel achat Local Pro après une réinstallation ou un changement d’appareil, vérifiez votre e-mail avant d’acheter. L’achat n’est lié à cet e-mail qu’une fois le code confirmé et la boutique a accepté l’achat. Vérifier l’e-mail n’active pas Local Pro. Un fichier de sauvegarde, un identifiant de transaction ou un interrupteur dans l’application ne le font pas non plus.';
+
+  @override
+  String get localProAccountBeforeBuy =>
+      'Si vous achetez avant la vérification de l’e-mail, l’achat reste sur cette installation. Il n’est lié que lorsque Restaurer les achats envoie le code de restauration actuel pendant que vous êtes connecté, et que le serveur accepte l’achat actuel de la boutique. La connexion ne le lie pas à elle seule. Une fois lié, une nouvelle installation ne le déplace que si ce même e-mail est connecté et que le serveur accepte à nouveau l’achat. Le code de restauration seul ne le déplace pas.';
+
+  @override
+  String localProAccountSignedIn(String email) {
+    return 'Connecté en tant que $email. Sur une nouvelle installation, connectez-vous et touchez Restaurer les achats. L’application demande l’achat actuel à cette boutique, et le serveur le vérifie avant que Local Pro puisse s’activer. Android et iOS restent séparés.';
+  }
+
+  @override
+  String get localProAccountEmailLabel => 'E-mail';
+
+  @override
+  String get localProAccountSendCode => 'Envoyer le code de vérification';
+
+  @override
+  String get localProAccountCodeLabel => 'Code de vérification';
+
+  @override
+  String get localProAccountConfirm => 'Confirmer l’e-mail';
+
+  @override
+  String get localProAccountCodeSent =>
+      'Un code de vérification a été envoyé. Il expire bientôt. Le code n’active pas Local Pro.';
+
+  @override
+  String get localProAccountNotConfigured =>
+      'L’envoi d’e-mails n’est pas configuré. Aucun code de vérification n’a été envoyé.';
+
+  @override
+  String get localProAccountUnavailable =>
+      'Cette version ne peut pas envoyer d’e-mail de vérification. Aucun code ne sera envoyé depuis cet écran.';
+
+  @override
+  String get localProAccountDeliveryFailed =>
+      'L’e-mail n’a pas pu être envoyé. Aucun code de vérification n’a été remis.';
+
+  @override
+  String get localProAccountInvalidCode =>
+      'Ce code n’est pas valide. Local Pro n’a pas changé.';
+
+  @override
+  String get localProAccountOffline =>
+      'Registry n’a pas pu joindre la vérification du compte. Rien n’a été envoyé ni modifié.';
+
+  @override
+  String get localProAccountDeleted =>
+      'Le compte a été retiré. Cet achat reste sur cette installation. Un nouvel appareil a besoin du code de restauration actuel. Supprimer le compte n’a ni activé ni désactivé Local Pro.';
+
+  @override
+  String get localProAccountDelete => 'Supprimer le compte';
+
+  @override
+  String get localProAccountDeleteBody =>
+      'Supprimer le compte vous déconnecte et retire le lien avec l’e-mail. Cela ne rembourse pas l’achat. Un achat qui n’a jamais été lié a encore besoin de son code de restauration.';
+
+  @override
+  String get localProRecoveryCodeRequired =>
+      'Cet achat est encore lié à l’installation d’origine, pas à cet e-mail. Il n’a pas été déplacé. Saisissez le code de restauration actuel et restaurez à nouveau pour le lier, ou continuez à utiliser ce code sans compte.';
+
+  @override
+  String get localProAccountSignInRequired =>
+      'Cet achat est lié à un e-mail vérifié. Local Pro reste désactivé sur cette installation. Connectez-vous avec cet e-mail, puis touchez Restaurer les achats. L’application demande l’achat actuel à la boutique, et le serveur le vérifie avant que l’achat puisse être déplacé. Un code de restauration seul ne le déplace pas, et un autre e-mail ne peut pas le prendre.';
+
+  @override
+  String get localProAccountUnchanged =>
+      'Cet achat reste sur cette installation. L’e-mail n’a pas été lié. Saisissez le code de restauration actuel avec Restaurer les achats pour le lier.';
+
+  @override
+  String get localProAccountLinked =>
+      'Cet achat est maintenant lié à votre e-mail vérifié. Une nouvelle installation de cette boutique peut le restaurer après votre connexion.';
 
   @override
   String get profilePlanFree =>

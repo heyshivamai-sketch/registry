@@ -227,7 +227,11 @@ class BillingServerResponse {
 }
 
 abstract class BillingVerificationClient {
-  Future<BillingServerResponse> post(String path, Map<String, Object?> body);
+  Future<BillingServerResponse> post(
+    String path,
+    Map<String, Object?> body, {
+    String? sessionToken,
+  });
 }
 
 /// Proof plus the optional one-time restore code from a verify response.

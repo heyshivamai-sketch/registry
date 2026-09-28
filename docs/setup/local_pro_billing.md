@@ -1,12 +1,12 @@
 # Local Pro billing
 
-Local Pro is a one-time, non-consumable purchase of higher local record limits. It does not include cloud sync, cloud backup, online accounts, or a transfer of a purchase from Android to iOS.
+Local Pro is a one-time, non-consumable purchase of higher local record limits. It does not include cloud sync, cloud backup, or a transfer of a purchase from Android to iOS. The app can be used with no account. An optional verified email can be used only to recover a Local Pro purchase on a new installation of the same store.
 
 `BillingConfiguration.storeVerificationConfigured` stays `false` in the default build. Until that flag is changed after a real store verification, the app does not show a price and does not grant Local Pro. This document is the setup and the ownership model. It is not evidence that a purchase was verified.
 
 ## Entitlement ownership
 
-Registry does not register an account. The app can be used locally with no sign-in. Google Play and the App Store decide which signed-in device can see a purchase. They do not tell this server the Google account or the Apple ID. Nothing in the Play Developer API response or the Apple signed transaction is that account.
+The app can be used locally with no sign-in. An optional email is not a Google account or an Apple ID, and it does not sync records. Google Play and the App Store decide which signed-in device can see a purchase. They do not tell this server the Google account or the Apple ID. Nothing in the Play Developer API response or the Apple signed transaction is that account.
 
 ### What the server actually checks
 
@@ -39,11 +39,44 @@ Sandbox and production rows are separate. A sandbox grant does not satisfy a pro
 
 ### Why a restore code exists
 
-This is the account problem. Registry has no user account, and the stores do not disclose the Google account or Apple ID, so the server cannot tell a reinstall of the same store customer from someone who copied a purchase token or a signed transaction. Those values are bearer secrets. Binding the purchase to the installation UUID that was sent at purchase time stops a copied token from granting a different installation. The one-time restore code is the only credential that moves that binding. It is not a store account, and it is not a receipt.
+The stores do not disclose the Google account or Apple ID, so the server cannot tell a reinstall of the same store customer from someone who copied a purchase token or a signed transaction. Those values are bearer secrets. Binding the purchase to the installation UUID that was sent at purchase time stops a copied token from granting a different installation.
 
-The code is 16 characters from a 32-character alphabet (about 80 bits), stored only as a peppered SHA-256 hash, and compared in constant time. A successful move rotates the hash inside the database transaction, so the same code cannot be replayed or used a second time. A canceled, refunded, or revoked purchase does not move: the existing row is marked revoked and the caller gets `binding_mismatch` with no grant. Wrong codes share the restore rate limit (10 requests per minute per IP) and do not grant. Guessing the code is not practical.
+For a purchase that is not linked to a verified email, the one-time restore code is still the credential that moves that binding. It is not a store account, and it is not a receipt. The code is 16 characters from a 32-character alphabet (about 80 bits), stored only as a peppered SHA-256 hash, and compared in constant time. A successful move rotates the hash inside the database transaction, so the same code cannot be replayed or used a second time. A canceled, refunded, or revoked purchase does not move: the existing row is marked revoked and the caller gets `binding_mismatch` with no grant. Wrong codes share the restore rate limit (10 requests per minute per IP) and do not grant. Guessing the code is not practical.
 
-Losing the code means this service cannot move Local Pro onto a new installation id. That is the limit of having no account and no store identity. It is not evidence that the server can see the Google account or Apple ID.
+Losing the code for a purchase that was never linked to a verified email means this service cannot move Local Pro onto a new installation id. That is the limit of having no store identity. It is not evidence that the server can see the Google account or Apple ID.
+
+### Optional verified email
+
+A person can verify an email before buying. The purchase UI says that verification has to happen first, and that the email does not turn on Local Pro. Confirming the code returns a session. It does not write a purchase and it does not return a grant.
+
+- A new purchase is linked to that account only when the request carries a valid session and the store API accepts the purchase for this installation. A client `accountId`, `premium` flag, or `sessionToken` in the JSON body is ignored. The session is taken only from the `Authorization` header.
+- After sign-in on a new installation, Restore purchases reads the current store entitlement (Play `queryPurchases` or StoreKit `Transaction.currentEntitlements`) and posts it to `POST /v1/purchases/restore`. The server calls the store again. A purchase already bound to a verified account moves only when that request carries a session for the same account and the store still says the purchase is purchased. Repeating that restore on the new installation is idempotent and does not rotate the restore code again.
+- A recovery code alone does not move an account-bound purchase. A session for a different account does not move it either, including when that caller also sends the current restore code. The server returns `409` with `{ "result": "account_sign_in_required" }` and does not change the row. That body has no email and no account id. The purchase screen tells the person to sign in with the email that owns the purchase and restore again.
+- Email verification alone, a copied `.rgry` backup, a client flag, and a submitted transaction id do not grant.
+
+### How an installation-only purchase becomes account-bound
+
+A purchase is installation-only while `purchases.account_id` is null. That is a purchase verified with no session, including one made before accounts existed, and a purchase whose account was later deleted. Deletion sets `account_id` to null. It does not revoke the store entitlement and it does not rotate the restore code.
+
+That purchase becomes account-bound only on `POST /v1/purchases/restore` when all of the following are true:
+
+1. The `Authorization: Bearer` session is valid for the account that should own it.
+2. The request includes the current restore code, and that code matches the stored hash.
+3. The server checks the purchase token or signed transaction with the store, and the store reports the purchase as purchased.
+4. The row is still active and is not already bound to an account.
+
+On the same installation, the server sets `account_id`, leaves the installation id and the restore-code hash in place, and returns `accountLink: linked`. On a different installation, it also moves the installation id and rotates the restore code. Signing in and restoring without the code does not set `account_id`. Another installation gets `recovery_code_required`. The same installation gets `accountLink: unchanged`. There is no silent rebind.
+
+After that link, the restore code is no longer enough to move the purchase. The next move requires the owning account's session and another current store check, as described above. Deleting the account returns the purchase to the installation-only rule, so the current restore code plus a verified store entitlement can move it again. Verifying the same email afterward creates a new account id. That account does not inherit the purchase. Linking it uses the same four steps, and the new account id is not the deleted one.
+
+- Android and iOS stay separate rows. Restoring a Play purchase does not move an App Store purchase, and the reverse is also refused.
+- A refund or revocation still removes Local Pro. A signed-in restore of a revoked purchase returns an inactive grant for that account and does not grant again.
+- If the grant response is lost after the server commits, the next restore with the same session sees the installation already recorded and returns the grant without another code. If a verification response is lost, the code is already consumed and the person requests a new code. The server does not keep a plaintext copy it can show again.
+- Offline use of an already cached signed grant is unchanged. A failed account request does not clear that cache and does not claim that a code was sent.
+- Deleting the account revokes its sessions and clears `account_id` on its purchases. It does not refund the store, does not revoke the current installation, and does not grant. The purchase falls back to the restore code. Signing in again with the same email creates a new account that does not inherit the old purchase.
+- Verification codes and session tokens are stored only as hashes on the server. The app keeps the session token in `account_session.json` next to the installation id, outside the registry database. `.rgry` backups do not contain the session, the code, or purchase credentials. Logs redact those values and the server does not write the code or the token into log lines.
+
+The session lasts 30 days. A verification code lasts 15 minutes and accepts 5 attempts. Start is limited to 5 requests a minute per IP and 3 per email hash. Confirm and delete are limited to 10 a minute per IP.
 
 ### Reinstall and restore
 
@@ -54,7 +87,7 @@ Restore purchases obtains the transaction from the platform store on this device
 - Same installation (app data still present): the store record's installation id matches, so restore or the next launch re-verifies and refreshes the signed grant. No restore code is required.
 - Purchase still pending in the store: Local Pro stays off. The unfinished purchase is kept locally and retried. A temporary verification failure, including HTTP 429 or 503, does not change the cached grant and does not change documents or subscriptions.
 - Server timeout or app restart: the purchase token or JWS is kept outside the registry database. The next launch sends it to the server again even if Play does not redeliver an already acknowledged purchase. If the grant was saved and `completePurchase` failed, the next store delivery finishes the transaction and does not verify it a second time. Duplicate callbacks are idempotent.
-- Reinstall or cleared app data: a new installation id is created. The store can still return the non-consumable, and the server verifies that purchase again. The UUID on the store record is still the old installation id, so the server does not grant until the same restore request includes the restore code. After a successful move, a new code is returned for the new installation and the previous installation loses Local Pro on its next successful revalidation. Records on either device are not deleted.
+- Reinstall or cleared app data: a new installation id is created. The store can still return the non-consumable, and the server verifies that purchase again. The UUID on the store record is still the old installation id. If the purchase is bound to a verified account, Restore purchases moves it only after sign-in with that same account; the restore code alone returns `account_sign_in_required` and leaves the row unchanged. If it is not bound, the server does not grant until the same restore request includes the current restore code, and signing in does not attach the purchase by itself. After a successful move, a new code is returned for the new installation and the previous installation loses Local Pro on its next successful revalidation. Records on either device are not deleted.
 - Android and iOS are not transferable. A Play purchase is not an App Store purchase. Restore on iOS will not honor a Play token, and Restore on Android will not honor an App Store transaction.
 
 ### Offline cache and revalidation
@@ -145,7 +178,7 @@ Copy `server/billing/.env.example` to a server-side env file. Replace placeholde
 | `BILLING_GRANT_PRIVATE_JWK` | Ed25519 private JWK used only to sign grants. Generate on the server. |
 | `BILLING_GRANT_PUBLIC_KEY_B64` | Raw 32-byte public key, standard base64. The app build must contain this before grants can be applied. Not a secret. Still do not flip the app flag until a real purchase verifies. |
 | `BILLING_TOKEN_KEY_B64` | 32-byte AES-256-GCM key for purchase tokens stored for acknowledgement retry. |
-| `RECOVERY_CODE_PEPPER` | Server pepper for restore-code hashes. |
+| `RECOVERY_CODE_PEPPER` | Server pepper for restore-code hashes and email-code hashes. |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | Full service-account JSON. Placeholder in the example. Server only. |
 | `APPLE_ISSUER_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` | App Store Server API key. |
 | `APPLE_ROOT_CA_DIR` | Directory of Apple root CA certificates. |
@@ -169,7 +202,10 @@ Endpoints:
 | Method and path | Role |
 | --- | --- |
 | `GET /health` | Process is up. No store call. |
-| `POST /v1/purchases/verify` | Verify a new or retried purchase. |
+| `POST /v1/accounts/verification/start` | Ask the email provider to send a code. Does not grant. |
+| `POST /v1/accounts/verification/confirm` | Check the code and return a session. Does not grant. |
+| `POST /v1/accounts/delete` | Revoke sessions and unlink purchases. Does not grant or revoke the store purchase. |
+| `POST /v1/purchases/verify` | Verify a new or retried purchase. A verified session may link a new purchase. |
 | `POST /v1/purchases/restore` | Verify a store restore. May include a restore code when the installation id changed. |
 | `POST /v1/entitlements/revalidate` | Re-check a bound purchase. Does not accept a client premium flag. |
 | `POST /v1/notifications/google` | Authenticated Play RTDN. |
@@ -202,7 +238,7 @@ Do this before changing `storeVerificationConfigured`. Do not treat mocked tests
 3. On a license tester (Play) or Sandbox Apple ID, buy `local_pro`. Confirm the store-localized price, then a signed grant, then Local Pro on that installation only.
 4. Force-stop the app during the purchase sheet and on the next launch confirm the transaction is verified once and finished or acknowledged. Confirm Play does not show the purchase as consumed.
 5. Tap Restore purchases on the same installation. Confirm the store returns the purchase, the server verifies it again, and Local Pro stays active without the restore code.
-6. Confirm a second device, or a reinstall, stays Free until Restore purchases returns the store transaction and the restore code moves the binding. The old installation loses Local Pro on its next successful revalidation. Records are not deleted. A copied purchase token without that code does not grant.
+6. Confirm a second device, or a reinstall, stays Free until Restore purchases returns the store transaction and the server accepts it. If the purchase is bound to a verified account, sign in with that same account first. A restore code alone, or a different account, returns `account_sign_in_required` and does not move it. If the purchase is installation-only, the current restore code is required; signing in does not move it, and the purchase becomes account-bound only when that code is sent with the session. The old installation loses Local Pro on its next successful revalidation. Records are not deleted. A copied purchase token, a verified email alone, or a transaction id does not grant.
 7. Refund or cancel the sandbox purchase. Confirm the notification or the next revalidation turns Local Pro off and that existing records can still be edited, exported, and restored.
 8. Confirm a Play purchase does not unlock the iOS app.
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createPublicKey, randomBytes, verify } from 'node:crypto';
+import { createPublicKey, randomBytes, verify, type JsonWebKey } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { describe, it } from 'node:test';
@@ -12,6 +12,7 @@ import { googleAcknowledgeUrl, googleProductGetUrl } from '../src/googlePlay.ts'
 import { createBillingHttpServer } from '../src/httpApp.ts';
 import { createLogger, redact } from '../src/log.ts';
 import { routeAppleVerifiers } from '../src/appleStore.ts';
+import { UnconfiguredEmailDelivery } from '../src/emailDelivery.ts';
 import { TransientStoreError, WrongEnvironmentError, type AppleTransaction, type AppleVerifier, type GooglePlayClient, type GoogleProductPurchase } from '../src/types.ts';
 
 const installA = '11111111-1111-4111-8111-111111111111';
@@ -126,6 +127,7 @@ function harness(options?: { verifyPerMinute?: number; restorePerMinute?: number
     google,
     apple,
     googlePushAuth: { async verifyAuthorization(header) { return header === 'Bearer test'; } },
+    email: new UnconfiguredEmailDelivery(),
     logger: createLogger((line) => lines.push(line)),
     now: () => new Date(current.getTime()),
   };
@@ -196,7 +198,7 @@ describe('purchase verification', () => {
     const valid = verify(
       null,
       Buffer.from(canonical),
-      createPublicKey({ key: deps.config.grantPrivateJwk!, format: 'jwk' }),
+      createPublicKey({ key: deps.config.grantPrivateJwk! as JsonWebKey, format: 'jwk' }),
       signature,
     );
     assert.equal(valid, true);

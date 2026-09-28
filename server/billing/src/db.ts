@@ -52,6 +52,7 @@ export interface PurchaseRow {
   token_ciphertext: string | null;
   installation_id: string;
   recovery_code_hash: string | null;
+  account_id: string | null;
   status: string;
   store_state: string;
   acknowledged: number;

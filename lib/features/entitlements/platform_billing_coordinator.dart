@@ -5,6 +5,7 @@ import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/entitlements/billing_records.dart';
 import 'package:the_registry/features/entitlements/billing_runtime.dart';
 import 'package:the_registry/features/entitlements/grant_codec.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 
@@ -21,6 +22,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
     required this.cache,
     required this.pending,
     required this.clock,
+    this.sessions,
     this.updateTimeout = const Duration(minutes: 5),
   });
 
@@ -32,6 +34,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
   final EntitlementCacheStore cache;
   final PendingPurchaseStore pending;
   final Clock clock;
+  final ProAccountSessionStore? sessions;
   final Duration updateTimeout;
 
   StreamSubscription<List<StorePurchaseUpdate>>? _updates;
@@ -177,6 +180,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
       return const PurchaseAttempt(outcome: PurchaseFlowOutcome.failed);
     }
     final installationId = await installationIds.getOrCreate();
+    final sessionToken = await _sessionToken();
     final BillingServerResponse response;
     try {
       response = await verifier.post(
@@ -192,6 +196,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
           if (update.platform == 'apple') 'signedTransaction': payload,
           if (_recoveryCode != null) 'recoveryCode': _recoveryCode,
         },
+        sessionToken: sessionToken,
       );
     } catch (_) {
       await _save(records, _record(update, key, 'needsVerification'));
@@ -204,6 +209,16 @@ class PlatformBillingCoordinator implements BillingCoordinator {
     if (response.statusCode == 409) {
       await _save(records, _record(update, key, 'mismatch'));
       await _finishAppleQueue(update, key);
+      if (response.body['result'] == 'recovery_code_required') {
+        return const PurchaseAttempt(
+          outcome: PurchaseFlowOutcome.recoveryCodeRequired,
+        );
+      }
+      if (response.body['result'] == 'account_sign_in_required') {
+        return const PurchaseAttempt(
+          outcome: PurchaseFlowOutcome.accountSignInRequired,
+        );
+      }
       return const PurchaseAttempt(
         outcome: PurchaseFlowOutcome.bindingMismatch,
       );
@@ -238,6 +253,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
     await _save(records, record);
     await _finish(update, await pending.read(), key, record);
     final recovery = response.body['recoveryCode'];
+    final accountLink = response.body['accountLink'];
     return PurchaseAttempt(
       proof: proof,
       outcome: proof.revoked
@@ -246,6 +262,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
           ? PurchaseFlowOutcome.restored
           : PurchaseFlowOutcome.verified,
       recoveryCode: recovery is String ? recovery : null,
+      accountLink: accountLink is String ? accountLink : null,
     );
   }
 
@@ -299,7 +316,7 @@ class PlatformBillingCoordinator implements BillingCoordinator {
         'productId': runtime.productId,
         if (record.platform == 'google') 'purchaseToken': record.payload,
         if (record.platform == 'apple') 'signedTransaction': record.payload,
-      });
+      }, sessionToken: await _sessionToken());
     } catch (_) {
       return;
     }
@@ -352,6 +369,15 @@ class PlatformBillingCoordinator implements BillingCoordinator {
     } catch (_) {
       return;
     }
+  }
+
+  Future<String?> _sessionToken() async {
+    final session = await sessions?.read();
+    final token = session?.token;
+    if (token == null || token.isEmpty) {
+      return null;
+    }
+    return token;
   }
 
   bool _retryable(BillingServerResponse response) {

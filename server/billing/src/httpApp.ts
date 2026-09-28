@@ -1,5 +1,10 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import {
+  confirmEmailVerification,
+  deleteAccount,
+  startEmailVerification,
+} from './accountService.ts';
+import {
   handleAppleNotification,
   handleGoogleNotification,
   revalidatePurchase,
@@ -47,7 +52,15 @@ async function dispatch(
       }
     }
     const ip = request.socket.remoteAddress ?? 'unknown';
-    const result = await route(deps, path, request, json, ip);
+    const authorization = request.headers.authorization;
+    const result = await route(
+      deps,
+      path,
+      request,
+      json,
+      ip,
+      Array.isArray(authorization) ? authorization[0] : authorization,
+    );
     send(response, result.status, result.body);
   } catch {
     deps.logger.error('request_failed');
@@ -63,12 +76,22 @@ async function route(
   request: IncomingMessage,
   json: unknown,
   ip: string,
+  authorization: string | undefined,
 ): Promise<ServiceResult> {
+  if (path === '/v1/accounts/verification/start') {
+    return startEmailVerification(deps, json, ip);
+  }
+  if (path === '/v1/accounts/verification/confirm') {
+    return confirmEmailVerification(deps, json, ip);
+  }
+  if (path === '/v1/accounts/delete') {
+    return deleteAccount(deps, authorization, ip);
+  }
   if (path === '/v1/purchases/verify') {
-    return verifyPurchase(deps, json, { restore: false, ip });
+    return verifyPurchase(deps, json, { restore: false, ip, authorization });
   }
   if (path === '/v1/purchases/restore') {
-    return verifyPurchase(deps, json, { restore: true, ip });
+    return verifyPurchase(deps, json, { restore: true, ip, authorization });
   }
   if (path === '/v1/entitlements/revalidate') {
     return revalidatePurchase(deps, json, ip);

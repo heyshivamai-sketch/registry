@@ -8,6 +8,7 @@ import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
 import 'package:the_registry/core/widgets/registry_form_field.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/entitlements/registry_plan.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -26,10 +27,17 @@ class _LocalProScreenState extends State<LocalProScreen> {
   var _loadStarted = false;
   String? _recoveryCode;
   final _restoreCode = TextEditingController();
+  final _email = TextEditingController();
+  final _code = TextEditingController();
+  ProAccountSession? _account;
+  String? _accountMessage;
+  var _accountBusy = false;
 
   @override
   void dispose() {
     _restoreCode.dispose();
+    _email.dispose();
+    _code.dispose();
     super.dispose();
   }
 
@@ -44,14 +52,15 @@ class _LocalProScreenState extends State<LocalProScreen> {
   }
 
   Future<void> _load() async {
-    final listing = await RegistryDependencies.of(
-      context,
-    ).storeProducts.loadLocalPro();
+    final deps = RegistryDependencies.of(context);
+    final listing = await deps.storeProducts.loadLocalPro();
+    final account = await deps.proAccounts?.readSession();
     if (!mounted) {
       return;
     }
     setState(() {
       _listing = listing;
+      _account = account;
       _loading = false;
     });
   }
@@ -110,20 +119,122 @@ class _LocalProScreenState extends State<LocalProScreen> {
       setState(() => _recoveryCode = attempt.recoveryCode);
     }
     final owned = deps.entitlements.plan == RegistryPlan.localPro;
-    final message = switch (attempt.outcome) {
-      PurchaseFlowOutcome.cancelled => l10n.localProPurchaseCancelled,
-      PurchaseFlowOutcome.failed => l10n.localProPurchaseFailed,
-      PurchaseFlowOutcome.pending => l10n.localProPendingStore,
-      PurchaseFlowOutcome.bindingMismatch => l10n.localProBindingMismatch,
-      PurchaseFlowOutcome.unchanged => l10n.localProNetworkUnchanged,
-      PurchaseFlowOutcome.revoked => l10n.localProRevoked,
-      PurchaseFlowOutcome.verified || PurchaseFlowOutcome.restored =>
-        owned ? l10n.localProOwned : l10n.localProPurchasePending,
-      PurchaseFlowOutcome.unavailable => l10n.localProPurchasePending,
+    final message = switch (attempt.accountLink) {
+      'unchanged' => l10n.localProAccountUnchanged,
+      'linked' => l10n.localProAccountLinked,
+      _ => switch (attempt.outcome) {
+        PurchaseFlowOutcome.cancelled => l10n.localProPurchaseCancelled,
+        PurchaseFlowOutcome.failed => l10n.localProPurchaseFailed,
+        PurchaseFlowOutcome.pending => l10n.localProPendingStore,
+        PurchaseFlowOutcome.bindingMismatch => l10n.localProBindingMismatch,
+        PurchaseFlowOutcome.recoveryCodeRequired =>
+          l10n.localProRecoveryCodeRequired,
+        PurchaseFlowOutcome.accountSignInRequired =>
+          l10n.localProAccountSignInRequired,
+        PurchaseFlowOutcome.unchanged => l10n.localProNetworkUnchanged,
+        PurchaseFlowOutcome.revoked => l10n.localProRevoked,
+        PurchaseFlowOutcome.verified || PurchaseFlowOutcome.restored =>
+          owned ? l10n.localProOwned : l10n.localProPurchasePending,
+        PurchaseFlowOutcome.unavailable => l10n.localProPurchasePending,
+      },
     };
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _sendCode() async {
+    final accounts = RegistryDependencies.of(context).proAccounts;
+    final email = _email.text.trim();
+    if (accounts == null || email.isEmpty || _accountBusy) {
+      return;
+    }
+    setState(() => _accountBusy = true);
+    try {
+      final attempt = await accounts.startVerification(email);
+      if (!mounted) {
+        return;
+      }
+      setState(() => _accountMessage = _accountText(attempt));
+    } finally {
+      if (mounted) {
+        setState(() => _accountBusy = false);
+      }
+    }
+  }
+
+  Future<void> _confirmCode() async {
+    final accounts = RegistryDependencies.of(context).proAccounts;
+    if (accounts == null || _accountBusy) {
+      return;
+    }
+    setState(() => _accountBusy = true);
+    try {
+      final attempt = await accounts.confirmVerification(
+        _email.text.trim(),
+        _code.text.trim(),
+      );
+      if (!mounted) {
+        return;
+      }
+      final session = await accounts.readSession();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _account = session;
+        _accountMessage = _accountText(attempt);
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _accountBusy = false);
+      }
+    }
+  }
+
+  Future<void> _deleteAccount() async {
+    final accounts = RegistryDependencies.of(context).proAccounts;
+    if (accounts == null || _accountBusy) {
+      return;
+    }
+    setState(() => _accountBusy = true);
+    try {
+      final attempt = await accounts.deleteAccount();
+      if (!mounted) {
+        return;
+      }
+      final session = await accounts.readSession();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _account = session;
+        _accountMessage = _accountText(attempt);
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _accountBusy = false);
+      }
+    }
+  }
+
+  String _accountText(AccountAttempt attempt) {
+    final l10n = AppLocalizations.of(context);
+    return switch (attempt.outcome) {
+      AccountAttemptOutcome.verificationPending => l10n.localProAccountCodeSent,
+      AccountAttemptOutcome.signedIn => l10n.localProAccountSignedIn(
+        attempt.email ?? _account?.email ?? '',
+      ),
+      AccountAttemptOutcome.invalidCode => l10n.localProAccountInvalidCode,
+      AccountAttemptOutcome.emailNotConfigured =>
+        l10n.localProAccountNotConfigured,
+      AccountAttemptOutcome.deliveryFailed =>
+        l10n.localProAccountDeliveryFailed,
+      AccountAttemptOutcome.offline => l10n.localProAccountOffline,
+      AccountAttemptOutcome.deleted => l10n.localProAccountDeleted,
+      AccountAttemptOutcome.unauthorized ||
+      AccountAttemptOutcome.failed => l10n.localProAccountOffline,
+    };
   }
 
   @override
@@ -254,6 +365,17 @@ class _LocalProScreenState extends State<LocalProScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            _AccountSection(
+              account: _account,
+              message: _accountMessage,
+              busy: _accountBusy || _buying,
+              email: _email,
+              code: _code,
+              onSend: _sendCode,
+              onConfirm: _confirmCode,
+              onDelete: _deleteAccount,
+            ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               owned ? l10n.localProCurrentPro : l10n.localProCurrentFree,
@@ -331,6 +453,121 @@ class _LocalProScreenState extends State<LocalProScreen> {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AccountSection extends StatelessWidget {
+  const _AccountSection({
+    required this.account,
+    required this.message,
+    required this.busy,
+    required this.email,
+    required this.code,
+    required this.onSend,
+    required this.onConfirm,
+    required this.onDelete,
+  });
+
+  final ProAccountSession? account;
+  final String? message;
+  final bool busy;
+  final TextEditingController email;
+  final TextEditingController code;
+  final Future<void> Function() onSend;
+  final Future<void> Function() onConfirm;
+  final Future<void> Function() onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final accounts = RegistryDependencies.of(context).proAccounts;
+    return RegistrySurface(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.localProAccountTitle, style: theme.textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l10n.localProAccountBody,
+            key: const ValueKey<String>('local-pro-account-explanation'),
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l10n.localProAccountBeforeBuy,
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (accounts == null)
+            Text(
+              l10n.localProAccountUnavailable,
+              key: const ValueKey<String>('local-pro-account-unavailable'),
+              style: theme.textTheme.bodyMedium,
+            )
+          else if (account != null) ...[
+            Text(
+              l10n.localProAccountSignedIn(account!.email),
+              key: const ValueKey<String>('local-pro-account-signed-in'),
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.localProAccountDeleteBody,
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextButton(
+              key: const ValueKey<String>('local-pro-account-delete'),
+              onPressed: busy ? null : () => unawaited(onDelete()),
+              child: Text(l10n.localProAccountDelete),
+            ),
+          ] else ...[
+            RegistryTextField(
+              fieldKey: const ValueKey<String>('local-pro-account-email'),
+              label: l10n.localProAccountEmailLabel,
+              controller: email,
+              enabled: !busy,
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
+              autocorrect: false,
+              enableSuggestions: false,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            RegistryPrimaryButton(
+              key: const ValueKey<String>('local-pro-account-send'),
+              label: l10n.localProAccountSendCode,
+              onPressed: busy ? null : () => unawaited(onSend()),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            RegistryTextField(
+              fieldKey: const ValueKey<String>('local-pro-account-code'),
+              label: l10n.localProAccountCodeLabel,
+              controller: code,
+              enabled: !busy,
+              keyboardType: TextInputType.number,
+              autocorrect: false,
+              enableSuggestions: false,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            RegistryPrimaryButton(
+              key: const ValueKey<String>('local-pro-account-confirm'),
+              label: l10n.localProAccountConfirm,
+              onPressed: busy ? null : () => unawaited(onConfirm()),
+            ),
+          ],
+          if (message != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              message!,
+              key: const ValueKey<String>('local-pro-account-status'),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+        ],
       ),
     );
   }

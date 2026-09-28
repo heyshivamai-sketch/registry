@@ -1,5 +1,6 @@
 import type { DatabaseSync } from 'node:sqlite';
 import type { webcrypto } from 'node:crypto';
+import { readAccountSession, type AccountSession } from './accountService.ts';
 import {
   canonicalGrant,
   decryptSecret,
@@ -12,6 +13,7 @@ import {
   signGrant,
   type GrantClaims,
 } from './cryptoBox.ts';
+import type { EmailDelivery } from './emailDelivery.ts';
 import { decideApple, decideGoogle, type StoreFacts } from './decisions.ts';
 import { allowRate, findPurchase, type PurchaseRow } from './db.ts';
 import type { Logger } from './log.ts';
@@ -51,9 +53,12 @@ export interface BillingDeps {
   google: GooglePlayClient;
   apple: AppleVerifier;
   googlePushAuth: GooglePushAuth;
+  email: EmailDelivery;
   logger: Logger;
   now: () => Date;
   recoveryCode?: () => string;
+  emailCode?: () => string;
+  sessionToken?: () => string;
 }
 
 interface VerifyValue {
@@ -69,7 +74,7 @@ interface VerifyValue {
 export async function verifyPurchase(
   deps: BillingDeps,
   body: unknown,
-  options: { restore: boolean; ip: string },
+  options: { restore: boolean; ip: string; authorization?: string },
 ): Promise<ServiceResult> {
   const ready = configurationResult(deps);
   if (ready) {
@@ -99,6 +104,7 @@ export async function verifyPurchase(
       secret: parsed.value.purchaseToken ?? parsed.value.signedTransaction ?? '',
       mode: options.restore ? 'restore' : 'verify',
       recoveryCode: parsed.value.recoveryCode,
+      session: readAccountSession(deps, options.authorization),
       eventTime: deps.now().toISOString(),
     });
   } catch (error) {
@@ -394,6 +400,7 @@ async function applyFacts(
     secret: string;
     mode: 'verify' | 'restore' | 'notification';
     recoveryCode?: string;
+    session?: AccountSession | null;
     eventTime: string;
     eventId?: string;
     eventType?: string;
@@ -422,6 +429,7 @@ async function applyFacts(
         secret: input.secret,
         status: 'revoked',
         recoveryHash: row.recovery_code_hash,
+        accountId: row.account_id,
         eventTime: input.eventTime,
         eventId: input.eventId,
         eventType: input.eventType,
@@ -431,54 +439,78 @@ async function applyFacts(
       if (revokedWrite === 'duplicate') {
         return result(200, { result: 'duplicate' });
       }
+      const callerOwns =
+        row.installation_id === input.installationId ||
+        (input.session != null && row.account_id === input.session.accountId);
+      if (callerOwns) {
+        return signInactive(deps, {
+          installationId: input.installationId,
+          platform: input.platform,
+          environment: input.facts.environment,
+          purchaseKey: input.facts.purchaseKey,
+        });
+      }
       deps.logger.info('binding_mismatch');
       return result(409, { result: 'binding_mismatch' });
+    }
+    if (
+      row &&
+      row.status === 'active' &&
+      input.facts.outcome === 'grant' &&
+      row.installation_id === input.installationId
+    ) {
+      return refreshHeldPurchase(deps, input, row, now);
+    }
+    const sessionOwns =
+      input.session != null &&
+      row != null &&
+      row.status === 'active' &&
+      input.facts.outcome === 'grant' &&
+      row.account_id === input.session.accountId;
+    if (sessionOwns && row) {
+      if (row.last_event_at && row.last_event_at > input.eventTime) {
+        return result(409, { result: 'binding_mismatch' });
+      }
+      return moveInstallation(deps, input, row, now, {
+        accountId: row.account_id,
+        expectAccountId: row.account_id,
+      });
+    }
+    if (
+      row &&
+      row.status === 'active' &&
+      input.facts.outcome === 'grant' &&
+      row.account_id != null
+    ) {
+      deps.logger.info('account_sign_in_required');
+      return result(409, { result: 'account_sign_in_required' });
     }
     const presentedHash =
       input.mode === 'restore' && input.facts.outcome === 'grant' && input.recoveryCode
         ? hashRecoveryCode(deps.config.recoveryPepper, input.recoveryCode)
         : null;
-    if (!presentedHash || !row || row.status !== 'active') {
-      deps.logger.info('binding_mismatch');
-      return result(409, { result: 'binding_mismatch' });
+    if (presentedHash && row && row.status === 'active' && row.account_id == null) {
+      if (row.last_event_at && row.last_event_at > input.eventTime) {
+        return result(409, { result: 'binding_mismatch' });
+      }
+      return moveInstallation(deps, input, row, now, {
+        accountId: input.session?.accountId ?? null,
+        expectRecoveryHash: presentedHash,
+        accountLink: input.session ? 'linked' : undefined,
+      });
     }
-    if (row.last_event_at && row.last_event_at > input.eventTime) {
-      return result(409, { result: 'binding_mismatch' });
+    if (
+      row &&
+      row.status === 'active' &&
+      input.facts.outcome === 'grant' &&
+      row.account_id == null &&
+      input.session != null
+    ) {
+      deps.logger.info('recovery_code_required');
+      return result(409, { result: 'recovery_code_required' });
     }
-    const nextCode = deps.recoveryCode?.() ?? generateRecoveryCode();
-    const nextHash = hashRecoveryCode(deps.config.recoveryPepper, nextCode);
-    const rebound = writePurchase(deps, {
-      row,
-      platform: input.platform,
-      facts: input.facts,
-      installationId: input.installationId,
-      packageOrBundle: input.packageOrBundle,
-      tokenHash: input.tokenHash,
-      secret: input.secret,
-      status: 'active',
-      recoveryHash: nextHash,
-      eventTime: input.eventTime,
-      eventId: input.eventId,
-      eventType: input.eventType,
-      acknowledged: input.facts.needsAcknowledge ? 0 : 1,
-      now,
-      expectRecoveryHash: presentedHash,
-    });
-    if (rebound === 'duplicate') {
-      return result(200, { result: 'duplicate' });
-    }
-    if (rebound !== 'ok') {
-      deps.logger.info('binding_mismatch');
-      return result(409, { result: 'binding_mismatch' });
-    }
-    return finishGrant(deps, {
-      platform: input.platform,
-      facts: input.facts,
-      installationId: input.installationId,
-      secret: input.secret,
-      status: 'active',
-      recoveryCode: nextCode,
-    });
+    deps.logger.info('binding_mismatch');
+    return result(409, { result: 'binding_mismatch' });
   }
 
   const existing = findPurchase(
@@ -516,6 +548,7 @@ async function applyFacts(
       secret: input.secret,
       status: 'pending',
       recoveryHash: existing?.recovery_code_hash ?? null,
+      accountId: existing?.account_id ?? null,
       eventTime: input.eventTime,
       eventId: input.eventId,
       eventType: input.eventType,
@@ -539,6 +572,7 @@ async function applyFacts(
       secret: input.secret,
       status: 'revoked',
       recoveryHash: existing?.recovery_code_hash ?? null,
+      accountId: existing?.account_id ?? null,
       eventTime: input.eventTime,
       eventId: input.eventId,
       eventType: input.eventType,
@@ -561,7 +595,8 @@ async function applyFacts(
   const recoveryHash = recoveryCode
     ? hashRecoveryCode(deps.config.recoveryPepper, recoveryCode)
     : (existing?.recovery_code_hash ?? null);
-  const grantWrite = writePurchase(deps, {
+  const link = accountLinkForHeldPurchase(deps, input, existing, created);
+  let grantWrite = writePurchase(deps, {
     row: existing,
     platform: input.platform,
     facts: input.facts,
@@ -571,14 +606,41 @@ async function applyFacts(
     secret: input.secret,
     status: 'active',
     recoveryHash,
+    accountId: link.accountId,
     eventTime: input.eventTime,
     eventId: input.eventId,
     eventType: input.eventType,
     acknowledged: input.facts.needsAcknowledge ? 0 : 1,
     now,
+    expectRecoveryHash: link.expectRecoveryHash,
   });
+  let accountLink = link.accountLink;
+  if (grantWrite === 'stale_code') {
+    accountLink = input.session && !existing?.account_id ? 'unchanged' : undefined;
+    grantWrite = writePurchase(deps, {
+      row: existing,
+      platform: input.platform,
+      facts: input.facts,
+      installationId,
+      packageOrBundle: input.packageOrBundle,
+      tokenHash: input.tokenHash,
+      secret: input.secret,
+      status: 'active',
+      recoveryHash,
+      accountId: existing?.account_id ?? null,
+      eventTime: input.eventTime,
+      eventId: input.eventId,
+      eventType: input.eventType,
+      acknowledged: input.facts.needsAcknowledge ? 0 : 1,
+      now,
+    });
+  }
   if (grantWrite === 'duplicate') {
     return result(200, { result: 'duplicate' });
+  }
+  if (grantWrite !== 'ok') {
+    deps.logger.info('binding_mismatch');
+    return result(409, { result: 'binding_mismatch' });
   }
   return finishGrant(deps, {
     platform: input.platform,
@@ -587,6 +649,7 @@ async function applyFacts(
     secret: input.secret,
     status: 'active',
     recoveryCode,
+    accountLink,
   });
 }
 
@@ -599,6 +662,7 @@ async function finishGrant(
     secret: string;
     status: 'active' | 'inactive';
     recoveryCode?: string;
+    accountLink?: 'bound' | 'linked' | 'unchanged';
   },
 ): Promise<ServiceResult> {
   let acknowledgementPending = false;
@@ -625,6 +689,7 @@ async function finishGrant(
     result: 'granted',
     ...signed,
     ...(input.recoveryCode ? { recoveryCode: input.recoveryCode } : {}),
+    ...(input.accountLink ? { accountLink: input.accountLink } : {}),
     ...(acknowledgementPending ? { acknowledgementPending: true } : {}),
   });
 }
@@ -658,6 +723,178 @@ async function acknowledgeLater(
   }
 }
 
+async function moveInstallation(
+  deps: BillingDeps,
+  input: {
+    platform: StorePlatform;
+    facts: StoreFacts;
+    installationId: string;
+    packageOrBundle: string;
+    tokenHash: string;
+    secret: string;
+    eventTime: string;
+    eventId?: string;
+    eventType?: string;
+  },
+  row: PurchaseRow,
+  now: string,
+  options: {
+    accountId: string | null;
+    expectRecoveryHash?: string;
+    expectAccountId?: string | null;
+    accountLink?: 'linked';
+  },
+): Promise<ServiceResult> {
+  const nextCode = deps.recoveryCode?.() ?? generateRecoveryCode();
+  const nextHash = hashRecoveryCode(deps.config.recoveryPepper, nextCode);
+  const rebound = writePurchase(deps, {
+    row,
+    platform: input.platform,
+    facts: input.facts,
+    installationId: input.installationId,
+    packageOrBundle: input.packageOrBundle,
+    tokenHash: input.tokenHash,
+    secret: input.secret,
+    status: 'active',
+    recoveryHash: nextHash,
+    accountId: options.accountId,
+    eventTime: input.eventTime,
+    eventId: input.eventId,
+    eventType: input.eventType,
+    acknowledged: input.facts.needsAcknowledge ? 0 : 1,
+    now,
+    expectRecoveryHash: options.expectRecoveryHash,
+    expectAccountId: options.expectAccountId,
+  });
+  if (rebound === 'duplicate') {
+    return result(200, { result: 'duplicate' });
+  }
+  if (rebound !== 'ok') {
+    deps.logger.info('binding_mismatch');
+    return result(409, { result: 'binding_mismatch' });
+  }
+  return finishGrant(deps, {
+    platform: input.platform,
+    facts: input.facts,
+    installationId: input.installationId,
+    secret: input.secret,
+    status: 'active',
+    recoveryCode: nextCode,
+    accountLink: options.accountLink,
+  });
+}
+
+async function refreshHeldPurchase(
+  deps: BillingDeps,
+  input: {
+    platform: StorePlatform;
+    facts: StoreFacts;
+    packageOrBundle: string;
+    tokenHash: string;
+    secret: string;
+    mode: 'verify' | 'restore' | 'notification';
+    recoveryCode?: string;
+    session?: AccountSession | null;
+    eventTime: string;
+    eventId?: string;
+    eventType?: string;
+  },
+  row: PurchaseRow,
+  now: string,
+): Promise<ServiceResult> {
+  const link = accountLinkForHeldPurchase(deps, input, row, false);
+  let written = writePurchase(deps, {
+    row,
+    platform: input.platform,
+    facts: input.facts,
+    installationId: row.installation_id,
+    packageOrBundle: input.packageOrBundle,
+    tokenHash: input.tokenHash,
+    secret: input.secret,
+    status: 'active',
+    recoveryHash: row.recovery_code_hash,
+    accountId: link.accountId,
+    eventTime: input.eventTime,
+    eventId: input.eventId,
+    eventType: input.eventType,
+    acknowledged: input.facts.needsAcknowledge ? 0 : row.acknowledged,
+    now,
+    expectRecoveryHash: link.expectRecoveryHash,
+  });
+  let accountLink = link.accountLink;
+  if (written === 'stale_code') {
+    accountLink = input.session && !row.account_id ? 'unchanged' : undefined;
+    written = writePurchase(deps, {
+      row,
+      platform: input.platform,
+      facts: input.facts,
+      installationId: row.installation_id,
+      packageOrBundle: input.packageOrBundle,
+      tokenHash: input.tokenHash,
+      secret: input.secret,
+      status: 'active',
+      recoveryHash: row.recovery_code_hash,
+      accountId: row.account_id,
+      eventTime: input.eventTime,
+      eventId: input.eventId,
+      eventType: input.eventType,
+      acknowledged: input.facts.needsAcknowledge ? 0 : row.acknowledged,
+      now,
+    });
+  }
+  if (written === 'duplicate') {
+    return result(200, { result: 'duplicate' });
+  }
+  if (written !== 'ok') {
+    return result(409, { result: 'binding_mismatch' });
+  }
+  return finishGrant(deps, {
+    platform: input.platform,
+    facts: input.facts,
+    installationId: row.installation_id,
+    secret: input.secret,
+    status: 'active',
+    accountLink,
+  });
+}
+
+function accountLinkForHeldPurchase(
+  deps: BillingDeps,
+  input: {
+    mode: 'verify' | 'restore' | 'notification';
+    recoveryCode?: string;
+    session?: AccountSession | null;
+  },
+  existing: PurchaseRow | undefined,
+  created: boolean,
+): {
+  accountId: string | null;
+  accountLink?: 'bound' | 'linked' | 'unchanged';
+  expectRecoveryHash?: string;
+} {
+  if (created && input.session) {
+    return { accountId: input.session.accountId, accountLink: 'bound' };
+  }
+  const current = existing?.account_id ?? null;
+  if (
+    !created &&
+    current == null &&
+    input.session &&
+    input.mode === 'restore' &&
+    input.recoveryCode
+  ) {
+    return {
+      accountId: input.session.accountId,
+      accountLink: 'linked',
+      expectRecoveryHash: hashRecoveryCode(deps.config.recoveryPepper, input.recoveryCode),
+    };
+  }
+  if (!created && current == null && input.session) {
+    return { accountId: null, accountLink: 'unchanged' };
+  }
+  return { accountId: current };
+}
+
 function writePurchase(
   deps: BillingDeps,
   input: {
@@ -670,14 +907,16 @@ function writePurchase(
     secret: string;
     status: string;
     recoveryHash: string | null;
+    accountId: string | null;
     eventTime: string;
     eventId?: string;
     eventType?: string;
     acknowledged: number;
     now: string;
     expectRecoveryHash?: string;
+    expectAccountId?: string | null;
   },
-): 'ok' | 'duplicate' | 'stale_code' {
+): 'ok' | 'duplicate' | 'stale_code' | 'stale_account' {
   if (!deps.config.tokenKey) {
     throw new NotConfiguredError();
   }
@@ -707,18 +946,31 @@ function writePurchase(
         return 'stale_code';
       }
     }
+    if (input.expectAccountId !== undefined) {
+      const current = findPurchase(
+        deps.db,
+        input.platform,
+        input.facts.environment,
+        input.facts.purchaseKey,
+      );
+      if (!current || current.account_id !== input.expectAccountId) {
+        deps.db.exec('ROLLBACK');
+        return 'stale_account';
+      }
+    }
     deps.db
       .prepare(
         `INSERT INTO purchases (
            platform, environment, purchase_key, product_id, package_or_bundle,
            token_hash, token_ciphertext, installation_id, recovery_code_hash,
-           status, store_state, acknowledged, last_event_at, created_at, updated_at
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           account_id, status, store_state, acknowledged, last_event_at, created_at, updated_at
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(platform, environment, purchase_key) DO UPDATE SET
            token_hash = excluded.token_hash,
            token_ciphertext = excluded.token_ciphertext,
            installation_id = excluded.installation_id,
            recovery_code_hash = excluded.recovery_code_hash,
+           account_id = excluded.account_id,
            status = excluded.status,
            store_state = excluded.store_state,
            acknowledged = excluded.acknowledged,
@@ -735,6 +987,7 @@ function writePurchase(
         ciphertext,
         input.installationId,
         input.recoveryHash,
+        input.accountId,
         input.status,
         input.facts.storeState,
         input.acknowledged,

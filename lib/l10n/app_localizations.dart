@@ -685,7 +685,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileMessage.
   ///
   /// In en, this message translates to:
-  /// **'There is no account in this version. Registry will keep your records private on this device.'**
+  /// **'Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.'**
   String get profileMessage;
 
   /// No description provided for @profileButton.
@@ -3655,7 +3655,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProNotIncludedCloud.
   ///
   /// In en, this message translates to:
-  /// **'Cloud sync, cloud backup, and online accounts are not part of this purchase.'**
+  /// **'Cloud sync and cloud backup are not included. An optional email can restore this store\'s Local Pro purchase only. It does not sync your records.'**
   String get localProNotIncludedCloud;
 
   /// No description provided for @localProFreeTitle.
@@ -3733,7 +3733,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProBindingMismatch.
   ///
   /// In en, this message translates to:
-  /// **'This purchase is linked to another installation. Local Pro stays off here. Restore purchases on the same store can move it only with the restore code from that installation.'**
+  /// **'This purchase is linked to another installation. Local Pro stays off here. If it is linked to your verified email, sign in and restore again so the store can be checked. Otherwise use the restore code from that installation. Android and iOS stay separate.'**
   String get localProBindingMismatch;
 
   /// No description provided for @localProRecoveryTitle.
@@ -3745,7 +3745,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProRecoveryBody.
   ///
   /// In en, this message translates to:
-  /// **'Registry has no account, and the stores do not send the Google account or Apple ID. After you reinstall, Restore purchases checks the store again and asks for this code. It does not move a purchase between Android and iOS.'**
+  /// **'If this purchase is linked to a verified email, sign in on the new installation and use Restore purchases. The app asks the store for the current purchase, and the server checks it before Local Pro turns on. A purchase made before an account, or one that was not linked, still needs the restore code from that installation. Android and iOS stay separate. Verifying an email does not by itself turn on Local Pro.'**
   String get localProRecoveryBody;
 
   /// No description provided for @localProRecoveryPrompt.
@@ -3777,6 +3777,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.'**
   String get localProNotIncludedTransfer;
+
+  /// No description provided for @localProAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional email'**
+  String get localProAccountTitle;
+
+  /// No description provided for @localProAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can keep using Registry without an account. To recover a new Local Pro purchase after a reinstall or a new device, verify your email before you buy. The purchase is linked to that email only after the code is confirmed and the store accepts the purchase. Verifying the email does not turn on Local Pro. A backup file, a transaction id, or a switch in the app does not either.'**
+  String get localProAccountBody;
+
+  /// No description provided for @localProAccountBeforeBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'If you buy before the email is verified, the purchase stays on this installation. It becomes linked only when Restore purchases sends the current restore code while you are signed in, and the server accepts the current store purchase. Signing in does not link it by itself. After it is linked, a new installation moves only when that same email is signed in and the server accepts the store purchase again. The restore code alone does not move it.'**
+  String get localProAccountBeforeBuy;
+
+  /// No description provided for @localProAccountSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}. On a new installation, sign in and tap Restore purchases. The app asks this store for the current purchase, and the server checks it before Local Pro can turn on. Android and iOS stay separate.'**
+  String localProAccountSignedIn(String email);
+
+  /// No description provided for @localProAccountEmailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get localProAccountEmailLabel;
+
+  /// No description provided for @localProAccountSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send verification code'**
+  String get localProAccountSendCode;
+
+  /// No description provided for @localProAccountCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get localProAccountCodeLabel;
+
+  /// No description provided for @localProAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm email'**
+  String get localProAccountConfirm;
+
+  /// No description provided for @localProAccountCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'A verification code was sent. It expires soon. The code does not turn on Local Pro.'**
+  String get localProAccountCodeSent;
+
+  /// No description provided for @localProAccountNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Email delivery is not set up. No verification code was sent.'**
+  String get localProAccountNotConfigured;
+
+  /// No description provided for @localProAccountUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This build cannot send a verification email. No code will be sent from this screen.'**
+  String get localProAccountUnavailable;
+
+  /// No description provided for @localProAccountDeliveryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The email could not be sent. No verification code was delivered.'**
+  String get localProAccountDeliveryFailed;
+
+  /// No description provided for @localProAccountInvalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is not valid. Local Pro was not changed.'**
+  String get localProAccountInvalidCode;
+
+  /// No description provided for @localProAccountOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry could not reach account verification. Nothing was sent or changed.'**
+  String get localProAccountOffline;
+
+  /// No description provided for @localProAccountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The account was removed. This purchase stays on this installation. A new device needs the current restore code. Deleting the account did not turn Local Pro on or off.'**
+  String get localProAccountDeleted;
+
+  /// No description provided for @localProAccountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get localProAccountDelete;
+
+  /// No description provided for @localProAccountDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting the account signs you out and removes the email link. It does not refund the store purchase. A purchase that was never linked still needs its restore code.'**
+  String get localProAccountDeleteBody;
+
+  /// No description provided for @localProRecoveryCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase is still tied to the original installation, not this email. It was not moved. Enter the current restore code and restore again to link it, or keep using that code without an account.'**
+  String get localProRecoveryCodeRequired;
+
+  /// No description provided for @localProAccountSignInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase is linked to a verified email. Local Pro stays off on this installation. Sign in with that email, then tap Restore purchases. The app asks the store for the current purchase, and the server checks it before the purchase can move. A restore code alone does not move it, and another email cannot take it.'**
+  String get localProAccountSignInRequired;
+
+  /// No description provided for @localProAccountUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase stays on this installation. The email was not linked. Enter the current restore code with Restore purchases to link it.'**
+  String get localProAccountUnchanged;
+
+  /// No description provided for @localProAccountLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase is now linked to your verified email. A new installation of this store can restore it after you sign in.'**
+  String get localProAccountLinked;
 
   /// No description provided for @profilePlanFree.
   ///

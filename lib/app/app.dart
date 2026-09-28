@@ -18,6 +18,7 @@ import 'package:the_registry/features/backup/platform_backup_file_gateway.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
@@ -60,6 +61,7 @@ class RegistryApp extends StatefulWidget {
     this.storeProducts,
     this.purchaseService,
     this.csvFiles,
+    this.proAccounts,
   });
 
   final OnboardingRepository onboardingRepository;
@@ -83,6 +85,7 @@ class RegistryApp extends StatefulWidget {
   final StoreProductSource? storeProducts;
   final PurchaseService? purchaseService;
   final CsvFileGateway? csvFiles;
+  final ProAccountClient? proAccounts;
 
   /// When null, the device locale is used. Unsupported languages fall back
   /// to English via [localeListResolutionCallback].
@@ -255,6 +258,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       storeProducts: _storeProducts,
       purchases: _purchases,
       csvFiles: _csvFiles,
+      proAccounts: widget.proAccounts,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Registry',
         debugShowCheckedModeBanner: false,

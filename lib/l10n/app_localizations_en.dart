@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'There is no account in this version. Registry will keep your records private on this device.';
+      'Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.';
 
   @override
   String get profileButton => 'Open profile';
@@ -2064,7 +2064,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'Cloud sync, cloud backup, and online accounts are not part of this purchase.';
+      'Cloud sync and cloud backup are not included. An optional email can restore this store\'s Local Pro purchase only. It does not sync your records.';
 
   @override
   String get localProFreeTitle => 'Stays free';
@@ -2110,14 +2110,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get localProBindingMismatch =>
-      'This purchase is linked to another installation. Local Pro stays off here. Restore purchases on the same store can move it only with the restore code from that installation.';
+      'This purchase is linked to another installation. Local Pro stays off here. If it is linked to your verified email, sign in and restore again so the store can be checked. Otherwise use the restore code from that installation. Android and iOS stay separate.';
 
   @override
   String get localProRecoveryTitle => 'Save this restore code';
 
   @override
   String get localProRecoveryBody =>
-      'Registry has no account, and the stores do not send the Google account or Apple ID. After you reinstall, Restore purchases checks the store again and asks for this code. It does not move a purchase between Android and iOS.';
+      'If this purchase is linked to a verified email, sign in on the new installation and use Restore purchases. The app asks the store for the current purchase, and the server checks it before Local Pro turns on. A purchase made before an account, or one that was not linked, still needs the restore code from that installation. Android and iOS stay separate. Verifying an email does not by itself turn on Local Pro.';
 
   @override
   String get localProRecoveryPrompt => 'Restore code';
@@ -2136,6 +2136,85 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get localProNotIncludedTransfer =>
       'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.';
+
+  @override
+  String get localProAccountTitle => 'Optional email';
+
+  @override
+  String get localProAccountBody =>
+      'You can keep using Registry without an account. To recover a new Local Pro purchase after a reinstall or a new device, verify your email before you buy. The purchase is linked to that email only after the code is confirmed and the store accepts the purchase. Verifying the email does not turn on Local Pro. A backup file, a transaction id, or a switch in the app does not either.';
+
+  @override
+  String get localProAccountBeforeBuy =>
+      'If you buy before the email is verified, the purchase stays on this installation. It becomes linked only when Restore purchases sends the current restore code while you are signed in, and the server accepts the current store purchase. Signing in does not link it by itself. After it is linked, a new installation moves only when that same email is signed in and the server accepts the store purchase again. The restore code alone does not move it.';
+
+  @override
+  String localProAccountSignedIn(String email) {
+    return 'Signed in as $email. On a new installation, sign in and tap Restore purchases. The app asks this store for the current purchase, and the server checks it before Local Pro can turn on. Android and iOS stay separate.';
+  }
+
+  @override
+  String get localProAccountEmailLabel => 'Email';
+
+  @override
+  String get localProAccountSendCode => 'Send verification code';
+
+  @override
+  String get localProAccountCodeLabel => 'Verification code';
+
+  @override
+  String get localProAccountConfirm => 'Confirm email';
+
+  @override
+  String get localProAccountCodeSent =>
+      'A verification code was sent. It expires soon. The code does not turn on Local Pro.';
+
+  @override
+  String get localProAccountNotConfigured =>
+      'Email delivery is not set up. No verification code was sent.';
+
+  @override
+  String get localProAccountUnavailable =>
+      'This build cannot send a verification email. No code will be sent from this screen.';
+
+  @override
+  String get localProAccountDeliveryFailed =>
+      'The email could not be sent. No verification code was delivered.';
+
+  @override
+  String get localProAccountInvalidCode =>
+      'That code is not valid. Local Pro was not changed.';
+
+  @override
+  String get localProAccountOffline =>
+      'Registry could not reach account verification. Nothing was sent or changed.';
+
+  @override
+  String get localProAccountDeleted =>
+      'The account was removed. This purchase stays on this installation. A new device needs the current restore code. Deleting the account did not turn Local Pro on or off.';
+
+  @override
+  String get localProAccountDelete => 'Delete account';
+
+  @override
+  String get localProAccountDeleteBody =>
+      'Deleting the account signs you out and removes the email link. It does not refund the store purchase. A purchase that was never linked still needs its restore code.';
+
+  @override
+  String get localProRecoveryCodeRequired =>
+      'This purchase is still tied to the original installation, not this email. It was not moved. Enter the current restore code and restore again to link it, or keep using that code without an account.';
+
+  @override
+  String get localProAccountSignInRequired =>
+      'This purchase is linked to a verified email. Local Pro stays off on this installation. Sign in with that email, then tap Restore purchases. The app asks the store for the current purchase, and the server checks it before the purchase can move. A restore code alone does not move it, and another email cannot take it.';
+
+  @override
+  String get localProAccountUnchanged =>
+      'This purchase stays on this installation. The email was not linked. Enter the current restore code with Restore purchases to link it.';
+
+  @override
+  String get localProAccountLinked =>
+      'This purchase is now linked to your verified email. A new installation of this store can restore it after you sign in.';
 
   @override
   String get profilePlanFree =>

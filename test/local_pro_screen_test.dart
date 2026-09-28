@@ -27,6 +27,32 @@ void main() {
     await tapProfileControl(tester, const ValueKey<String>('local-pro-open'));
 
     expect(find.byType(LocalProScreen), findsOneWidget);
+    expect(find.textContaining('cloud'), findsWidgets);
+    final scrollable = find.descendant(
+      of: find.byType(LocalProScreen),
+      matching: find.byType(Scrollable),
+    );
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey<String>('local-pro-account-explanation')),
+      200,
+      scrollable: scrollable,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('local-pro-account-explanation')),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('verify your email before you buy'),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('local-pro-account-unavailable')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('local-pro-account-send')),
+      findsNothing,
+    );
     await tester.scrollUntilVisible(
       find.byKey(const ValueKey<String>('local-pro-buy')),
       200,
@@ -41,7 +67,6 @@ void main() {
     );
     expect(find.byKey(const ValueKey<String>('local-pro-price')), findsNothing);
     expect(find.textContaining('\$'), findsNothing);
-    expect(find.textContaining('cloud'), findsWidgets);
     expect(_buyButton(tester).onPressed, isNull);
     expect(
       RegistryDependencies.of(

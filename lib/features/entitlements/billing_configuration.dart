@@ -28,6 +28,8 @@
 /// * Call the store API above. Do not trust the client callback, a boolean
 ///   in the app, a backup file, or a debug switch.
 /// * Return a signed grant only after the store call succeeds.
+/// * An optional verified email can be attached to a new purchase. The
+///   email confirmation itself is not a grant.
 /// * The app may cache that signed grant. It must not cache a client-written
 ///   "premium" flag.
 ///

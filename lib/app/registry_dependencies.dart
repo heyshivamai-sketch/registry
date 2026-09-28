@@ -5,6 +5,7 @@ import 'package:the_registry/features/backup/backup_service.dart';
 import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
 import 'package:the_registry/features/documents/data/image_picker_image_service.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/data/ml_kit_document_ocr_service.dart';
@@ -34,6 +35,7 @@ class RegistryDependencies extends InheritedWidget {
     required this.storeProducts,
     required this.purchases,
     required this.csvFiles,
+    this.proAccounts,
     required super.child,
   });
 
@@ -52,6 +54,9 @@ class RegistryDependencies extends InheritedWidget {
   final StoreProductSource storeProducts;
   final PurchaseService purchases;
   final CsvFileGateway csvFiles;
+
+  /// Null when billing is not configured. Email verification is not available.
+  final ProAccountClient? proAccounts;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -79,7 +84,8 @@ class RegistryDependencies extends InheritedWidget {
         appLock != oldWidget.appLock ||
         storeProducts != oldWidget.storeProducts ||
         purchases != oldWidget.purchases ||
-        csvFiles != oldWidget.csvFiles;
+        csvFiles != oldWidget.csvFiles ||
+        proAccounts != oldWidget.proAccounts;
   }
 }
 

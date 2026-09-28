@@ -6,6 +6,7 @@ import { loadConfig } from './config.ts';
 import { openDatabase } from './db.ts';
 import { createGooglePlayClient, notConfiguredGoogle } from './googlePlay.ts';
 import { createBillingHttpServer } from './httpApp.ts';
+import { UnconfiguredEmailDelivery } from './emailDelivery.ts';
 import { createLogger } from './log.ts';
 import type { GooglePushAuth } from './types.ts';
 
@@ -62,12 +63,16 @@ const googlePushAuth: GooglePushAuth = {
   },
 };
 
+const email = new UnconfiguredEmailDelivery();
+logger.info('email_delivery', { configured: email.configured });
+
 const server = createBillingHttpServer({
   db,
   config,
   google,
   apple,
   googlePushAuth,
+  email,
   logger,
   now: () => new Date(),
 });

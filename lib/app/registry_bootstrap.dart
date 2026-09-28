@@ -10,6 +10,7 @@ import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/production_billing.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
@@ -54,6 +55,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
   AppLockStore? _appLockStore;
   PurchaseService? _purchases;
   StoreProductSource? _products;
+  ProAccountClient? _accounts;
   int _generation = 0;
 
   @override
@@ -107,6 +109,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         _appLockStore = appLockStore;
         _purchases = billing?.purchases;
         _products = billing?.products;
+        _accounts = billing?.accounts;
         _phase = _StartupPhase.ready;
       });
     } catch (_) {
@@ -144,6 +147,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         appLockStore: _appLockStore,
         purchaseService: _purchases,
         storeProducts: _products,
+        proAccounts: _accounts,
       );
     }
 

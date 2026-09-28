@@ -14,11 +14,18 @@ class HttpBillingVerificationClient implements BillingVerificationClient {
   @override
   Future<BillingServerResponse> post(
     String path,
-    Map<String, Object?> body,
-  ) async {
+    Map<String, Object?> body, {
+    String? sessionToken,
+  }) async {
     try {
       final request = await _client.postUrl(baseUrl.resolve(path));
       request.headers.contentType = ContentType.json;
+      if (sessionToken != null && sessionToken.isNotEmpty) {
+        request.headers.set(
+          HttpHeaders.authorizationHeader,
+          'Bearer $sessionToken',
+        );
+      }
       request.add(utf8.encode(jsonEncode(body)));
       final response = await request.close().timeout(
         const Duration(seconds: 20),

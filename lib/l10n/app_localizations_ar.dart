@@ -358,7 +358,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'لا يوجد حساب في هذا الإصدار. سيبقى سجلك خاصًا على هذا الجهاز.';
+      'تبقى سجلاتك خاصة على هذا الجهاز. يمكن لـ Local Pro استخدام بريد مُوثَّق اختياري لاستعادة ذلك الشراء. لا يزامن المستندات أو الاشتراكات.';
 
   @override
   String get profileButton => 'فتح الملف الشخصي';
@@ -2050,7 +2050,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'المزامنة السحابية والنسخ الاحتياطي السحابي والحسابات عبر الإنترنت ليست جزءًا من هذا الشراء.';
+      'المزامنة السحابية والنسخ الاحتياطي السحابي غير مشمولين. يمكن لبريد اختياري استعادة شراء Local Pro من هذا المتجر فقط. لا يزامن سجلاتك.';
 
   @override
   String get localProFreeTitle => 'يبقى مجانيًا';
@@ -2096,14 +2096,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProBindingMismatch =>
-      'هذا الشراء مرتبط بتثبيت آخر. يبقى Local Pro متوقفًا هنا. استعادة المشتريات على المتجر نفسه تنقله فقط برمز الاستعادة من ذلك التثبيت.';
+      'هذا الشراء مرتبط بتثبيت آخر. يبقى Local Pro متوقفًا هنا. إذا كان مرتبطًا ببريدك المُوثَّق، سجّل الدخول واستعد مرة أخرى ليتحقق المتجر. وإلا فاستخدم رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين.';
 
   @override
   String get localProRecoveryTitle => 'احتفظ برمز الاستعادة';
 
   @override
   String get localProRecoveryBody =>
-      'ليس لدى Registry حساب، ولا ترسل المتاجر حساب Google أو Apple ID. بعد إعادة التثبيت، تتحقق استعادة المشتريات من المتجر مرة أخرى وتطلب هذا الرمز. لا ينقل الشراء بين Android وiOS.';
+      'إذا كان هذا الشراء مرتبطًا ببريد مُوثَّق، سجّل الدخول على التثبيت الجديد واستخدم استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل تشغيل Local Pro. الشراء الذي تم قبل وجود حساب، أو الذي لم يُربَط، ما زال يحتاج رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين. توثيق البريد وحده لا يشغّل Local Pro.';
 
   @override
   String get localProRecoveryPrompt => 'رمز الاستعادة';
@@ -2122,6 +2122,85 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get localProNotIncludedTransfer =>
       'شراء Google Play لا يفتح تطبيق iOS، وشراء App Store لا يفتح Android.';
+
+  @override
+  String get localProAccountTitle => 'بريد اختياري';
+
+  @override
+  String get localProAccountBody =>
+      'يمكنك مواصلة استخدام Registry من دون حساب. لاستعادة شراء Local Pro جديد بعد إعادة التثبيت أو تغيير الجهاز، وثّق بريدك قبل الشراء. يُربَط الشراء بذلك البريد فقط بعد تأكيد الرمز وقبول المتجر للشراء. توثيق البريد لا يشغّل Local Pro. ولا يفعل ذلك ملف نسخة احتياطية أو معرّف معاملة أو مفتاح داخل التطبيق.';
+
+  @override
+  String get localProAccountBeforeBuy =>
+      'إذا اشتريت قبل توثيق البريد، يبقى الشراء على هذا التثبيت. يُربَط فقط عندما ترسل استعادة المشتريات رمز الاستعادة الحالي وأنت مسجّل الدخول، ويقبل الخادم شراء المتجر الحالي. تسجيل الدخول لا يربطه وحده. بعد الربط، ينتقل إلى تثبيت جديد فقط عندما يكون ذلك البريد نفسه مسجّل الدخول ويقبل الخادم شراء المتجر مرة أخرى. رمز الاستعادة وحده لا ينقله.';
+
+  @override
+  String localProAccountSignedIn(String email) {
+    return 'تم تسجيل الدخول باسم $email. على تثبيت جديد، سجّل الدخول ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من هذا المتجر، ويتحقق الخادم منه قبل أن يعمل Local Pro. يبقى Android وiOS منفصلين.';
+  }
+
+  @override
+  String get localProAccountEmailLabel => 'البريد';
+
+  @override
+  String get localProAccountSendCode => 'إرسال رمز التحقق';
+
+  @override
+  String get localProAccountCodeLabel => 'رمز التحقق';
+
+  @override
+  String get localProAccountConfirm => 'تأكيد البريد';
+
+  @override
+  String get localProAccountCodeSent =>
+      'أُرسل رمز تحقق. تنتهي صلاحيته قريبًا. الرمز لا يشغّل Local Pro.';
+
+  @override
+  String get localProAccountNotConfigured =>
+      'إرسال البريد غير مُعد. لم يُرسل رمز تحقق.';
+
+  @override
+  String get localProAccountUnavailable =>
+      'هذا الإصدار لا يستطيع إرسال بريد تحقق. لن يُرسل أي رمز من هذه الشاشة.';
+
+  @override
+  String get localProAccountDeliveryFailed =>
+      'تعذّر إرسال البريد. لم يُسلَّم رمز تحقق.';
+
+  @override
+  String get localProAccountInvalidCode =>
+      'هذا الرمز غير صالح. لم يتغير Local Pro.';
+
+  @override
+  String get localProAccountOffline =>
+      'تعذّر على Registry الوصول إلى التحقق من الحساب. لم يُرسل شيء ولم يتغير شيء.';
+
+  @override
+  String get localProAccountDeleted =>
+      'أُزيل الحساب. يبقى هذا الشراء على هذا التثبيت. يحتاج الجهاز الجديد رمز الاستعادة الحالي. حذف الحساب لم يشغّل Local Pro ولم يوقفه.';
+
+  @override
+  String get localProAccountDelete => 'حذف الحساب';
+
+  @override
+  String get localProAccountDeleteBody =>
+      'حذف الحساب يسجّل خروجك ويزيل ربط البريد. لا يسترد مبلغ الشراء من المتجر. الشراء الذي لم يُربَط قط ما زال يحتاج رمز الاستعادة.';
+
+  @override
+  String get localProRecoveryCodeRequired =>
+      'هذا الشراء ما زال مرتبطًا بالتثبيت الأصلي، لا بهذا البريد. لم يُنقل. أدخل رمز الاستعادة الحالي واستعد مرة أخرى لربطه، أو واصل استخدام ذلك الرمز من دون حساب.';
+
+  @override
+  String get localProAccountSignInRequired =>
+      'هذا الشراء مرتبط ببريد مُوثَّق. يبقى Local Pro متوقفًا على هذا التثبيت. سجّل الدخول بذلك البريد، ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل نقل الشراء. رمز الاستعادة وحده لا ينقله، ولا يستطيع بريد آخر أخذه.';
+
+  @override
+  String get localProAccountUnchanged =>
+      'يبقى هذا الشراء على هذا التثبيت. لم يُربَط البريد. أدخل رمز الاستعادة الحالي مع استعادة المشتريات لربطه.';
+
+  @override
+  String get localProAccountLinked =>
+      'أصبح هذا الشراء مرتبطًا ببريدك المُوثَّق. يمكن لتثبيت جديد من هذا المتجر استعادته بعد تسجيل الدخول.';
 
   @override
   String get profilePlanFree =>

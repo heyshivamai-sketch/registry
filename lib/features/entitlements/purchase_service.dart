@@ -23,6 +23,8 @@ enum PurchaseFlowOutcome {
   bindingMismatch,
   unchanged,
   revoked,
+  recoveryCodeRequired,
+  accountSignInRequired,
 }
 
 class PurchaseAttempt {
@@ -30,6 +32,7 @@ class PurchaseAttempt {
     this.proof,
     this.outcome = PurchaseFlowOutcome.unavailable,
     this.recoveryCode,
+    this.accountLink,
   });
 
   /// Null unless a configured verifier accepted the store purchase.
@@ -38,6 +41,9 @@ class PurchaseAttempt {
 
   /// Shown when this installation first receives the binding.
   final String? recoveryCode;
+
+  /// `bound`, `linked`, or `unchanged` when the server reports an account link.
+  final String? accountLink;
 }
 
 abstract class PurchaseService {

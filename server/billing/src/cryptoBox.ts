@@ -7,6 +7,7 @@ import {
   randomInt,
   sign,
   timingSafeEqual,
+  type JsonWebKey,
   type webcrypto,
 } from 'node:crypto';
 import type { StoreEnvironment, StorePlatform } from './types.ts';
@@ -44,7 +45,7 @@ export function signGrant(
   claims: GrantClaims,
 ): { canonical: string; signature: string } {
   const canonical = canonicalGrant(claims);
-  const key = createPrivateKey({ key: privateJwk, format: 'jwk' });
+  const key = createPrivateKey({ key: privateJwk as JsonWebKey, format: 'jwk' });
   const signature = sign(null, Buffer.from(canonical, 'utf8'), key).toString('base64');
   return { canonical, signature };
 }
@@ -67,6 +68,37 @@ export function normalizeRecoveryCode(code: string): string {
 
 export function hashRecoveryCode(pepper: string, code: string): string {
   return sha256Hex(`${pepper}:${normalizeRecoveryCode(code)}`);
+}
+
+export function generateEmailCode(): string {
+  let raw = '';
+  for (let index = 0; index < 8; index += 1) {
+    raw += String(randomInt(10));
+  }
+  return raw;
+}
+
+export function normalizeEmail(value: string): string | null {
+  const email = value.trim().toLowerCase();
+  if (email.length < 3 || email.length > 254) {
+    return null;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return null;
+  }
+  return email;
+}
+
+export function hashEmailCode(pepper: string, email: string, code: string): string {
+  return sha256Hex(`${pepper}:email:${email}:${code}`);
+}
+
+export function generateSessionToken(): string {
+  return randomBytes(32).toString('base64url');
+}
+
+export function hashSessionToken(token: string): string {
+  return sha256Hex(`session:${token}`);
 }
 
 export function recoveryCodesMatch(leftHex: string, rightHex: string): boolean {

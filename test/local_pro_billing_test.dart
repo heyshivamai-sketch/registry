@@ -12,6 +12,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:the_registry/app/app.dart';
+import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/backup/backup_models.dart';
 import 'package:the_registry/features/backup/backup_payload.dart';
@@ -26,6 +27,7 @@ import 'package:the_registry/features/entitlements/entitlement_service.dart';
 import 'package:the_registry/features/entitlements/grant_codec.dart';
 import 'package:the_registry/features/entitlements/in_app_purchase_store.dart';
 import 'package:the_registry/features/entitlements/platform_billing_coordinator.dart';
+import 'package:the_registry/features/entitlements/pro_account.dart';
 import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
 import 'package:the_registry/features/entitlements/production_billing.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
@@ -34,6 +36,7 @@ import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 
 import 'support/fake_onboarding_repository.dart';
+import 'support/phase2_fakes.dart';
 
 const _install = '11111111-1111-4111-8111-111111111111';
 
@@ -211,42 +214,42 @@ void main() {
     );
   });
 
-  test('a second callback for the same purchase is not verified again', () async {
-    final canonical = grant();
-    final signature = await sign(canonical);
-    final store = _FakeStore(
-      const StoreListing(
-        productId: 'local_pro',
-        localizedPrice: 'DZD 1,200.00',
-      ),
-    );
-    final gate = Completer<void>();
-    final verifier = _FakeVerifier(
-      BillingServerResponse(
-        statusCode: 200,
-        body: {'canonical': canonical, 'signature': signature},
-      ),
-    )..gate = gate;
-    final coordinator = _coordinator(
-      runtime: readyRuntime(),
-      store: store,
-      verifier: verifier,
-      cache: MemoryEntitlementCache(),
-      pending: MemoryPendingPurchaseStore(),
-    );
-    store.burst = 2;
-    store.next = [_update(StorePurchaseStatus.purchased)];
-    final pendingResult = coordinator.purchaseLocalPro();
-    await Future<void>.delayed(Duration.zero);
-    expect(verifier.calls, 1);
-    gate.complete();
-    expect(
-      (await pendingResult).outcome,
-      PurchaseFlowOutcome.verified,
-    );
-    expect(verifier.calls, 1);
-    await coordinator.dispose();
-  });
+  test(
+    'a second callback for the same purchase is not verified again',
+    () async {
+      final canonical = grant();
+      final signature = await sign(canonical);
+      final store = _FakeStore(
+        const StoreListing(
+          productId: 'local_pro',
+          localizedPrice: 'DZD 1,200.00',
+        ),
+      );
+      final gate = Completer<void>();
+      final verifier = _FakeVerifier(
+        BillingServerResponse(
+          statusCode: 200,
+          body: {'canonical': canonical, 'signature': signature},
+        ),
+      )..gate = gate;
+      final coordinator = _coordinator(
+        runtime: readyRuntime(),
+        store: store,
+        verifier: verifier,
+        cache: MemoryEntitlementCache(),
+        pending: MemoryPendingPurchaseStore(),
+      );
+      store.burst = 2;
+      store.next = [_update(StorePurchaseStatus.purchased)];
+      final pendingResult = coordinator.purchaseLocalPro();
+      await Future<void>.delayed(Duration.zero);
+      expect(verifier.calls, 1);
+      gate.complete();
+      expect((await pendingResult).outcome, PurchaseFlowOutcome.verified);
+      expect(verifier.calls, 1);
+      await coordinator.dispose();
+    },
+  );
 
   test('restart retries completion without a second verification', () async {
     final canonical = grant();
@@ -477,7 +480,10 @@ void main() {
       ),
     );
     final verifier = _FakeVerifier(
-      const BillingServerResponse(statusCode: 429, body: {'error': 'rate_limited'}),
+      const BillingServerResponse(
+        statusCode: 429,
+        body: {'error': 'rate_limited'},
+      ),
     );
     final coordinator = _coordinator(
       runtime: readyRuntime(),
@@ -542,35 +548,42 @@ void main() {
     },
   );
 
-  test('Apple mismatch finishes the queue and Play mismatch does not', () async {
-    final store = _FakeStore(
-      const StoreListing(
-        productId: 'local_pro',
-        localizedPrice: 'DZD 1,200.00',
-      ),
-    );
-    final verifier = _FakeVerifier(
-      const BillingServerResponse(
-        statusCode: 409,
-        body: {'result': 'binding_mismatch'},
-      ),
-    );
-    final coordinator = _coordinator(
-      runtime: readyRuntime(),
-      store: store,
-      verifier: verifier,
-      cache: MemoryEntitlementCache(),
-      pending: MemoryPendingPurchaseStore(),
-    );
-    store.next = [
-      _update(StorePurchaseStatus.restored, platform: 'apple', purchaseKey: '1000001'),
-    ];
-    final mismatch = await coordinator.restoreLocalPro();
-    expect(mismatch.outcome, PurchaseFlowOutcome.bindingMismatch);
-    expect(store.completed, ['1000001']);
-    expect(verifier.bodies.single['signedTransaction'], 'header.payload.sig');
-    expect(verifier.bodies.single.containsKey('purchaseToken'), isFalse);
-  });
+  test(
+    'Apple mismatch finishes the queue and Play mismatch does not',
+    () async {
+      final store = _FakeStore(
+        const StoreListing(
+          productId: 'local_pro',
+          localizedPrice: 'DZD 1,200.00',
+        ),
+      );
+      final verifier = _FakeVerifier(
+        const BillingServerResponse(
+          statusCode: 409,
+          body: {'result': 'binding_mismatch'},
+        ),
+      );
+      final coordinator = _coordinator(
+        runtime: readyRuntime(),
+        store: store,
+        verifier: verifier,
+        cache: MemoryEntitlementCache(),
+        pending: MemoryPendingPurchaseStore(),
+      );
+      store.next = [
+        _update(
+          StorePurchaseStatus.restored,
+          platform: 'apple',
+          purchaseKey: '1000001',
+        ),
+      ];
+      final mismatch = await coordinator.restoreLocalPro();
+      expect(mismatch.outcome, PurchaseFlowOutcome.bindingMismatch);
+      expect(store.completed, ['1000001']);
+      expect(verifier.bodies.single['signedTransaction'], 'header.payload.sig');
+      expect(verifier.bodies.single.containsKey('purchaseToken'), isFalse);
+    },
+  );
 
   test('backup bytes do not carry entitlement fields', () {
     final bytes = RegistryBackupPayload.encode(
@@ -594,6 +607,281 @@ void main() {
     expect(text.contains('purchaseToken'), isFalse);
     expect(text.contains('recoveryCode'), isFalse);
     expect(text.contains('signedTransaction'), isFalse);
+    expect(text.contains('sessionToken'), isFalse);
+    expect(text.contains('verificationCode'), isFalse);
+  });
+
+  test(
+    'account session stays outside the registry database and backup',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'registry-account',
+      );
+      addTearDown(() => directory.delete(recursive: true));
+      final store = FileProAccountSessionStore(
+        File('${directory.path}/billing/account_session.json'),
+      );
+      await store.write(
+        const ProAccountSession(
+          token: 'session-secret',
+          email: 'owner@example.com',
+        ),
+      );
+      final again = await store.read();
+      expect(again?.email, 'owner@example.com');
+      expect(again?.token, 'session-secret');
+      expect(File('${directory.path}/registry.db').existsSync(), isFalse);
+      await store.clear();
+      expect(await store.read(), isNull);
+    },
+  );
+
+  test(
+    'restore sends the session apart from the store token and does not grant without the server',
+    () async {
+      final sessions = MemoryProAccountSessionStore();
+      await sessions.write(
+        const ProAccountSession(
+          token: 'session-secret',
+          email: 'owner@example.com',
+        ),
+      );
+      final store = _FakeStore(
+        const StoreListing(
+          productId: 'local_pro',
+          localizedPrice: 'DZD 1,200.00',
+        ),
+      );
+      final verifier = _FakeVerifier(
+        const BillingServerResponse(
+          statusCode: 409,
+          body: {'result': 'recovery_code_required'},
+        ),
+      );
+      final cache = MemoryEntitlementCache();
+      final coordinator = _coordinator(
+        runtime: readyRuntime(),
+        store: store,
+        verifier: verifier,
+        cache: cache,
+        pending: MemoryPendingPurchaseStore(),
+        sessions: sessions,
+      );
+      store.next = [_update(StorePurchaseStatus.restored)];
+      final attempt = await coordinator.restoreLocalPro();
+      expect(attempt.outcome, PurchaseFlowOutcome.recoveryCodeRequired);
+      expect(attempt.proof, isNull);
+      expect(cache.writes, 0);
+      expect(verifier.paths, ['/v1/purchases/restore']);
+      expect(verifier.sessionTokens, ['session-secret']);
+      expect(verifier.bodies.single.containsKey('sessionToken'), isFalse);
+      expect(verifier.bodies.single.containsKey('premium'), isFalse);
+      expect(verifier.bodies.single.containsKey('transactionId'), isFalse);
+      expect(verifier.bodies.single['purchaseToken'], 'token-1');
+    },
+  );
+
+  testWidgets(
+    'restore tells the user to sign in when a recovery code cannot move an account purchase',
+    (tester) async {
+      final store = _FakeStore(
+        const StoreListing(
+          productId: 'local_pro',
+          localizedPrice: 'DZD 1,200.00',
+        ),
+      );
+      final cache = MemoryEntitlementCache();
+      final verifier = _FakeVerifier(
+        const BillingServerResponse(
+          statusCode: 409,
+          body: {'result': 'account_sign_in_required'},
+        ),
+      );
+      final coordinator = _coordinator(
+        runtime: readyRuntime(),
+        store: store,
+        verifier: verifier,
+        cache: cache,
+        pending: MemoryPendingPurchaseStore(),
+      );
+      store.next = [_update(StorePurchaseStatus.restored)];
+      await tester.pumpWidget(
+        RegistryApp(
+          onboardingRepository: FakeOnboardingRepository(completed: true),
+          locale: const Locale('en'),
+          storeProducts: ScriptedStoreProductSource(
+            const StoreListing(
+              productId: 'local_pro',
+              localizedPrice: 'DZD 1,200.00',
+            ),
+          ),
+          purchaseService: ProductionPurchaseService(coordinator: coordinator),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('nav-profile')));
+      await tester.pumpAndSettle();
+      await tapProfileControl(tester, const ValueKey<String>('local-pro-open'));
+      final scrollable = find.descendant(
+        of: find.byType(LocalProScreen),
+        matching: find.byWidgetPredicate(
+          (widget) =>
+              widget is Scrollable &&
+              widget.axisDirection == AxisDirection.down,
+        ),
+      );
+      await _tapAccountControl(
+        tester,
+        const ValueKey<String>('local-pro-restore-code'),
+        scrollable,
+      );
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('local-pro-restore-code')),
+        'ABCD-EFGH-JKLM-NPQR',
+      );
+      await _tapAccountControl(
+        tester,
+        const ValueKey<String>('local-pro-restore'),
+        scrollable,
+      );
+      expect(
+        find.textContaining('A restore code alone does not move it'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('@'), findsNothing);
+      expect(
+        RegistryDependencies.of(
+          tester.element(find.byType(LocalProScreen)),
+        ).entitlements.plan,
+        RegistryPlan.free,
+      );
+      expect(cache.writes, 0);
+      expect(store.completed, isEmpty);
+      expect(verifier.paths, ['/v1/purchases/restore']);
+      expect(verifier.bodies.single['recoveryCode'], 'ABCD-EFGH-JKLM-NPQR');
+      expect(verifier.bodies.single.containsKey('sessionToken'), isFalse);
+      expect(verifier.sessionTokens, [null]);
+    },
+  );
+
+  test(
+    'email verification does not grant and a missing provider does not claim a send',
+    () async {
+      final sessions = MemoryProAccountSessionStore();
+      final verifier = _FakeVerifier(
+        const BillingServerResponse(
+          statusCode: 503,
+          body: {'error': 'email_not_configured'},
+        ),
+      );
+      final accounts = HttpProAccountClient(verifier, sessions);
+      final blocked = await accounts.startVerification('owner@example.com');
+      expect(blocked.outcome, AccountAttemptOutcome.emailNotConfigured);
+      expect(await sessions.read(), isNull);
+      expect(verifier.bodies.single.containsKey('code'), isFalse);
+
+      verifier.response = const BillingServerResponse(
+        statusCode: 200,
+        body: {
+          'result': 'signed_in',
+          'sessionToken': 'issued-session',
+          'email': 'owner@example.com',
+        },
+      );
+      final signedIn = await accounts.confirmVerification(
+        'owner@example.com',
+        '12345678',
+      );
+      expect(signedIn.outcome, AccountAttemptOutcome.signedIn);
+      expect((await sessions.read())?.token, 'issued-session');
+      expect(verifier.paths, [
+        '/v1/accounts/verification/start',
+        '/v1/accounts/verification/confirm',
+      ]);
+      expect(verifier.paths.any((path) => path.contains('purchases')), isFalse);
+    },
+  );
+
+  testWidgets('confirming an email does not turn on Local Pro', (tester) async {
+    final accounts = _ScriptedAccounts(
+      const AccountAttempt(outcome: AccountAttemptOutcome.emailNotConfigured),
+    );
+    await tester.pumpWidget(
+      RegistryApp(
+        onboardingRepository: FakeOnboardingRepository(completed: true),
+        locale: const Locale('en'),
+        proAccounts: accounts,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('nav-profile')));
+    await tester.pumpAndSettle();
+    await tapProfileControl(tester, const ValueKey<String>('local-pro-open'));
+    final scrollable = find.descendant(
+      of: find.byType(LocalProScreen),
+      matching: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable && widget.axisDirection == AxisDirection.down,
+      ),
+    );
+    await _tapAccountControl(
+      tester,
+      const ValueKey<String>('local-pro-account-email'),
+      scrollable,
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('local-pro-account-email')),
+      'owner@example.com',
+    );
+    await _tapAccountControl(
+      tester,
+      const ValueKey<String>('local-pro-account-send'),
+      scrollable,
+    );
+    expect(
+      find.textContaining('No verification code was sent'),
+      findsOneWidget,
+    );
+    expect(
+      RegistryDependencies.of(
+        tester.element(find.byType(LocalProScreen)),
+      ).entitlements.plan,
+      RegistryPlan.free,
+    );
+
+    accounts.next = const AccountAttempt(
+      outcome: AccountAttemptOutcome.signedIn,
+      email: 'owner@example.com',
+    );
+    accounts.session = const ProAccountSession(
+      token: 'issued-session',
+      email: 'owner@example.com',
+    );
+    await _tapAccountControl(
+      tester,
+      const ValueKey<String>('local-pro-account-code'),
+      scrollable,
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('local-pro-account-code')),
+      '12345678',
+    );
+    await _tapAccountControl(
+      tester,
+      const ValueKey<String>('local-pro-account-confirm'),
+      scrollable,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('local-pro-account-signed-in')),
+      findsOneWidget,
+    );
+    expect(
+      RegistryDependencies.of(
+        tester.element(find.byType(LocalProScreen)),
+      ).entitlements.plan,
+      RegistryPlan.free,
+    );
+    expect(find.byKey(const ValueKey<String>('local-pro-price')), findsNothing);
   });
 
   test('installation id stays outside the registry database file', () async {
@@ -723,6 +1011,7 @@ PlatformBillingCoordinator _coordinator({
   required MemoryPendingPurchaseStore pending,
   Clock? clock,
   Duration updateTimeout = const Duration(seconds: 2),
+  ProAccountSessionStore? sessions,
 }) {
   return PlatformBillingCoordinator(
     runtime: runtime,
@@ -733,7 +1022,48 @@ PlatformBillingCoordinator _coordinator({
     pending: pending,
     clock: clock ?? FixedClock(DateTime.utc(2026, 9, 27, 12)),
     updateTimeout: updateTimeout,
+    sessions: sessions,
   );
+}
+
+Future<void> _tapAccountControl(
+  WidgetTester tester,
+  ValueKey<String> key,
+  Finder scrollable,
+) async {
+  final target = find.byKey(key);
+  await tester.scrollUntilVisible(target, 200, scrollable: scrollable);
+  for (var attempt = 0; attempt < 8; attempt++) {
+    final dy = tester.getCenter(target).dy;
+    if (dy > 160 && dy < 520) {
+      break;
+    }
+    await tester.drag(scrollable, Offset(0, dy < 160 ? 180 : -180));
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(target);
+  await tester.pumpAndSettle();
+}
+
+class _ScriptedAccounts implements ProAccountClient {
+  _ScriptedAccounts(this.next);
+
+  AccountAttempt next;
+  ProAccountSession? session;
+
+  @override
+  Future<AccountAttempt> confirmVerification(String email, String code) async {
+    return next;
+  }
+
+  @override
+  Future<AccountAttempt> deleteAccount() async => next;
+
+  @override
+  Future<ProAccountSession?> readSession() async => session;
+
+  @override
+  Future<AccountAttempt> startVerification(String email) async => next;
 }
 
 StorePurchaseUpdate _update(
@@ -805,17 +1135,20 @@ class _FakeVerifier implements BillingVerificationClient {
   BillingServerResponse response;
   final paths = <String>[];
   final bodies = <Map<String, Object?>>[];
+  final sessionTokens = <String?>[];
   var calls = 0;
   Completer<void>? gate;
 
   @override
   Future<BillingServerResponse> post(
     String path,
-    Map<String, Object?> body,
-  ) async {
+    Map<String, Object?> body, {
+    String? sessionToken,
+  }) async {
     calls += 1;
     paths.add(path);
     bodies.add(body);
+    sessionTokens.add(sessionToken);
     final gate = this.gate;
     if (gate != null) {
       await gate.future;

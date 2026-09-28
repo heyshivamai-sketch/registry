@@ -75,9 +75,23 @@ These are not Play Console, App Store Connect, or a live `SignedDataVerifier` ca
 - A license-tester purchase, a Sandbox Apple ID purchase, a force-stop during the purchase sheet, a reinstall restore-code move, `AppStore.sync()` against Apple, and a real refund notification were not run.
 - `email_verified` is checked in `server/billing/src/index.ts`. The automated tests use a fake authorizer, so they do not exercise Google's OIDC library.
 
+## Account-bound transfer rule
+
+Checked on 28 September 2026 on `feature/pro-account-recovery`. This is the server and Flutter behavior in the working tree. `BillingConfiguration.storeVerificationConfigured` is still `false`. No store purchase was made.
+
+An account-bound purchase (`purchases.account_id` set) moves to another installation only when Restore purchases carries a session for that same account and the server accepts a current store entitlement. A recovery code with no session returns `409` `{ "result": "account_sign_in_required" }` and does not change the row. A session for a different account does the same, including when it also sends the current recovery code. The response body has no email and no account id. The Local Pro screen shows that the person must sign in with the owning email and restore again, and that the restore code alone does not move the purchase. Local Pro stays off.
+
+An installation-only purchase (`account_id` null) still moves with its current recovery code plus a store entitlement the server accepts. It becomes account-bound only on restore when that request also has a valid session, the current recovery code, and a purchased store result. The same installation keeps its installation id and restore-code hash and returns `accountLink: linked`. A different installation moves and rotates the code. Signing in without the code does not set `account_id`.
+
+The owning session can move the purchase. A second restore on that new installation returns the grant and does not rotate the code again. Replaying either the old or the new recovery code without that session does not move it. A refund marks the row revoked; the recovery code does not grant it again. Deleting the account revokes its sessions, sets `account_id` to null, and leaves the store entitlement on the current installation. The same email can be verified again as a new account id. That account does not inherit the purchase. The current recovery code plus a verified store entitlement can move it, and the same restore with the new session links that new account.
+
+Server coverage is in `server/billing/test/accountRecovery.test.ts` (`moves an account-bound purchase only for that account session`, the refund test, and the deletion test). The Flutter restore message is in `test/local_pro_billing_test.dart`.
+
+Sequential check on 28 September 2026, after this rule change: server tests 26 passed, 0 failed; `tsc --noEmit` passed; `flutter analyze` reported no issues; `flutter test test/local_pro_billing_test.dart test/local_pro_screen_test.dart` passed 23 tests; `flutter test` passed 303 tests.
+
 ## Remaining blockers
 
-Reinstall requires a recovery code. Losing it currently prevents restoring a paid entitlement. Recovery UX and real store acceptance must be resolved before enabling purchases.
+An installation-only purchase still needs its recovery code. An account-bound purchase needs the owning account's session, and this server cannot send that verification email until a real `EmailDelivery` provider is configured. Store acceptance is still required before enabling purchases.
 
 - Play Console app for `com.registry.app`, one-time product `local_pro`, license testers, Play Developer API service account, and Pub/Sub push for real-time developer notifications.
 - Decision on the iOS bundle id before creating the App Store Connect app. Current value remains `com.example.theRegistry`.
@@ -97,7 +111,7 @@ Do not check these from the mocked tests. The steps are the sandbox checklist in
 - [ ] A license-tester or Sandbox Apple ID purchase returns a signed grant and turns Local Pro on for that installation only.
 - [ ] Force-stop during purchase, then relaunch, verifies the transaction once and finishes or acknowledges it. Play does not show it as consumed.
 - [ ] Restore purchases on the same installation reads the platform store, the server verifies that purchase again, and Local Pro stays active without the restore code.
-- [ ] A reinstall stays Free until Restore purchases returns the store transaction and the restore code moves the binding. A copied token without the code does not grant. The old installation loses Local Pro on its next successful revalidation. Records are not deleted. Losing the code leaves the new installation on Free, because the server never receives the Google account or Apple ID.
+- [ ] A reinstall stays Free until Restore purchases returns the store transaction and the server accepts it. An account-bound purchase moves only for a session of that same account. A recovery code alone, or another account, does not move it and does not reveal the owner's email. An installation-only purchase still needs its current recovery code, and it becomes account-bound only when that code is restored with a verified session. A copied token without that proof does not grant. The old installation loses Local Pro on its next successful revalidation. Records are not deleted.
 - [ ] A refund or revocation turns Local Pro off. Existing records can still be edited, exported, and restored. A new record past the Free limit cannot be added.
 - [ ] A Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.
 - [ ] Only after that evidence, a production build may set `storeVerificationConfigured` to true.

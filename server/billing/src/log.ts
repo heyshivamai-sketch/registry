@@ -1,5 +1,5 @@
 const secretKey =
-  /purchaseToken|purchasetoken|token|signedTransaction|signedPayload|signedtransaction|recoveryCode|recoverycode|authorization|private|receipt|jws|serviceAccount|password|ciphertext/i;
+  /purchaseToken|purchasetoken|token|signedTransaction|signedPayload|signedtransaction|recoveryCode|recoverycode|authorization|private|receipt|jws|serviceAccount|password|ciphertext|verificationCode|emailCode|sessionToken|bearer/i;
 
 export function redact(value: unknown): unknown {
   if (Array.isArray(value)) {
