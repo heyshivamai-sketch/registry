@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
+import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_selector_field.dart';
@@ -240,10 +241,27 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
               if (session != null && session.notice != CsvImportNotice.none)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: Text(
-                    key: const ValueKey<String>('csv-notice'),
-                    _notice(l10n, session.notice),
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        key: const ValueKey<String>('csv-notice'),
+                        _notice(l10n, session.notice),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      if (session.notice == CsvImportNotice.subscriptionLimit)
+                        TextButton(
+                          key: const ValueKey<String>('local-pro-from-limit'),
+                          onPressed: () => unawaited(
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const LocalProScreen(),
+                              ),
+                            ),
+                          ),
+                          child: Text(l10n.localProAction),
+                        ),
+                    ],
                   ),
                 ),
               if (step == CsvImportStep.choose) ..._choose(l10n),

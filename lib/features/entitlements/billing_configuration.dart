@@ -23,19 +23,32 @@
 ///   signed transaction JWS). Require product id `local_pro`, this bundle
 ///   id, and no revocation.
 ///
-/// Backend, which this app does not ship:
+/// Backend in `server/billing`, which is not deployed by this build:
 /// * Receive the store purchase token or signed transaction from the app.
 /// * Call the store API above. Do not trust the client callback, a boolean
 ///   in the app, a backup file, or a debug switch.
-/// * Return a verified result only after the store call succeeds.
-/// * The app may cache that verified result later. It must not cache a
-///   client-written "premium" flag.
+/// * Return a signed grant only after the store call succeeds.
+/// * The app may cache that signed grant. It must not cache a client-written
+///   "premium" flag.
+///
+/// Setup, ownership, and the release checklist are in
+/// `docs/setup/local_pro_billing.md`. [storeVerificationConfigured] stays
+/// false until a real sandbox purchase has been verified.
 ///
 /// The display name, application id, and bundle id stay as they are today.
 /// A future brand such as Regiday is not a reason to change those ids
 /// until the name is approved and the store listings are created for it.
 abstract final class BillingConfiguration {
   static const localProProductId = 'local_pro';
+  static const androidApplicationId = 'com.registry.app';
+  static const iosBundleId = 'com.example.theRegistry';
+
+  /// Empty until a deployment build is allowed to verify grants.
+  static const String? verificationBaseUrl = null;
+  static const grantPublicKeyBase64 = '';
+
+  /// `sandbox` or `production` once that build is pointed at a live server.
+  static const String? storeEnvironment = null;
 
   static const storeVerificationConfigured = false;
 }

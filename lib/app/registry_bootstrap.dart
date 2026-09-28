@@ -10,6 +10,8 @@ import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import 'package:the_registry/features/entitlements/production_billing.dart';
+import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/data/shared_preferences_onboarding_repository.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -50,6 +52,8 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
   OnboardingRepository? _onboarding;
   NotificationPromptStore? _notificationPrompts;
   AppLockStore? _appLockStore;
+  PurchaseService? _purchases;
+  StoreProductSource? _products;
   int _generation = 0;
 
   @override
@@ -86,11 +90,23 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         await store.close();
         return;
       }
+      ProductionBilling? billing;
+      try {
+        billing = await openProductionBilling();
+      } catch (_) {
+        billing = null;
+      }
+      if (!mounted || generation != _generation) {
+        await store.close();
+        return;
+      }
       setState(() {
         _store = store;
         _onboarding = onboarding;
         _notificationPrompts = prompts;
         _appLockStore = appLockStore;
+        _purchases = billing?.purchases;
+        _products = billing?.products;
         _phase = _StartupPhase.ready;
       });
     } catch (_) {
@@ -126,6 +142,8 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         timeZoneSource: widget.timeZoneSource,
         notificationPromptStore: _notificationPrompts,
         appLockStore: _appLockStore,
+        purchaseService: _purchases,
+        storeProducts: _products,
       );
     }
 

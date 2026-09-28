@@ -6,6 +6,7 @@ import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
 import 'package:the_registry/core/widgets/registry_surface.dart';
+import 'package:the_registry/core/widgets/registry_form_field.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/entitlements/purchase_service.dart';
 import 'package:the_registry/features/entitlements/registry_plan.dart';
@@ -23,6 +24,14 @@ class _LocalProScreenState extends State<LocalProScreen> {
   var _loading = true;
   var _buying = false;
   var _loadStarted = false;
+  String? _recoveryCode;
+  final _restoreCode = TextEditingController();
+
+  @override
+  void dispose() {
+    _restoreCode.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -57,23 +66,64 @@ class _LocalProScreenState extends State<LocalProScreen> {
     setState(() => _buying = true);
     try {
       final attempt = await deps.purchases.purchaseLocalPro();
-      deps.entitlements.applyVerified(attempt.proof);
-      if (!mounted) {
-        return;
-      }
-      final messenger = ScaffoldMessenger.of(context);
-      if (deps.entitlements.plan == RegistryPlan.localPro) {
-        messenger.showSnackBar(SnackBar(content: Text(l10n.localProOwned)));
-      } else {
-        messenger.showSnackBar(
-          SnackBar(content: Text(l10n.localProPurchasePending)),
-        );
-      }
+      _showAttempt(deps, l10n, attempt);
     } finally {
       if (mounted) {
         setState(() => _buying = false);
       }
     }
+  }
+
+  Future<void> _restore() async {
+    if (_buying) {
+      return;
+    }
+    final deps = RegistryDependencies.of(context);
+    final l10n = AppLocalizations.of(context);
+    final code = _restoreCode.text.trim();
+    setState(() => _buying = true);
+    try {
+      final attempt = await deps.purchases.restoreLocalPro(
+        recoveryCode: code.isEmpty ? null : code,
+      );
+      _showAttempt(deps, l10n, attempt);
+    } finally {
+      if (mounted) {
+        setState(() => _buying = false);
+      }
+    }
+  }
+
+  void _showAttempt(
+    RegistryDependencies deps,
+    AppLocalizations l10n,
+    PurchaseAttempt attempt,
+  ) {
+    if (attempt.outcome != PurchaseFlowOutcome.unchanged &&
+        attempt.proof != null) {
+      deps.entitlements.applyVerified(attempt.proof);
+    }
+    if (!mounted) {
+      return;
+    }
+    if (attempt.recoveryCode != null) {
+      setState(() => _recoveryCode = attempt.recoveryCode);
+    }
+    final owned = deps.entitlements.plan == RegistryPlan.localPro;
+    final message = switch (attempt.outcome) {
+      PurchaseFlowOutcome.cancelled => l10n.localProPurchaseCancelled,
+      PurchaseFlowOutcome.failed => l10n.localProPurchaseFailed,
+      PurchaseFlowOutcome.pending => l10n.localProPendingStore,
+      PurchaseFlowOutcome.bindingMismatch => l10n.localProBindingMismatch,
+      PurchaseFlowOutcome.unchanged => l10n.localProNetworkUnchanged,
+      PurchaseFlowOutcome.revoked => l10n.localProRevoked,
+      PurchaseFlowOutcome.verified || PurchaseFlowOutcome.restored =>
+        owned ? l10n.localProOwned : l10n.localProPurchasePending,
+      PurchaseFlowOutcome.unavailable => l10n.localProPurchasePending,
+    };
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -178,6 +228,11 @@ class _LocalProScreenState extends State<LocalProScreen> {
                     l10n.localProNotIncludedCloud,
                     style: theme.textTheme.bodyMedium,
                   ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.localProNotIncludedTransfer,
+                    style: theme.textTheme.bodyMedium,
+                  ),
                 ],
               ),
             ),
@@ -222,12 +277,58 @@ class _LocalProScreenState extends State<LocalProScreen> {
                 style: theme.textTheme.headlineSmall,
               ),
             const SizedBox(height: AppSpacing.md),
+            if (_recoveryCode != null) ...[
+              RegistrySurface(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.localProRecoveryTitle,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      _recoveryCode!,
+                      key: const ValueKey<String>('local-pro-recovery-code'),
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      l10n.localProRecoveryBody,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
             if (!owned)
               RegistryPrimaryButton(
                 key: const ValueKey<String>('local-pro-buy'),
                 label: l10n.localProBuy,
                 onPressed: canBuy ? () => unawaited(_buy()) : null,
               ),
+            if (listing != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              RegistryTextField(
+                fieldKey: const ValueKey<String>('local-pro-restore-code'),
+                label: l10n.localProRecoveryPrompt,
+                controller: _restoreCode,
+                enabled: !_buying,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              RegistryPrimaryButton(
+                key: const ValueKey<String>('local-pro-restore'),
+                label: l10n.localProRestore,
+                onPressed: _buying ? null : () => unawaited(_restore()),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.localProRecoverySubmit,
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
           ],
         ),
       ),

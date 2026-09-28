@@ -174,6 +174,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     unawaited(_reminders.start());
+    unawaited(_purchases.warmUp(_entitlementSource));
   }
 
   @override

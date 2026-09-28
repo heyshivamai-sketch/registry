@@ -13,6 +13,10 @@ import 'package:the_registry/features/subscriptions/domain/registry_subscription
 ///
 /// Big-endian, length-prefixed UTF-8. Attachment bytes are raw, not paths.
 /// Dates use the same local/UTC microsecond encoding as the on-device rows.
+///
+/// Entitlement grants, installation ids, purchase tokens, signed transactions,
+/// and restore codes are not fields of this payload. Restoring a backup does
+/// not grant Local Pro.
 abstract final class RegistryBackupPayload {
   static const magic = [0x52, 0x47, 0x50, 0x59]; // RGPY
   static const version = 1;

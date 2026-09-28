@@ -3706,6 +3706,78 @@ abstract class AppLocalizations {
   /// **'The store did not return a verified purchase. Local Pro stays off.'**
   String get localProPurchasePending;
 
+  /// No description provided for @localProRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get localProRestore;
+
+  /// No description provided for @localProPurchaseCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase was cancelled. Local Pro stays off.'**
+  String get localProPurchaseCancelled;
+
+  /// No description provided for @localProPurchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase could not be completed. Local Pro stays off.'**
+  String get localProPurchaseFailed;
+
+  /// No description provided for @localProPendingStore.
+  ///
+  /// In en, this message translates to:
+  /// **'The store is still processing this purchase. Local Pro stays off until it is verified.'**
+  String get localProPendingStore;
+
+  /// No description provided for @localProBindingMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase is linked to another installation. Local Pro stays off here. Restore purchases on the same store can move it only with the restore code from that installation.'**
+  String get localProBindingMismatch;
+
+  /// No description provided for @localProRecoveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this restore code'**
+  String get localProRecoveryTitle;
+
+  /// No description provided for @localProRecoveryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry has no account, and the stores do not send the Google account or Apple ID. After you reinstall, Restore purchases checks the store again and asks for this code. It does not move a purchase between Android and iOS.'**
+  String get localProRecoveryBody;
+
+  /// No description provided for @localProRecoveryPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore code'**
+  String get localProRecoveryPrompt;
+
+  /// No description provided for @localProRecoverySubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore with code'**
+  String get localProRecoverySubmit;
+
+  /// No description provided for @localProNetworkUnchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry could not reach purchase verification. Nothing on this device was changed.'**
+  String get localProNetworkUnchanged;
+
+  /// No description provided for @localProRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'The store revoked this purchase. Local Pro is off. Records you already have can still be viewed, edited, renewed, deleted, exported, and restored.'**
+  String get localProRevoked;
+
+  /// No description provided for @localProNotIncludedTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.'**
+  String get localProNotIncludedTransfer;
+
   /// No description provided for @profilePlanFree.
   ///
   /// In en, this message translates to:

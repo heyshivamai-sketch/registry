@@ -73,4 +73,13 @@ class DebugQaPurchaseService implements PurchaseService {
     calls += 1;
     return PurchaseAttempt(proof: proof);
   }
+
+  @override
+  Future<PurchaseAttempt> restoreLocalPro({String? recoveryCode}) async {
+    calls += 1;
+    return PurchaseAttempt(proof: proof);
+  }
+
+  @override
+  Future<void> warmUp(VerifiedEntitlementSource source) async {}
 }

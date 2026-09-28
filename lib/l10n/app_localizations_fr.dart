@@ -2124,6 +2124,50 @@ class AppLocalizationsFr extends AppLocalizations {
       'La boutique n’a pas renvoyé un achat vérifié. Local Pro reste inactif.';
 
   @override
+  String get localProRestore => 'Restaurer les achats';
+
+  @override
+  String get localProPurchaseCancelled =>
+      'L’achat a été annulé. Local Pro reste inactif.';
+
+  @override
+  String get localProPurchaseFailed =>
+      'L’achat n’a pas pu être terminé. Local Pro reste inactif.';
+
+  @override
+  String get localProPendingStore =>
+      'La boutique traite encore cet achat. Local Pro reste inactif tant qu’il n’est pas vérifié.';
+
+  @override
+  String get localProBindingMismatch =>
+      'Cet achat est lié à une autre installation. Local Pro reste désactivé ici. Restaurer les achats sur la même boutique ne le déplace qu’avec le code de restauration de cette installation.';
+
+  @override
+  String get localProRecoveryTitle => 'Conservez ce code de restauration';
+
+  @override
+  String get localProRecoveryBody =>
+      'Registry n’a pas de compte, et les boutiques n’envoient ni le compte Google ni l’identifiant Apple. Après une réinstallation, Restaurer les achats vérifie à nouveau la boutique et demande ce code. Il ne transfère pas un achat entre Android et iOS.';
+
+  @override
+  String get localProRecoveryPrompt => 'Code de restauration';
+
+  @override
+  String get localProRecoverySubmit => 'Restaurer avec le code';
+
+  @override
+  String get localProNetworkUnchanged =>
+      'Registry n’a pas pu joindre la vérification d’achat. Rien n’a été modifié sur cet appareil.';
+
+  @override
+  String get localProRevoked =>
+      'La boutique a révoqué cet achat. Local Pro est inactif. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés, supprimés, exportés et restaurés.';
+
+  @override
+  String get localProNotIncludedTransfer =>
+      'Un achat Google Play ne déverrouille pas l’application iOS, et un achat App Store ne déverrouille pas Android.';
+
+  @override
   String get profilePlanFree =>
       'Offre gratuite. Les nouveaux documents et abonnements s’arrêtent aux limites gratuites. Les enregistrements déjà présents restent utilisables.';
 

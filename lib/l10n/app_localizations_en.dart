@@ -2094,6 +2094,50 @@ class AppLocalizationsEn extends AppLocalizations {
       'The store did not return a verified purchase. Local Pro stays off.';
 
   @override
+  String get localProRestore => 'Restore purchases';
+
+  @override
+  String get localProPurchaseCancelled =>
+      'The purchase was cancelled. Local Pro stays off.';
+
+  @override
+  String get localProPurchaseFailed =>
+      'The purchase could not be completed. Local Pro stays off.';
+
+  @override
+  String get localProPendingStore =>
+      'The store is still processing this purchase. Local Pro stays off until it is verified.';
+
+  @override
+  String get localProBindingMismatch =>
+      'This purchase is linked to another installation. Local Pro stays off here. Restore purchases on the same store can move it only with the restore code from that installation.';
+
+  @override
+  String get localProRecoveryTitle => 'Save this restore code';
+
+  @override
+  String get localProRecoveryBody =>
+      'Registry has no account, and the stores do not send the Google account or Apple ID. After you reinstall, Restore purchases checks the store again and asks for this code. It does not move a purchase between Android and iOS.';
+
+  @override
+  String get localProRecoveryPrompt => 'Restore code';
+
+  @override
+  String get localProRecoverySubmit => 'Restore with code';
+
+  @override
+  String get localProNetworkUnchanged =>
+      'Registry could not reach purchase verification. Nothing on this device was changed.';
+
+  @override
+  String get localProRevoked =>
+      'The store revoked this purchase. Local Pro is off. Records you already have can still be viewed, edited, renewed, deleted, exported, and restored.';
+
+  @override
+  String get localProNotIncludedTransfer =>
+      'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.';
+
+  @override
   String get profilePlanFree =>
       'Free plan. New documents and subscriptions stop at the free limits. Records you already have stay usable.';
 

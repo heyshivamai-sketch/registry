@@ -11,11 +11,16 @@ class VerifiedEntitlementProof {
     required this.productId,
     required this.accepted,
     this.clientSuppliedOnly = false,
+    this.revoked = false,
   });
 
   final String productId;
   final bool accepted;
   final bool clientSuppliedOnly;
+
+  /// A store refund, revocation, or binding move. Ignored when the proof is
+  /// only a client claim.
+  final bool revoked;
 }
 
 /// Decides the plan from a proof. Production always passes
@@ -29,10 +34,16 @@ RegistryPlan planAfterProof({
   if (!storeVerificationConfigured || proof == null) {
     return current;
   }
-  if (!proof.accepted || proof.clientSuppliedOnly) {
+  if (proof.clientSuppliedOnly) {
     return current;
   }
   if (proof.productId != BillingConfiguration.localProProductId) {
+    return current;
+  }
+  if (proof.revoked) {
+    return RegistryPlan.free;
+  }
+  if (!proof.accepted) {
     return current;
   }
   return RegistryPlan.localPro;
@@ -48,6 +59,12 @@ abstract class VerifiedEntitlementSource implements Listenable {
 
 class ProductionVerifiedEntitlementSource extends ChangeNotifier
     implements VerifiedEntitlementSource {
+  ProductionVerifiedEntitlementSource({bool? storeVerificationConfigured})
+    : _configured =
+          storeVerificationConfigured ??
+          BillingConfiguration.storeVerificationConfigured;
+
+  final bool _configured;
   RegistryPlan _plan = RegistryPlan.free;
 
   @override
@@ -57,8 +74,7 @@ class ProductionVerifiedEntitlementSource extends ChangeNotifier
   void applyVerified(VerifiedEntitlementProof? proof) {
     final next = planAfterProof(
       current: _plan,
-      storeVerificationConfigured:
-          BillingConfiguration.storeVerificationConfigured,
+      storeVerificationConfigured: _configured,
       proof: proof,
     );
     if (next == _plan) {

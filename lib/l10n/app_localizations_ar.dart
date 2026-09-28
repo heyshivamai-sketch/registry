@@ -2080,6 +2080,50 @@ class AppLocalizationsAr extends AppLocalizations {
       'لم يُرجع المتجر عملية شراء موثّقة. يبقى Local Pro متوقفًا.';
 
   @override
+  String get localProRestore => 'استعادة المشتريات';
+
+  @override
+  String get localProPurchaseCancelled =>
+      'أُلغي الشراء. يبقى Local Pro متوقفًا.';
+
+  @override
+  String get localProPurchaseFailed =>
+      'تعذّر إتمام الشراء. يبقى Local Pro متوقفًا.';
+
+  @override
+  String get localProPendingStore =>
+      'ما زال المتجر يعالج هذا الشراء. يبقى Local Pro متوقفًا إلى أن يُوثَّق.';
+
+  @override
+  String get localProBindingMismatch =>
+      'هذا الشراء مرتبط بتثبيت آخر. يبقى Local Pro متوقفًا هنا. استعادة المشتريات على المتجر نفسه تنقله فقط برمز الاستعادة من ذلك التثبيت.';
+
+  @override
+  String get localProRecoveryTitle => 'احتفظ برمز الاستعادة';
+
+  @override
+  String get localProRecoveryBody =>
+      'ليس لدى Registry حساب، ولا ترسل المتاجر حساب Google أو Apple ID. بعد إعادة التثبيت، تتحقق استعادة المشتريات من المتجر مرة أخرى وتطلب هذا الرمز. لا ينقل الشراء بين Android وiOS.';
+
+  @override
+  String get localProRecoveryPrompt => 'رمز الاستعادة';
+
+  @override
+  String get localProRecoverySubmit => 'استعادة بالرمز';
+
+  @override
+  String get localProNetworkUnchanged =>
+      'تعذّر على Registry الوصول إلى التحقق من الشراء. لم يتغير شيء على هذا الجهاز.';
+
+  @override
+  String get localProRevoked =>
+      'ألغى المتجر هذا الشراء. Local Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتجديد والحذف والتصدير والاستعادة.';
+
+  @override
+  String get localProNotIncludedTransfer =>
+      'شراء Google Play لا يفتح تطبيق iOS، وشراء App Store لا يفتح Android.';
+
+  @override
   String get profilePlanFree =>
       'الخطة المجانية. تتوقف المستندات والاشتراكات الجديدة عند الحدود المجانية. تبقى السجلات الموجودة قابلة للاستخدام.';
 

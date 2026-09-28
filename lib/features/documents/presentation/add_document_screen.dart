@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
+import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
 import 'package:the_registry/features/entitlements/entitlement_copy.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
@@ -418,7 +419,15 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       if (!mounted) {
         return;
       }
-      _showSaveMessage(entitlementDenialMessage(l10n, error.decision));
+      showEntitlementLimit(
+        context,
+        error.decision,
+        onUpgrade: () => unawaited(
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const LocalProScreen()),
+          ),
+        ),
+      );
     } on DuplicateRecordId {
       if (!mounted) {
         return;
