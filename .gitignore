@@ -33,6 +33,22 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Local Node dependencies and retired billing-server manifests
+node_modules/
+/package.json
+/package-lock.json
+
+# Local QA captures and generated build output
+/screenshots/
+/android/build/
+/registry_preview_screenshot.png
+/tooling/aadhaar_synthetic_test.png
+
+# Firebase config copies not used by the Android-only setup
+/lib/google-services.json
+/android/app/GoogleService-Info.plist
+/ios/Runner/GoogleService-Info.plist
+
 # Symbolication related
 app.*.symbols
 
@@ -44,7 +60,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local Pro billing server
+# Private QA build outputs (APKs, build info)
+/artifacts/
+
+# Leftovers from the removed Local Pro billing server
 server/billing/node_modules/
 server/billing/data/
 server/billing/.env
