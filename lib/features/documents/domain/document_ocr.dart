@@ -89,10 +89,14 @@ class DocumentOcrResult {
     required this.classification,
     required this.fields,
     required this.overallConfidence,
+    this.categoryLabel,
+    this.documentTypeLabel,
   });
 
   const DocumentOcrResult.failed()
-    : status = OcrRecognitionStatus.failed,
+    : categoryLabel = null,
+      documentTypeLabel = null,
+      status = OcrRecognitionStatus.failed,
       classification = const DocumentClassification(
         schemaId: DocumentSchemaIds.genericOther,
         countryCode: DocumentCountryCodes.other,
@@ -103,7 +107,9 @@ class DocumentOcrResult {
       overallConfidence = OcrConfidence.notDetected;
 
   const DocumentOcrResult.cancelled()
-    : status = OcrRecognitionStatus.cancelled,
+    : categoryLabel = null,
+      documentTypeLabel = null,
+      status = OcrRecognitionStatus.cancelled,
       classification = const DocumentClassification(
         schemaId: DocumentSchemaIds.genericOther,
         countryCode: DocumentCountryCodes.other,
@@ -114,6 +120,8 @@ class DocumentOcrResult {
       overallConfidence = OcrConfidence.notDetected;
 
   final OcrRecognitionStatus status;
+  final String? categoryLabel;
+  final String? documentTypeLabel;
   final DocumentClassification classification;
   final List<ExtractedDocumentField> fields;
   final OcrConfidence overallConfidence;
@@ -123,12 +131,19 @@ class DocumentOcrResult {
 
   DocumentOcrResult copyWith({
     OcrRecognitionStatus? status,
+    String? categoryLabel,
+    String? documentTypeLabel,
+    bool clearDocumentTypeLabel = false,
     DocumentClassification? classification,
     List<ExtractedDocumentField>? fields,
     OcrConfidence? overallConfidence,
   }) {
     return DocumentOcrResult(
       status: status ?? this.status,
+      categoryLabel: categoryLabel ?? this.categoryLabel,
+      documentTypeLabel: clearDocumentTypeLabel
+          ? null
+          : documentTypeLabel ?? this.documentTypeLabel,
       classification: classification ?? this.classification,
       fields: fields ?? this.fields,
       overallConfidence: overallConfidence ?? this.overallConfidence,
@@ -137,5 +152,51 @@ class DocumentOcrResult {
 }
 
 abstract class DocumentOcrService {
+  bool get isAvailable => true;
+
   Future<DocumentOcrResult> recognize(Uint8List imageBytes);
+}
+
+class DisabledDocumentOcrService implements DocumentOcrService {
+  const DisabledDocumentOcrService();
+
+  @override
+  bool get isAvailable => false;
+
+  @override
+  Future<DocumentOcrResult> recognize(Uint8List imageBytes) async =>
+      const DocumentOcrResult.failed();
+}
+
+abstract interface class MultiImageDocumentOcrService {
+  Future<DocumentOcrResult> recognizeImages(List<Uint8List> images);
+}
+
+Future<DocumentOcrResult> recognizeDocumentImages(
+  DocumentOcrService service,
+  List<Uint8List> images,
+) async {
+  if (!service.isAvailable) {
+    return const DocumentOcrResult.failed();
+  }
+  if (service is MultiImageDocumentOcrService) {
+    return (service as MultiImageDocumentOcrService).recognizeImages(images);
+  }
+  final results = <DocumentOcrResult>[];
+  for (final image in images) {
+    final result = await service.recognize(image);
+    if (result.status == OcrRecognitionStatus.cancelled) return result;
+    if (result.status == OcrRecognitionStatus.success) results.add(result);
+  }
+  if (results.isEmpty) return const DocumentOcrResult.failed();
+  final fields = <String, ExtractedDocumentField>{};
+  for (final result in results) {
+    for (final field in result.fields) {
+      if (field.value.trim().isNotEmpty ||
+          !fields.containsKey(field.fieldKey)) {
+        fields[field.fieldKey] = field;
+      }
+    }
+  }
+  return results.first.copyWith(fields: fields.values.toList());
 }

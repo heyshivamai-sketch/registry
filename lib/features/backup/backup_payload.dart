@@ -14,12 +14,12 @@ import 'package:the_registry/features/subscriptions/domain/registry_subscription
 /// Big-endian, length-prefixed UTF-8. Attachment bytes are raw, not paths.
 /// Dates use the same local/UTC microsecond encoding as the on-device rows.
 ///
-/// Entitlement grants, installation ids, purchase tokens, signed transactions,
-/// and restore codes are not fields of this payload. Restoring a backup does
-/// not grant Local Pro.
+/// Local Pro state, purchase tokens, and store transactions are not fields of
+/// this payload. Restoring a backup does not grant Local Pro; only the store
+/// can.
 abstract final class RegistryBackupPayload {
   static const magic = [0x52, 0x47, 0x50, 0x59]; // RGPY
-  static const version = 1;
+  static const version = 2;
 
   static Uint8List encode(BackupSnapshot snapshot) {
     if (snapshot.documents.length > BackupLimits.maxDocuments ||
@@ -59,7 +59,7 @@ abstract final class RegistryBackupPayload {
       }
     }
     final version = reader.u16();
-    if (version != RegistryBackupPayload.version) {
+    if (version < 1 || version > RegistryBackupPayload.version) {
       throw const BackupUnsupportedVersion();
     }
     final documentCount = reader.u32();
@@ -71,7 +71,7 @@ abstract final class RegistryBackupPayload {
     final documents = <RegistryDocument>[];
     final seenDocuments = <String>{};
     for (var i = 0; i < documentCount; i++) {
-      documents.add(_readDocument(reader, seenDocuments));
+      documents.add(_readDocument(reader, seenDocuments, version));
     }
     final subscriptions = <RegistrySubscription>[];
     final seenSubscriptions = <String>{};
@@ -139,17 +139,31 @@ abstract final class RegistryBackupPayload {
     final attachment = document.attachmentBytes;
     if (attachment == null || attachment.isEmpty) {
       writer.u8(0);
-      return;
+    } else {
+      if (attachment.length > BackupLimits.maxAttachmentBytes) {
+        throw const BackupOversized();
+      }
+      writer.u8(1);
+      writer.u32(attachment.length);
+      writer.bytes(attachment);
     }
-    if (attachment.length > BackupLimits.maxAttachmentBytes) {
-      throw const BackupOversized();
+    writer.optStr(document.categoryLabel);
+    if (document.additionalImages.length > 5) throw const BackupOversized();
+    writer.u8(document.additionalImages.length);
+    for (final image in document.additionalImages) {
+      if (image.isEmpty || image.length > BackupLimits.maxAttachmentBytes) {
+        throw const BackupOversized();
+      }
+      writer.u32(image.length);
+      writer.bytes(image);
     }
-    writer.u8(1);
-    writer.u32(attachment.length);
-    writer.bytes(attachment);
   }
 
-  static RegistryDocument _readDocument(_Reader reader, Set<String> seenIds) {
+  static RegistryDocument _readDocument(
+    _Reader reader,
+    Set<String> seenIds,
+    int version,
+  ) {
     final id = _readId(reader, seenIds);
     final name = _readText(reader, required: true);
     final category = _enumValue(DocumentCategory.values, reader.str());
@@ -223,7 +237,22 @@ abstract final class RegistryBackupPayload {
     } else if (hasAttachment != 0) {
       throw const BackupInvalid('attachment');
     }
+    final categoryLabel = version >= 2 ? reader.optStr() : null;
+    final additionalImages = <Uint8List>[];
+    if (version >= 2) {
+      final count = reader.u8();
+      if (count > 5) throw const BackupOversized();
+      for (var i = 0; i < count; i++) {
+        final length = reader.u32();
+        if (length == 0 || length > BackupLimits.maxAttachmentBytes) {
+          throw const BackupOversized();
+        }
+        additionalImages.add(reader.byteCopy(length));
+      }
+    }
     return RegistryDocument(
+      categoryLabel: categoryLabel,
+      additionalImages: additionalImages,
       id: id,
       name: name,
       category: category,

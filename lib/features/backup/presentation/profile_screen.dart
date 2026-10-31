@@ -136,6 +136,7 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
+          const _AdsPrivacySection(),
           const SizedBox(height: AppSpacing.md),
           RegistrySurface(
             key: const ValueKey<String>('csv-import-section'),
@@ -170,6 +171,52 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle)),
       body: body,
+    );
+  }
+}
+
+class _AdsPrivacySection extends StatelessWidget {
+  const _AdsPrivacySection();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final ads = RegistryDependencies.of(context).ads;
+    return ListenableBuilder(
+      listenable: ads,
+      builder: (context, _) {
+        if (!ads.privacyOptionsRequired) {
+          return const SizedBox.shrink();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.md),
+          child: RegistrySurface(
+            key: const ValueKey<String>('ads-privacy-section'),
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                RegistrySectionHeader(
+                  title: l10n.adsPrivacyTitle,
+                  icon: Icons.privacy_tip_outlined,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(l10n.adsPrivacyBody, style: theme.textTheme.bodyMedium),
+                const SizedBox(height: AppSpacing.md),
+                OutlinedButton(
+                  key: const ValueKey<String>('ads-privacy-options'),
+                  onPressed: () => unawaited(ads.showPrivacyOptions()),
+                  child: Text(
+                    l10n.adsPrivacyAction,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

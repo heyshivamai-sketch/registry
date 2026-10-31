@@ -211,7 +211,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPrivacyLock.
   ///
   /// In en, this message translates to:
-  /// **'On-device only'**
+  /// **'Local records'**
   String get onboardingPrivacyLock;
 
   /// No description provided for @navHome.
@@ -685,7 +685,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileMessage.
   ///
   /// In en, this message translates to:
-  /// **'Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.'**
+  /// **'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.'**
   String get profileMessage;
 
   /// No description provided for @profileButton.
@@ -703,7 +703,7 @@ abstract class AppLocalizations {
   /// No description provided for @addDocumentMessage.
   ///
   /// In en, this message translates to:
-  /// **'The document form, optional scan and on-device storage will be built next. You can go back and keep exploring Home.'**
+  /// **'Add images for optional AI scanning or enter details manually. Records and attachments stay on this device.'**
   String get addDocumentMessage;
 
   /// No description provided for @addSubscriptionTitle.
@@ -781,7 +781,7 @@ abstract class AppLocalizations {
   /// No description provided for @attachmentPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Your image stays on this device and is not uploaded.'**
+  /// **'Stored on this device. Sent to Gemini through Firebase AI Logic only when you tap Scan all images.'**
   String get attachmentPrivacy;
 
   /// No description provided for @replaceAttachmentTitle.
@@ -943,7 +943,7 @@ abstract class AppLocalizations {
   /// No description provided for @remindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
+  /// **'Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
   String get remindersHelper;
 
   /// No description provided for @reminderOnActionDate.
@@ -1573,7 +1573,7 @@ abstract class AppLocalizations {
   /// No description provided for @scanDocumentSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Take a photo or choose an image, then review extracted details.'**
+  /// **'Add the front, back or another page. Scan when your images are ready.'**
   String get scanDocumentSubtitle;
 
   /// No description provided for @enterManuallyTitle.
@@ -1591,13 +1591,13 @@ abstract class AppLocalizations {
   /// No description provided for @ocrPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Your scan is processed on this device. Nothing is saved until you confirm.'**
+  /// **'Images are sent to Gemini through Firebase AI Logic only when you start a scan. Nothing is saved until you confirm.'**
   String get ocrPrivacy;
 
   /// No description provided for @ocrReviewPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Your scan is processed on this device. Review all extracted details before saving.'**
+  /// **'Gemini results are not saved until you review, confirm and complete Save.'**
   String get ocrReviewPrivacy;
 
   /// No description provided for @scanAgain.
@@ -1615,7 +1615,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrProcessingMessage.
   ///
   /// In en, this message translates to:
-  /// **'Text is being recognised on this device. You can cancel and enter details manually.'**
+  /// **'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter details manually.'**
   String get ocrProcessingMessage;
 
   /// No description provided for @ocrCancel.
@@ -1981,7 +1981,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrOnDeviceEyebrow.
   ///
   /// In en, this message translates to:
-  /// **'On-device extraction'**
+  /// **'AI-assisted extraction'**
   String get ocrOnDeviceEyebrow;
 
   /// No description provided for @howToAddBody.
@@ -2047,7 +2047,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrProcessingHint.
   ///
   /// In en, this message translates to:
-  /// **'Text is being recognised on this device.'**
+  /// **'Gemini is reading the images through Firebase AI Logic.'**
   String get ocrProcessingHint;
 
   /// No description provided for @horizonOpenCalendar.
@@ -2713,7 +2713,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionTrackingDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Registry tracks this plan but does not cancel or charge it automatically.'**
+  /// **'Regiday tracks this plan but does not cancel or charge it automatically.'**
   String get subscriptionTrackingDisclaimer;
 
   /// No description provided for @homeHeroReview.
@@ -3013,7 +3013,7 @@ abstract class AppLocalizations {
   /// No description provided for @storageErrorMessage.
   ///
   /// In en, this message translates to:
-  /// **'Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.'**
+  /// **'Regiday could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.'**
   String get storageErrorMessage;
 
   /// No description provided for @storageErrorRetry.
@@ -3079,7 +3079,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsLimits.
   ///
   /// In en, this message translates to:
-  /// **'Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.'**
+  /// **'Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.'**
   String get notificationsLimits;
 
   /// No description provided for @notificationsOmittedCount.
@@ -3109,7 +3109,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationChannelName.
   ///
   /// In en, this message translates to:
-  /// **'Registry reminders'**
+  /// **'Regiday reminders'**
   String get notificationChannelName;
 
   /// No description provided for @notificationChannelDescription.
@@ -3121,7 +3121,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationTitle.
   ///
   /// In en, this message translates to:
-  /// **'Registry reminder'**
+  /// **'Regiday reminder'**
   String get notificationTitle;
 
   /// No description provided for @reminderDocumentActionToday.
@@ -3199,7 +3199,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Registry does not store that password, and this does not encrypt the registry database already on this device.'**
+  /// **'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.'**
   String get backupSectionBody;
 
   /// No description provided for @backupExportAction.
@@ -3229,7 +3229,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupPasswordWarning.
   ///
   /// In en, this message translates to:
-  /// **'Choose a password for this file. If you lose it, this backup cannot be restored. Registry does not save the password.'**
+  /// **'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.'**
   String get backupPasswordWarning;
 
   /// No description provided for @backupPasswordLabel.
@@ -3283,7 +3283,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupImportIntro.
   ///
   /// In en, this message translates to:
-  /// **'Choose a Registry backup file and enter its password. Importing replaces every document and subscription on this device.'**
+  /// **'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.'**
   String get backupImportIntro;
 
   /// No description provided for @backupChooseFile.
@@ -3421,13 +3421,13 @@ abstract class AppLocalizations {
   /// No description provided for @backupUnsupportedVersion.
   ///
   /// In en, this message translates to:
-  /// **'This backup was made by a newer version of Registry.'**
+  /// **'This backup was made by a newer version of Regiday.'**
   String get backupUnsupportedVersion;
 
   /// No description provided for @backupInvalidFile.
   ///
   /// In en, this message translates to:
-  /// **'This file is not a valid Registry backup.'**
+  /// **'This file is not a valid Regiday backup.'**
   String get backupInvalidFile;
 
   /// No description provided for @backupTampered.
@@ -3469,7 +3469,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Ask for this device\'s biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
+  /// **'Ask for this device\'s biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
   String get appLockSectionBody;
 
   /// No description provided for @appLockEnabled.
@@ -3487,7 +3487,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockReason.
   ///
   /// In en, this message translates to:
-  /// **'Unlock Registry to view records on this device.'**
+  /// **'Unlock Regiday to view records on this device.'**
   String get appLockReason;
 
   /// No description provided for @appLockEnableReason.
@@ -3499,7 +3499,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'This device has no biometrics or passcode Registry can use. App lock was not turned on.'**
+  /// **'This device has no biometrics or passcode Regiday can use. App lock was not turned on.'**
   String get appLockUnavailable;
 
   /// No description provided for @appLockCancelled.
@@ -3517,7 +3517,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockPlatformError.
   ///
   /// In en, this message translates to:
-  /// **'Registry could not use this device\'s authentication. App lock was not changed.'**
+  /// **'Regiday could not use this device\'s authentication. App lock was not changed.'**
   String get appLockPlatformError;
 
   /// No description provided for @appLockDisableReason.
@@ -3553,7 +3553,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockLockedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Registry is locked'**
+  /// **'Regiday is locked'**
   String get appLockLockedTitle;
 
   /// No description provided for @appLockLockedBody.
@@ -3583,25 +3583,25 @@ abstract class AppLocalizations {
   /// No description provided for @appLockUnlockPlatformError.
   ///
   /// In en, this message translates to:
-  /// **'Registry could not use this device\'s authentication. Your records stay hidden.'**
+  /// **'Regiday could not use this device\'s authentication. Your records stay hidden.'**
   String get appLockUnlockPlatformError;
 
   /// No description provided for @appLockPrivacyCover.
   ///
   /// In en, this message translates to:
-  /// **'Registry'**
+  /// **'Regiday'**
   String get appLockPrivacyCover;
 
   /// No description provided for @localProTitle.
   ///
   /// In en, this message translates to:
-  /// **'Local Pro'**
+  /// **'Regiday Pro'**
   String get localProTitle;
 
   /// No description provided for @localProAction.
   ///
   /// In en, this message translates to:
-  /// **'View Local Pro'**
+  /// **'View Regiday Pro'**
   String get localProAction;
 
   /// No description provided for @localProEyebrow.
@@ -3613,13 +3613,13 @@ abstract class AppLocalizations {
   /// No description provided for @localProHeadline.
   ///
   /// In en, this message translates to:
-  /// **'Keep more records on this device'**
+  /// **'More room for what matters'**
   String get localProHeadline;
 
   /// No description provided for @localProIntro.
   ///
   /// In en, this message translates to:
-  /// **'Local Pro is a one-time purchase for the local features listed here. Future cloud services are separate and are not part of this purchase.'**
+  /// **'Regiday Pro is a one-time upgrade, not a subscription. Keep more records on this device.'**
   String get localProIntro;
 
   /// No description provided for @localProIncludedTitle.
@@ -3631,31 +3631,31 @@ abstract class AppLocalizations {
   /// No description provided for @localProIncludedDocuments.
   ///
   /// In en, this message translates to:
-  /// **'Removes the free limit of {count} documents.'**
+  /// **'More documents. Go beyond the free limit of {count}.'**
   String localProIncludedDocuments(int count);
 
   /// No description provided for @localProIncludedSubscriptions.
   ///
   /// In en, this message translates to:
-  /// **'Removes the free limit of {count} subscription records.'**
+  /// **'More subscriptions. Go beyond the free limit of {count}.'**
   String localProIncludedSubscriptions(int count);
 
   /// No description provided for @localProTechnicalLimits.
   ///
   /// In en, this message translates to:
-  /// **'Device storage, backup size, and the local reminder cap still apply.'**
+  /// **'Subject to device storage, backup and reminder limits.'**
   String get localProTechnicalLimits;
 
   /// No description provided for @localProNotIncludedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Not included'**
+  /// **'Good to know'**
   String get localProNotIncludedTitle;
 
   /// No description provided for @localProNotIncludedCloud.
   ///
   /// In en, this message translates to:
-  /// **'Cloud sync and cloud backup are not included. An optional email can restore this store\'s Local Pro purchase only. It does not sync your records.'**
+  /// **'Records stay on this device. Move them using an encrypted backup in Profile. No account or cloud sync.'**
   String get localProNotIncludedCloud;
 
   /// No description provided for @localProFreeTitle.
@@ -3667,7 +3667,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProFreeBody.
   ///
   /// In en, this message translates to:
-  /// **'Viewing, editing, renewing, deleting, reminders, app lock, export, and restore stay available for records you already have.'**
+  /// **'Reminders, scanning, app lock and encrypted backups stay free. You can always view, edit and export existing records.'**
   String get localProFreeBody;
 
   /// No description provided for @localProCurrentFree.
@@ -3679,32 +3679,14 @@ abstract class AppLocalizations {
   /// No description provided for @localProCurrentPro.
   ///
   /// In en, this message translates to:
-  /// **'Current plan: Local Pro'**
+  /// **'Current plan: Regiday Pro'**
   String get localProCurrentPro;
-
-  /// No description provided for @localProPriceUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'The store price is unavailable until Local Pro is configured. There is nothing to buy yet.'**
-  String get localProPriceUnavailable;
 
   /// No description provided for @localProBuy.
   ///
   /// In en, this message translates to:
-  /// **'Buy Local Pro'**
+  /// **'Buy Regiday Pro'**
   String get localProBuy;
-
-  /// No description provided for @localProOwned.
-  ///
-  /// In en, this message translates to:
-  /// **'Local Pro is active on this device.'**
-  String get localProOwned;
-
-  /// No description provided for @localProPurchasePending.
-  ///
-  /// In en, this message translates to:
-  /// **'The store did not return a verified purchase. Local Pro stays off.'**
-  String get localProPurchasePending;
 
   /// No description provided for @localProRestore.
   ///
@@ -3715,194 +3697,134 @@ abstract class AppLocalizations {
   /// No description provided for @localProPurchaseCancelled.
   ///
   /// In en, this message translates to:
-  /// **'The purchase was cancelled. Local Pro stays off.'**
+  /// **'The purchase was cancelled. Regiday Pro stays off.'**
   String get localProPurchaseCancelled;
 
   /// No description provided for @localProPurchaseFailed.
   ///
   /// In en, this message translates to:
-  /// **'The purchase could not be completed. Local Pro stays off.'**
+  /// **'The purchase could not be completed. Regiday Pro stays off.'**
   String get localProPurchaseFailed;
 
   /// No description provided for @localProPendingStore.
   ///
   /// In en, this message translates to:
-  /// **'The store is still processing this purchase. Local Pro stays off until it is verified.'**
+  /// **'The store is waiting for payment. Regiday Pro turns on after the store confirms the purchase. Nothing is unlocked yet.'**
   String get localProPendingStore;
-
-  /// No description provided for @localProBindingMismatch.
-  ///
-  /// In en, this message translates to:
-  /// **'This purchase is linked to another installation. Local Pro stays off here. If it is linked to your verified email, sign in and restore again so the store can be checked. Otherwise use the restore code from that installation. Android and iOS stay separate.'**
-  String get localProBindingMismatch;
-
-  /// No description provided for @localProRecoveryTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Save this restore code'**
-  String get localProRecoveryTitle;
-
-  /// No description provided for @localProRecoveryBody.
-  ///
-  /// In en, this message translates to:
-  /// **'If this purchase is linked to a verified email, sign in on the new installation and use Restore purchases. The app asks the store for the current purchase, and the server checks it before Local Pro turns on. A purchase made before an account, or one that was not linked, still needs the restore code from that installation. Android and iOS stay separate. Verifying an email does not by itself turn on Local Pro.'**
-  String get localProRecoveryBody;
-
-  /// No description provided for @localProRecoveryPrompt.
-  ///
-  /// In en, this message translates to:
-  /// **'Restore code'**
-  String get localProRecoveryPrompt;
-
-  /// No description provided for @localProRecoverySubmit.
-  ///
-  /// In en, this message translates to:
-  /// **'Restore with code'**
-  String get localProRecoverySubmit;
-
-  /// No description provided for @localProNetworkUnchanged.
-  ///
-  /// In en, this message translates to:
-  /// **'Registry could not reach purchase verification. Nothing on this device was changed.'**
-  String get localProNetworkUnchanged;
 
   /// No description provided for @localProRevoked.
   ///
   /// In en, this message translates to:
-  /// **'The store revoked this purchase. Local Pro is off. Records you already have can still be viewed, edited, renewed, deleted, exported, and restored.'**
+  /// **'The store no longer reports a Regiday Pro purchase for this account, for example after a refund. Regiday Pro is off. Records you already have can still be viewed, edited, and exported. New records stop at the Free limits.'**
   String get localProRevoked;
 
   /// No description provided for @localProNotIncludedTransfer.
   ///
   /// In en, this message translates to:
-  /// **'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.'**
+  /// **'Your purchase belongs to your app store. It does not transfer between Android and iOS or through backup files.'**
   String get localProNotIncludedTransfer;
 
-  /// No description provided for @localProAccountTitle.
+  /// No description provided for @localProIncludedAds.
   ///
   /// In en, this message translates to:
-  /// **'Optional email'**
-  String get localProAccountTitle;
+  /// **'An ad-free experience'**
+  String get localProIncludedAds;
 
-  /// No description provided for @localProAccountBody.
+  /// No description provided for @localProIncludedAdsOn.
   ///
   /// In en, this message translates to:
-  /// **'You can keep using Registry without an account. To recover a new Local Pro purchase after a reinstall or a new device, verify your email before you buy. The purchase is linked to that email only after the code is confirmed and the store accepts the purchase. Verifying the email does not turn on Local Pro. A backup file, a transaction id, or a switch in the app does not either.'**
-  String get localProAccountBody;
+  /// **'No ads. Free users see one small banner on Home in this version. Regiday Pro removes it.'**
+  String get localProIncludedAdsOn;
 
-  /// No description provided for @localProAccountBeforeBuy.
+  /// No description provided for @localProRestoreRequirements.
   ///
   /// In en, this message translates to:
-  /// **'If you buy before the email is verified, the purchase stays on this installation. It becomes linked only when Restore purchases sends the current restore code while you are signed in, and the server accepts the current store purchase. Signing in does not link it by itself. After it is linked, a new installation moves only when that same email is signed in and the server accepts the store purchase again. The restore code alone does not move it.'**
-  String get localProAccountBeforeBuy;
+  /// **'Restore purchases asks the store for Regiday Pro bought with the same Google Play or Apple account for this app. Android and iOS purchases stay separate.'**
+  String get localProRestoreRequirements;
 
-  /// No description provided for @localProAccountSignedIn.
+  /// No description provided for @localProStatusDisabled.
   ///
   /// In en, this message translates to:
-  /// **'Signed in as {email}. On a new installation, sign in and tap Restore purchases. The app asks this store for the current purchase, and the server checks it before Local Pro can turn on. Android and iOS stay separate.'**
-  String localProAccountSignedIn(String email);
+  /// **'Coming soon. Purchases are not available yet; your free plan stays active.'**
+  String get localProStatusDisabled;
 
-  /// No description provided for @localProAccountEmailLabel.
+  /// No description provided for @localProStatusChecking.
   ///
   /// In en, this message translates to:
-  /// **'Email'**
-  String get localProAccountEmailLabel;
+  /// **'Checking your purchase with the store…'**
+  String get localProStatusChecking;
 
-  /// No description provided for @localProAccountSendCode.
+  /// No description provided for @localProStatusActive.
   ///
   /// In en, this message translates to:
-  /// **'Send verification code'**
-  String get localProAccountSendCode;
+  /// **'Regiday Pro is active. The store confirmed your purchase.'**
+  String get localProStatusActive;
 
-  /// No description provided for @localProAccountCodeLabel.
+  /// No description provided for @localProStatusActiveUnconfirmed.
   ///
   /// In en, this message translates to:
-  /// **'Verification code'**
-  String get localProAccountCodeLabel;
+  /// **'Regiday Pro stays on from the store\'s last confirmation. The store cannot be reached right now, so a refund made since then is not detected until it can be.'**
+  String get localProStatusActiveUnconfirmed;
 
-  /// No description provided for @localProAccountConfirm.
+  /// No description provided for @localProStatusUnknown.
   ///
   /// In en, this message translates to:
-  /// **'Confirm email'**
-  String get localProAccountConfirm;
+  /// **'The store could not be reached, so a purchase cannot be confirmed right now. The Free limits apply until it can. Your records are not affected.'**
+  String get localProStatusUnknown;
 
-  /// No description provided for @localProAccountCodeSent.
+  /// No description provided for @localProProductMissing.
   ///
   /// In en, this message translates to:
-  /// **'A verification code was sent. It expires soon. The code does not turn on Local Pro.'**
-  String get localProAccountCodeSent;
+  /// **'The store did not return Regiday Pro. It may not be available for this store account or country yet.'**
+  String get localProProductMissing;
 
-  /// No description provided for @localProAccountNotConfigured.
+  /// No description provided for @localProStoreUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Email delivery is not set up. No verification code was sent.'**
-  String get localProAccountNotConfigured;
+  /// **'The store\'s billing service is not available on this device. Check that you are signed in to the store, then try again.'**
+  String get localProStoreUnavailable;
 
-  /// No description provided for @localProAccountUnavailable.
+  /// No description provided for @localProStoreError.
   ///
   /// In en, this message translates to:
-  /// **'This build cannot send a verification email. No code will be sent from this screen.'**
-  String get localProAccountUnavailable;
+  /// **'Could not reach the store. Check your connection and try again. Nothing was changed.'**
+  String get localProStoreError;
 
-  /// No description provided for @localProAccountDeliveryFailed.
+  /// No description provided for @localProRetry.
   ///
   /// In en, this message translates to:
-  /// **'The email could not be sent. No verification code was delivered.'**
-  String get localProAccountDeliveryFailed;
+  /// **'Try again'**
+  String get localProRetry;
 
-  /// No description provided for @localProAccountInvalidCode.
+  /// No description provided for @localProResultActive.
   ///
   /// In en, this message translates to:
-  /// **'That code is not valid. Local Pro was not changed.'**
-  String get localProAccountInvalidCode;
+  /// **'Regiday Pro is active.'**
+  String get localProResultActive;
 
-  /// No description provided for @localProAccountOffline.
+  /// No description provided for @localProRestoreNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Registry could not reach account verification. Nothing was sent or changed.'**
-  String get localProAccountOffline;
+  /// **'The store found no Regiday Pro purchase for this account. Check that you are signed in with the account that bought it.'**
+  String get localProRestoreNotFound;
 
-  /// No description provided for @localProAccountDeleted.
+  /// No description provided for @adsPrivacyTitle.
   ///
   /// In en, this message translates to:
-  /// **'The account was removed. This purchase stays on this installation. A new device needs the current restore code. Deleting the account did not turn Local Pro on or off.'**
-  String get localProAccountDeleted;
+  /// **'Ad privacy'**
+  String get adsPrivacyTitle;
 
-  /// No description provided for @localProAccountDelete.
+  /// No description provided for @adsPrivacyBody.
   ///
   /// In en, this message translates to:
-  /// **'Delete account'**
-  String get localProAccountDelete;
+  /// **'Review or change your choices for how ads may use your data.'**
+  String get adsPrivacyBody;
 
-  /// No description provided for @localProAccountDeleteBody.
+  /// No description provided for @adsPrivacyAction.
   ///
   /// In en, this message translates to:
-  /// **'Deleting the account signs you out and removes the email link. It does not refund the store purchase. A purchase that was never linked still needs its restore code.'**
-  String get localProAccountDeleteBody;
-
-  /// No description provided for @localProRecoveryCodeRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'This purchase is still tied to the original installation, not this email. It was not moved. Enter the current restore code and restore again to link it, or keep using that code without an account.'**
-  String get localProRecoveryCodeRequired;
-
-  /// No description provided for @localProAccountSignInRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'This purchase is linked to a verified email. Local Pro stays off on this installation. Sign in with that email, then tap Restore purchases. The app asks the store for the current purchase, and the server checks it before the purchase can move. A restore code alone does not move it, and another email cannot take it.'**
-  String get localProAccountSignInRequired;
-
-  /// No description provided for @localProAccountUnchanged.
-  ///
-  /// In en, this message translates to:
-  /// **'This purchase stays on this installation. The email was not linked. Enter the current restore code with Restore purchases to link it.'**
-  String get localProAccountUnchanged;
-
-  /// No description provided for @localProAccountLinked.
-  ///
-  /// In en, this message translates to:
-  /// **'This purchase is now linked to your verified email. A new installation of this store can restore it after you sign in.'**
-  String get localProAccountLinked;
+  /// **'Privacy options'**
+  String get adsPrivacyAction;
 
   /// No description provided for @profilePlanFree.
   ///
@@ -3913,13 +3835,13 @@ abstract class AppLocalizations {
   /// No description provided for @freeLimitDocuments.
   ///
   /// In en, this message translates to:
-  /// **'The free plan includes {count} documents. Local Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.'**
+  /// **'The free plan includes {count} documents. Regiday Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.'**
   String freeLimitDocuments(int count);
 
   /// No description provided for @freeLimitSubscriptions.
   ///
   /// In en, this message translates to:
-  /// **'The free plan includes {count} subscription records. Local Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.'**
+  /// **'The free plan includes {count} subscription records. Regiday Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.'**
   String freeLimitSubscriptions(int count);
 
   /// No description provided for @recordAlreadyExists.
@@ -4149,6 +4071,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggested from a charge CSV. Recurrence was not confirmed.'**
   String get csvSuggestionNote;
+
+  /// No description provided for @addOtherImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another image (optional)'**
+  String get addOtherImage;
+
+  /// No description provided for @scanAllImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan all images'**
+  String get scanAllImages;
+
+  /// No description provided for @firebaseAiScanPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'When you tap Scan all images, your document images are sent to Gemini through Firebase AI Logic. Review every field before saving.'**
+  String get firebaseAiScanPrivacy;
+
+  /// No description provided for @firebaseAiScanProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter the details manually.'**
+  String get firebaseAiScanProcessing;
+
+  /// No description provided for @firebaseAiScanUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.'**
+  String get firebaseAiScanUnavailable;
 }
 
 class _AppLocalizationsDelegate

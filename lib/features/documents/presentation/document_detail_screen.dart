@@ -157,7 +157,9 @@ class _DocumentDetailBody extends StatelessWidget {
                     ),
                     RegistryInfoRow(
                       label: l10n.fieldCategory,
-                      value: DocumentCopy.category(l10n, document.category),
+                      value: document.categoryLabel?.isNotEmpty == true
+                          ? document.categoryLabel!
+                          : DocumentCopy.category(l10n, document.category),
                     ),
                     if (_present(document.ownerName))
                       RegistryInfoRow(
@@ -334,8 +336,10 @@ class _DocumentDetailBody extends StatelessWidget {
   void _openAttachment(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) =>
-            DocumentAttachmentPreviewPage(bytes: document.attachmentBytes!),
+        builder: (_) => DocumentAttachmentPreviewPage(
+          bytes: document.attachmentBytes!,
+          additionalImages: document.additionalImages,
+        ),
       ),
     );
   }
@@ -532,6 +536,7 @@ class _QuickActions extends StatelessWidget {
               MaterialPageRoute<void>(
                 builder: (_) => DocumentAttachmentPreviewPage(
                   bytes: document.attachmentBytes!,
+                  additionalImages: document.additionalImages,
                 ),
               ),
             );

@@ -1,0 +1,30 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "regiday-b1f5b",
+          "appId": "1:359772476439:android:65d093975f351d49bf3852",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "residay-app",
+          "appId": "1:595673119514:ios:c165cc3ac19862beac4aa3",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "regiday-b1f5b",
+          "configurations": {
+            "android": "1:359772476439:android:65d093975f351d49bf3852",
+            "ios": "1:595673119514:ios:c165cc3ac19862beac4aa3"
+          }
+        }
+      }
+    }
+  }
+}

@@ -26,7 +26,7 @@ abstract class AndroidBackupBridge {
 class MethodChannelAndroidBackupBridge implements AndroidBackupBridge {
   const MethodChannelAndroidBackupBridge();
 
-  static const channel = MethodChannel('com.registry.app/backup_file');
+  static const channel = MethodChannel('com.residay.app/backup_file');
 
   @override
   Future<bool?> save({required Uint8List bytes, required String name}) {
@@ -56,7 +56,7 @@ class PlatformBackupFileGateway implements BackupFileGateway {
   final AndroidBackupBridge? _androidBridge;
 
   static const _typeGroup = XTypeGroup(
-    label: 'Registry backup',
+    label: 'Regiday backup',
     extensions: <String>['rgry'],
     mimeTypes: <String>['application/octet-stream'],
     uniformTypeIdentifiers: <String>['public.data'],

@@ -6,15 +6,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/app_lock/app_lock_store.dart';
-import 'package:the_registry/features/entitlements/billing_configuration.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
+import 'package:the_registry/features/entitlements/local_pro_store.dart';
 import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
 
 import 'support/fake_onboarding_repository.dart';
 import 'support/phase2_fakes.dart';
 import 'support/save_screenshot.dart';
 
 const _folder = 'phase2a_local_pro';
+const _launchFolder = 'launch_local_pro_ads';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -81,22 +82,20 @@ void main() {
     );
     await saveScreenshot(
       tester,
-      'fixture_local_pro_price_unavailable',
-      folder: _folder,
+      'fixture_local_pro_purchases_disabled',
+      folder: _launchFolder,
     );
 
+    final store = FakeLocalProStore(
+      product: const StoreProduct.available(localizedPrice: 'DZD 2,400.00'),
+    );
     await tester.pumpWidget(
       wrapForScreenshot(
         RegistryApp(
           onboardingRepository: FakeOnboardingRepository(completed: true),
           locale: const Locale('en'),
           clock: FixedClock(DateTime(2026, 9, 27)),
-          storeProducts: ScriptedStoreProductSource(
-            const StoreListing(
-              productId: BillingConfiguration.localProProductId,
-              localizedPrice: 'DZD 2,400.00',
-            ),
-          ),
+          localPro: LocalProEntitlement(purchasesEnabled: true, store: store),
           csvFiles: ScriptedCsvFileGateway(
             Uint8List.fromList(
               utf8.encode(
@@ -115,7 +114,7 @@ void main() {
     await tapProfileControl(tester, const ValueKey<String>('local-pro-open'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.byKey(const ValueKey<String>('local-pro-buy')),
+      find.byKey(const ValueKey<String>('local-pro-restore')),
       200,
       scrollable: find.descendant(
         of: find.byType(LocalProScreen),
@@ -124,8 +123,8 @@ void main() {
     );
     await saveScreenshot(
       tester,
-      'fixture_local_pro_store_price',
-      folder: _folder,
+      'fixture_local_pro_fake_store_price',
+      folder: _launchFolder,
     );
 
     await tester.pageBack();
@@ -137,5 +136,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('csv-continue')));
     await tester.pumpAndSettle();
     await saveScreenshot(tester, 'fixture_csv_review', folder: _folder);
+    await tester.pumpWidget(const SizedBox());
+    await store.close();
   });
 }

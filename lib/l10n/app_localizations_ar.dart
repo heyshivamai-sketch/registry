@@ -67,7 +67,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingDecisionDate => 'قرّر قبل الجمعة';
 
   @override
-  String get onboardingPrivacyLock => 'على الجهاز فقط';
+  String get onboardingPrivacyLock => 'سجلات محلية';
 
   @override
   String get navHome => 'الرئيسية';
@@ -358,7 +358,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'تبقى سجلاتك خاصة على هذا الجهاز. يمكن لـ Local Pro استخدام بريد مُوثَّق اختياري لاستعادة ذلك الشراء. لا يزامن المستندات أو الاشتراكات.';
+      'تبقى سجلاتك خاصة على هذا الجهاز. Regiday Pro ترقية لمرة واحدة ولا يزامن المستندات أو الاشتراكات.';
 
   @override
   String get profileButton => 'فتح الملف الشخصي';
@@ -368,7 +368,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addDocumentMessage =>
-      'سيتم لاحقًا بناء نموذج المستند والمسح الضوئي والتخزين على الجهاز. يمكنك الرجوع ومتابعة استكشاف الرئيسية.';
+      'أضف صورًا للمسح الاختياري بالذكاء الاصطناعي أو أدخل التفاصيل يدويًا. تبقى السجلات والمرفقات على هذا الجهاز.';
 
   @override
   String get addSubscriptionTitle => 'إضافة اشتراك';
@@ -409,7 +409,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get attachmentRemove => 'إزالة';
 
   @override
-  String get attachmentPrivacy => 'تبقى صورتك على هذا الجهاز ولا يتم رفعها.';
+  String get attachmentPrivacy =>
+      'تُحفظ الصورة على هذا الجهاز، ولا تُرسل إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح.';
 
   @override
   String get replaceAttachmentTitle => 'استبدال الصورة';
@@ -494,7 +495,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'يُحفظ مع هذا المستند. يطلب Registry من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
+      'يُحفظ مع هذا المستند. يطلب Regiday من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
 
   @override
   String get reminderOnActionDate => 'في تاريخ الإجراء';
@@ -825,7 +826,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanDocumentSubtitle =>
-      'التقط صورة أو اختر صورة، ثم راجع التفاصيل المستخرجة.';
+      'أضف الوجه الأمامي أو الخلفي أو صفحة أخرى، ثم ابدأ المسح.';
 
   @override
   String get enterManuallyTitle => 'إدخال يدوي';
@@ -835,11 +836,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ocrPrivacy =>
-      'تتم معالجة المسح على هذا الجهاز. لا يُحفظ شيء حتى تؤكد.';
+      'لا تُرسل الصور إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح. لا يُحفظ شيء حتى تؤكد.';
 
   @override
   String get ocrReviewPrivacy =>
-      'تتم معالجة المسح على هذا الجهاز. راجع كل التفاصيل المستخرجة قبل الحفظ.';
+      'لا تُحفظ نتائج Gemini حتى تراجعها وتؤكدها وتكمل الحفظ.';
 
   @override
   String get scanAgain => 'مسح مرة أخرى';
@@ -849,7 +850,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ocrProcessingMessage =>
-      'يتم التعرف على النص على هذا الجهاز. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
+      'يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
 
   @override
   String get ocrCancel => 'إلغاء المسح';
@@ -1058,7 +1059,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get guidedSetup => 'إعداد موجّه';
 
   @override
-  String get ocrOnDeviceEyebrow => 'استخراج على الجهاز';
+  String get ocrOnDeviceEyebrow => 'استخراج بمساعدة الذكاء الاصطناعي';
 
   @override
   String get howToAddBody => 'امسح للبدء بسرعة، أو أدخل التفاصيل بنفسك.';
@@ -1093,7 +1094,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ocrReviewHint => 'راجع القيم المميّزة قبل المتابعة.';
 
   @override
-  String get ocrProcessingHint => 'يتم التعرف على النص على هذا الجهاز.';
+  String get ocrProcessingHint => 'يقرأ Gemini الصور عبر Firebase AI Logic.';
 
   @override
   String get horizonOpenCalendar => 'فتح التقويم';
@@ -1655,7 +1656,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get storageErrorMessage =>
-      'تعذر على Registry فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.';
+      'تعذر على Regiday فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.';
 
   @override
   String get storageErrorRetry => 'إعادة المحاولة';
@@ -1730,14 +1731,14 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا يمكن لهذا الجهاز جدولة تذكيرات محلية الآن. خيارات التذكير المحفوظة لم تتغير.';
 
   @override
-  String get notificationChannelName => 'تذكيرات السجل';
+  String get notificationChannelName => 'تذكيرات Regiday';
 
   @override
   String get notificationChannelDescription =>
       'تذكيرات محلية لتواريخ المستندات ومدفوعات الاشتراكات. وقت التسليم ليس دقيقًا.';
 
   @override
-  String get notificationTitle => 'تذكير';
+  String get notificationTitle => 'تذكير Regiday';
 
   @override
   String get reminderDocumentActionToday => 'تاريخ إجراء مستند هو اليوم.';
@@ -1793,7 +1794,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Registry كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
+      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Regiday كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
 
   @override
   String get backupExportAction => 'تصدير نسخة احتياطية';
@@ -1810,7 +1811,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupPasswordWarning =>
-      'اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Registry كلمة المرور.';
+      'اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Regiday كلمة المرور.';
 
   @override
   String get backupPasswordLabel => 'كلمة مرور النسخة الاحتياطية';
@@ -1917,11 +1918,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupUnsupportedVersion =>
-      'أُنشئت هذه النسخة بإصدار أحدث من Registry.';
+      'أُنشئت هذه النسخة بإصدار أحدث من Regiday.';
 
   @override
   String get backupInvalidFile =>
-      'هذا الملف ليس نسخة احتياطية صالحة من Registry.';
+      'هذا الملف ليس نسخة احتياطية صالحة من Regiday.';
 
   @override
   String get backupTampered => 'ملف النسخة الاحتياطية تالف أو تم تغييره.';
@@ -1943,7 +1944,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Registry سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
+      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Regiday سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
 
   @override
   String get appLockEnabled => 'قفل التطبيق مفعّل';
@@ -1952,14 +1953,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appLockDisabled => 'قفل التطبيق متوقف';
 
   @override
-  String get appLockReason => 'افتح قفل Registry لعرض السجلات على هذا الجهاز.';
+  String get appLockReason => 'افتح قفل Regiday لعرض السجلات على هذا الجهاز.';
 
   @override
   String get appLockEnableReason => 'أكّد أنك أنت قبل تشغيل قفل التطبيق.';
 
   @override
   String get appLockUnavailable =>
-      'لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Registry استخدامه. لم يُفعَّل القفل.';
+      'لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Regiday استخدامه. لم يُفعَّل القفل.';
 
   @override
   String get appLockCancelled => 'أُلغي التحقق. لم يُفعَّل قفل التطبيق.';
@@ -1969,7 +1970,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockPlatformError =>
-      'تعذّر على Registry استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.';
+      'تعذّر على Regiday استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.';
 
   @override
   String get appLockDisableReason => 'أكّد أنك أنت قبل إيقاف قفل التطبيق.';
@@ -1989,7 +1990,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appLockUnlock => 'فتح القفل';
 
   @override
-  String get appLockLockedTitle => 'Registry مقفل';
+  String get appLockLockedTitle => 'Regiday مقفل';
 
   @override
   String get appLockLockedBody =>
@@ -2007,38 +2008,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockUnlockPlatformError =>
-      'تعذّر على Registry استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.';
+      'تعذّر على Regiday استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.';
 
   @override
-  String get appLockPrivacyCover => 'Registry';
+  String get appLockPrivacyCover => 'Regiday';
 
   @override
-  String get localProTitle => 'Local Pro';
+  String get localProTitle => 'Regiday Pro';
 
   @override
-  String get localProAction => 'عرض Local Pro';
+  String get localProAction => 'عرض Regiday Pro';
 
   @override
   String get localProEyebrow => 'شراء لمرة واحدة';
 
   @override
-  String get localProHeadline => 'احتفظ بمزيد من السجلات على هذا الجهاز';
+  String get localProHeadline => 'مساحة أكبر لما يهمك';
 
   @override
   String get localProIntro =>
-      'Local Pro شراء لمرة واحدة للميزات المحلية المذكورة هنا. خدمات السحابة اللاحقة منفصلة وليست جزءًا من هذا الشراء.';
+      'Regiday Pro ترقية تُشترى مرة واحدة دون اشتراك، للاحتفاظ بالمزيد من السجلات على هذا الجهاز.';
 
   @override
   String get localProIncludedTitle => 'المشمول';
 
   @override
   String localProIncludedDocuments(int count) {
-    return 'يلغي الحد المجاني البالغ $count مستندات.';
+    return 'مستندات أكثر. تجاوز الحد المجاني البالغ $count.';
   }
 
   @override
   String localProIncludedSubscriptions(int count) {
-    return 'يلغي الحد المجاني البالغ $count اشتراكات.';
+    return 'اشتراكات أكثر. تجاوز الحد المجاني البالغ $count.';
   }
 
   @override
@@ -2050,157 +2051,108 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'المزامنة السحابية والنسخ الاحتياطي السحابي غير مشمولين. يمكن لبريد اختياري استعادة شراء Local Pro من هذا المتجر فقط. لا يزامن سجلاتك.';
+      'لا مزامنة سحابية ولا نسخ احتياطي سحابي ولا حساب. لنقل السجلات إلى جهاز آخر استخدم ملف النسخة الاحتياطية المشفّر في الملف الشخصي. ملف النسخة الاحتياطية لا ينقل Regiday Pro.';
 
   @override
   String get localProFreeTitle => 'يبقى مجانيًا';
 
   @override
   String get localProFreeBody =>
-      'يبقى العرض والتعديل والتجديد والحذف والتذكيرات وقفل التطبيق والتصدير والاستعادة متاحة للسجلات الموجودة لديك.';
+      'تبقى التذكيرات وقراءة النص (OCR) وقفل التطبيق والنسخ الاحتياطي والاستعادة المشفّران واستيراد CSV مجانية. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير في أي خطة.';
 
   @override
   String get localProCurrentFree => 'الخطة الحالية: مجاني';
 
   @override
-  String get localProCurrentPro => 'الخطة الحالية: Local Pro';
+  String get localProCurrentPro => 'الخطة الحالية: Regiday Pro';
 
   @override
-  String get localProPriceUnavailable =>
-      'سعر المتجر غير متاح إلى أن يُضبط Local Pro. لا يوجد ما يمكن شراؤه بعد.';
-
-  @override
-  String get localProBuy => 'شراء Local Pro';
-
-  @override
-  String get localProOwned => 'Local Pro مفعّل على هذا الجهاز.';
-
-  @override
-  String get localProPurchasePending =>
-      'لم يُرجع المتجر عملية شراء موثّقة. يبقى Local Pro متوقفًا.';
+  String get localProBuy => 'شراء Regiday Pro';
 
   @override
   String get localProRestore => 'استعادة المشتريات';
 
   @override
   String get localProPurchaseCancelled =>
-      'أُلغي الشراء. يبقى Local Pro متوقفًا.';
+      'أُلغي الشراء. يبقى Regiday Pro متوقفًا.';
 
   @override
   String get localProPurchaseFailed =>
-      'تعذّر إتمام الشراء. يبقى Local Pro متوقفًا.';
+      'تعذّر إتمام الشراء. يبقى Regiday Pro متوقفًا.';
 
   @override
   String get localProPendingStore =>
-      'ما زال المتجر يعالج هذا الشراء. يبقى Local Pro متوقفًا إلى أن يُوثَّق.';
-
-  @override
-  String get localProBindingMismatch =>
-      'هذا الشراء مرتبط بتثبيت آخر. يبقى Local Pro متوقفًا هنا. إذا كان مرتبطًا ببريدك المُوثَّق، سجّل الدخول واستعد مرة أخرى ليتحقق المتجر. وإلا فاستخدم رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين.';
-
-  @override
-  String get localProRecoveryTitle => 'احتفظ برمز الاستعادة';
-
-  @override
-  String get localProRecoveryBody =>
-      'إذا كان هذا الشراء مرتبطًا ببريد مُوثَّق، سجّل الدخول على التثبيت الجديد واستخدم استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل تشغيل Local Pro. الشراء الذي تم قبل وجود حساب، أو الذي لم يُربَط، ما زال يحتاج رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين. توثيق البريد وحده لا يشغّل Local Pro.';
-
-  @override
-  String get localProRecoveryPrompt => 'رمز الاستعادة';
-
-  @override
-  String get localProRecoverySubmit => 'استعادة بالرمز';
-
-  @override
-  String get localProNetworkUnchanged =>
-      'تعذّر على Registry الوصول إلى التحقق من الشراء. لم يتغير شيء على هذا الجهاز.';
+      'ينتظر المتجر الدفع. يعمل Regiday Pro بعد أن يؤكد المتجر الشراء. لم يُفتح شيء بعد.';
 
   @override
   String get localProRevoked =>
-      'ألغى المتجر هذا الشراء. Local Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتجديد والحذف والتصدير والاستعادة.';
+      'لم يعد المتجر يُظهر شراء Regiday Pro لهذا الحساب، مثلًا بعد استرداد المبلغ. Regiday Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير. تتوقف السجلات الجديدة عند الحدود المجانية.';
 
   @override
   String get localProNotIncludedTransfer =>
       'شراء Google Play لا يفتح تطبيق iOS، وشراء App Store لا يفتح Android.';
 
   @override
-  String get localProAccountTitle => 'بريد اختياري';
+  String get localProIncludedAds =>
+      'بلا إعلانات. الإعلانات متوقفة في هذا الإصدار. إذا عرض إصدار لاحق إعلانات لمستخدمي الخطة المجانية، يبقيها Regiday Pro متوقفة.';
 
   @override
-  String get localProAccountBody =>
-      'يمكنك مواصلة استخدام Registry من دون حساب. لاستعادة شراء Local Pro جديد بعد إعادة التثبيت أو تغيير الجهاز، وثّق بريدك قبل الشراء. يُربَط الشراء بذلك البريد فقط بعد تأكيد الرمز وقبول المتجر للشراء. توثيق البريد لا يشغّل Local Pro. ولا يفعل ذلك ملف نسخة احتياطية أو معرّف معاملة أو مفتاح داخل التطبيق.';
+  String get localProIncludedAdsOn =>
+      'بلا إعلانات. في هذا الإصدار يرى مستخدمو الخطة المجانية شريطًا إعلانيًا صغيرًا في الصفحة الرئيسية. يزيله Regiday Pro.';
 
   @override
-  String get localProAccountBeforeBuy =>
-      'إذا اشتريت قبل توثيق البريد، يبقى الشراء على هذا التثبيت. يُربَط فقط عندما ترسل استعادة المشتريات رمز الاستعادة الحالي وأنت مسجّل الدخول، ويقبل الخادم شراء المتجر الحالي. تسجيل الدخول لا يربطه وحده. بعد الربط، ينتقل إلى تثبيت جديد فقط عندما يكون ذلك البريد نفسه مسجّل الدخول ويقبل الخادم شراء المتجر مرة أخرى. رمز الاستعادة وحده لا ينقله.';
+  String get localProRestoreRequirements =>
+      'تطلب استعادة المشتريات من المتجر Regiday Pro الذي اشتُري بحساب Google Play أو Apple نفسه لهذا التطبيق. تبقى مشتريات Android وiOS منفصلة.';
 
   @override
-  String localProAccountSignedIn(String email) {
-    return 'تم تسجيل الدخول باسم $email. على تثبيت جديد، سجّل الدخول ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من هذا المتجر، ويتحقق الخادم منه قبل أن يعمل Local Pro. يبقى Android وiOS منفصلين.';
-  }
+  String get localProStatusDisabled =>
+      'قريبًا. الشراء غير متاح بعد؛ تبقى خطتك المجانية فعالة.';
 
   @override
-  String get localProAccountEmailLabel => 'البريد';
+  String get localProStatusChecking => 'جارٍ التحقق من شرائك لدى المتجر…';
 
   @override
-  String get localProAccountSendCode => 'إرسال رمز التحقق';
+  String get localProStatusActive => 'Regiday Pro مفعّل. أكّد المتجر شراءك.';
 
   @override
-  String get localProAccountCodeLabel => 'رمز التحقق';
+  String get localProStatusActiveUnconfirmed =>
+      'يبقى Regiday Pro مفعّلًا وفق آخر تأكيد من المتجر. تعذّر الوصول إلى المتجر الآن، لذا لن يُكتشف استرداد تم منذ ذلك الحين إلا عند الوصول إليه.';
 
   @override
-  String get localProAccountConfirm => 'تأكيد البريد';
+  String get localProStatusUnknown =>
+      'تعذّر الوصول إلى المتجر، لذا لا يمكن تأكيد الشراء الآن. تنطبق الحدود المجانية إلى أن يصبح ذلك ممكنًا. لا تتأثر سجلاتك.';
 
   @override
-  String get localProAccountCodeSent =>
-      'أُرسل رمز تحقق. تنتهي صلاحيته قريبًا. الرمز لا يشغّل Local Pro.';
+  String get localProProductMissing =>
+      'لم يُرجع المتجر Regiday Pro. قد لا يكون متاحًا بعد لهذا الحساب أو هذا البلد.';
 
   @override
-  String get localProAccountNotConfigured =>
-      'إرسال البريد غير مُعد. لم يُرسل رمز تحقق.';
+  String get localProStoreUnavailable =>
+      'خدمة الدفع في المتجر غير متاحة على هذا الجهاز. تأكد من تسجيل الدخول إلى المتجر ثم حاول مرة أخرى.';
 
   @override
-  String get localProAccountUnavailable =>
-      'هذا الإصدار لا يستطيع إرسال بريد تحقق. لن يُرسل أي رمز من هذه الشاشة.';
+  String get localProStoreError =>
+      'تعذّر الوصول إلى المتجر. تحقق من اتصالك وحاول مرة أخرى. لم يتغير شيء.';
 
   @override
-  String get localProAccountDeliveryFailed =>
-      'تعذّر إرسال البريد. لم يُسلَّم رمز تحقق.';
+  String get localProRetry => 'إعادة المحاولة';
 
   @override
-  String get localProAccountInvalidCode =>
-      'هذا الرمز غير صالح. لم يتغير Local Pro.';
+  String get localProResultActive => 'Regiday Pro مفعّل.';
 
   @override
-  String get localProAccountOffline =>
-      'تعذّر على Registry الوصول إلى التحقق من الحساب. لم يُرسل شيء ولم يتغير شيء.';
+  String get localProRestoreNotFound =>
+      'لم يجد المتجر أي شراء Regiday Pro لهذا الحساب. تأكد من تسجيل الدخول بالحساب الذي اشتراه.';
 
   @override
-  String get localProAccountDeleted =>
-      'أُزيل الحساب. يبقى هذا الشراء على هذا التثبيت. يحتاج الجهاز الجديد رمز الاستعادة الحالي. حذف الحساب لم يشغّل Local Pro ولم يوقفه.';
+  String get adsPrivacyTitle => 'خصوصية الإعلانات';
 
   @override
-  String get localProAccountDelete => 'حذف الحساب';
+  String get adsPrivacyBody =>
+      'راجع أو غيّر اختياراتك بشأن استخدام الإعلانات لبياناتك.';
 
   @override
-  String get localProAccountDeleteBody =>
-      'حذف الحساب يسجّل خروجك ويزيل ربط البريد. لا يسترد مبلغ الشراء من المتجر. الشراء الذي لم يُربَط قط ما زال يحتاج رمز الاستعادة.';
-
-  @override
-  String get localProRecoveryCodeRequired =>
-      'هذا الشراء ما زال مرتبطًا بالتثبيت الأصلي، لا بهذا البريد. لم يُنقل. أدخل رمز الاستعادة الحالي واستعد مرة أخرى لربطه، أو واصل استخدام ذلك الرمز من دون حساب.';
-
-  @override
-  String get localProAccountSignInRequired =>
-      'هذا الشراء مرتبط ببريد مُوثَّق. يبقى Local Pro متوقفًا على هذا التثبيت. سجّل الدخول بذلك البريد، ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل نقل الشراء. رمز الاستعادة وحده لا ينقله، ولا يستطيع بريد آخر أخذه.';
-
-  @override
-  String get localProAccountUnchanged =>
-      'يبقى هذا الشراء على هذا التثبيت. لم يُربَط البريد. أدخل رمز الاستعادة الحالي مع استعادة المشتريات لربطه.';
-
-  @override
-  String get localProAccountLinked =>
-      'أصبح هذا الشراء مرتبطًا ببريدك المُوثَّق. يمكن لتثبيت جديد من هذا المتجر استعادته بعد تسجيل الدخول.';
+  String get adsPrivacyAction => 'خيارات الخصوصية';
 
   @override
   String get profilePlanFree =>
@@ -2208,12 +2160,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String freeLimitDocuments(int count) {
-    return 'تشمل الخطة المجانية $count مستندات. يلغي Local Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.';
+    return 'تشمل الخطة المجانية $count مستندات. يلغي Regiday Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.';
   }
 
   @override
   String freeLimitSubscriptions(int count) {
-    return 'تشمل الخطة المجانية $count اشتراكات. يلغي Local Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.';
+    return 'تشمل الخطة المجانية $count اشتراكات. يلغي Regiday Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.';
   }
 
   @override
@@ -2357,4 +2309,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get csvSuggestionNote => 'مقترح من ملف CSV للرسوم. لم يُؤكد التكرار.';
+
+  @override
+  String get addOtherImage => 'إضافة صورة أخرى (اختياري)';
+
+  @override
+  String get scanAllImages => 'مسح جميع الصور';
+
+  @override
+  String get firebaseAiScanPrivacy =>
+      'عند الضغط على مسح جميع الصور، تُرسل صور المستند إلى Gemini عبر Firebase AI Logic. راجع كل حقل قبل الحفظ.';
+
+  @override
+  String get firebaseAiScanProcessing =>
+      'يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
+
+  @override
+  String get firebaseAiScanUnavailable =>
+      'المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا.';
 }

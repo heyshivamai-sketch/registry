@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "359772476439",
+    "project_id": "regiday-b1f5b",
+    "storage_bucket": "regiday-b1f5b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359772476439:android:65d093975f351d49bf3852",
+        "android_client_info": {
+          "package_name": "com.ventrovatech.residay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANAanI_6m-FQRejcgUYgT5OcelYUI4D4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

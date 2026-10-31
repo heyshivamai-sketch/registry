@@ -1,18 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_registry/app/app.dart';
+import 'package:the_registry/app/launch_config.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/app/theme/app_theme.dart';
 import 'package:the_registry/core/persistence/registry_store.dart';
+import 'package:the_registry/features/ads/ads_config.dart';
+import 'package:the_registry/features/ads/ads_platform.dart';
 import 'package:the_registry/features/app_lock/app_lock_store.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/entitlements/pro_account.dart';
-import 'package:the_registry/features/entitlements/production_billing.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
+import 'package:the_registry/features/entitlements/in_app_purchase_store.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
+import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/data/shared_preferences_onboarding_repository.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -31,9 +36,19 @@ class RegistryBootstrap extends StatefulWidget {
     this.resetOnboarding = false,
     this.reminderScheduler,
     this.timeZoneSource,
+    this.purchasesEnabled = LaunchConfig.purchasesEnabled,
+    this.adsConfig,
+    this.documentOcrService,
   });
 
   final Future<RegistryStore> Function()? openStore;
+
+  /// Defaults to `PURCHASES_ENABLED`, which is false.
+  final bool purchasesEnabled;
+
+  /// Defaults to the `ADS_*` build defines, which leave ads off.
+  final AdsConfig? adsConfig;
+  final DocumentOcrService? documentOcrService;
   final Future<SharedPreferences> Function()? loadPreferences;
 
   /// When set, startup does not read onboarding preferences itself.
@@ -53,10 +68,15 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
   OnboardingRepository? _onboarding;
   NotificationPromptStore? _notificationPrompts;
   AppLockStore? _appLockStore;
-  PurchaseService? _purchases;
-  StoreProductSource? _products;
-  ProAccountClient? _accounts;
+  LocalProEntitlement? _localPro;
+  AdsConfig _ads = AdsConfig.off;
   int _generation = 0;
+
+  @override
+  void dispose() {
+    _localPro?.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -92,13 +112,21 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         await store.close();
         return;
       }
-      ProductionBilling? billing;
-      try {
-        billing = await openProductionBilling();
-      } catch (_) {
-        billing = null;
+      LocalProEntitlement? localPro;
+      if (widget.purchasesEnabled && (Platform.isAndroid || Platform.isIOS)) {
+        final preferences = await loadPreferences();
+        localPro = LocalProEntitlement(
+          purchasesEnabled: true,
+          store: InAppPurchaseLocalProStore(),
+          hints: PreferencesLocalProHintStore(preferences),
+        );
+      }
+      final ads = widget.adsConfig ?? AdsConfig.fromEnvironment();
+      if (ads.problem != null) {
+        debugPrint('Ads stay off: ${ads.problem!.name}');
       }
       if (!mounted || generation != _generation) {
+        localPro?.dispose();
         await store.close();
         return;
       }
@@ -107,9 +135,9 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         _onboarding = onboarding;
         _notificationPrompts = prompts;
         _appLockStore = appLockStore;
-        _purchases = billing?.purchases;
-        _products = billing?.products;
-        _accounts = billing?.accounts;
+        _localPro?.dispose();
+        _localPro = localPro;
+        _ads = ads;
         _phase = _StartupPhase.ready;
       });
     } catch (_) {
@@ -145,9 +173,10 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         timeZoneSource: widget.timeZoneSource,
         notificationPromptStore: _notificationPrompts,
         appLockStore: _appLockStore,
-        purchaseService: _purchases,
-        storeProducts: _products,
-        proAccounts: _accounts,
+        localPro: _localPro,
+        adsConfig: _ads,
+        adsPlatform: _ads.enabled ? const GoogleMobileAdsPlatform() : null,
+        documentOcrService: widget.documentOcrService,
       );
     }
 

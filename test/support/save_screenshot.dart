@@ -29,7 +29,10 @@ Future<void> saveScreenshot(
   await tester.runAsync(() async {
     final image = await boundary.toImage(pixelRatio: pixelRatio);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final file = File('screenshots/$folder/$filename.png');
+    // Let validation runs keep new captures separate from existing QA evidence.
+    final root =
+        Platform.environment['REGISTRY_SCREENSHOT_ROOT'] ?? 'screenshots';
+    final file = File('$root/$folder/$filename.png');
     file.parent.createSync(recursive: true);
     await file.writeAsBytes(bytes!.buffer.asUint8List());
   });

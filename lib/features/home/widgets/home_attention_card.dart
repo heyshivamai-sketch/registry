@@ -31,7 +31,7 @@ class HomeAttentionCard extends StatelessWidget {
         : days == 0
         ? l10n.statusToday
         : item.statusLabel(l10n);
-    final largeText = MediaQuery.textScalerOf(context).scale(14) / 14 >= 1.3;
+
     final chip = DecoratedBox(
       decoration: BoxDecoration(
         color: status.urgentContainer,
@@ -41,8 +41,7 @@ class HomeAttentionCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Text(
           trailingLabel,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+
           style: theme.textTheme.labelSmall?.copyWith(
             color: status.urgent,
             letterSpacing: 0,
@@ -86,8 +85,7 @@ class HomeAttentionCard extends StatelessWidget {
                     children: [
                       Text(
                         item.title(l10n),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -96,15 +94,14 @@ class HomeAttentionCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         '${item.compactActionLabel(l10n)} · $date',
-                        maxLines: largeText ? 3 : 1,
-                        overflow: TextOverflow.ellipsis,
+
                         style: theme.textTheme.bodySmall,
                       ),
+                      const SizedBox(height: 6),
+                      chip,
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                if (largeText) Flexible(child: chip) else chip,
               ],
             ),
           ),

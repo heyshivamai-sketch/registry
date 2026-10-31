@@ -1,5 +1,7 @@
 # Phase 2 plan
 
+> **Superseded (28 September 2026, `feature/local-store-pro-and-ads`).** The billing server, email account, recovery code, installation binding, and signed grants described here were removed. Local Pro is now checked on the device against Google Play Billing or StoreKit only. Current setup: `docs/setup/local_pro_billing.md`, `docs/setup/ads.md`, `docs/setup/privacy_and_data.md`, `docs/release/launch_checklist.md`. This file is kept as a historical record.
+
 Phase 2A is the local premium foundation on `feature/phase2-local-pro-foundation`, branched from `70fd546` (`feature/secure-backup-restore`). It does not add cloud sync, bank access, email import, or a live store purchase.
 
 The proposed product name **Regiday** is not approved or cleared. This phase keeps the current display name, application id, and bundle ids.
@@ -17,7 +19,7 @@ App lock is free. It asks for platform biometrics and can fall back to the devic
 When the setting is on:
 
 - Cold start shows a lock screen before records. Records stay offstage until authentication succeeds.
-- The privacy cover appears as soon as the app becomes inactive, including during the grace window. Android also sets `FLAG_SECURE` while the lock is on, through `com.registry.app/privacy`.
+- The privacy cover appears as soon as the app becomes inactive, including during the grace window. Android also sets `FLAG_SECURE` while the lock is on, through `com.residay.app/privacy`.
 - Relock timeout is **30 seconds** (`AppLockPolicy.relockTimeout`). A resume before that keeps the unlocked session. A resume at or after 30 seconds requires authentication again. The system authentication sheet does not start the timer.
 - Cancellation or unavailable authentication while locked keeps records hidden.
 
@@ -51,11 +53,11 @@ Local Pro is described as a one-time purchase of the local limits above. Cloud s
 
 Do not set `storeVerificationConfigured` until all of the following exist.
 
-Google Play Console, application id `com.registry.app`:
+Google Play Console, application id `com.residay.app`:
 
 - One-time product id `local_pro` (not a subscription).
 - An active price created in Play Console. The app must display that localized price from a Play Billing product query.
-- Play Developer API access that can call `purchases.products.get` for package `com.registry.app` and product `local_pro`.
+- Play Developer API access that can call `purchases.products.get` for package `com.residay.app` and product `local_pro`.
 - The backend treats `purchaseState` purchased, for that product, as success and acknowledges the purchase.
 
 App Store Connect, bundle id `com.example.theRegistry`:
@@ -91,8 +93,8 @@ Do not change these until Regiday is approved and store listings are created for
 | Surface | File | Current value |
 | --- | --- | --- |
 | Android label | `android/app/src/main/AndroidManifest.xml` | `the_registry` |
-| Android application id | `android/app/build.gradle.kts` | `com.registry.app` |
-| Android package | `android/app/src/main/kotlin/com/registry/app/` | `com.registry.app` |
+| Android application id | `android/app/build.gradle.kts` | `com.residay.app` |
+| Android package | `android/app/src/main/kotlin/com/registry/app/` | `com.residay.app` |
 | iOS display name | `ios/Runner/Info.plist` `CFBundleDisplayName` | `The Registry` |
 | iOS bundle name | `ios/Runner/Info.plist` `CFBundleName` | `the_registry` |
 | iOS bundle id | `ios/Runner.xcodeproj/project.pbxproj` `PRODUCT_BUNDLE_IDENTIFIER` | `com.example.theRegistry` |

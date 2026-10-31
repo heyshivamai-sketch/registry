@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged only when ADS_ENABLED=true (see build.gradle.kts). The value is
+     the Android AdMob App ID (with "~"), not a banner ad unit ID. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+    </application>
+</manifest>

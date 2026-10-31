@@ -315,7 +315,8 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
 
   Future<void> _pickImage({
     required bool fromCamera,
-    bool runOcr = true,
+    bool runOcr = false,
+    bool additional = false,
   }) async {
     final deps = RegistryDependencies.of(context);
     final l10n = AppLocalizations.of(context);
@@ -327,7 +328,11 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     }
     switch (result.status) {
       case ImagePickStatus.success:
-        _controller.setAttachment(result.bytes);
+        if (additional) {
+          _controller.addImage(result.bytes!);
+        } else {
+          _controller.setAttachment(result.bytes);
+        }
         if (runOcr) {
           await _controller.recognizeAttachment(deps.documentOcr);
         }
@@ -594,7 +599,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         onSchema: _pickSchema,
         onCategory: _pickCategory,
         onCountry: _pickCountry,
-        onRetake: () => _replaceAttachment(runOcr: true),
+        onRetake: () => _replaceAttachment(),
       );
     }
     return switch (_controller.step) {
@@ -605,10 +610,14 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
           _controller.upsertUnboundSchemaValues();
           _syncDynamicControllers();
         },
-        onTakePhoto: () => _pickImage(fromCamera: true, runOcr: true),
-        onChooseGallery: () => _pickImage(fromCamera: false, runOcr: true),
-        onReplace: () => _replaceAttachment(runOcr: !_controller.isEditing),
-        onScanAgain: () => _replaceAttachment(runOcr: true),
+        onTakePhoto: () => _pickImage(fromCamera: true),
+        onAddPhoto: () => _pickImage(fromCamera: true, additional: true),
+        onAddGallery: () => _pickImage(fromCamera: false, additional: true),
+        onChooseGallery: () => _pickImage(fromCamera: false),
+        onReplace: () => _replaceAttachment(),
+        onScanAgain: () => _controller.recognizeAttachment(
+          RegistryDependencies.of(context).documentOcr,
+        ),
         onRemove: () => _controller.setAttachment(null),
         onRetry: () {
           final ocr = RegistryDependencies.of(context).documentOcr;
@@ -756,6 +765,8 @@ class _SourceStep extends StatelessWidget {
     required this.onChooseGallery,
     required this.onReplace,
     required this.onScanAgain,
+    required this.onAddPhoto,
+    required this.onAddGallery,
     required this.onRemove,
     required this.onRetry,
   });
@@ -766,6 +777,8 @@ class _SourceStep extends StatelessWidget {
   final VoidCallback onChooseGallery;
   final VoidCallback onReplace;
   final VoidCallback onScanAgain;
+  final VoidCallback onAddPhoto;
+  final VoidCallback onAddGallery;
   final VoidCallback onRemove;
   final VoidCallback onRetry;
 
@@ -773,6 +786,9 @@ class _SourceStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final aiScanAvailable = RegistryDependencies.of(
+      context,
+    ).documentOcr.isAvailable;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -783,12 +799,7 @@ class _SourceStep extends StatelessWidget {
               : l10n.addDocumentHeadline,
           body: l10n.howToAddTitle,
         ),
-        Text(
-          l10n.addDocumentSubtitle,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(height: AppSpacing.md),
+
         if (controller.ocrStatus == OcrUiStatus.failed) ...[
           Text(
             key: const ValueKey<String>('ocr-failed'),
@@ -814,15 +825,15 @@ class _SourceStep extends StatelessWidget {
             title: l10n.scanDocumentTitle,
             subtitle: l10n.scanDocumentSubtitle,
             badge: l10n.scanDocumentRecommended,
-            child: Wrap(
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 RegistrySecondaryButton(
                   key: const ValueKey<String>('attach-camera'),
                   label: l10n.attachmentTakePhoto,
                   onPressed: onTakePhoto,
                 ),
+                const SizedBox(height: AppSpacing.xs),
                 RegistrySecondaryButton(
                   key: const ValueKey<String>('attach-gallery'),
                   label: l10n.attachmentChooseGallery,
@@ -848,18 +859,65 @@ class _SourceStep extends StatelessWidget {
             onRemove: onRemove,
           ),
         if (controller.hasAttachment) ...[
-          const SizedBox(height: AppSpacing.sm),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton(
-              key: const ValueKey<String>('scan-again'),
-              onPressed: onScanAgain,
-              child: Text(l10n.scanAgain),
+          for (var i = 0; i < controller.additionalImages.length; i++) ...[
+            const SizedBox(height: AppSpacing.sm),
+            DocumentAttachmentCard(
+              bytes: controller.additionalImages[i],
+              onTakePhoto: onAddPhoto,
+              onChooseGallery: onAddGallery,
+              onReplace: null,
+              onRemove: () => controller.removeImage(i),
             ),
+          ],
+          const SizedBox(height: AppSpacing.sm),
+          if (controller.additionalImages.length < 5) ...[
+            Text(l10n.addOtherImage, style: theme.textTheme.titleSmall),
+            const SizedBox(height: AppSpacing.xs),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: onAddPhoto,
+                  icon: const Icon(Icons.add_a_photo_outlined),
+                  label: Text(l10n.attachmentTakePhoto),
+                ),
+                OutlinedButton.icon(
+                  onPressed: onAddGallery,
+                  icon: const Icon(Icons.add_photo_alternate_outlined),
+                  label: Text(l10n.attachmentChooseGallery),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: AppSpacing.md),
+          RegistryCallout(
+            message: aiScanAvailable
+                ? l10n.firebaseAiScanPrivacy
+                : l10n.firebaseAiScanUnavailable,
           ),
+          const SizedBox(height: AppSpacing.sm),
+          FilledButton.icon(
+            key: const ValueKey<String>('scan-again'),
+            onPressed: aiScanAvailable ? onScanAgain : null,
+            icon: const Icon(Icons.auto_awesome_rounded),
+            label: Text(l10n.scanAllImages),
+          ),
+          if (!aiScanAvailable)
+            TextButton.icon(
+              key: const ValueKey<String>('scan-enter-manually'),
+              onPressed: onManual,
+              icon: const Icon(Icons.edit_outlined),
+              label: Text(l10n.enterManuallyTitle),
+            ),
         ],
         const SizedBox(height: AppSpacing.md),
-        RegistryCallout(message: l10n.ocrPrivacy),
+        if (!controller.hasAttachment)
+          RegistryCallout(
+            message: aiScanAvailable
+                ? l10n.firebaseAiScanPrivacy
+                : l10n.firebaseAiScanUnavailable,
+          ),
       ],
     );
   }
@@ -941,6 +999,13 @@ class _ChoiceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (badge != null) ...[
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Chip(label: Text(badge!)),
+              ),
+              const SizedBox(height: 8),
+            ],
             Row(
               children: [
                 RegistryAuraIconTile(
@@ -965,27 +1030,6 @@ class _ChoiceCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (badge != null)
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE9E6FF),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 7,
-                        vertical: 5,
-                      ),
-                      child: Text(
-                        badge!,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.tertiary,
-                          letterSpacing: 0,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                  ),
               ],
             ),
             if (child != null) ...[
@@ -1067,17 +1111,19 @@ class _IdentityStep extends StatelessWidget {
           onTap: onPickCountry,
         ),
         const SizedBox(height: AppSpacing.md),
-        RegistrySelectorField(
-          fieldKey: 'field-category',
-          label: l10n.fieldCategory,
-          value: controller.category == null
+        TextFormField(
+          key: const ValueKey<String>('field-category'),
+          initialValue: controller.categoryLabel.isNotEmpty
+              ? controller.categoryLabel
+              : controller.category == null
               ? ''
               : DocumentCopy.category(l10n, controller.category!),
-          empty: controller.category == null,
-          requiredField: true,
-          errorText: controller.categoryError,
-          placeholder: l10n.chooseOption,
-          onTap: onPickCategory,
+          decoration: InputDecoration(
+            labelText: '${l10n.fieldCategory} *',
+            errorText: controller.categoryError,
+          ),
+          textCapitalization: TextCapitalization.words,
+          onChanged: controller.setCategoryLabel,
         ),
         const SizedBox(height: AppSpacing.md),
         RegistryTextField(
@@ -1659,6 +1705,8 @@ class _ReviewStep extends StatelessWidget {
                 label: l10n.fieldCategory,
                 value: controller.category == null
                     ? ''
+                    : controller.categoryLabel.isNotEmpty
+                    ? controller.categoryLabel
                     : DocumentCopy.category(l10n, controller.category!),
               ),
               _ReviewRow(
@@ -1843,7 +1891,7 @@ class _OcrProcessing extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         Text(
-          l10n.ocrProcessingMessage,
+          l10n.firebaseAiScanProcessing,
           style: Theme.of(context).textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),
@@ -1878,10 +1926,13 @@ class _OcrReview extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final result = controller.ocrResult;
-    final typeLabel = DocumentCopy.schema(
-      l10n,
-      result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
-    );
+    final extractedType = result?.documentTypeLabel?.trim();
+    final typeLabel = extractedType?.isNotEmpty == true
+        ? extractedType!
+        : DocumentCopy.schema(
+            l10n,
+            result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
+          );
     return Column(
       key: const ValueKey<String>('ocr-review'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1948,25 +1999,22 @@ class _OcrReview extends StatelessWidget {
         RegistrySelectorField(
           fieldKey: 'ocr-schema',
           label: l10n.fieldDocumentType,
-          value: DocumentCopy.schema(
-            l10n,
-            result?.classification.schemaId ?? DocumentSchemaIds.genericOther,
-          ),
+          value: typeLabel,
           empty: result == null,
           placeholder: l10n.chooseOption,
           onTap: onSchema,
         ),
         const SizedBox(height: AppSpacing.md),
-        RegistrySelectorField(
-          fieldKey: 'ocr-category',
-          label: l10n.fieldCategory,
-          value: DocumentCopy.category(
-            l10n,
-            result?.classification.category ?? DocumentCategory.other,
-          ),
-          empty: result == null,
-          placeholder: l10n.chooseOption,
-          onTap: onCategory,
+        TextFormField(
+          key: const ValueKey<String>('ocr-category'),
+          initialValue:
+              result?.categoryLabel ??
+              DocumentCopy.category(
+                l10n,
+                result?.classification.category ?? DocumentCategory.other,
+              ),
+          decoration: InputDecoration(labelText: l10n.fieldCategory),
+          onChanged: (value) => controller.setOcrCategoryLabel(value),
         ),
         const SizedBox(height: AppSpacing.md),
         for (final field in controller.ocrFields) ...[

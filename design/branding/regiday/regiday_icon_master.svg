@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Regiday icon master (square, opaque; the OS applies the mask)</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4E46E5"/>
+      <stop offset="1" stop-color="#332B99"/>
+    </linearGradient>
+  </defs>
+  <rect id="background" width="1024" height="1024" fill="url(#bg)"/>
+  <path id="page" fill="#FFFDF8" fill-rule="evenodd" d="M271.16,265.42 Q271.16,225.28,311.3,225.28 L626.69,225.28 L741.38,339.97 L741.38,420.25 C741.38,512,684.03,569.34,603.75,580.81 L752.84,798.72 L598.02,798.72 L471.86,603.75 L425.98,603.75 L425.98,758.58 Q425.98,798.72,385.84,798.72 L311.3,798.72 Q271.16,798.72,271.16,758.58 Z M425.98,351.44 L557.88,351.44 C592.28,351.44,603.75,380.11,603.75,414.52 C603.75,448.92,592.28,477.59,557.88,477.59 L425.98,477.59 Z"/>
+  <path id="fold-shadow" fill="#272078" fill-opacity="0.16" d="M615.22,236.75 L615.22,351.44 L729.91,351.44 Z"/>
+  <path id="fold" fill="#94E1C8" d="M626.69,225.28 L626.69,317.03 Q626.69,339.97,649.63,339.97 L741.38,339.97 Z"/>
+</svg>

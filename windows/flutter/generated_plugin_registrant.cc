@@ -7,12 +7,21 @@
 #include "generated_plugin_registrant.h"
 
 #include <file_selector_windows/file_selector_windows.h>
+#include <firebase_app_check/firebase_app_check_plugin_c_api.h>
+#include <firebase_auth/firebase_auth_plugin_c_api.h>
+#include <firebase_core/firebase_core_plugin_c_api.h>
 #include <flutter_timezone/flutter_timezone_plugin_c_api.h>
 #include <local_auth_windows/local_auth_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
+  FirebaseAppCheckPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FirebaseAppCheckPluginCApi"));
+  FirebaseAuthPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FirebaseAuthPluginCApi"));
+  FirebaseCorePluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
   FlutterTimezonePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterTimezonePluginCApi"));
   LocalAuthPluginRegisterWithRegistrar(

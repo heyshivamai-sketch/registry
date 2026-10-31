@@ -4,17 +4,17 @@ import 'package:the_registry/features/backup/backup_models.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
-import 'package:the_registry/features/entitlements/billing_configuration.dart';
-import 'package:the_registry/features/entitlements/debug_qa_entitlements.dart';
+import 'package:the_registry/app/launch_config.dart';
+import 'package:the_registry/features/ads/ads_config.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
 import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_controller.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
+import 'support/phase2_fakes.dart';
 import 'support/sample_document.dart';
 import 'support/sample_subscription.dart';
 
@@ -97,7 +97,7 @@ void main() {
       expect(documents.documents, hasLength(11));
       expect(subscriptions.subscriptions, hasLength(6));
 
-      final source = ProductionVerifiedEntitlementSource();
+      final source = LocalProEntitlement.disabled();
       final writes = RegistryWrites(
         documents: documents,
         subscriptions: subscriptions,
@@ -142,7 +142,7 @@ void main() {
       entitlements: EntitlementService(
         documents: documents,
         subscriptions: subscriptions,
-        source: ProductionVerifiedEntitlementSource(),
+        source: LocalProEntitlement.disabled(),
       ),
     );
     await expectLater(
@@ -192,60 +192,87 @@ void main() {
     expect(subscriptionId, 'sub_1');
   });
 
-  test(
-    'production verification ignores client and unverified proofs',
-    () async {
-      expect(BillingConfiguration.storeVerificationConfigured, isFalse);
-      expect(BillingConfiguration.localProProductId, 'local_pro');
-      final source = ProductionVerifiedEntitlementSource();
-      source.applyVerified(
-        const VerifiedEntitlementProof(
-          productId: 'local_pro',
-          accepted: true,
-          clientSuppliedOnly: true,
+  test('Local Pro lifts both limits and a lost entitlement blocks only new '
+      'records', () async {
+    final documents = InMemoryDocumentRepository();
+    final subscriptions = InMemorySubscriptionRepository();
+    for (var index = 0; index < EntitlementPolicy.freeDocumentLimit; index++) {
+      await documents.save(sampleDocument(id: 'doc_$index'));
+    }
+    for (
+      var index = 0;
+      index < EntitlementPolicy.freeSubscriptionLimit;
+      index++
+    ) {
+      await subscriptions.save(sampleSubscription(id: 'sub_$index'));
+    }
+    final plan = FakePlanSource();
+    final writes = RegistryWrites(
+      documents: documents,
+      subscriptions: subscriptions,
+      entitlements: EntitlementService(
+        documents: documents,
+        subscriptions: subscriptions,
+        source: plan,
+      ),
+    );
+    await expectLater(
+      writes.createDocument(sampleDocument(id: 'doc_free_extra')),
+      throwsA(
+        isA<EntitlementDenied>().having(
+          (error) => error.decision.denial,
+          'denial',
+          EntitlementDenialKind.documentLimit,
         ),
-      );
-      expect(source.plan, RegistryPlan.free);
-      final purchase = const ProductionPurchaseService();
-      source.applyVerified((await purchase.purchaseLocalPro()).proof);
-      expect(source.plan, RegistryPlan.free);
-      expect(await const ProductionStoreProductSource().loadLocalPro(), isNull);
+      ),
+    );
+    await expectLater(
+      writes.createSubscription(sampleSubscription(id: 'sub_free_extra')),
+      throwsA(
+        isA<EntitlementDenied>().having(
+          (error) => error.decision.denial,
+          'denial',
+          EntitlementDenialKind.subscriptionLimit,
+        ),
+      ),
+    );
 
-      expect(
-        planAfterProof(
-          current: RegistryPlan.free,
-          storeVerificationConfigured: true,
-          proof: const VerifiedEntitlementProof(
-            productId: 'local_pro',
-            accepted: true,
-            clientSuppliedOnly: true,
-          ),
-        ),
-        RegistryPlan.free,
-      );
-      expect(
-        planAfterProof(
-          current: RegistryPlan.free,
-          storeVerificationConfigured: false,
-          proof: const VerifiedEntitlementProof(
-            productId: 'local_pro',
-            accepted: true,
-          ),
-        ),
-        RegistryPlan.free,
-      );
-      expect(
-        planAfterProof(
-          current: RegistryPlan.free,
-          storeVerificationConfigured: true,
-          proof: const VerifiedEntitlementProof(
-            productId: 'local_pro',
-            accepted: true,
-          ),
-        ),
-        RegistryPlan.localPro,
-      );
-      expect(() => ensureDebugQaBuild(releaseMode: true), throwsStateError);
-    },
-  );
+    plan.set(plan: RegistryPlan.localPro);
+    await writes.createDocument(sampleDocument(id: 'doc_pro_1'));
+    await writes.createDocument(sampleDocument(id: 'doc_pro_2'));
+    await writes.createSubscription(sampleSubscription(id: 'sub_pro_1'));
+    expect(documents.documents, hasLength(12));
+    expect(subscriptions.subscriptions, hasLength(6));
+
+    // Refund or revocation: the store no longer reports Local Pro.
+    plan.set(plan: RegistryPlan.free);
+    await expectLater(
+      writes.createDocument(sampleDocument(id: 'doc_after_refund')),
+      throwsA(isA<EntitlementDenied>()),
+    );
+    expect(
+      await documents.update(sampleDocument(id: 'doc_pro_1', name: 'Kept')),
+      isTrue,
+    );
+    expect(documents.findById('doc_pro_1')?.name, 'Kept');
+    expect(documents.documents, hasLength(12));
+
+    // Back below the Free limit, creating works again.
+    for (final id in ['doc_pro_1', 'doc_pro_2', 'doc_0']) {
+      await documents.delete(id);
+    }
+    await writes.createDocument(sampleDocument(id: 'doc_free_again'));
+    expect(documents.documents, hasLength(10));
+  });
+
+  test('the launch build ships with purchases off and ads off', () {
+    expect(LaunchConfig.purchasesEnabled, isFalse);
+    expect(LaunchConfig.adsEnabled, isFalse);
+    expect(LaunchConfig.localProProductId, 'local_pro');
+    expect(AdsConfig.fromEnvironment().enabled, isFalse);
+    final localPro = LocalProEntitlement.disabled();
+    expect(localPro.plan, RegistryPlan.free);
+    expect(localPro.status, LocalProStatus.disabled);
+    expect(localPro.restoreAvailable, isFalse);
+  });
 }

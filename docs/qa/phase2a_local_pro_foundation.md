@@ -1,5 +1,7 @@
 # Phase 2A — Local Pro foundation
 
+> **Superseded (28 September 2026, `feature/local-store-pro-and-ads`).** The billing server, email account, recovery code, installation binding, and signed grants described here were removed. Local Pro is now checked on the device against Google Play Billing or StoreKit only. Current setup: `docs/setup/local_pro_billing.md`, `docs/setup/ads.md`, `docs/setup/privacy_and_data.md`, `docs/release/launch_checklist.md`. This file is kept as a historical record.
+
 **Date:** 27 September 2026
 **Branch:** `feature/phase2-local-pro-foundation`
 **HEAD:** `70fd5466287d945f76e1c7cd83b477ece224248a` (`feat: add encrypted registry backup and restore`)
@@ -17,7 +19,7 @@ The first pass only opened Home, Profile, Local Pro, and the in-app CSV choose s
 - Local Pro is a one-time local purchase. Cloud sync, cloud backup, and accounts are listed as not included. Production purchase and entitlement sources do not grant Local Pro while `BillingConfiguration.storeVerificationConfigured` is false. There is no client boolean, backup flag, debug switch, or unverified callback that turns it on. Debug QA fakes throw in release and are not constructed by production startup.
 - Generic CSV import is one documented format (`date,merchant,amount_minor,currency`). The person chooses the file, maps columns, reviews suggestions, and confirms before any write. Recurrence is a suggestion. Invalid input and cancellation leave repositories unchanged.
 
-Design detail, the store-configuration checklist, and the branding file table are in `docs/roadmap/phase2_plan.md`. Display name, application id `com.registry.app`, and bundle id `com.example.theRegistry` are unchanged. **Regiday is a proposed name and is not approved.**
+Design detail, the store-configuration checklist, and the branding file table are in `docs/roadmap/phase2_plan.md`. Display name, application id `com.residay.app`, and bundle id `com.example.theRegistry` are unchanged. **Regiday is a proposed name and is not approved.**
 
 `BillingConfiguration.storeVerificationConfigured` is still `false` (`lib/features/entitlements/billing_configuration.dart`). This pass did not implement purchases and did not enable Buy.
 

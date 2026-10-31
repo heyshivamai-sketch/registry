@@ -4,6 +4,7 @@ import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
+import 'package:the_registry/features/ads/presentation/registry_banner_slot.dart';
 import 'package:the_registry/features/home/data/coming_up_grouping.dart';
 import 'package:the_registry/features/home/data/mock_registry_catalog.dart';
 import 'package:the_registry/features/home/data/registry_item.dart';
@@ -152,6 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       setState(() => _comingUpFilter = filter),
                   groups: groups,
                   empty: homeComingUp.isEmpty,
+                ),
+                const RegistryBannerSlot(
+                  key: ValueKey<String>('home-banner-slot'),
                 ),
               ],
             ],

@@ -10,7 +10,7 @@ import 'package:the_registry/features/csv_import/csv_import_limits.dart';
 import 'package:the_registry/features/csv_import/presentation/import_charges_screen.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/entitlements/verified_entitlement.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 
@@ -33,7 +33,7 @@ void main() {
         entitlements: EntitlementService(
           documents: documents,
           subscriptions: subscriptions,
-          source: ProductionVerifiedEntitlementSource(),
+          source: LocalProEntitlement.disabled(),
         ),
       ),
       clock: FixedClock(DateTime(2026, 4, 2)),

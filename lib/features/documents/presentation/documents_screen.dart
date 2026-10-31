@@ -188,58 +188,57 @@ class _DocumentsHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+        Row(
+          children: [
+            Expanded(
+              child: Text(
                 l10n.documentsEyebrow,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.tertiary,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xxs),
-              Text(l10n.documentsTitle, style: theme.textTheme.headlineMedium),
-              if (savedCount > 0) ...[
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l10n.documentsSummary(savedCount),
-                  style: theme.textTheme.titleSmall,
-                ),
-                Text(
-                  l10n.documentsAttentionSummary(attentionCount),
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
-            ],
-          ),
-        ),
-        Semantics(
-          button: true,
-          label: l10n.notificationsButton,
-          child: Material(
-            color: colorScheme.surfaceContainerLowest,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: colorScheme.outlineVariant),
             ),
-            child: InkWell(
-              onTap: () => AppRoutes.openNotifications(context),
-              borderRadius: BorderRadius.circular(15),
-              child: SizedBox(
-                width: AppSpacing.minTapTarget,
-                height: AppSpacing.minTapTarget,
-                child: Icon(
-                  Icons.notifications_none_rounded,
-                  color: colorScheme.onSurface,
+            Semantics(
+              button: true,
+              label: l10n.notificationsButton,
+              child: Material(
+                color: colorScheme.surfaceContainerLowest,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(color: colorScheme.outlineVariant),
+                ),
+                child: InkWell(
+                  onTap: () => AppRoutes.openNotifications(context),
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    width: AppSpacing.minTapTarget,
+                    height: AppSpacing.minTapTarget,
+                    child: Icon(
+                      Icons.notifications_none_rounded,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(l10n.documentsTitle, style: theme.textTheme.headlineMedium),
+        if (savedCount > 0) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l10n.documentsSummary(savedCount),
+            style: theme.textTheme.titleSmall,
+          ),
+          Text(
+            l10n.documentsAttentionSummary(attentionCount),
+            style: theme.textTheme.bodySmall,
+          ),
+        ],
       ],
     );
   }

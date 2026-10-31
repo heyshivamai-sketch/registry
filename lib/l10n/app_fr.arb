@@ -18,7 +18,7 @@
   "onboardingSubscriptionName": "Streaming",
   "onboardingUpcomingCharge": "Prélèvement dans 5 jours",
   "onboardingDecisionDate": "Décider avant vendredi",
-  "onboardingPrivacyLock": "Sur l’appareil uniquement",
+  "onboardingPrivacyLock": "Données locales",
   "navHome": "Accueil",
   "navDocuments": "Documents",
   "navSubscriptions": "Abonnements",
@@ -97,10 +97,10 @@
   "subscriptionsEmptyTitle": "Aucun abonnement pour le moment",
   "subscriptionsEmptyMessage": "Ajoutez streaming, sport et autres prélèvements pour anticiper les paiements.",
   "profileTitle": "Profil",
-  "profileMessage": "Vos dossiers restent privés sur cet appareil. Local Pro peut utiliser un e-mail vérifié facultatif pour restaurer cet achat. Il ne synchronise ni les documents ni les abonnements.",
+  "profileMessage": "Vos dossiers restent privés sur cet appareil. Regiday Pro est une mise à niveau unique et ne synchronise ni les documents ni les abonnements.",
   "profileButton": "Ouvrir le profil",
   "addDocumentTitle": "Ajouter un document",
-  "addDocumentMessage": "Le formulaire document, l’analyse optionnelle et le stockage local seront construits ensuite. Vous pouvez revenir en arrière et continuer à explorer l’accueil.",
+  "addDocumentMessage": "Ajoutez des images pour l’analyse IA facultative ou saisissez les informations manuellement. Les documents et pièces jointes restent sur cet appareil.",
   "addSubscriptionTitle": "Ajouter un abonnement",
   "addSubscriptionMessage": "Le formulaire d’abonnement et les rappels de paiement seront construits ensuite. Vous pouvez revenir en arrière et continuer à explorer l’accueil.",
   "searchNoResultsTitle": "Aucun résultat",
@@ -113,7 +113,7 @@
   "attachmentChooseGallery": "Choisir depuis la galerie",
   "attachmentReplace": "Remplacer",
   "attachmentRemove": "Retirer",
-  "attachmentPrivacy": "Votre image reste sur cet appareil et n’est pas téléversée.",
+  "attachmentPrivacy": "Stockée sur cet appareil. Envoyée à Gemini via Firebase AI Logic uniquement lorsque vous lancez l’analyse.",
   "replaceAttachmentTitle": "Remplacer la photo",
   "attachmentPickerFailed": "La photo n’a pas pu être ajoutée. Vérifiez l’autorisation de l’appareil photo ou de la bibliothèque, puis réessayez.",
   "sectionBasicInfo": "Informations de base",
@@ -140,7 +140,7 @@
   "fieldExpectedChanges": "Changements attendus au renouvellement",
   "fieldNotes": "Notes",
   "sectionReminders": "Préférence de rappel",
-  "remindersHelper": "Enregistré avec ce document. Registry demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.",
+  "remindersHelper": "Enregistré avec ce document. Regiday demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.",
   "reminderOnActionDate": "Le jour de l’action",
   "reminder7Days": "7 jours avant",
   "reminder30Days": "30 jours avant",
@@ -185,7 +185,9 @@
   "deleteDocumentMessage": "{name} sera retiré de cet appareil.",
   "@deleteDocumentMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "deleteDocumentConfirm": "Supprimer",
@@ -221,7 +223,9 @@
   "maskedDocumentNumberLabel": "Numéro de document masqué {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "ownerLabel": "Titulaire",
@@ -247,8 +251,12 @@
   "wizardStepOf": "Étape {current} sur {total}",
   "@wizardStepOf": {
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "wizardContinue": "Continuer",
@@ -261,14 +269,14 @@
   "howToAddTitle": "Comment souhaitez-vous l’ajouter ?",
   "scanDocumentTitle": "Scanner le document",
   "scanDocumentRecommended": "Recommandé",
-  "scanDocumentSubtitle": "Prenez une photo ou choisissez une image, puis vérifiez les informations extraites.",
+  "scanDocumentSubtitle": "Ajoutez le recto, le verso ou une autre page, puis lancez la lecture.",
   "enterManuallyTitle": "Saisir manuellement",
   "enterManuallySubtitle": "Saisissez les informations vous-même, étape par étape.",
-  "ocrPrivacy": "Votre scan est traité sur cet appareil. Rien n’est enregistré avant votre confirmation.",
-  "ocrReviewPrivacy": "Votre scan est traité sur cet appareil. Vérifiez toutes les informations extraites avant d’enregistrer.",
+  "ocrPrivacy": "Les images sont envoyées à Gemini via Firebase AI Logic uniquement lorsque vous lancez l’analyse. Rien n’est enregistré avant votre confirmation.",
+  "ocrReviewPrivacy": "Les résultats Gemini ne sont enregistrés qu’après vérification, confirmation et enregistrement final.",
   "scanAgain": "Scanner à nouveau",
   "ocrProcessingTitle": "Lecture du document",
-  "ocrProcessingMessage": "Le texte est reconnu sur cet appareil. Vous pouvez annuler et saisir les informations manuellement.",
+  "ocrProcessingMessage": "Gemini lit toutes les images du document via Firebase AI Logic. Vous pouvez annuler et saisir les informations manuellement.",
   "ocrCancel": "Annuler le scan",
   "ocrFailedTitle": "Ce scan n’a pas pu être lu",
   "ocrFailedMessage": "Conservez la photo et saisissez les informations manuellement, ou essayez une autre image.",
@@ -277,7 +285,9 @@
   "ocrFieldsFound": "{count, plural, =0{Aucun champ trouvé} one{1 champ trouvé} other{{count} champs trouvés}}",
   "@ocrFieldsFound": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "ocrConfidenceHigh": "Confiance élevée",
@@ -308,13 +318,17 @@
   "reviewDynamicCount": "{count, plural, =0{Aucun champ supplémentaire} one{1 champ supplémentaire} other{{count} champs supplémentaires}}",
   "@reviewDynamicCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "suggestedActionDate": "Date de début suggérée : {date}",
   "@suggestedActionDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "useSuggestedActionDate": "Utiliser la date suggérée",
@@ -344,7 +358,7 @@
   "snapshotNinetyDayView": "Vue 90 jours",
   "profileMonogram": "R",
   "guidedSetup": "Configuration guidée",
-  "ocrOnDeviceEyebrow": "Extraction sur l’appareil",
+  "ocrOnDeviceEyebrow": "Extraction assistée par IA",
   "howToAddBody": "Scannez pour gagner du temps, ou saisissez les détails vous-même.",
   "identityIntro": "Quelques détails pour organiser votre document.",
   "datesIntro": "Les dates incluent toujours le jour, le mois et l’année.",
@@ -355,7 +369,7 @@
   "ocrDynamicTemplateTitle": "Modèle de champs dynamique",
   "ocrDynamicTemplateBody": "Les champs changent selon le pays et le type de document. Les libellés inconnus deviennent des champs personnalisés.",
   "ocrReviewHint": "Vérifiez les valeurs mises en avant avant de continuer.",
-  "ocrProcessingHint": "Le texte est reconnu sur cet appareil.",
+  "ocrProcessingHint": "Gemini lit les images via Firebase AI Logic.",
   "horizonOpenCalendar": "Ouvrir le calendrier",
   "horizon90EmptyTitle": "Rien dans les 90 prochains jours",
   "horizon90EmptyMessage": "Les éléments avec une date d’action ou de renouvellement dans les 90 prochains jours apparaîtront ici, du plus proche au plus lointain.",
@@ -513,20 +527,24 @@
   "attachmentAddedOn": "Ajouté le {date}",
   "@attachmentAddedOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "estimatedMonthlyCostValue": "Coût mensuel estimé {amount}",
   "@estimatedMonthlyCostValue": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "selectedDocumentType": "Type de document sélectionné",
   "chooseOption": "Choisir",
   "storageLoadingLabel": "Chargement des enregistrements",
   "storageErrorTitle": "Impossible d’ouvrir les enregistrements",
-  "storageErrorMessage": "Registry n’a pas pu ouvrir les enregistrements déjà stockés sur cet appareil. Ils ont été laissés en place. Réessayez sans réinitialiser l’application.",
+  "storageErrorMessage": "Regiday n’a pas pu ouvrir les enregistrements déjà stockés sur cet appareil. Ils ont été laissés en place. Réessayez sans réinitialiser l’application.",
   "storageErrorRetry": "Réessayer",
   "reminderPermissionDenied": "Les notifications sont désactivées, donc aucun rappel ne sera planifié. Vous pouvez quand même enregistrer. Activez-les dans les réglages des notifications lorsque vous voulez des rappels.",
   "reminderStatusScheduled": "Un rappel local est planifié sur cet appareil. La remise n’est pas garantie à 9:00 précises.",
@@ -537,14 +555,14 @@
   "reminderStatusUnavailable": "Ces choix sont enregistrés. Les rappels locaux ne peuvent pas être planifiés sur cet appareil pour le moment.",
   "notificationsScheduledCount": "{count, plural, =0{Aucun rappel local n’est planifié sur cet appareil.} one{1 rappel local est planifié sur cet appareil.} other{{count} rappels locaux sont planifiés sur cet appareil.}}",
   "notificationsPermissionOff": "Les notifications sont désactivées. Les choix de rappel restent enregistrés avec chaque dossier, et rien n’est planifié tant que vous ne les activez pas dans les réglages du système.",
-  "notificationsLimits": "Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Registry demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Registry. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Registry en planifie au plus 64, les plus proches d’abord.",
+  "notificationsLimits": "Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Regiday demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Regiday. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Regiday en planifie au plus 64, les plus proches d’abord.",
   "notificationsOmittedCount": "{count, plural, one{1 rappel enregistré n’a pas été planifié à cause de cette limite.} other{{count} rappels enregistrés n’ont pas été planifiés à cause de cette limite.}}",
   "notificationsAllow": "Autoriser les notifications",
   "notificationsOpenSettings": "Réglages des notifications",
   "notificationsUnavailable": "Cet appareil ne peut pas planifier de rappels locaux pour le moment. Les choix enregistrés ne sont pas modifiés.",
-  "notificationChannelName": "Rappels Registry",
+  "notificationChannelName": "Rappels Regiday",
   "notificationChannelDescription": "Rappels locaux pour les dates de documents et les paiements d’abonnements. L’heure de remise n’est pas exacte.",
-  "notificationTitle": "Rappel Registry",
+  "notificationTitle": "Rappel Regiday",
   "reminderDocumentActionToday": "La date d’action d’un document est aujourd’hui.",
   "reminderDocumentActionIn7": "La date d’action d’un document est dans 7 jours, le {date}.",
   "reminderDocumentActionIn30": "La date d’action d’un document est dans 30 jours, le {date}.",
@@ -557,12 +575,12 @@
   "reminderSubscriptionPaymentIn1": "Un paiement d’abonnement est demain, le {date}.",
   "reminderSubscriptionChargeToday": "La date de paiement d’un abonnement est aujourd’hui.",
   "backupSectionTitle": "Sauvegarde et restauration",
-  "backupSectionBody": "Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Registry ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.",
+  "backupSectionBody": "Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Regiday ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.",
   "backupExportAction": "Exporter une sauvegarde",
   "backupImportAction": "Importer une sauvegarde",
   "backupExportTitle": "Exporter une sauvegarde",
   "backupIncluded": "Le fichier comprend les documents, les abonnements, les champs personnalisés, l’historique des renouvellements, les choix de rappel, les dates, les montants et les images des documents.",
-  "backupPasswordWarning": "Choisissez un mot de passe pour ce fichier. Si vous le perdez, cette sauvegarde ne pourra pas être restaurée. Registry n’enregistre pas le mot de passe.",
+  "backupPasswordWarning": "Choisissez un mot de passe pour ce fichier. Si vous le perdez, cette sauvegarde ne pourra pas être restaurée. Regiday n’enregistre pas le mot de passe.",
   "backupPasswordLabel": "Mot de passe de la sauvegarde",
   "backupConfirmPasswordLabel": "Confirmer le mot de passe",
   "backupPasswordTooShort": "Utilisez au moins 8 caractères.",
@@ -571,7 +589,7 @@
   "backupHidePassword": "Masquer le mot de passe",
   "backupChooseSave": "Choisir où enregistrer",
   "backupImportTitle": "Importer une sauvegarde",
-  "backupImportIntro": "Choisissez un fichier de sauvegarde Registry et saisissez son mot de passe. L’importation remplace chaque document et chaque abonnement de cet appareil.",
+  "backupImportIntro": "Choisissez un fichier de sauvegarde Regiday et saisissez son mot de passe. L’importation remplace chaque document et chaque abonnement de cet appareil.",
   "backupChooseFile": "Choisir un fichier de sauvegarde",
   "backupSelectedFile": "Fichier de sauvegarde sélectionné",
   "backupNoFile": "Choisissez d’abord un fichier de sauvegarde.",
@@ -594,90 +612,77 @@
   "backupImportReplaced": "Le registre de cet appareil a été remplacé à partir de la sauvegarde.",
   "backupImportCancelled": "Importation annulée.",
   "backupWrongPassword": "Ce mot de passe n’ouvre pas cette sauvegarde.",
-  "backupUnsupportedVersion": "Cette sauvegarde a été créée par une version plus récente de Registry.",
-  "backupInvalidFile": "Ce fichier n’est pas une sauvegarde Registry valide.",
+  "backupUnsupportedVersion": "Cette sauvegarde a été créée par une version plus récente de Regiday.",
+  "backupInvalidFile": "Ce fichier n’est pas une sauvegarde Regiday valide.",
   "backupTampered": "Ce fichier de sauvegarde est endommagé ou a été modifié.",
   "backupImportTooLarge": "Cette sauvegarde est trop volumineuse pour être restaurée.",
   "backupImportStorage": "Il n’y a pas assez d’espace libre pour restaurer cette sauvegarde.",
   "backupImportFailed": "La restauration ne s’est pas terminée.",
   "backupImportUnchanged": "Rien n’a été modifié sur cet appareil.",
   "appLockSectionTitle": "Verrouillage de l’application",
-  "appLockSectionBody": "Demandez la biométrie ou le code de cet appareil avant que Registry n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.",
+  "appLockSectionBody": "Demandez la biométrie ou le code de cet appareil avant que Regiday n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.",
   "appLockEnabled": "Le verrouillage est activé",
   "appLockDisabled": "Le verrouillage est désactivé",
-  "appLockReason": "Déverrouillez Registry pour voir les enregistrements de cet appareil.",
+  "appLockReason": "Déverrouillez Regiday pour voir les enregistrements de cet appareil.",
   "appLockEnableReason": "Confirmez que c’est bien vous avant d’activer le verrouillage.",
-  "appLockUnavailable": "Cet appareil n’a pas de biométrie ni de code que Registry peut utiliser. Le verrouillage n’a pas été activé.",
+  "appLockUnavailable": "Cet appareil n’a pas de biométrie ni de code que Regiday peut utiliser. Le verrouillage n’a pas été activé.",
   "appLockCancelled": "L’authentification a été annulée. Le verrouillage n’a pas été activé.",
   "appLockFailed": "L’authentification a échoué. Le verrouillage n’a pas été activé.",
-  "appLockPlatformError": "Registry n’a pas pu utiliser l’authentification de cet appareil. Le verrouillage n’a pas été modifié.",
+  "appLockPlatformError": "Regiday n’a pas pu utiliser l’authentification de cet appareil. Le verrouillage n’a pas été modifié.",
   "appLockDisableReason": "Confirmez que c’est bien vous avant de désactiver le verrouillage.",
   "appLockDisableCancelled": "L’authentification a été annulée. Le verrouillage reste activé.",
   "appLockDisableFailed": "L’authentification a échoué. Le verrouillage reste activé.",
   "appLockDisableUnavailable": "Cet appareil ne peut pas authentifier pour le moment. Le verrouillage reste activé.",
   "appLockUnlock": "Déverrouiller",
-  "appLockLockedTitle": "Registry est verrouillé",
+  "appLockLockedTitle": "Regiday est verrouillé",
   "appLockLockedBody": "Authentifiez-vous avec cet appareil pour voir vos enregistrements. Le verrouillage ne chiffre pas la base.",
   "appLockUnlockCancelled": "L’authentification a été annulée. Vos enregistrements restent masqués.",
   "appLockUnlockFailed": "L’authentification a échoué. Vos enregistrements restent masqués.",
   "appLockUnlockUnavailable": "Cet appareil ne peut pas authentifier pour le moment. Vos enregistrements restent masqués.",
-  "appLockUnlockPlatformError": "Registry n’a pas pu utiliser l’authentification de cet appareil. Vos enregistrements restent masqués.",
-  "appLockPrivacyCover": "Registry",
-  "localProTitle": "Local Pro",
-  "localProAction": "Voir Local Pro",
+  "appLockUnlockPlatformError": "Regiday n’a pas pu utiliser l’authentification de cet appareil. Vos enregistrements restent masqués.",
+  "appLockPrivacyCover": "Regiday",
+  "localProTitle": "Regiday Pro",
+  "localProAction": "Voir Regiday Pro",
   "localProEyebrow": "Achat unique",
-  "localProHeadline": "Gardez plus d’enregistrements sur cet appareil",
-  "localProIntro": "Local Pro est un achat unique pour les fonctions locales indiquées ici. Les futurs services dans le nuage sont distincts et ne font pas partie de cet achat.",
+  "localProHeadline": "Plus de place pour l’essentiel",
+  "localProIntro": "Regiday Pro : un seul achat, sans abonnement, pour conserver plus de dossiers sur cet appareil.",
   "localProIncludedTitle": "Inclus",
-  "localProIncludedDocuments": "Retire la limite gratuite de {count} documents.",
-  "localProIncludedSubscriptions": "Retire la limite gratuite de {count} abonnements.",
+  "localProIncludedDocuments": "Plus de documents. Dépassez la limite gratuite de {count}.",
+  "localProIncludedSubscriptions": "Plus d’abonnements. Dépassez la limite gratuite de {count}.",
   "localProTechnicalLimits": "Le stockage de l’appareil, la taille des sauvegardes et le plafond des rappels locaux s’appliquent toujours.",
   "localProNotIncludedTitle": "Non inclus",
-  "localProNotIncludedCloud": "La synchronisation et la sauvegarde dans le nuage ne sont pas incluses. Un e-mail facultatif peut seulement restaurer l’achat Local Pro de cette boutique. Il ne synchronise pas vos dossiers.",
+  "localProNotIncludedCloud": "Pas de synchronisation, de sauvegarde dans le nuage ni de compte. Pour déplacer vos enregistrements vers un autre appareil, utilisez le fichier de sauvegarde chiffré dans Profil. Un fichier de sauvegarde ne transporte pas Regiday Pro.",
   "localProFreeTitle": "Reste gratuit",
-  "localProFreeBody": "La consultation, la modification, le renouvellement, la suppression, les rappels, le verrouillage, l’exportation et la restauration restent disponibles pour les enregistrements que vous avez déjà.",
+  "localProFreeBody": "Les rappels, la lecture de texte (OCR), le verrouillage, la sauvegarde et la restauration chiffrées et l’import CSV restent gratuits. Les enregistrements déjà présents restent consultables, modifiables et exportables quelle que soit l’offre.",
   "localProCurrentFree": "Offre actuelle : Gratuit",
-  "localProCurrentPro": "Offre actuelle : Local Pro",
-  "localProPriceUnavailable": "Le prix de la boutique n’est pas disponible tant que Local Pro n’est pas configuré. Il n’y a rien à acheter pour le moment.",
-  "localProBuy": "Acheter Local Pro",
-  "localProOwned": "Local Pro est actif sur cet appareil.",
-  "localProPurchasePending": "La boutique n’a pas renvoyé un achat vérifié. Local Pro reste inactif.",
+  "localProCurrentPro": "Offre actuelle : Regiday Pro",
+  "localProBuy": "Acheter Regiday Pro",
   "localProRestore": "Restaurer les achats",
-  "localProPurchaseCancelled": "L’achat a été annulé. Local Pro reste inactif.",
-  "localProPurchaseFailed": "L’achat n’a pas pu être terminé. Local Pro reste inactif.",
-  "localProPendingStore": "La boutique traite encore cet achat. Local Pro reste inactif tant qu’il n’est pas vérifié.",
-  "localProBindingMismatch": "Cet achat est lié à une autre installation. Local Pro reste désactivé ici. S’il est lié à votre e-mail vérifié, connectez-vous et restaurez à nouveau pour que la boutique soit vérifiée. Sinon, utilisez le code de restauration de cette installation. Android et iOS restent séparés.",
-  "localProRecoveryTitle": "Conservez ce code de restauration",
-  "localProRecoveryBody": "Si cet achat est lié à un e-mail vérifié, connectez-vous sur la nouvelle installation et utilisez Restaurer les achats. L’application demande l’achat actuel à la boutique, et le serveur le vérifie avant d’activer Local Pro. Un achat fait avant un compte, ou non lié, a encore besoin du code de restauration de cette installation. Android et iOS restent séparés. Vérifier un e-mail n’active pas Local Pro à lui seul.",
-  "localProRecoveryPrompt": "Code de restauration",
-  "localProRecoverySubmit": "Restaurer avec le code",
-  "localProNetworkUnchanged": "Registry n’a pas pu joindre la vérification d’achat. Rien n’a été modifié sur cet appareil.",
-  "localProRevoked": "La boutique a révoqué cet achat. Local Pro est inactif. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés, supprimés, exportés et restaurés.",
+  "localProPurchaseCancelled": "L’achat a été annulé. Regiday Pro reste inactif.",
+  "localProPurchaseFailed": "L’achat n’a pas pu être terminé. Regiday Pro reste inactif.",
+  "localProPendingStore": "La boutique attend le paiement. Regiday Pro s’active une fois l’achat confirmé par la boutique. Rien n’est encore débloqué.",
+  "localProRevoked": "La boutique ne signale plus d’achat Regiday Pro pour ce compte, par exemple après un remboursement. Regiday Pro est inactif. Les enregistrements déjà présents peuvent encore être consultés, modifiés et exportés. Les nouveaux enregistrements s’arrêtent aux limites gratuites.",
   "localProNotIncludedTransfer": "Un achat Google Play ne déverrouille pas l’application iOS, et un achat App Store ne déverrouille pas Android.",
-  "localProAccountTitle": "E-mail facultatif",
-  "localProAccountBody": "Vous pouvez continuer à utiliser Registry sans compte. Pour retrouver un nouvel achat Local Pro après une réinstallation ou un changement d’appareil, vérifiez votre e-mail avant d’acheter. L’achat n’est lié à cet e-mail qu’une fois le code confirmé et la boutique a accepté l’achat. Vérifier l’e-mail n’active pas Local Pro. Un fichier de sauvegarde, un identifiant de transaction ou un interrupteur dans l’application ne le font pas non plus.",
-  "localProAccountBeforeBuy": "Si vous achetez avant la vérification de l’e-mail, l’achat reste sur cette installation. Il n’est lié que lorsque Restaurer les achats envoie le code de restauration actuel pendant que vous êtes connecté, et que le serveur accepte l’achat actuel de la boutique. La connexion ne le lie pas à elle seule. Une fois lié, une nouvelle installation ne le déplace que si ce même e-mail est connecté et que le serveur accepte à nouveau l’achat. Le code de restauration seul ne le déplace pas.",
-  "localProAccountSignedIn": "Connecté en tant que {email}. Sur une nouvelle installation, connectez-vous et touchez Restaurer les achats. L’application demande l’achat actuel à cette boutique, et le serveur le vérifie avant que Local Pro puisse s’activer. Android et iOS restent séparés.",
-  "localProAccountEmailLabel": "E-mail",
-  "localProAccountSendCode": "Envoyer le code de vérification",
-  "localProAccountCodeLabel": "Code de vérification",
-  "localProAccountConfirm": "Confirmer l’e-mail",
-  "localProAccountCodeSent": "Un code de vérification a été envoyé. Il expire bientôt. Le code n’active pas Local Pro.",
-  "localProAccountNotConfigured": "L’envoi d’e-mails n’est pas configuré. Aucun code de vérification n’a été envoyé.",
-  "localProAccountUnavailable": "Cette version ne peut pas envoyer d’e-mail de vérification. Aucun code ne sera envoyé depuis cet écran.",
-  "localProAccountDeliveryFailed": "L’e-mail n’a pas pu être envoyé. Aucun code de vérification n’a été remis.",
-  "localProAccountInvalidCode": "Ce code n’est pas valide. Local Pro n’a pas changé.",
-  "localProAccountOffline": "Registry n’a pas pu joindre la vérification du compte. Rien n’a été envoyé ni modifié.",
-  "localProAccountDeleted": "Le compte a été retiré. Cet achat reste sur cette installation. Un nouvel appareil a besoin du code de restauration actuel. Supprimer le compte n’a ni activé ni désactivé Local Pro.",
-  "localProAccountDelete": "Supprimer le compte",
-  "localProAccountDeleteBody": "Supprimer le compte vous déconnecte et retire le lien avec l’e-mail. Cela ne rembourse pas l’achat. Un achat qui n’a jamais été lié a encore besoin de son code de restauration.",
-  "localProRecoveryCodeRequired": "Cet achat est encore lié à l’installation d’origine, pas à cet e-mail. Il n’a pas été déplacé. Saisissez le code de restauration actuel et restaurez à nouveau pour le lier, ou continuez à utiliser ce code sans compte.",
-  "localProAccountSignInRequired": "Cet achat est lié à un e-mail vérifié. Local Pro reste désactivé sur cette installation. Connectez-vous avec cet e-mail, puis touchez Restaurer les achats. L’application demande l’achat actuel à la boutique, et le serveur le vérifie avant que l’achat puisse être déplacé. Un code de restauration seul ne le déplace pas, et un autre e-mail ne peut pas le prendre.",
-  "localProAccountUnchanged": "Cet achat reste sur cette installation. L’e-mail n’a pas été lié. Saisissez le code de restauration actuel avec Restaurer les achats pour le lier.",
-  "localProAccountLinked": "Cet achat est maintenant lié à votre e-mail vérifié. Une nouvelle installation de cette boutique peut le restaurer après votre connexion.",
+  "localProIncludedAds": "Pas de publicité. Les publicités sont désactivées dans cette version. Si une version ultérieure en affiche aux utilisateurs de l’offre gratuite, Regiday Pro les garde désactivées.",
+  "localProIncludedAdsOn": "Pas de publicité. Dans cette version, l’offre gratuite affiche une petite bannière sur l’accueil. Regiday Pro la retire.",
+  "localProRestoreRequirements": "Restaurer les achats demande à la boutique le Regiday Pro acheté avec le même compte Google Play ou Apple pour cette application. Les achats Android et iOS restent séparés.",
+  "localProStatusDisabled": "Bientôt disponible. Les achats ne sont pas encore disponibles ; votre offre gratuite reste active.",
+  "localProStatusChecking": "Vérification de votre achat auprès de la boutique…",
+  "localProStatusActive": "Regiday Pro est actif. La boutique a confirmé votre achat.",
+  "localProStatusActiveUnconfirmed": "Regiday Pro reste actif d’après la dernière confirmation de la boutique. La boutique est injoignable pour le moment : un remboursement fait depuis ne sera détecté que lorsqu’elle sera joignable.",
+  "localProStatusUnknown": "La boutique est injoignable, l’achat ne peut donc pas être confirmé pour le moment. Les limites gratuites s’appliquent en attendant. Vos enregistrements ne sont pas touchés.",
+  "localProProductMissing": "La boutique n’a pas renvoyé Regiday Pro. Il n’est peut-être pas encore disponible pour ce compte ou ce pays.",
+  "localProStoreUnavailable": "Le service de facturation de la boutique n’est pas disponible sur cet appareil. Vérifiez que vous êtes connecté à la boutique, puis réessayez.",
+  "localProStoreError": "Impossible de joindre la boutique. Vérifiez votre connexion et réessayez. Rien n’a été modifié.",
+  "localProRetry": "Réessayer",
+  "localProResultActive": "Regiday Pro est actif.",
+  "localProRestoreNotFound": "La boutique n’a trouvé aucun achat Regiday Pro pour ce compte. Vérifiez que vous êtes connecté avec le compte qui l’a acheté.",
+  "adsPrivacyTitle": "Confidentialité des publicités",
+  "adsPrivacyBody": "Consultez ou modifiez vos choix sur l’utilisation de vos données par les publicités.",
+  "adsPrivacyAction": "Options de confidentialité",
   "profilePlanFree": "Offre gratuite. Les nouveaux documents et abonnements s’arrêtent aux limites gratuites. Les enregistrements déjà présents restent utilisables.",
-  "freeLimitDocuments": "L’offre gratuite comprend {count} documents. Local Pro retire cette limite pour les nouveaux documents. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés et supprimés.",
-  "freeLimitSubscriptions": "L’offre gratuite comprend {count} abonnements. Local Pro retire cette limite pour les nouveaux abonnements. Les enregistrements déjà présents peuvent encore être consultés, modifiés et supprimés.",
+  "freeLimitDocuments": "L’offre gratuite comprend {count} documents. Regiday Pro retire cette limite pour les nouveaux documents. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés et supprimés.",
+  "freeLimitSubscriptions": "L’offre gratuite comprend {count} abonnements. Regiday Pro retire cette limite pour les nouveaux abonnements. Les enregistrements déjà présents peuvent encore être consultés, modifiés et supprimés.",
   "recordAlreadyExists": "Cet enregistrement existe déjà, il n’a donc pas été enregistré une seconde fois.",
   "csvImportAction": "Importer des charges depuis un CSV",
   "csvImportTitle": "Importer des charges",
@@ -715,5 +720,10 @@
   "csvConfirmCreate": "Créer les abonnements sélectionnés",
   "csvNothingSelected": "Sélectionnez au moins une suggestion. Rien n’a été ajouté.",
   "csvCreated": "{count, plural, one{1 abonnement ajouté.} other{{count} abonnements ajoutés.}}",
-  "csvSuggestionNote": "Suggéré à partir d’un CSV de charges. La récurrence n’a pas été confirmée."
+  "csvSuggestionNote": "Suggéré à partir d’un CSV de charges. La récurrence n’a pas été confirmée.",
+  "addOtherImage": "Ajouter une autre image (facultatif)",
+  "scanAllImages": "Scanner toutes les images",
+  "firebaseAiScanPrivacy": "En appuyant sur Scanner toutes les images, vos images sont envoyées à Gemini via Firebase AI Logic. Vérifiez chaque champ avant d’enregistrer.",
+  "firebaseAiScanProcessing": "Gemini lit toutes les images via Firebase AI Logic. Vous pouvez annuler et saisir les détails manuellement.",
+  "firebaseAiScanUnavailable": "Le scan par IA est indisponible car Firebase n’est pas configuré. Vous pouvez ajouter des images et saisir tous les détails manuellement."
 }

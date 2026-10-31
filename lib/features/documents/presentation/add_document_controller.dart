@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:the_registry/features/documents/domain/document_field_value.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_ocr_parser.dart';
 import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
@@ -44,6 +43,8 @@ class AddDocumentController extends ChangeNotifier {
   String notes = '';
   Set<ReminderPreference> reminders = {};
   Uint8List? attachmentBytes;
+  List<Uint8List> additionalImages = [];
+  String categoryLabel = '';
   List<DocumentFieldValue> dynamicFields = const [];
   bool additionalOpen = false;
   bool identityExtrasOpen = false;
@@ -160,6 +161,8 @@ class AddDocumentController extends ChangeNotifier {
     notes = document.notes ?? '';
     reminders = Set<ReminderPreference>.from(document.reminders);
     attachmentBytes = document.attachmentBytes;
+    additionalImages = List.of(document.additionalImages);
+    categoryLabel = document.categoryLabel ?? '';
     dynamicFields = List<DocumentFieldValue>.unmodifiable(
       document.dynamicFields,
     );
@@ -386,8 +389,56 @@ class AddDocumentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setOcrCategoryLabel(String value) {
+    ocrResult = ocrResult?.copyWith(categoryLabel: value);
+    notifyListeners();
+  }
+
+  void setCategoryLabel(String value) {
+    categoryLabel = value;
+    if (value.trim().isEmpty) {
+      category = null;
+      notifyListeners();
+      return;
+    }
+    category =
+        DocumentCategory.values
+            .where(
+              (item) =>
+                  item.name.toLowerCase() ==
+                  value.replaceAll(' ', '').toLowerCase(),
+            )
+            .firstOrNull ??
+        DocumentCategory.other;
+    final matching = schemaRegistry
+        .byCountry(countryCode ?? DocumentCountryCodes.other)
+        .where((schema) => schema.category == category);
+    if (matching.isNotEmpty) schemaId = matching.first.id;
+    categoryError = null;
+    notifyListeners();
+  }
+
+  void addImage(Uint8List bytes) {
+    if (additionalImages.length >= 5) return;
+    cancelOcr();
+    additionalImages = [...additionalImages, bytes];
+    notifyListeners();
+  }
+
+  void removeImage(int index) {
+    cancelOcr();
+    additionalImages = [...additionalImages]..removeAt(index);
+    notifyListeners();
+  }
+
   void setAttachment(Uint8List? bytes) {
-    attachmentBytes = bytes;
+    _ocrGeneration++;
+    if (bytes == null && additionalImages.isNotEmpty) {
+      attachmentBytes = additionalImages.first;
+      additionalImages = additionalImages.skip(1).toList();
+    } else {
+      attachmentBytes = bytes;
+    }
     if (bytes == null) {
       ocrStatus = OcrUiStatus.idle;
       ocrResult = null;
@@ -472,7 +523,10 @@ class AddDocumentController extends ChangeNotifier {
     ocrResult = null;
     notifyListeners();
     try {
-      final result = await ocr.recognize(attachmentBytes!);
+      final result = await recognizeDocumentImages(ocr, [
+        attachmentBytes!,
+        ...additionalImages,
+      ]);
       if (generation != _ocrGeneration) {
         return;
       }
@@ -589,13 +643,19 @@ class AddDocumentController extends ChangeNotifier {
 
   void changeOcrSchema(String nextSchemaId) {
     final schema = schemaRegistry.byId(nextSchemaId);
-    final remapped = DocumentOcrParser.remap(
-      current: ocrResult ?? const DocumentOcrResult.failed(),
-      schema: schema,
-      confirmedFields: ocrFields,
+    final current = ocrResult;
+    if (current == null) {
+      return;
+    }
+    ocrResult = current.copyWith(
+      clearDocumentTypeLabel: true,
+      classification: current.classification.copyWith(
+        schemaId: schema.id,
+        countryCode: schema.countryCode,
+        category: schema.category,
+        confidence: OcrConfidence.review,
+      ),
     );
-    ocrResult = remapped;
-    ocrFields = List<ExtractedDocumentField>.from(remapped.fields);
     notifyListeners();
   }
 
@@ -608,10 +668,15 @@ class AddDocumentController extends ChangeNotifier {
     schemaId = schema.id;
     countryCode = result.classification.countryCode;
     category = schema.category;
+    categoryLabel = result.categoryLabel ?? '';
+    if (result.documentTypeLabel?.trim().isNotEmpty == true) {
+      name = result.documentTypeLabel!.trim();
+    }
     final nextDynamic = <DocumentFieldValue>[];
     for (final field in ocrFields) {
       final definition = schema.fieldById(field.fieldKey);
-      final binding = definition?.binding ?? DocumentBaseBinding.none;
+      final binding =
+          definition?.binding ?? _fallbackBindingFor(field.fieldKey);
       final value = field.value.trim();
       switch (binding) {
         case DocumentBaseBinding.title:
@@ -657,6 +722,21 @@ class AddDocumentController extends ChangeNotifier {
     step = AddDocumentStep.identity;
     identityExtrasOpen = hasIdentityExtras;
     notifyListeners();
+  }
+
+  DocumentBaseBinding _fallbackBindingFor(String fieldKey) {
+    return switch (fieldKey) {
+      DocumentFieldKeys.fullName ||
+      DocumentFieldKeys.name => DocumentBaseBinding.owner,
+      DocumentFieldKeys.documentNumber ||
+      DocumentFieldKeys.idNumber ||
+      DocumentFieldKeys.aadhaarNumber ||
+      DocumentFieldKeys.passportNumber => DocumentBaseBinding.number,
+      DocumentFieldKeys.issueDate => DocumentBaseBinding.issueDate,
+      DocumentFieldKeys.expiryDate => DocumentBaseBinding.expiryDate,
+      DocumentFieldKeys.issuingAuthority => DocumentBaseBinding.issuer,
+      _ => DocumentBaseBinding.none,
+    };
   }
 
   DateTime? _tryParseDate(String raw) => tryParseLooseDate(raw);
@@ -840,6 +920,8 @@ class AddDocumentController extends ChangeNotifier {
         notes: _optional(notes),
         reminders: Set<ReminderPreference>.from(reminders),
         attachmentBytes: attachmentBytes,
+        additionalImages: List.of(additionalImages),
+        categoryLabel: categoryLabel,
         createdAt: createdAt ?? now,
         updatedAt: now,
         renewalHistory: renewalHistory,
@@ -866,6 +948,8 @@ class AddDocumentController extends ChangeNotifier {
       notes: _optional(notes),
       reminders: Set<ReminderPreference>.from(reminders),
       attachmentBytes: attachmentBytes,
+      additionalImages: List.of(additionalImages),
+      categoryLabel: categoryLabel,
       createdAt: now,
       schemaId: schemaId,
       countryCode: countryCode,
@@ -931,6 +1015,8 @@ class AddDocumentController extends ChangeNotifier {
       notes: notes,
       reminders: reminders,
       attachmentBytes: attachmentBytes,
+      additionalImages: List.of(additionalImages),
+      categoryLabel: categoryLabel,
       schemaId: schemaId,
       countryCode: countryCode,
       dynamicFields: dynamicFields,
@@ -964,6 +1050,8 @@ class _FormSnapshot {
     this.notes = '',
     this.reminders = const {},
     this.attachmentBytes,
+    this.additionalImages = const [],
+    this.categoryLabel = '',
     this.schemaId = DocumentSchemaIds.genericOther,
     this.countryCode,
     this.dynamicFields = const [],
@@ -985,6 +1073,8 @@ class _FormSnapshot {
   final String notes;
   final Set<ReminderPreference> reminders;
   final Uint8List? attachmentBytes;
+  final List<Uint8List> additionalImages;
+  final String categoryLabel;
   final String schemaId;
   final String? countryCode;
   final List<DocumentFieldValue> dynamicFields;
@@ -994,6 +1084,8 @@ class _FormSnapshot {
     return other is _FormSnapshot &&
         other.name.trim() == name.trim() &&
         other.category == category &&
+        other.categoryLabel == categoryLabel &&
+        listEquals(other.additionalImages, additionalImages) &&
         other.ownerName.trim() == ownerName.trim() &&
         other.issuingAuthority.trim() == issuingAuthority.trim() &&
         other.documentNumber.trim() == documentNumber.trim() &&

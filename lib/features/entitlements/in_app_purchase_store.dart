@@ -1,182 +1,230 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
+import 'package:in_app_purchase_storekit/store_kit_2_wrappers.dart';
+import 'package:the_registry/features/entitlements/local_pro_store.dart';
 
-/// The methods [InAppPurchase] uses for a non-consumable.
+/// Play Billing on Android and StoreKit 2 on iOS through `in_app_purchase`.
 ///
-/// There is no consume or [InAppPurchase.buyConsumable] method here.
-abstract class BillingPlugin {
-  Future<bool> isAvailable();
-
-  Future<ProductDetailsResponse> queryProductDetails(Set<String> identifiers);
-
-  Future<bool> buyNonConsumable({required PurchaseParam purchaseParam});
-
-  Future<void> restorePurchases({String? applicationUserName});
-
-  Stream<List<PurchaseDetails>> get purchaseStream;
-
-  Future<void> completePurchase(PurchaseDetails purchase);
-}
-
-class InAppPurchaseBillingPlugin implements BillingPlugin {
-  InAppPurchaseBillingPlugin({InAppPurchase? billing})
+/// Only [InAppPurchase.buyNonConsumable] and [InAppPurchase.completePurchase]
+/// are used for buying. Nothing here calls `buyConsumable` or
+/// `consumePurchase`. Construct this only when purchases are enabled: reading
+/// [InAppPurchase.instance] connects to the store.
+class InAppPurchaseLocalProStore implements LocalProStore {
+  InAppPurchaseLocalProStore({InAppPurchase? billing})
     : _billing = billing ?? InAppPurchase.instance;
 
   final InAppPurchase _billing;
 
   @override
-  Future<bool> isAvailable() => _billing.isAvailable();
-
-  @override
-  Future<ProductDetailsResponse> queryProductDetails(Set<String> identifiers) {
-    return _billing.queryProductDetails(identifiers);
-  }
-
-  @override
-  Future<bool> buyNonConsumable({required PurchaseParam purchaseParam}) {
-    return _billing.buyNonConsumable(purchaseParam: purchaseParam);
-  }
-
-  @override
-  Future<void> restorePurchases({String? applicationUserName}) async {
-    if (Platform.isIOS) {
-      try {
-        await _billing
-            .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>()
-            .sync();
-      } catch (_) {
-        // A dismissed App Store prompt still leaves on-device entitlements.
+  Future<StoreProduct> loadProduct(String productId) async {
+    try {
+      if (!await _billing.isAvailable()) {
+        return const StoreProduct.unavailable();
       }
-    }
-    return _billing.restorePurchases(applicationUserName: applicationUserName);
-  }
-
-  @override
-  Stream<List<PurchaseDetails>> get purchaseStream => _billing.purchaseStream;
-
-  @override
-  Future<void> completePurchase(PurchaseDetails purchase) {
-    return _billing.completePurchase(purchase);
-  }
-}
-
-class InAppPurchaseLocalProStore implements LocalProStore {
-  InAppPurchaseLocalProStore({BillingPlugin? plugin})
-    : _plugin = plugin ?? InAppPurchaseBillingPlugin();
-
-  final BillingPlugin _plugin;
-  ProductDetails? _product;
-  final _details = <String, PurchaseDetails>{};
-
-  @override
-  Future<StoreListing?> loadProduct(String productId) async {
-    if (!await _plugin.isAvailable()) {
-      return null;
-    }
-    final response = await _plugin.queryProductDetails({productId});
-    if (response.error != null) {
-      return null;
-    }
-    ProductDetails? match;
-    for (final product in response.productDetails) {
-      if (product.id == productId) {
-        match = product;
+      final response = await _billing.queryProductDetails({productId});
+      for (final product in response.productDetails) {
+        final price = product.price.trim();
+        if (product.id == productId && price.isNotEmpty) {
+          return StoreProduct.available(localizedPrice: price, handle: product);
+        }
       }
+      if (response.error != null) {
+        return const StoreProduct.error();
+      }
+      return const StoreProduct.missing();
+    } on PlatformException {
+      return const StoreProduct.error();
     }
-    if (match == null) {
-      return null;
-    }
-    final price = match.price.trim();
-    if (price.isEmpty) {
-      return null;
-    }
-    _product = match;
-    return StoreListing(productId: match.id, localizedPrice: price);
   }
 
   @override
-  Future<bool> buyNonConsumable({
-    required String productId,
-    required String applicationUserName,
-  }) {
-    final product = _product;
-    if (product == null || product.id != productId) {
-      return Future.value(false);
+  Future<OwnershipQuery> queryOwnership(String productId) async {
+    try {
+      if (Platform.isAndroid) {
+        if (!await _billing.isAvailable()) {
+          return const OwnershipQuery(StoreOwnership.unavailable);
+        }
+        final response = await _billing
+            .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>()
+            .queryPastPurchases();
+        return androidOwnership(response, productId);
+      }
+      if (Platform.isIOS) {
+        final all = await SK2Transaction.transactions();
+        final unfinished = await SK2Transaction.unfinishedTransactions();
+        return appleOwnership(all, unfinished, productId);
+      }
+      return const OwnershipQuery(StoreOwnership.unavailable);
+    } on PlatformException {
+      return const OwnershipQuery(StoreOwnership.error);
     }
-    return _plugin.buyNonConsumable(
-      purchaseParam: PurchaseParam(
-        productDetails: product,
-        applicationUserName: applicationUserName,
-      ),
+  }
+
+  @override
+  Future<bool> syncWithStore() async {
+    if (!Platform.isIOS) {
+      return true;
+    }
+    try {
+      await _billing
+          .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>()
+          .sync();
+      return true;
+    } on PlatformException {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> buy(StoreProduct product) async {
+    final details = product.handle;
+    if (!product.isAvailable || details is! ProductDetails) {
+      return false;
+    }
+    try {
+      return await _billing.buyNonConsumable(
+        purchaseParam: PurchaseParam(productDetails: details),
+      );
+    } on PlatformException {
+      return false;
+    }
+  }
+
+  @override
+  Stream<List<StoreTransaction>> get transactions {
+    return _billing.purchaseStream.map(
+      (purchases) => [for (final purchase in purchases) transaction(purchase)],
     );
   }
 
   @override
-  Future<void> restorePurchases({String? applicationUserName}) {
-    return _plugin.restorePurchases(applicationUserName: applicationUserName);
-  }
-
-  @override
-  Stream<List<StorePurchaseUpdate>> get updates {
-    return _plugin.purchaseStream.map((purchases) {
-      return [for (final purchase in purchases) _remember(purchase)];
-    });
-  }
-
-  @override
-  Future<void> complete(String purchaseKey) {
-    final details = _details[purchaseKey];
-    if (details == null) {
-      throw StateError('missing_purchase');
+  Future<void> complete(StoreTransaction transaction) async {
+    final handle = transaction.handle;
+    if (handle is PurchaseDetails) {
+      await _billing.completePurchase(handle);
+    } else if (handle is SK2Transaction) {
+      await SK2Transaction.finish(int.parse(handle.id));
     }
-    return _plugin.completePurchase(details);
-  }
-
-  StorePurchaseUpdate _remember(PurchaseDetails details) {
-    final update = billingUpdateFromPurchase(details);
-    final key = update.purchaseKey;
-    if (key != null) {
-      _details[key] = details;
-    }
-    return update;
   }
 }
 
-StorePurchaseUpdate billingUpdateFromPurchase(PurchaseDetails details) {
-  final payload = _verificationPayload(details);
-  return StorePurchaseUpdate(
-    productId: details.productID,
-    purchaseKey: details.purchaseID ?? payload,
-    status: switch (details.status) {
-      PurchaseStatus.pending => StorePurchaseStatus.pending,
-      PurchaseStatus.purchased => StorePurchaseStatus.purchased,
-      PurchaseStatus.restored => StorePurchaseStatus.restored,
-      PurchaseStatus.canceled => StorePurchaseStatus.canceled,
-      PurchaseStatus.error => StorePurchaseStatus.error,
-    },
-    platform: details.verificationData.source == 'google_play'
-        ? 'google'
-        : 'apple',
-    payload: payload,
-    pendingComplete: details.pendingCompletePurchase,
-    errorCode: details.error?.code,
+/// Play Billing: only `PURCHASED` counts. `PENDING` never unlocks Pro.
+OwnershipQuery androidOwnership(
+  QueryPurchaseDetailsResponse response,
+  String productId,
+) {
+  final unfinished = <StoreTransaction>[];
+  var owned = false;
+  var pending = false;
+  for (final purchase in response.pastPurchases) {
+    if (purchase.productID != productId) {
+      continue;
+    }
+    final state = purchase.billingClientPurchase.purchaseState;
+    if (state == PurchaseStateWrapper.purchased) {
+      owned = true;
+      if (!purchase.billingClientPurchase.isAcknowledged) {
+        unfinished.add(transaction(purchase));
+      }
+    } else if (state == PurchaseStateWrapper.pending) {
+      pending = true;
+    }
+  }
+  if (owned) {
+    return OwnershipQuery(StoreOwnership.owned, unfinished: unfinished);
+  }
+  if (response.error != null) {
+    return const OwnershipQuery(StoreOwnership.error);
+  }
+  return OwnershipQuery(
+    pending ? StoreOwnership.pending : StoreOwnership.notOwned,
   );
 }
 
-String? _verificationPayload(PurchaseDetails details) {
+/// StoreKit 2: [all] is `Transaction.all` after StoreKit verification. A
+/// transaction with a `revocationDate` was refunded or revoked.
+OwnershipQuery appleOwnership(
+  List<SK2Transaction> all,
+  List<SK2Transaction> unfinished,
+  String productId,
+) {
+  final owned = all.any(
+    (item) =>
+        item.productId == productId &&
+        !appleTransactionRevoked(item.jsonRepresentation),
+  );
+  if (!owned) {
+    return const OwnershipQuery(StoreOwnership.notOwned);
+  }
+  return OwnershipQuery(
+    StoreOwnership.owned,
+    unfinished: [
+      for (final item in unfinished)
+        if (item.productId == productId &&
+            !appleTransactionRevoked(item.jsonRepresentation))
+          StoreTransaction(
+            productId: item.productId,
+            status: StoreTransactionStatus.purchased,
+            purchaseId: item.id,
+            needsCompletion: true,
+            handle: item,
+          ),
+    ],
+  );
+}
+
+/// Reads `revocationDate` from the StoreKit transaction JSON.
+///
+/// A payload that cannot be read is treated as revoked so it cannot unlock
+/// Local Pro.
+bool appleTransactionRevoked(String? json) {
+  if (json == null || json.isEmpty) {
+    return true;
+  }
+  try {
+    final decoded = jsonDecode(json);
+    if (decoded is! Map<String, Object?>) {
+      return true;
+    }
+    return decoded['revocationDate'] != null;
+  } on FormatException {
+    return true;
+  }
+}
+
+StoreTransaction transaction(PurchaseDetails details) {
+  var status = switch (details.status) {
+    PurchaseStatus.pending => StoreTransactionStatus.pending,
+    PurchaseStatus.purchased => StoreTransactionStatus.purchased,
+    PurchaseStatus.restored => StoreTransactionStatus.restored,
+    PurchaseStatus.canceled => StoreTransactionStatus.cancelled,
+    PurchaseStatus.error => StoreTransactionStatus.error,
+  };
+  var playPurchased = false;
   if (details is GooglePlayPurchaseDetails) {
-    final token = details.billingClientPurchase.purchaseToken.trim();
-    if (token.isNotEmpty) {
-      return token;
+    playPurchased =
+        details.billingClientPurchase.purchaseState ==
+        PurchaseStateWrapper.purchased;
+    if (!playPurchased && status == StoreTransactionStatus.purchased) {
+      status = StoreTransactionStatus.pending;
     }
   }
-  final server = details.verificationData.serverVerificationData.trim();
-  if (server.isEmpty) {
-    return null;
-  }
-  return server;
+  return StoreTransaction(
+    productId: details.productID,
+    status: status,
+    purchaseId: details.purchaseID,
+    needsCompletion:
+        details.pendingCompletePurchase &&
+        status != StoreTransactionStatus.pending,
+    storeConfirmed: playPurchased && status == StoreTransactionStatus.purchased,
+    errorCode: details.error?.code,
+    handle: details,
+  );
 }

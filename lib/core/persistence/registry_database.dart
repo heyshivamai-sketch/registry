@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 /// Version 1 stores document and subscription rows. Version 2 adds attachment
 /// metadata plus ordered dynamic fields and renewal history.
 abstract final class RegistryDatabase {
-  static const int schemaVersion = 2;
+  static const int schemaVersion = 3;
 
   static Future<Database> open(String path) {
     return openDatabase(
@@ -34,6 +34,12 @@ abstract final class RegistryDatabase {
     }
     if (from < 2 && to >= 2) {
       await _upgradeToVersion2(db);
+    }
+    if (from < 3 && to >= 3) {
+      await db.execute(
+        "ALTER TABLE documents ADD COLUMN additional_images TEXT NOT NULL DEFAULT '[]'",
+      );
+      await db.execute("ALTER TABLE documents ADD COLUMN category_label TEXT");
     }
   }
 

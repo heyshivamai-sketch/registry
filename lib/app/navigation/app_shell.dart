@@ -60,15 +60,17 @@ class AppShellState extends State<AppShell> {
         child: Builder(
           builder: (context) {
             final theme = Theme.of(context);
+            final toastInset = ((MediaQuery.sizeOf(context).width - 520) / 2)
+                .clamp(AppSpacing.md, double.infinity);
             return Theme(
               data: theme.copyWith(
                 snackBarTheme: theme.snackBarTheme.copyWith(
                   behavior: SnackBarBehavior.floating,
                   insetPadding: EdgeInsets.fromLTRB(
-                    AppSpacing.md,
+                    toastInset,
                     AppSpacing.xs,
-                    AppSpacing.md,
-                    AppSpacing.snackBarDockInset(context),
+                    toastInset,
+                    AppSpacing.xs,
                   ),
                 ),
               ),

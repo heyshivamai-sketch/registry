@@ -42,7 +42,7 @@ Required functional gaps from the original audit are closed: Pulse **Review now*
 | Gradle wrapper URL | Unchanged `https://services.gradle.org/distributions/gradle-9.1.0-all.zip` (local zip used only for this assemble; not committed) |
 | APK | `build/app/outputs/flutter-apk/app-debug.apk` (rebuilt 19 Sep 2026 ~14:00 for P2 polish; prior 12:27 binary superseded) |
 | Install | `adb -s emulator-5554 install -r` → Success |
-| applicationId | `com.registry.app` 1.0.0 debug |
+| applicationId | `com.residay.app` 1.0.0 debug |
 
 ### Automated validation (this session)
 
@@ -87,7 +87,7 @@ P2 visual mismatches that remain are platform/type only (Roboto vs Inter). Wizar
 | Logical viewport | sw411dp · w411dp · h914dp |
 | Locale during live capture | `en-US`, LTR |
 | Text scale | 1.0 |
-| App | `com.registry.app` 1.0.0 debug · `MainActivity` resumed |
+| App | `com.residay.app` 1.0.0 debug · `MainActivity` resumed |
 | Build this session | `flutter run` / `assembleDebug` **failed** (Gradle wrapper download `ConnectException`; offline Gradle plugin resolve failed). Live app is the **already-installed debug binary**, which matched current source for Home, dock, empty wallet, and add wizard. |
 
 Prototype CSS tokens (from live `styles.css`): `--ink:#111936`, `--violet:#6558f5`, `--aqua:#42d8b7`, `--coral:#ff675d`, `--gold:#e9aa27`, `--paper:#f7f8fc`, `--muted:#66718b`, `--line:#e7e9f2`, Inter. Flutter `AppColors` / `AppSpacing` / `AppRadius` align with those numbers.
@@ -345,7 +345,7 @@ Status after the corrections session:
 Working tree includes production `lib/` and `test/` changes for this correction; **no commit and no push**.
 
 - **Phase 4 was not started.**
-- **applicationId remains `com.registry.app`.**
+- **applicationId remains `com.residay.app`.**
 - Gradle wrapper distribution URL was not permanently changed.
 
 Evidence: `screenshots/registry_aura_phase1_3_corrections/`.

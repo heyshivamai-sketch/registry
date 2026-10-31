@@ -17,10 +17,11 @@ import 'package:the_registry/features/backup/backup_service.dart';
 import 'package:the_registry/features/backup/platform_backup_file_gateway.dart';
 import 'package:the_registry/features/backup/registry_archive.dart';
 import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
+import 'package:the_registry/features/ads/ads_config.dart';
+import 'package:the_registry/features/ads/ads_controller.dart';
+import 'package:the_registry/features/ads/ads_platform.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/entitlements/pro_account.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
-import 'package:the_registry/features/entitlements/verified_entitlement.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/reminders/data/memory_reminder_scheduler.dart';
 import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
@@ -57,11 +58,10 @@ class RegistryApp extends StatefulWidget {
     this.appLockStore,
     this.deviceAuthenticator,
     this.privacyFlag,
-    this.verifiedEntitlements,
-    this.storeProducts,
-    this.purchaseService,
+    this.localPro,
+    this.adsConfig,
+    this.adsPlatform,
     this.csvFiles,
-    this.proAccounts,
   });
 
   final OnboardingRepository onboardingRepository;
@@ -81,11 +81,15 @@ class RegistryApp extends StatefulWidget {
   final AppLockStore? appLockStore;
   final DeviceAuthenticator? deviceAuthenticator;
   final PrivacyFlag? privacyFlag;
-  final VerifiedEntitlementSource? verifiedEntitlements;
-  final StoreProductSource? storeProducts;
-  final PurchaseService? purchaseService;
+
+  /// Store-backed Local Pro. When null, purchases are off and the plan is
+  /// Free.
+  final LocalProEntitlement? localPro;
+
+  /// When null, ads are off and the Mobile Ads SDK is never called.
+  final AdsConfig? adsConfig;
+  final AdsPlatform? adsPlatform;
   final CsvFileGateway? csvFiles;
-  final ProAccountClient? proAccounts;
 
   /// When null, the device locale is used. Unsupported languages fall back
   /// to English via [localeListResolutionCallback].
@@ -138,18 +142,19 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       );
   late final AppLockStore _appLockStore =
       widget.appLockStore ?? MemoryAppLockStore();
-  late final VerifiedEntitlementSource _entitlementSource =
-      widget.verifiedEntitlements ?? ProductionVerifiedEntitlementSource();
-  late final StoreProductSource _storeProducts =
-      widget.storeProducts ?? const ProductionStoreProductSource();
-  late final PurchaseService _purchases =
-      widget.purchaseService ?? const ProductionPurchaseService();
+  late final LocalProEntitlement _localPro =
+      widget.localPro ?? LocalProEntitlement.disabled();
+  late final AdsController _ads = AdsController(
+    config: widget.adsConfig ?? AdsConfig.off,
+    plan: _localPro,
+    platform: widget.adsPlatform,
+  );
   late final CsvFileGateway _csvFiles =
       widget.csvFiles ?? const PlatformCsvFileGateway();
   late final EntitlementService _entitlements = EntitlementService(
     documents: _documents,
     subscriptions: _subscriptions,
-    source: _entitlementSource,
+    source: _localPro,
   );
   late final RegistryWrites _writes = RegistryWrites(
     documents: _documents,
@@ -177,7 +182,8 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     unawaited(_reminders.start());
-    unawaited(_purchases.warmUp(_entitlementSource));
+    unawaited(_localPro.start());
+    _ads.start();
   }
 
   @override
@@ -185,6 +191,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
     _appLock.onLifecycle(state);
     if (state == AppLifecycleState.resumed) {
       unawaited(_reminders.reconcile());
+      unawaited(_localPro.onResumed());
     }
   }
 
@@ -212,11 +219,12 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
     _reminders.dispose();
     _appLock.dispose();
     _entitlements.dispose();
+    _ads.dispose();
     if (widget.appLockStore == null) {
       (_appLockStore as ChangeNotifier).dispose();
     }
-    if (widget.verifiedEntitlements == null) {
-      (_entitlementSource as ChangeNotifier).dispose();
+    if (widget.localPro == null) {
+      _localPro.dispose();
     }
     super.dispose();
   }
@@ -255,12 +263,11 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       entitlements: _entitlements,
       writes: _writes,
       appLock: _appLock,
-      storeProducts: _storeProducts,
-      purchases: _purchases,
+      localPro: _localPro,
+      ads: _ads,
       csvFiles: _csvFiles,
-      proAccounts: widget.proAccounts,
       child: MaterialApp(
-        onGenerateTitle: (context) => 'Registry',
+        onGenerateTitle: (context) => 'Regiday',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),

@@ -9,7 +9,7 @@ abstract class PrivacyFlag {
 }
 
 class PlatformPrivacyFlag implements PrivacyFlag {
-  static const channelName = 'com.registry.app/privacy';
+  static const channelName = 'com.residay.app/privacy';
 
   const PlatformPrivacyFlag({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(channelName);

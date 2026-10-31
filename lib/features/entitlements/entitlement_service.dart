@@ -3,16 +3,15 @@ import 'package:the_registry/features/documents/domain/document_repository.dart'
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/features/entitlements/verified_entitlement.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
 
-/// Reads the verified plan and admits new records in one place.
+/// Reads the store-backed plan and admits new records in one place.
 class EntitlementService extends ChangeNotifier {
   EntitlementService({
     required this.documents,
     required this.subscriptions,
-    required VerifiedEntitlementSource source,
+    required RegistryPlanSource source,
   }) {
     _source = source;
     _source.addListener(notifyListeners);
@@ -20,7 +19,7 @@ class EntitlementService extends ChangeNotifier {
 
   final DocumentRepository documents;
   final SubscriptionRepository subscriptions;
-  late final VerifiedEntitlementSource _source;
+  late final RegistryPlanSource _source;
 
   RegistryPlan get plan => _source.plan;
 
@@ -38,10 +37,6 @@ class EntitlementService extends ChangeNotifier {
       currentCount: subscriptions.subscriptions.length,
       additional: additional,
     );
-  }
-
-  void applyVerified(VerifiedEntitlementProof? proof) {
-    _source.applyVerified(proof);
   }
 
   @override

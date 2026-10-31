@@ -42,6 +42,8 @@ class RegistryDocument {
     this.notes,
     this.reminders = const {},
     this.attachmentBytes,
+    this.additionalImages = const [],
+    this.categoryLabel,
     this.renewalHistory = const [],
     this.schemaId = DocumentSchemaIds.genericOther,
     this.countryCode,
@@ -67,6 +69,8 @@ class RegistryDocument {
   final String? notes;
   final Set<ReminderPreference> reminders;
   final Uint8List? attachmentBytes;
+  final List<Uint8List> additionalImages;
+  final String? categoryLabel;
   final DateTime createdAt;
   final DateTime? updatedAt;
   final List<RenewalHistoryEntry> renewalHistory;
@@ -126,6 +130,8 @@ class RegistryDocument {
     Object? notes = _unset,
     Set<ReminderPreference>? reminders,
     Object? attachmentBytes = _unset,
+    List<Uint8List>? additionalImages,
+    String? categoryLabel,
     DateTime? createdAt,
     Object? updatedAt = _unset,
     List<RenewalHistoryEntry>? renewalHistory,
@@ -171,6 +177,8 @@ class RegistryDocument {
       attachmentBytes: identical(attachmentBytes, _unset)
           ? this.attachmentBytes
           : attachmentBytes as Uint8List?,
+      additionalImages: additionalImages ?? this.additionalImages,
+      categoryLabel: categoryLabel ?? this.categoryLabel,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: identical(updatedAt, _unset)
           ? this.updatedAt

@@ -18,7 +18,7 @@
   "onboardingSubscriptionName": "البث",
   "onboardingUpcomingCharge": "الدفعة خلال 5 أيام",
   "onboardingDecisionDate": "قرّر قبل الجمعة",
-  "onboardingPrivacyLock": "على الجهاز فقط",
+  "onboardingPrivacyLock": "سجلات محلية",
   "navHome": "الرئيسية",
   "navDocuments": "المستندات",
   "navSubscriptions": "الاشتراكات",
@@ -97,10 +97,10 @@
   "subscriptionsEmptyTitle": "لا توجد اشتراكات بعد",
   "subscriptionsEmptyMessage": "أضف البث والنادي والمدفوعات المتكررة لتبقى سابقًا للدفعات.",
   "profileTitle": "الملف الشخصي",
-  "profileMessage": "تبقى سجلاتك خاصة على هذا الجهاز. يمكن لـ Local Pro استخدام بريد مُوثَّق اختياري لاستعادة ذلك الشراء. لا يزامن المستندات أو الاشتراكات.",
+  "profileMessage": "تبقى سجلاتك خاصة على هذا الجهاز. Regiday Pro ترقية لمرة واحدة ولا يزامن المستندات أو الاشتراكات.",
   "profileButton": "فتح الملف الشخصي",
   "addDocumentTitle": "إضافة مستند",
-  "addDocumentMessage": "سيتم لاحقًا بناء نموذج المستند والمسح الضوئي والتخزين على الجهاز. يمكنك الرجوع ومتابعة استكشاف الرئيسية.",
+  "addDocumentMessage": "أضف صورًا للمسح الاختياري بالذكاء الاصطناعي أو أدخل التفاصيل يدويًا. تبقى السجلات والمرفقات على هذا الجهاز.",
   "addSubscriptionTitle": "إضافة اشتراك",
   "addSubscriptionMessage": "سيتم لاحقًا بناء نموذج الاشتراك وتذكيرات الدفع. يمكنك الرجوع ومتابعة استكشاف الرئيسية.",
   "searchNoResultsTitle": "لا توجد نتائج",
@@ -113,7 +113,7 @@
   "attachmentChooseGallery": "اختيار من المعرض",
   "attachmentReplace": "استبدال",
   "attachmentRemove": "إزالة",
-  "attachmentPrivacy": "تبقى صورتك على هذا الجهاز ولا يتم رفعها.",
+  "attachmentPrivacy": "تُحفظ الصورة على هذا الجهاز، ولا تُرسل إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح.",
   "replaceAttachmentTitle": "استبدال الصورة",
   "attachmentPickerFailed": "تعذّر إضافة الصورة. تحقق من إذن الكاميرا أو المكتبة ثم أعد المحاولة.",
   "sectionBasicInfo": "معلومات أساسية",
@@ -140,7 +140,7 @@
   "fieldExpectedChanges": "التغييرات المتوقعة عند التجديد",
   "fieldNotes": "ملاحظات",
   "sectionReminders": "تفضيل التذكير",
-  "remindersHelper": "يُحفظ مع هذا المستند. يطلب Registry من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.",
+  "remindersHelper": "يُحفظ مع هذا المستند. يطلب Regiday من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.",
   "reminderOnActionDate": "في تاريخ الإجراء",
   "reminder7Days": "قبل 7 أيام",
   "reminder30Days": "قبل 30 يومًا",
@@ -185,7 +185,9 @@
   "deleteDocumentMessage": "ستتم إزالة {name} من هذا الجهاز.",
   "@deleteDocumentMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "deleteDocumentConfirm": "حذف",
@@ -221,7 +223,9 @@
   "maskedDocumentNumberLabel": "رقم المستند المخفي {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "ownerLabel": "المالك",
@@ -247,8 +251,12 @@
   "wizardStepOf": "الخطوة {current} من {total}",
   "@wizardStepOf": {
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "wizardContinue": "متابعة",
@@ -261,14 +269,14 @@
   "howToAddTitle": "كيف تريد إضافته؟",
   "scanDocumentTitle": "مسح المستند",
   "scanDocumentRecommended": "موصى به",
-  "scanDocumentSubtitle": "التقط صورة أو اختر صورة، ثم راجع التفاصيل المستخرجة.",
+  "scanDocumentSubtitle": "أضف الوجه الأمامي أو الخلفي أو صفحة أخرى، ثم ابدأ المسح.",
   "enterManuallyTitle": "إدخال يدوي",
   "enterManuallySubtitle": "أدخل التفاصيل بنفسك خطوة بخطوة.",
-  "ocrPrivacy": "تتم معالجة المسح على هذا الجهاز. لا يُحفظ شيء حتى تؤكد.",
-  "ocrReviewPrivacy": "تتم معالجة المسح على هذا الجهاز. راجع كل التفاصيل المستخرجة قبل الحفظ.",
+  "ocrPrivacy": "لا تُرسل الصور إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح. لا يُحفظ شيء حتى تؤكد.",
+  "ocrReviewPrivacy": "لا تُحفظ نتائج Gemini حتى تراجعها وتؤكدها وتكمل الحفظ.",
   "scanAgain": "مسح مرة أخرى",
   "ocrProcessingTitle": "جارٍ قراءة هذا المستند",
-  "ocrProcessingMessage": "يتم التعرف على النص على هذا الجهاز. يمكنك الإلغاء وإدخال التفاصيل يدويًا.",
+  "ocrProcessingMessage": "يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.",
   "ocrCancel": "إلغاء المسح",
   "ocrFailedTitle": "تعذر قراءة هذا المسح",
   "ocrFailedMessage": "احتفظ بالصورة وأدخل التفاصيل يدويًا، أو جرّب صورة أخرى.",
@@ -277,7 +285,9 @@
   "ocrFieldsFound": "{count, plural, =0{لم يتم العثور على حقول} one{تم العثور على حقل واحد} two{تم العثور على حقلين} few{تم العثور على {count} حقول} other{تم العثور على {count} حقلًا}}",
   "@ocrFieldsFound": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "ocrConfidenceHigh": "ثقة عالية",
@@ -308,13 +318,17 @@
   "reviewDynamicCount": "{count, plural, =0{لا توجد حقول إضافية} one{حقل إضافي واحد} two{حقلان إضافيان} few{{count} حقول إضافية} other{{count} حقلًا إضافيًا}}",
   "@reviewDynamicCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "suggestedActionDate": "تاريخ البدء المقترح: {date}",
   "@suggestedActionDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "useSuggestedActionDate": "استخدام التاريخ المقترح",
@@ -344,7 +358,7 @@
   "snapshotNinetyDayView": "عرض 90 يومًا",
   "profileMonogram": "R",
   "guidedSetup": "إعداد موجّه",
-  "ocrOnDeviceEyebrow": "استخراج على الجهاز",
+  "ocrOnDeviceEyebrow": "استخراج بمساعدة الذكاء الاصطناعي",
   "howToAddBody": "امسح للبدء بسرعة، أو أدخل التفاصيل بنفسك.",
   "identityIntro": "بعض التفاصيل لتنظيم مستندك.",
   "datesIntro": "تشمل التواريخ دائمًا اليوم والشهر والسنة.",
@@ -355,7 +369,7 @@
   "ocrDynamicTemplateTitle": "قالب حقول ديناميكي",
   "ocrDynamicTemplateBody": "تتغير الحقول حسب البلد ونوع المستند. تظهر التسميات غير المعروفة كحقول مخصصة.",
   "ocrReviewHint": "راجع القيم المميّزة قبل المتابعة.",
-  "ocrProcessingHint": "يتم التعرف على النص على هذا الجهاز.",
+  "ocrProcessingHint": "يقرأ Gemini الصور عبر Firebase AI Logic.",
   "horizonOpenCalendar": "فتح التقويم",
   "horizon90EmptyTitle": "لا شيء خلال الـ 90 يومًا القادمة",
   "horizon90EmptyMessage": "ستظهر هنا العناصر التي لها تاريخ إجراء أو تجديد خلال الـ 90 يومًا القادمة، من الأقرب إلى الأبعد.",
@@ -513,20 +527,24 @@
   "attachmentAddedOn": "أُضيف في {date}",
   "@attachmentAddedOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "estimatedMonthlyCostValue": "التكلفة الشهرية التقديرية {amount}",
   "@estimatedMonthlyCostValue": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "selectedDocumentType": "نوع المستند المحدد",
   "chooseOption": "اختر",
   "storageLoadingLabel": "جارٍ تحميل السجلات المحفوظة",
   "storageErrorTitle": "تعذر فتح السجلات المحفوظة",
-  "storageErrorMessage": "تعذر على Registry فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.",
+  "storageErrorMessage": "تعذر على Regiday فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.",
   "storageErrorRetry": "إعادة المحاولة",
   "reminderPermissionDenied": "الإشعارات متوقفة، لذلك لن يُجدول أي تذكير. يمكنك الحفظ رغم ذلك. فعّلها من إعدادات الإشعارات عندما تريد التذكيرات.",
   "reminderStatusScheduled": "تمت جدولة تذكير محلي على هذا الجهاز. لا يضمن النظام التسليم في تمام الساعة 9:00.",
@@ -542,9 +560,9 @@
   "notificationsAllow": "السماح بالإشعارات",
   "notificationsOpenSettings": "إعدادات الإشعارات",
   "notificationsUnavailable": "لا يمكن لهذا الجهاز جدولة تذكيرات محلية الآن. خيارات التذكير المحفوظة لم تتغير.",
-  "notificationChannelName": "تذكيرات السجل",
+  "notificationChannelName": "تذكيرات Regiday",
   "notificationChannelDescription": "تذكيرات محلية لتواريخ المستندات ومدفوعات الاشتراكات. وقت التسليم ليس دقيقًا.",
-  "notificationTitle": "تذكير",
+  "notificationTitle": "تذكير Regiday",
   "reminderDocumentActionToday": "تاريخ إجراء مستند هو اليوم.",
   "reminderDocumentActionIn7": "تاريخ إجراء مستند بعد 7 أيام، في {date}.",
   "reminderDocumentActionIn30": "تاريخ إجراء مستند بعد 30 يومًا، في {date}.",
@@ -557,12 +575,12 @@
   "reminderSubscriptionPaymentIn1": "دفعة اشتراك غدًا، في {date}.",
   "reminderSubscriptionChargeToday": "تاريخ دفع اشتراك هو اليوم.",
   "backupSectionTitle": "النسخ الاحتياطي والاستعادة",
-  "backupSectionBody": "صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Registry كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.",
+  "backupSectionBody": "صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Regiday كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.",
   "backupExportAction": "تصدير نسخة احتياطية",
   "backupImportAction": "استيراد نسخة احتياطية",
   "backupExportTitle": "تصدير نسخة احتياطية",
   "backupIncluded": "يتضمن الملف المستندات والاشتراكات والحقول المخصصة وسجل التجديد وخيارات التذكير والتواريخ والمبالغ وصور المستندات.",
-  "backupPasswordWarning": "اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Registry كلمة المرور.",
+  "backupPasswordWarning": "اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Regiday كلمة المرور.",
   "backupPasswordLabel": "كلمة مرور النسخة الاحتياطية",
   "backupConfirmPasswordLabel": "تأكيد كلمة المرور",
   "backupPasswordTooShort": "استخدم 8 أحرف على الأقل.",
@@ -594,90 +612,77 @@
   "backupImportReplaced": "استُبدل سجل هذا الجهاز من النسخة الاحتياطية.",
   "backupImportCancelled": "أُلغي الاستيراد.",
   "backupWrongPassword": "كلمة المرور هذه لا تفتح هذه النسخة.",
-  "backupUnsupportedVersion": "أُنشئت هذه النسخة بإصدار أحدث من Registry.",
-  "backupInvalidFile": "هذا الملف ليس نسخة احتياطية صالحة من Registry.",
+  "backupUnsupportedVersion": "أُنشئت هذه النسخة بإصدار أحدث من Regiday.",
+  "backupInvalidFile": "هذا الملف ليس نسخة احتياطية صالحة من Regiday.",
   "backupTampered": "ملف النسخة الاحتياطية تالف أو تم تغييره.",
   "backupImportTooLarge": "هذه النسخة أكبر من أن تُستعاد.",
   "backupImportStorage": "لا توجد مساحة كافية لاستعادة هذه النسخة.",
   "backupImportFailed": "لم تكتمل الاستعادة.",
   "backupImportUnchanged": "لم يتغير شيء على هذا الجهاز.",
   "appLockSectionTitle": "قفل التطبيق",
-  "appLockSectionBody": "اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Registry سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.",
+  "appLockSectionBody": "اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Regiday سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.",
   "appLockEnabled": "قفل التطبيق مفعّل",
   "appLockDisabled": "قفل التطبيق متوقف",
-  "appLockReason": "افتح قفل Registry لعرض السجلات على هذا الجهاز.",
+  "appLockReason": "افتح قفل Regiday لعرض السجلات على هذا الجهاز.",
   "appLockEnableReason": "أكّد أنك أنت قبل تشغيل قفل التطبيق.",
-  "appLockUnavailable": "لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Registry استخدامه. لم يُفعَّل القفل.",
+  "appLockUnavailable": "لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Regiday استخدامه. لم يُفعَّل القفل.",
   "appLockCancelled": "أُلغي التحقق. لم يُفعَّل قفل التطبيق.",
   "appLockFailed": "فشل التحقق. لم يُفعَّل قفل التطبيق.",
-  "appLockPlatformError": "تعذّر على Registry استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.",
+  "appLockPlatformError": "تعذّر على Regiday استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.",
   "appLockDisableReason": "أكّد أنك أنت قبل إيقاف قفل التطبيق.",
   "appLockDisableCancelled": "أُلغي التحقق. يبقى قفل التطبيق مفعّلاً.",
   "appLockDisableFailed": "فشل التحقق. يبقى قفل التطبيق مفعّلاً.",
   "appLockDisableUnavailable": "لا يمكن لهذا الجهاز التحقق الآن. يبقى قفل التطبيق مفعّلاً.",
   "appLockUnlock": "فتح القفل",
-  "appLockLockedTitle": "Registry مقفل",
+  "appLockLockedTitle": "Regiday مقفل",
   "appLockLockedBody": "تحقق عبر هذا الجهاز لعرض سجلاتك. قفل التطبيق لا يشفّر قاعدة البيانات.",
   "appLockUnlockCancelled": "أُلغي التحقق. تبقى سجلاتك مخفية.",
   "appLockUnlockFailed": "فشل التحقق. تبقى سجلاتك مخفية.",
   "appLockUnlockUnavailable": "لا يمكن لهذا الجهاز التحقق الآن. تبقى سجلاتك مخفية.",
-  "appLockUnlockPlatformError": "تعذّر على Registry استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.",
-  "appLockPrivacyCover": "Registry",
-  "localProTitle": "Local Pro",
-  "localProAction": "عرض Local Pro",
+  "appLockUnlockPlatformError": "تعذّر على Regiday استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.",
+  "appLockPrivacyCover": "Regiday",
+  "localProTitle": "Regiday Pro",
+  "localProAction": "عرض Regiday Pro",
   "localProEyebrow": "شراء لمرة واحدة",
-  "localProHeadline": "احتفظ بمزيد من السجلات على هذا الجهاز",
-  "localProIntro": "Local Pro شراء لمرة واحدة للميزات المحلية المذكورة هنا. خدمات السحابة اللاحقة منفصلة وليست جزءًا من هذا الشراء.",
+  "localProHeadline": "مساحة أكبر لما يهمك",
+  "localProIntro": "Regiday Pro ترقية تُشترى مرة واحدة دون اشتراك، للاحتفاظ بالمزيد من السجلات على هذا الجهاز.",
   "localProIncludedTitle": "المشمول",
-  "localProIncludedDocuments": "يلغي الحد المجاني البالغ {count} مستندات.",
-  "localProIncludedSubscriptions": "يلغي الحد المجاني البالغ {count} اشتراكات.",
+  "localProIncludedDocuments": "مستندات أكثر. تجاوز الحد المجاني البالغ {count}.",
+  "localProIncludedSubscriptions": "اشتراكات أكثر. تجاوز الحد المجاني البالغ {count}.",
   "localProTechnicalLimits": "تبقى حدود تخزين الجهاز وحجم النسخة الاحتياطية وسقف التذكيرات المحلية سارية.",
   "localProNotIncludedTitle": "غير مشمول",
-  "localProNotIncludedCloud": "المزامنة السحابية والنسخ الاحتياطي السحابي غير مشمولين. يمكن لبريد اختياري استعادة شراء Local Pro من هذا المتجر فقط. لا يزامن سجلاتك.",
+  "localProNotIncludedCloud": "لا مزامنة سحابية ولا نسخ احتياطي سحابي ولا حساب. لنقل السجلات إلى جهاز آخر استخدم ملف النسخة الاحتياطية المشفّر في الملف الشخصي. ملف النسخة الاحتياطية لا ينقل Regiday Pro.",
   "localProFreeTitle": "يبقى مجانيًا",
-  "localProFreeBody": "يبقى العرض والتعديل والتجديد والحذف والتذكيرات وقفل التطبيق والتصدير والاستعادة متاحة للسجلات الموجودة لديك.",
+  "localProFreeBody": "تبقى التذكيرات وقراءة النص (OCR) وقفل التطبيق والنسخ الاحتياطي والاستعادة المشفّران واستيراد CSV مجانية. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير في أي خطة.",
   "localProCurrentFree": "الخطة الحالية: مجاني",
-  "localProCurrentPro": "الخطة الحالية: Local Pro",
-  "localProPriceUnavailable": "سعر المتجر غير متاح إلى أن يُضبط Local Pro. لا يوجد ما يمكن شراؤه بعد.",
-  "localProBuy": "شراء Local Pro",
-  "localProOwned": "Local Pro مفعّل على هذا الجهاز.",
-  "localProPurchasePending": "لم يُرجع المتجر عملية شراء موثّقة. يبقى Local Pro متوقفًا.",
+  "localProCurrentPro": "الخطة الحالية: Regiday Pro",
+  "localProBuy": "شراء Regiday Pro",
   "localProRestore": "استعادة المشتريات",
-  "localProPurchaseCancelled": "أُلغي الشراء. يبقى Local Pro متوقفًا.",
-  "localProPurchaseFailed": "تعذّر إتمام الشراء. يبقى Local Pro متوقفًا.",
-  "localProPendingStore": "ما زال المتجر يعالج هذا الشراء. يبقى Local Pro متوقفًا إلى أن يُوثَّق.",
-  "localProBindingMismatch": "هذا الشراء مرتبط بتثبيت آخر. يبقى Local Pro متوقفًا هنا. إذا كان مرتبطًا ببريدك المُوثَّق، سجّل الدخول واستعد مرة أخرى ليتحقق المتجر. وإلا فاستخدم رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين.",
-  "localProRecoveryTitle": "احتفظ برمز الاستعادة",
-  "localProRecoveryBody": "إذا كان هذا الشراء مرتبطًا ببريد مُوثَّق، سجّل الدخول على التثبيت الجديد واستخدم استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل تشغيل Local Pro. الشراء الذي تم قبل وجود حساب، أو الذي لم يُربَط، ما زال يحتاج رمز الاستعادة من ذلك التثبيت. يبقى Android وiOS منفصلين. توثيق البريد وحده لا يشغّل Local Pro.",
-  "localProRecoveryPrompt": "رمز الاستعادة",
-  "localProRecoverySubmit": "استعادة بالرمز",
-  "localProNetworkUnchanged": "تعذّر على Registry الوصول إلى التحقق من الشراء. لم يتغير شيء على هذا الجهاز.",
-  "localProRevoked": "ألغى المتجر هذا الشراء. Local Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتجديد والحذف والتصدير والاستعادة.",
+  "localProPurchaseCancelled": "أُلغي الشراء. يبقى Regiday Pro متوقفًا.",
+  "localProPurchaseFailed": "تعذّر إتمام الشراء. يبقى Regiday Pro متوقفًا.",
+  "localProPendingStore": "ينتظر المتجر الدفع. يعمل Regiday Pro بعد أن يؤكد المتجر الشراء. لم يُفتح شيء بعد.",
+  "localProRevoked": "لم يعد المتجر يُظهر شراء Regiday Pro لهذا الحساب، مثلًا بعد استرداد المبلغ. Regiday Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير. تتوقف السجلات الجديدة عند الحدود المجانية.",
   "localProNotIncludedTransfer": "شراء Google Play لا يفتح تطبيق iOS، وشراء App Store لا يفتح Android.",
-  "localProAccountTitle": "بريد اختياري",
-  "localProAccountBody": "يمكنك مواصلة استخدام Registry من دون حساب. لاستعادة شراء Local Pro جديد بعد إعادة التثبيت أو تغيير الجهاز، وثّق بريدك قبل الشراء. يُربَط الشراء بذلك البريد فقط بعد تأكيد الرمز وقبول المتجر للشراء. توثيق البريد لا يشغّل Local Pro. ولا يفعل ذلك ملف نسخة احتياطية أو معرّف معاملة أو مفتاح داخل التطبيق.",
-  "localProAccountBeforeBuy": "إذا اشتريت قبل توثيق البريد، يبقى الشراء على هذا التثبيت. يُربَط فقط عندما ترسل استعادة المشتريات رمز الاستعادة الحالي وأنت مسجّل الدخول، ويقبل الخادم شراء المتجر الحالي. تسجيل الدخول لا يربطه وحده. بعد الربط، ينتقل إلى تثبيت جديد فقط عندما يكون ذلك البريد نفسه مسجّل الدخول ويقبل الخادم شراء المتجر مرة أخرى. رمز الاستعادة وحده لا ينقله.",
-  "localProAccountSignedIn": "تم تسجيل الدخول باسم {email}. على تثبيت جديد، سجّل الدخول ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من هذا المتجر، ويتحقق الخادم منه قبل أن يعمل Local Pro. يبقى Android وiOS منفصلين.",
-  "localProAccountEmailLabel": "البريد",
-  "localProAccountSendCode": "إرسال رمز التحقق",
-  "localProAccountCodeLabel": "رمز التحقق",
-  "localProAccountConfirm": "تأكيد البريد",
-  "localProAccountCodeSent": "أُرسل رمز تحقق. تنتهي صلاحيته قريبًا. الرمز لا يشغّل Local Pro.",
-  "localProAccountNotConfigured": "إرسال البريد غير مُعد. لم يُرسل رمز تحقق.",
-  "localProAccountUnavailable": "هذا الإصدار لا يستطيع إرسال بريد تحقق. لن يُرسل أي رمز من هذه الشاشة.",
-  "localProAccountDeliveryFailed": "تعذّر إرسال البريد. لم يُسلَّم رمز تحقق.",
-  "localProAccountInvalidCode": "هذا الرمز غير صالح. لم يتغير Local Pro.",
-  "localProAccountOffline": "تعذّر على Registry الوصول إلى التحقق من الحساب. لم يُرسل شيء ولم يتغير شيء.",
-  "localProAccountDeleted": "أُزيل الحساب. يبقى هذا الشراء على هذا التثبيت. يحتاج الجهاز الجديد رمز الاستعادة الحالي. حذف الحساب لم يشغّل Local Pro ولم يوقفه.",
-  "localProAccountDelete": "حذف الحساب",
-  "localProAccountDeleteBody": "حذف الحساب يسجّل خروجك ويزيل ربط البريد. لا يسترد مبلغ الشراء من المتجر. الشراء الذي لم يُربَط قط ما زال يحتاج رمز الاستعادة.",
-  "localProRecoveryCodeRequired": "هذا الشراء ما زال مرتبطًا بالتثبيت الأصلي، لا بهذا البريد. لم يُنقل. أدخل رمز الاستعادة الحالي واستعد مرة أخرى لربطه، أو واصل استخدام ذلك الرمز من دون حساب.",
-  "localProAccountSignInRequired": "هذا الشراء مرتبط ببريد مُوثَّق. يبقى Local Pro متوقفًا على هذا التثبيت. سجّل الدخول بذلك البريد، ثم اضغط استعادة المشتريات. يطلب التطبيق الشراء الحالي من المتجر، ويتحقق الخادم منه قبل نقل الشراء. رمز الاستعادة وحده لا ينقله، ولا يستطيع بريد آخر أخذه.",
-  "localProAccountUnchanged": "يبقى هذا الشراء على هذا التثبيت. لم يُربَط البريد. أدخل رمز الاستعادة الحالي مع استعادة المشتريات لربطه.",
-  "localProAccountLinked": "أصبح هذا الشراء مرتبطًا ببريدك المُوثَّق. يمكن لتثبيت جديد من هذا المتجر استعادته بعد تسجيل الدخول.",
+  "localProIncludedAds": "بلا إعلانات. الإعلانات متوقفة في هذا الإصدار. إذا عرض إصدار لاحق إعلانات لمستخدمي الخطة المجانية، يبقيها Regiday Pro متوقفة.",
+  "localProIncludedAdsOn": "بلا إعلانات. في هذا الإصدار يرى مستخدمو الخطة المجانية شريطًا إعلانيًا صغيرًا في الصفحة الرئيسية. يزيله Regiday Pro.",
+  "localProRestoreRequirements": "تطلب استعادة المشتريات من المتجر Regiday Pro الذي اشتُري بحساب Google Play أو Apple نفسه لهذا التطبيق. تبقى مشتريات Android وiOS منفصلة.",
+  "localProStatusDisabled": "قريبًا. الشراء غير متاح بعد؛ تبقى خطتك المجانية فعالة.",
+  "localProStatusChecking": "جارٍ التحقق من شرائك لدى المتجر…",
+  "localProStatusActive": "Regiday Pro مفعّل. أكّد المتجر شراءك.",
+  "localProStatusActiveUnconfirmed": "يبقى Regiday Pro مفعّلًا وفق آخر تأكيد من المتجر. تعذّر الوصول إلى المتجر الآن، لذا لن يُكتشف استرداد تم منذ ذلك الحين إلا عند الوصول إليه.",
+  "localProStatusUnknown": "تعذّر الوصول إلى المتجر، لذا لا يمكن تأكيد الشراء الآن. تنطبق الحدود المجانية إلى أن يصبح ذلك ممكنًا. لا تتأثر سجلاتك.",
+  "localProProductMissing": "لم يُرجع المتجر Regiday Pro. قد لا يكون متاحًا بعد لهذا الحساب أو هذا البلد.",
+  "localProStoreUnavailable": "خدمة الدفع في المتجر غير متاحة على هذا الجهاز. تأكد من تسجيل الدخول إلى المتجر ثم حاول مرة أخرى.",
+  "localProStoreError": "تعذّر الوصول إلى المتجر. تحقق من اتصالك وحاول مرة أخرى. لم يتغير شيء.",
+  "localProRetry": "إعادة المحاولة",
+  "localProResultActive": "Regiday Pro مفعّل.",
+  "localProRestoreNotFound": "لم يجد المتجر أي شراء Regiday Pro لهذا الحساب. تأكد من تسجيل الدخول بالحساب الذي اشتراه.",
+  "adsPrivacyTitle": "خصوصية الإعلانات",
+  "adsPrivacyBody": "راجع أو غيّر اختياراتك بشأن استخدام الإعلانات لبياناتك.",
+  "adsPrivacyAction": "خيارات الخصوصية",
   "profilePlanFree": "الخطة المجانية. تتوقف المستندات والاشتراكات الجديدة عند الحدود المجانية. تبقى السجلات الموجودة قابلة للاستخدام.",
-  "freeLimitDocuments": "تشمل الخطة المجانية {count} مستندات. يلغي Local Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.",
-  "freeLimitSubscriptions": "تشمل الخطة المجانية {count} اشتراكات. يلغي Local Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.",
+  "freeLimitDocuments": "تشمل الخطة المجانية {count} مستندات. يلغي Regiday Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.",
+  "freeLimitSubscriptions": "تشمل الخطة المجانية {count} اشتراكات. يلغي Regiday Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.",
   "recordAlreadyExists": "هذا السجل موجود بالفعل، لذلك لم يُحفظ مرة أخرى.",
   "csvImportAction": "استيراد رسوم من CSV",
   "csvImportTitle": "استيراد الرسوم",
@@ -715,5 +720,10 @@
   "csvConfirmCreate": "إنشاء الاشتراكات المحددة",
   "csvNothingSelected": "حدد اقتراحًا واحدًا على الأقل. لم يُضف شيء.",
   "csvCreated": "{count, plural, one{أُضيف اشتراك واحد.} other{أُضيف {count} اشتراكات.}}",
-  "csvSuggestionNote": "مقترح من ملف CSV للرسوم. لم يُؤكد التكرار."
+  "csvSuggestionNote": "مقترح من ملف CSV للرسوم. لم يُؤكد التكرار.",
+  "addOtherImage": "إضافة صورة أخرى (اختياري)",
+  "scanAllImages": "مسح جميع الصور",
+  "firebaseAiScanPrivacy": "عند الضغط على مسح جميع الصور، تُرسل صور المستند إلى Gemini عبر Firebase AI Logic. راجع كل حقل قبل الحفظ.",
+  "firebaseAiScanProcessing": "يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.",
+  "firebaseAiScanUnavailable": "المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا."
 }

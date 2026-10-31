@@ -299,7 +299,7 @@ void main() {
       );
       expect(
         en.appLockPlatformError,
-        "Registry could not use this device's authentication. App lock was not changed.",
+        "Regiday could not use this device's authentication. App lock was not changed.",
       );
       expect(
         en.appLockPlatformError.toLowerCase(),
@@ -367,7 +367,7 @@ void main() {
       await _toggleLock(tester);
       expect(
         find.text(
-          "Registry could not use this device's authentication. App lock was not changed.",
+          "Regiday could not use this device's authentication. App lock was not changed.",
         ),
         findsOneWidget,
       );

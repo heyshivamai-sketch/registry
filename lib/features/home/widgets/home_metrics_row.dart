@@ -40,35 +40,36 @@ class HomeMetricsRow extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final stacked = constraints.maxWidth < 300 || textScale >= 1.35;
+        final stacked = constraints.maxWidth < 320 || textScale >= 1.35;
         final documents = _OverviewTile(
           key: const ValueKey<String>('metric-documents'),
           background: brand.mintSurface,
           onTap: tabs == null ? null : () => tabs.onSelect(1),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.description_outlined,
-                      color: Theme.of(context).colorScheme.primary,
+              Row(
+                children: [
+                  Icon(
+                    Icons.description_outlined,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const Spacer(),
+                  const ExcludeSemantics(
+                    child: RegistryDocumentStack(
+                      size: RegistryDocumentStackSize.tile,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      '$documentCount',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(
-                      l10n.homeDocumentsTile,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const RegistryDocumentStack(size: RegistryDocumentStackSize.tile),
+              Text(
+                '$documentCount',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              Text(
+                l10n.homeDocumentsTile,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         );

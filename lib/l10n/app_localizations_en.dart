@@ -67,7 +67,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingDecisionDate => 'Decide by Friday';
 
   @override
-  String get onboardingPrivacyLock => 'On-device only';
+  String get onboardingPrivacyLock => 'Local records';
 
   @override
   String get navHome => 'Home';
@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.';
+      'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.';
 
   @override
   String get profileButton => 'Open profile';
@@ -366,7 +366,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addDocumentMessage =>
-      'The document form, optional scan and on-device storage will be built next. You can go back and keep exploring Home.';
+      'Add images for optional AI scanning or enter details manually. Records and attachments stay on this device.';
 
   @override
   String get addSubscriptionTitle => 'Add subscription';
@@ -408,7 +408,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attachmentPrivacy =>
-      'Your image stays on this device and is not uploaded.';
+      'Stored on this device. Sent to Gemini through Firebase AI Logic only when you tap Scan all images.';
 
   @override
   String get replaceAttachmentTitle => 'Replace photo';
@@ -494,7 +494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.';
+      'Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.';
 
   @override
   String get reminderOnActionDate => 'On action date';
@@ -825,7 +825,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanDocumentSubtitle =>
-      'Take a photo or choose an image, then review extracted details.';
+      'Add the front, back or another page. Scan when your images are ready.';
 
   @override
   String get enterManuallyTitle => 'Enter manually';
@@ -836,11 +836,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ocrPrivacy =>
-      'Your scan is processed on this device. Nothing is saved until you confirm.';
+      'Images are sent to Gemini through Firebase AI Logic only when you start a scan. Nothing is saved until you confirm.';
 
   @override
   String get ocrReviewPrivacy =>
-      'Your scan is processed on this device. Review all extracted details before saving.';
+      'Gemini results are not saved until you review, confirm and complete Save.';
 
   @override
   String get scanAgain => 'Scan again';
@@ -850,7 +850,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ocrProcessingMessage =>
-      'Text is being recognised on this device. You can cancel and enter details manually.';
+      'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter details manually.';
 
   @override
   String get ocrCancel => 'Cancel scan';
@@ -1055,7 +1055,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guidedSetup => 'Guided setup';
 
   @override
-  String get ocrOnDeviceEyebrow => 'On-device extraction';
+  String get ocrOnDeviceEyebrow => 'AI-assisted extraction';
 
   @override
   String get howToAddBody =>
@@ -1092,7 +1092,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrReviewHint => 'Review highlighted values before continuing.';
 
   @override
-  String get ocrProcessingHint => 'Text is being recognised on this device.';
+  String get ocrProcessingHint =>
+      'Gemini is reading the images through Firebase AI Logic.';
 
   @override
   String get horizonOpenCalendar => 'Open calendar';
@@ -1479,7 +1480,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionTrackingDisclaimer =>
-      'Registry tracks this plan but does not cancel or charge it automatically.';
+      'Regiday tracks this plan but does not cancel or charge it automatically.';
 
   @override
   String homeHeroReview(String title) {
@@ -1659,7 +1660,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storageErrorMessage =>
-      'Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.';
+      'Regiday could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.';
 
   @override
   String get storageErrorRetry => 'Try again';
@@ -1710,7 +1711,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsLimits =>
-      'Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.';
+      'Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.';
 
   @override
   String notificationsOmittedCount(int count) {
@@ -1735,14 +1736,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'This device cannot schedule local reminders right now. Saved reminder choices are unchanged.';
 
   @override
-  String get notificationChannelName => 'Registry reminders';
+  String get notificationChannelName => 'Regiday reminders';
 
   @override
   String get notificationChannelDescription =>
       'Local reminders for document dates and subscription payments. Delivery time is not exact.';
 
   @override
-  String get notificationTitle => 'Registry reminder';
+  String get notificationTitle => 'Regiday reminder';
 
   @override
   String get reminderDocumentActionToday => 'A document action date is today.';
@@ -1799,7 +1800,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Registry does not store that password, and this does not encrypt the registry database already on this device.';
+      'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.';
 
   @override
   String get backupExportAction => 'Export backup';
@@ -1816,7 +1817,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupPasswordWarning =>
-      'Choose a password for this file. If you lose it, this backup cannot be restored. Registry does not save the password.';
+      'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.';
 
   @override
   String get backupPasswordLabel => 'Backup password';
@@ -1844,7 +1845,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupImportIntro =>
-      'Choose a Registry backup file and enter its password. Importing replaces every document and subscription on this device.';
+      'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.';
 
   @override
   String get backupChooseFile => 'Choose backup file';
@@ -1923,10 +1924,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupUnsupportedVersion =>
-      'This backup was made by a newer version of Registry.';
+      'This backup was made by a newer version of Regiday.';
 
   @override
-  String get backupInvalidFile => 'This file is not a valid Registry backup.';
+  String get backupInvalidFile => 'This file is not a valid Regiday backup.';
 
   @override
   String get backupTampered =>
@@ -1950,7 +1951,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'Ask for this device\'s biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.';
+      'Ask for this device\'s biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.';
 
   @override
   String get appLockEnabled => 'App lock is on';
@@ -1959,7 +1960,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appLockDisabled => 'App lock is off';
 
   @override
-  String get appLockReason => 'Unlock Registry to view records on this device.';
+  String get appLockReason => 'Unlock Regiday to view records on this device.';
 
   @override
   String get appLockEnableReason =>
@@ -1967,7 +1968,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockUnavailable =>
-      'This device has no biometrics or passcode Registry can use. App lock was not turned on.';
+      'This device has no biometrics or passcode Regiday can use. App lock was not turned on.';
 
   @override
   String get appLockCancelled =>
@@ -1979,7 +1980,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockPlatformError =>
-      'Registry could not use this device\'s authentication. App lock was not changed.';
+      'Regiday could not use this device\'s authentication. App lock was not changed.';
 
   @override
   String get appLockDisableReason =>
@@ -2001,7 +2002,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appLockUnlock => 'Unlock';
 
   @override
-  String get appLockLockedTitle => 'Registry is locked';
+  String get appLockLockedTitle => 'Regiday is locked';
 
   @override
   String get appLockLockedBody =>
@@ -2021,200 +2022,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockUnlockPlatformError =>
-      'Registry could not use this device\'s authentication. Your records stay hidden.';
+      'Regiday could not use this device\'s authentication. Your records stay hidden.';
 
   @override
-  String get appLockPrivacyCover => 'Registry';
+  String get appLockPrivacyCover => 'Regiday';
 
   @override
-  String get localProTitle => 'Local Pro';
+  String get localProTitle => 'Regiday Pro';
 
   @override
-  String get localProAction => 'View Local Pro';
+  String get localProAction => 'View Regiday Pro';
 
   @override
   String get localProEyebrow => 'One-time purchase';
 
   @override
-  String get localProHeadline => 'Keep more records on this device';
+  String get localProHeadline => 'More room for what matters';
 
   @override
   String get localProIntro =>
-      'Local Pro is a one-time purchase for the local features listed here. Future cloud services are separate and are not part of this purchase.';
+      'Regiday Pro is a one-time upgrade, not a subscription. Keep more records on this device.';
 
   @override
   String get localProIncludedTitle => 'Included';
 
   @override
   String localProIncludedDocuments(int count) {
-    return 'Removes the free limit of $count documents.';
+    return 'More documents. Go beyond the free limit of $count.';
   }
 
   @override
   String localProIncludedSubscriptions(int count) {
-    return 'Removes the free limit of $count subscription records.';
+    return 'More subscriptions. Go beyond the free limit of $count.';
   }
 
   @override
   String get localProTechnicalLimits =>
-      'Device storage, backup size, and the local reminder cap still apply.';
+      'Subject to device storage, backup and reminder limits.';
 
   @override
-  String get localProNotIncludedTitle => 'Not included';
+  String get localProNotIncludedTitle => 'Good to know';
 
   @override
   String get localProNotIncludedCloud =>
-      'Cloud sync and cloud backup are not included. An optional email can restore this store\'s Local Pro purchase only. It does not sync your records.';
+      'Records stay on this device. Move them using an encrypted backup in Profile. No account or cloud sync.';
 
   @override
   String get localProFreeTitle => 'Stays free';
 
   @override
   String get localProFreeBody =>
-      'Viewing, editing, renewing, deleting, reminders, app lock, export, and restore stay available for records you already have.';
+      'Reminders, scanning, app lock and encrypted backups stay free. You can always view, edit and export existing records.';
 
   @override
   String get localProCurrentFree => 'Current plan: Free';
 
   @override
-  String get localProCurrentPro => 'Current plan: Local Pro';
+  String get localProCurrentPro => 'Current plan: Regiday Pro';
 
   @override
-  String get localProPriceUnavailable =>
-      'The store price is unavailable until Local Pro is configured. There is nothing to buy yet.';
-
-  @override
-  String get localProBuy => 'Buy Local Pro';
-
-  @override
-  String get localProOwned => 'Local Pro is active on this device.';
-
-  @override
-  String get localProPurchasePending =>
-      'The store did not return a verified purchase. Local Pro stays off.';
+  String get localProBuy => 'Buy Regiday Pro';
 
   @override
   String get localProRestore => 'Restore purchases';
 
   @override
   String get localProPurchaseCancelled =>
-      'The purchase was cancelled. Local Pro stays off.';
+      'The purchase was cancelled. Regiday Pro stays off.';
 
   @override
   String get localProPurchaseFailed =>
-      'The purchase could not be completed. Local Pro stays off.';
+      'The purchase could not be completed. Regiday Pro stays off.';
 
   @override
   String get localProPendingStore =>
-      'The store is still processing this purchase. Local Pro stays off until it is verified.';
-
-  @override
-  String get localProBindingMismatch =>
-      'This purchase is linked to another installation. Local Pro stays off here. If it is linked to your verified email, sign in and restore again so the store can be checked. Otherwise use the restore code from that installation. Android and iOS stay separate.';
-
-  @override
-  String get localProRecoveryTitle => 'Save this restore code';
-
-  @override
-  String get localProRecoveryBody =>
-      'If this purchase is linked to a verified email, sign in on the new installation and use Restore purchases. The app asks the store for the current purchase, and the server checks it before Local Pro turns on. A purchase made before an account, or one that was not linked, still needs the restore code from that installation. Android and iOS stay separate. Verifying an email does not by itself turn on Local Pro.';
-
-  @override
-  String get localProRecoveryPrompt => 'Restore code';
-
-  @override
-  String get localProRecoverySubmit => 'Restore with code';
-
-  @override
-  String get localProNetworkUnchanged =>
-      'Registry could not reach purchase verification. Nothing on this device was changed.';
+      'The store is waiting for payment. Regiday Pro turns on after the store confirms the purchase. Nothing is unlocked yet.';
 
   @override
   String get localProRevoked =>
-      'The store revoked this purchase. Local Pro is off. Records you already have can still be viewed, edited, renewed, deleted, exported, and restored.';
+      'The store no longer reports a Regiday Pro purchase for this account, for example after a refund. Regiday Pro is off. Records you already have can still be viewed, edited, and exported. New records stop at the Free limits.';
 
   @override
   String get localProNotIncludedTransfer =>
-      'A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.';
+      'Your purchase belongs to your app store. It does not transfer between Android and iOS or through backup files.';
 
   @override
-  String get localProAccountTitle => 'Optional email';
+  String get localProIncludedAds => 'An ad-free experience';
 
   @override
-  String get localProAccountBody =>
-      'You can keep using Registry without an account. To recover a new Local Pro purchase after a reinstall or a new device, verify your email before you buy. The purchase is linked to that email only after the code is confirmed and the store accepts the purchase. Verifying the email does not turn on Local Pro. A backup file, a transaction id, or a switch in the app does not either.';
+  String get localProIncludedAdsOn =>
+      'No ads. Free users see one small banner on Home in this version. Regiday Pro removes it.';
 
   @override
-  String get localProAccountBeforeBuy =>
-      'If you buy before the email is verified, the purchase stays on this installation. It becomes linked only when Restore purchases sends the current restore code while you are signed in, and the server accepts the current store purchase. Signing in does not link it by itself. After it is linked, a new installation moves only when that same email is signed in and the server accepts the store purchase again. The restore code alone does not move it.';
+  String get localProRestoreRequirements =>
+      'Restore purchases asks the store for Regiday Pro bought with the same Google Play or Apple account for this app. Android and iOS purchases stay separate.';
 
   @override
-  String localProAccountSignedIn(String email) {
-    return 'Signed in as $email. On a new installation, sign in and tap Restore purchases. The app asks this store for the current purchase, and the server checks it before Local Pro can turn on. Android and iOS stay separate.';
-  }
+  String get localProStatusDisabled =>
+      'Coming soon. Purchases are not available yet; your free plan stays active.';
 
   @override
-  String get localProAccountEmailLabel => 'Email';
+  String get localProStatusChecking => 'Checking your purchase with the store…';
 
   @override
-  String get localProAccountSendCode => 'Send verification code';
+  String get localProStatusActive =>
+      'Regiday Pro is active. The store confirmed your purchase.';
 
   @override
-  String get localProAccountCodeLabel => 'Verification code';
+  String get localProStatusActiveUnconfirmed =>
+      'Regiday Pro stays on from the store\'s last confirmation. The store cannot be reached right now, so a refund made since then is not detected until it can be.';
 
   @override
-  String get localProAccountConfirm => 'Confirm email';
+  String get localProStatusUnknown =>
+      'The store could not be reached, so a purchase cannot be confirmed right now. The Free limits apply until it can. Your records are not affected.';
 
   @override
-  String get localProAccountCodeSent =>
-      'A verification code was sent. It expires soon. The code does not turn on Local Pro.';
+  String get localProProductMissing =>
+      'The store did not return Regiday Pro. It may not be available for this store account or country yet.';
 
   @override
-  String get localProAccountNotConfigured =>
-      'Email delivery is not set up. No verification code was sent.';
+  String get localProStoreUnavailable =>
+      'The store\'s billing service is not available on this device. Check that you are signed in to the store, then try again.';
 
   @override
-  String get localProAccountUnavailable =>
-      'This build cannot send a verification email. No code will be sent from this screen.';
+  String get localProStoreError =>
+      'Could not reach the store. Check your connection and try again. Nothing was changed.';
 
   @override
-  String get localProAccountDeliveryFailed =>
-      'The email could not be sent. No verification code was delivered.';
+  String get localProRetry => 'Try again';
 
   @override
-  String get localProAccountInvalidCode =>
-      'That code is not valid. Local Pro was not changed.';
+  String get localProResultActive => 'Regiday Pro is active.';
 
   @override
-  String get localProAccountOffline =>
-      'Registry could not reach account verification. Nothing was sent or changed.';
+  String get localProRestoreNotFound =>
+      'The store found no Regiday Pro purchase for this account. Check that you are signed in with the account that bought it.';
 
   @override
-  String get localProAccountDeleted =>
-      'The account was removed. This purchase stays on this installation. A new device needs the current restore code. Deleting the account did not turn Local Pro on or off.';
+  String get adsPrivacyTitle => 'Ad privacy';
 
   @override
-  String get localProAccountDelete => 'Delete account';
+  String get adsPrivacyBody =>
+      'Review or change your choices for how ads may use your data.';
 
   @override
-  String get localProAccountDeleteBody =>
-      'Deleting the account signs you out and removes the email link. It does not refund the store purchase. A purchase that was never linked still needs its restore code.';
-
-  @override
-  String get localProRecoveryCodeRequired =>
-      'This purchase is still tied to the original installation, not this email. It was not moved. Enter the current restore code and restore again to link it, or keep using that code without an account.';
-
-  @override
-  String get localProAccountSignInRequired =>
-      'This purchase is linked to a verified email. Local Pro stays off on this installation. Sign in with that email, then tap Restore purchases. The app asks the store for the current purchase, and the server checks it before the purchase can move. A restore code alone does not move it, and another email cannot take it.';
-
-  @override
-  String get localProAccountUnchanged =>
-      'This purchase stays on this installation. The email was not linked. Enter the current restore code with Restore purchases to link it.';
-
-  @override
-  String get localProAccountLinked =>
-      'This purchase is now linked to your verified email. A new installation of this store can restore it after you sign in.';
+  String get adsPrivacyAction => 'Privacy options';
 
   @override
   String get profilePlanFree =>
@@ -2222,12 +2174,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String freeLimitDocuments(int count) {
-    return 'The free plan includes $count documents. Local Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.';
+    return 'The free plan includes $count documents. Regiday Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.';
   }
 
   @override
   String freeLimitSubscriptions(int count) {
-    return 'The free plan includes $count subscription records. Local Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.';
+    return 'The free plan includes $count subscription records. Regiday Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.';
   }
 
   @override
@@ -2374,4 +2326,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get csvSuggestionNote =>
       'Suggested from a charge CSV. Recurrence was not confirmed.';
+
+  @override
+  String get addOtherImage => 'Add another image (optional)';
+
+  @override
+  String get scanAllImages => 'Scan all images';
+
+  @override
+  String get firebaseAiScanPrivacy =>
+      'When you tap Scan all images, your document images are sent to Gemini through Firebase AI Logic. Review every field before saving.';
+
+  @override
+  String get firebaseAiScanProcessing =>
+      'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter the details manually.';
+
+  @override
+  String get firebaseAiScanUnavailable =>
+      'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.';
 }

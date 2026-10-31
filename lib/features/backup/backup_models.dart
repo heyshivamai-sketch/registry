@@ -92,6 +92,9 @@ class BackupSnapshot {
   int get attachmentCount {
     var count = 0;
     for (final document in documents) {
+      count += document.additionalImages
+          .where((image) => image.isNotEmpty)
+          .length;
       if (document.hasAttachment) {
         count += 1;
       }
@@ -127,6 +130,9 @@ class OpenedBackup {
   /// Clears decrypted images when this backup is not kept as the live registry.
   void wipeAttachments() {
     for (final document in snapshot.documents) {
+      for (final image in document.additionalImages) {
+        image.fillRange(0, image.length, 0);
+      }
       document.attachmentBytes?.fillRange(
         0,
         document.attachmentBytes!.length,

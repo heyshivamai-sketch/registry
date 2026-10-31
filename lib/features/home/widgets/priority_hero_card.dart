@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_registry/core/widgets/attention_entrance.dart';
 import 'package:the_registry/app/navigation/app_routes.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
@@ -86,7 +87,11 @@ class PriorityHeroCard extends StatelessWidget {
                         const SizedBox(height: AppSpacing.sm),
                         Align(
                           alignment: AlignmentDirectional.centerEnd,
-                          child: RegistryHeroPassStack(icon: highlighted?.icon),
+                          child: AttentionEntrance(
+                            child: RegistryHeroPassStack(
+                              icon: highlighted?.icon,
+                            ),
+                          ),
                         ),
                       ],
                     )
@@ -95,7 +100,9 @@ class PriorityHeroCard extends StatelessWidget {
                       children: [
                         Expanded(child: content),
                         const SizedBox(width: 4),
-                        RegistryHeroPassStack(icon: highlighted?.icon),
+                        AttentionEntrance(
+                          child: RegistryHeroPassStack(icon: highlighted?.icon),
+                        ),
                       ],
                     ),
             ),

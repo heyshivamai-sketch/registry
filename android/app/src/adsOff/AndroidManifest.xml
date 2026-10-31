@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged only when ADS_ENABLED is not true (see build.gradle.kts).
+     The Google Mobile Ads dependency is linked into every build, so its
+     startup provider and advertising permissions are removed here: an
+     ads-off build must not start the SDK, has no AdMob App ID, and does not
+     declare advertising ID or Privacy Sandbox (AdServices) API use. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_TOPICS"
+        tools:node="remove" />
+    <application>
+        <provider
+            android:name="com.google.android.gms.ads.MobileAdsInitProvider"
+            tools:node="remove" />
+    </application>
+</manifest>

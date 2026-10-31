@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
-import 'package:the_registry/features/documents/domain/document_ocr_parser.dart';
 import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
@@ -13,6 +12,7 @@ import 'support/fake_document_ocr_service.dart';
 import 'support/fake_image_picker_service.dart';
 import 'support/fake_onboarding_repository.dart';
 import 'support/sample_document.dart';
+import 'support/sample_document_ocr_result.dart';
 import 'support/save_screenshot.dart';
 import 'support/tiny_png.dart';
 
@@ -143,9 +143,10 @@ void main() {
       find.byKey(const ValueKey<String>('field-name')),
       'Travel passport',
     );
-    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-category')),
+      'Passport',
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();
@@ -165,12 +166,7 @@ void main() {
 
   testWidgets('OCR and responsive fidelity screenshots', (tester) async {
     pixel8(tester, height: 1400);
-    ocr.result = DocumentOcrParser.parse('''
-Government of India
-Aadhaar
-Name: SAMPLE USER
-1234 5678 9012
-''');
+    ocr.result = sampleAadhaarOcrResult(name: 'SAMPLE USER');
     images.galleryResult = ImagePickResult.success(kTinyPngBytes);
 
     await tester.pumpWidget(wrapForScreenshot(app()));
@@ -182,6 +178,11 @@ Name: SAMPLE USER
 
     ocr.delay = const Duration(milliseconds: 50);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey<String>('scan-again')),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
     await tester.pump();
     await saveScreenshot(
       tester,

@@ -489,9 +489,10 @@ void main() {
       find.byKey(const ValueKey<String>('field-name')),
       'Probe passport',
     );
-    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-category')),
+      'Passport',
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
     await tester.pumpAndSettle();

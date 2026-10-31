@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:the_registry/core/time/clock.dart';
+import 'package:the_registry/features/ads/ads_controller.dart';
 import 'package:the_registry/features/app_lock/app_lock_controller.dart';
 import 'package:the_registry/features/backup/backup_service.dart';
 import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
 import 'package:the_registry/features/documents/data/image_picker_image_service.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/entitlements/pro_account.dart';
-import 'package:the_registry/features/entitlements/purchase_service.dart';
+import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
-import 'package:the_registry/features/documents/data/ml_kit_document_ocr_service.dart';
 import 'package:the_registry/features/documents/domain/date_picker_service.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_repository.dart';
@@ -32,10 +31,9 @@ class RegistryDependencies extends InheritedWidget {
     required this.entitlements,
     required this.writes,
     required this.appLock,
-    required this.storeProducts,
-    required this.purchases,
+    required this.localPro,
+    required this.ads,
     required this.csvFiles,
-    this.proAccounts,
     required super.child,
   });
 
@@ -51,12 +49,9 @@ class RegistryDependencies extends InheritedWidget {
   final EntitlementService entitlements;
   final RegistryWrites writes;
   final AppLockController appLock;
-  final StoreProductSource storeProducts;
-  final PurchaseService purchases;
+  final LocalProEntitlement localPro;
+  final AdsController ads;
   final CsvFileGateway csvFiles;
-
-  /// Null when billing is not configured. Email verification is not available.
-  final ProAccountClient? proAccounts;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -82,10 +77,9 @@ class RegistryDependencies extends InheritedWidget {
         entitlements != oldWidget.entitlements ||
         writes != oldWidget.writes ||
         appLock != oldWidget.appLock ||
-        storeProducts != oldWidget.storeProducts ||
-        purchases != oldWidget.purchases ||
-        csvFiles != oldWidget.csvFiles ||
-        proAccounts != oldWidget.proAccounts;
+        localPro != oldWidget.localPro ||
+        ads != oldWidget.ads ||
+        csvFiles != oldWidget.csvFiles;
   }
 }
 
@@ -111,5 +105,5 @@ DatePickerService createDefaultDatePicker() {
 }
 
 DocumentOcrService createDefaultDocumentOcr() {
-  return MlKitDocumentOcrService();
+  return const DisabledDocumentOcrService();
 }

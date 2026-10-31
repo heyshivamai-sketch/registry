@@ -67,6 +67,15 @@ abstract final class AppTheme {
         ),
       ),
       snackBarTheme: SnackBarThemeData(
+        elevation: 3,
+        showCloseIcon: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onInverseSurface,
+          fontSize: 14,
+          height: 1.4,
+        ),
+        backgroundColor: colorScheme.inverseSurface,
         behavior: SnackBarBehavior.floating,
         insetPadding: const EdgeInsets.fromLTRB(
           AppSpacing.md,

@@ -20,7 +20,7 @@ class DocumentAttachmentCard extends StatelessWidget {
   final Uint8List? bytes;
   final VoidCallback onTakePhoto;
   final VoidCallback onChooseGallery;
-  final VoidCallback onReplace;
+  final VoidCallback? onReplace;
   final VoidCallback onRemove;
 
   @override
@@ -53,7 +53,7 @@ class DocumentAttachmentCard extends StatelessWidget {
                       borderRadius: AppRadius.cardBorder,
                       child: Image.memory(
                         bytes!,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         width: double.infinity,
                         height: 180,
                       ),
@@ -100,11 +100,12 @@ class DocumentAttachmentCard extends StatelessWidget {
                   onPressed: onChooseGallery,
                 ),
               ] else ...[
-                RegistrySecondaryButton(
-                  key: const ValueKey<String>('attach-replace'),
-                  label: l10n.attachmentReplace,
-                  onPressed: onReplace,
-                ),
+                if (onReplace != null)
+                  RegistrySecondaryButton(
+                    key: const ValueKey<String>('attach-replace'),
+                    label: l10n.attachmentReplace,
+                    onPressed: onReplace,
+                  ),
                 TextButton(
                   key: const ValueKey<String>('attach-remove'),
                   onPressed: onRemove,

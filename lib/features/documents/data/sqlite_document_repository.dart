@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -419,6 +420,10 @@ class SqliteDocumentRepository extends ChangeNotifier
       'id': document.id,
       'name': document.name,
       'category': document.category.name,
+      'category_label': document.categoryLabel,
+      'additional_images': jsonEncode(
+        document.additionalImages.map(base64Encode).toList(),
+      ),
       'owner_name': document.ownerName,
       'issuing_authority': document.issuingAuthority,
       'document_number': document.documentNumber,
@@ -483,6 +488,11 @@ class SqliteDocumentRepository extends ChangeNotifier
         row['reminders'],
       ),
       attachmentBytes: bytes,
+      categoryLabel: row['category_label'] as String?,
+      additionalImages:
+          (jsonDecode(row['additional_images'] as String? ?? '[]') as List)
+              .map((value) => base64Decode(value as String))
+              .toList(),
       createdAt: PersistedValues.decodeDate(row['created_at']),
       updatedAt: PersistedValues.decodeOptionalDate(row['updated_at']),
       renewalHistory: history,

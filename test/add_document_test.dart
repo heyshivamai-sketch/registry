@@ -5,7 +5,6 @@ import 'package:the_registry/app/app.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/domain/document_field_value.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_ocr_parser.dart';
 import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
@@ -19,6 +18,7 @@ import 'support/fake_document_ocr_service.dart';
 import 'support/fake_image_picker_service.dart';
 import 'support/fake_onboarding_repository.dart';
 import 'support/sample_document.dart';
+import 'support/sample_document_ocr_result.dart';
 import 'support/save_screenshot.dart';
 import 'support/tiny_png.dart';
 
@@ -103,9 +103,10 @@ void main() {
       'Family passport',
     );
     await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-category')),
+      'Passport',
+    );
     await tester.pumpAndSettle();
     await continueWizard(tester);
   }
@@ -127,9 +128,10 @@ void main() {
       'Family passport',
     );
     await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-category')),
+      'Passport',
+    );
     await tester.pumpAndSettle();
     await continueWizard(tester);
 
@@ -152,7 +154,7 @@ void main() {
 
     expect(find.byType(AddDocumentScreen), findsOneWidget);
     expect(find.text('Add a document'), findsOneWidget);
-    expect(find.text('Scan or enter the details manually.'), findsOneWidget);
+    expect(find.text('Scan or enter the details manually.'), findsNothing);
   });
 
   testWidgets('Add Document opens from Documents tab', (tester) async {
@@ -554,6 +556,65 @@ void main() {
     expect(find.byKey(const ValueKey<String>('attach-remove')), findsNothing);
   });
 
+  testWidgets('Capture front and back before scanning both images', (
+    tester,
+  ) async {
+    images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+    ocr.result = sampleAadhaarOcrResult(name: 'SAMPLE USER');
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await openFromDocumentsTab(tester);
+    await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    expect(ocr.recognizeCount, 0);
+    final addImage = find.byIcon(Icons.add_photo_alternate_outlined);
+    await reveal(tester, addImage);
+    await tester.tap(addImage);
+    await tester.pumpAndSettle();
+    expect(find.byType(Image), findsNWidgets(2));
+    expect(ocr.recognizeCount, 0);
+    await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+    await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
+    await tester.pumpAndSettle();
+    expect(ocr.recognizeCount, 1);
+    expect(ocr.receivedImages, hasLength(2));
+    expect(find.byKey(const ValueKey<String>('ocr-review')), findsOneWidget);
+  });
+
+  testWidgets(
+    'Firebase not configured disables AI Scan and keeps manual entry available',
+    (tester) async {
+      ocr.available = false;
+      images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      expect(
+        find.textContaining(
+          'AI Scan is unavailable because Firebase is not configured',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+      await tester.pumpAndSettle();
+      await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+
+      final scanButton = tester.widget<FilledButton>(
+        find.byKey(const ValueKey<String>('scan-again')),
+      );
+      expect(scanButton.onPressed, isNull);
+      expect(ocr.recognizeCount, 0);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('scan-enter-manually')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
+      expect(ocr.recognizeCount, 0);
+    },
+  );
+
   testWidgets('Selected attachment state shows only Replace and Remove', (
     tester,
   ) async {
@@ -894,19 +955,31 @@ void main() {
   testWidgets('OCR success opens review and confirm does not save', (
     tester,
   ) async {
-    ocr.result = DocumentOcrParser.parse('''
-Government of India
-Aadhaar
-Name: SAMPLE NAME
-1234 5678 9012
-''');
+    ocr.result = sampleAadhaarOcrResult();
     images.galleryResult = ImagePickResult.success(kTinyPngBytes);
     await tester.pumpWidget(app());
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
     await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+    await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
+    await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey<String>('ocr-review')), findsOneWidget);
+    for (final fieldKey in [
+      DocumentFieldKeys.fullName,
+      DocumentFieldKeys.aadhaarNumber,
+      DocumentFieldKeys.dateOfBirth,
+      DocumentFieldKeys.issueDate,
+      DocumentFieldKeys.expiryDate,
+      DocumentFieldKeys.address,
+      DocumentFieldKeys.issuingAuthority,
+    ]) {
+      expect(
+        find.byKey(ValueKey<String>('ocr-field-$fieldKey')),
+        findsOneWidget,
+      );
+    }
     expect(find.text('Aadhaar'), findsWidgets);
     expect(find.text('Document type'), findsWidgets);
     expect(find.text('Category'), findsWidgets);
@@ -997,6 +1070,9 @@ Name: SAMPLE NAME
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
     await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+    await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
+    await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey<String>('ocr-failed')), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('ocr-retry')), findsOneWidget);
@@ -1009,6 +1085,9 @@ Name: SAMPLE NAME
     await tester.pumpAndSettle();
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+    await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+    await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey<String>('ocr-failed')), findsNothing);
     expect(find.byType(Image), findsOneWidget);
@@ -1084,9 +1163,10 @@ Name: SAMPLE NAME
       'Family passport',
     );
     await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.tap(find.byKey(const ValueKey<String>('field-category')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('field-category')),
+      'Passport',
+    );
     await tester.pumpAndSettle();
     await reveal(
       tester,
@@ -1148,15 +1228,10 @@ Name: SAMPLE NAME
     );
 
     ocr.delay = const Duration(milliseconds: 400);
-    ocr.result = DocumentOcrParser.parse('''
-Government of India
-Aadhaar
-Name: SAMPLE NAME
-DOB: 1990
-Gender: Female
-1234 5678 9012
-Address: SAMPLE STREET, CITY
-''');
+    ocr.result = sampleAadhaarOcrResult(
+      dateOfBirth: '1990-01-01',
+      address: 'SAMPLE STREET, CITY',
+    );
     await remount();
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
@@ -1175,11 +1250,7 @@ Address: SAMPLE STREET, CITY
     );
     ocr.delay = null;
 
-    ocr.result = DocumentOcrParser.parse('''
-Membership Card
-Club: SAMPLE CLUB
-Member code: ZX-99
-''');
+    ocr.result = sampleGenericOcrResult();
     await remount();
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
@@ -1190,17 +1261,7 @@ Member code: ZX-99
       folder: 'registry_aura_phase3',
     );
 
-    ocr.result = DocumentOcrParser.parse('''
-PASSPORT
-Passport No. P1234567
-Surname SAMPLE
-Given names JANE MARIE
-Nationality SAMPLELAND
-Date of birth 12 JAN 1990
-Date of issue 01 MAR 2020
-Date of expiry 01 MAR 2030
-Authority SAMPLE OFFICE
-''');
+    ocr.result = samplePassportOcrResult();
     await remount();
     await openFromDocumentsTab(tester);
     await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
@@ -1291,9 +1352,7 @@ Authority SAMPLE OFFICE
     await tester.tap(find.byKey(const ValueKey<String>('country-IN')));
     await tester.pumpAndSettle();
     await reveal(tester, category);
-    await tester.tap(category);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('category-idCard')));
+    await tester.enterText(category, 'ID card');
     await tester.pumpAndSettle();
 
     expect(

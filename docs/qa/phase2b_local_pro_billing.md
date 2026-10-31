@@ -1,5 +1,7 @@
 # Phase 2B — Local Pro billing
 
+> **Superseded (28 September 2026, `feature/local-store-pro-and-ads`).** The billing server, email account, recovery code, installation binding, and signed grants described here were removed. Local Pro is now checked on the device against Google Play Billing or StoreKit only. Current setup: `docs/setup/local_pro_billing.md`, `docs/setup/ads.md`, `docs/setup/privacy_and_data.md`, `docs/release/launch_checklist.md`. This file is kept as a historical record.
+
 **Date:** 28 September 2026
 **Branch:** `feature/local-pro-billing`
 **HEAD:** `f335091ac19cc04b891c315123bbc59f7f354582` (`docs: remove trailing whitespace from phase2a QA report`)
@@ -24,7 +26,7 @@ Setup and the ownership model are in `docs/setup/local_pro_billing.md`. Placehol
 - The app caches the signed grant, not a boolean. A transport failure or HTTP 503 leaves that cache and does not rewrite documents or subscriptions. A verified revocation replaces the cache with an inactive grant and the plan returns to Free. Existing records can still be updated. A net-new document past the Free limit is still refused.
 - Opening Local Pro from a document draft pushes a route on top of the form. Dismissing it leaves the draft text in place. The Local Pro screen does not offer cloud sync, cloud backup, or an account.
 
-Application id `com.registry.app` and bundle id `com.example.theRegistry` are unchanged. The bundle id still has to be decided before an App Store Connect app is created. `com.example` may be rejected, and an Apple bundle id cannot be changed after the first upload.
+Application id `com.residay.app` and bundle id `com.example.theRegistry` are unchanged. The bundle id still has to be decided before an App Store Connect app is created. `com.example` may be rejected, and an Apple bundle id cannot be changed after the first upload.
 
 ## Automated results
 
@@ -93,7 +95,7 @@ Sequential check on 28 September 2026, after this rule change: server tests 26 p
 
 An installation-only purchase still needs its recovery code. An account-bound purchase needs the owning account's session, and this server cannot send that verification email until a real `EmailDelivery` provider is configured. Store acceptance is still required before enabling purchases.
 
-- Play Console app for `com.registry.app`, one-time product `local_pro`, license testers, Play Developer API service account, and Pub/Sub push for real-time developer notifications.
+- Play Console app for `com.residay.app`, one-time product `local_pro`, license testers, Play Developer API service account, and Pub/Sub push for real-time developer notifications.
 - Decision on the iOS bundle id before creating the App Store Connect app. Current value remains `com.example.theRegistry`.
 - App Store Connect non-consumable `local_pro`, Paid Applications agreement, App Store Server API key, Apple root certificates, Sandbox Apple ID, and Server Notifications V2 URLs.
 - A deployed `server/billing` with the values from `server/billing/.env.example` replaced on the server only. Generate the grant key there. Do not commit it.
@@ -103,7 +105,7 @@ An installation-only purchase still needs its recovery code. An account-bound pu
 
 Do not check these from the mocked tests. The steps are the sandbox checklist in `docs/setup/local_pro_billing.md`.
 
-- [ ] Play product `local_pro` exists for `com.registry.app` and is a one-time product, not a subscription.
+- [ ] Play product `local_pro` exists for `com.residay.app` and is a one-time product, not a subscription.
 - [ ] App Store product `local_pro` exists for the chosen bundle id and is a non-consumable. Family Sharing stays off.
 - [ ] Server credentials, grant key, token key, and restore-code pepper exist only on the server.
 - [ ] A build that points at the server but still has `storeVerificationConfigured` false shows no price and Buy does not grant.

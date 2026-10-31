@@ -27,7 +27,7 @@
   "onboardingSubscriptionName": "Streaming",
   "onboardingUpcomingCharge": "Charge in 5 days",
   "onboardingDecisionDate": "Decide by Friday",
-  "onboardingPrivacyLock": "On-device only",
+  "onboardingPrivacyLock": "Local records",
   "navHome": "Home",
   "navDocuments": "Documents",
   "navSubscriptions": "Subscriptions",
@@ -48,14 +48,18 @@
   "daysRemaining": "{count} days remaining",
   "@daysRemaining": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "oneDayOverdue": "1 day overdue",
   "daysOverdue": "{count} days overdue",
   "@daysOverdue": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "highImpactLabel": "High impact",
@@ -69,13 +73,17 @@
   "snapshotDocumentsSupporting": "{count, plural, =0{None need action} one{1 action due} other{{count} need action}}",
   "@snapshotDocumentsSupporting": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "snapshotSubscriptionsSupporting": "{count, plural, one{1 tracked} other{{count} tracked}}",
   "@snapshotSubscriptionsSupporting": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "pulseEyebrow": "Next best action",
@@ -90,13 +98,17 @@
   "documentsSummary": "{count} saved",
   "@documentsSummary": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "documentsAttentionSummary": "{count, plural, one{{count} needs attention} other{{count} need attention}}",
   "@documentsAttentionSummary": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "sectionNeedsAttention": "Needs attention",
@@ -105,31 +117,41 @@
   "sectionItemCount": "{count, plural, one{{count} item} other{{count} items}}",
   "@sectionItemCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "startByDate": "Start by {date}",
   "@startByDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "expiresDate": "Expires {date}",
   "@expiresDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "nextChargeDate": "Next charge {date}",
   "@nextChargeDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "decideByDate": "Decide by {date}",
   "@decideByDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "typeDocument": "Document",
@@ -161,10 +183,10 @@
   "subscriptionsEmptyTitle": "No subscriptions yet",
   "subscriptionsEmptyMessage": "Add streaming, gym and other recurring charges to stay ahead of payments.",
   "profileTitle": "Profile",
-  "profileMessage": "Your records stay private on this device. Local Pro can use an optional verified email to restore that purchase. It does not sync documents or subscriptions.",
+  "profileMessage": "Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.",
   "profileButton": "Open profile",
   "addDocumentTitle": "Add document",
-  "addDocumentMessage": "The document form, optional scan and on-device storage will be built next. You can go back and keep exploring Home.",
+  "addDocumentMessage": "Add images for optional AI scanning or enter details manually. Records and attachments stay on this device.",
   "addSubscriptionTitle": "Add subscription",
   "addSubscriptionMessage": "The subscription form and payment reminders will be built next. You can go back and keep exploring Home.",
   "searchNoResultsTitle": "No matching items",
@@ -177,7 +199,7 @@
   "attachmentChooseGallery": "Choose from gallery",
   "attachmentReplace": "Replace",
   "attachmentRemove": "Remove",
-  "attachmentPrivacy": "Your image stays on this device and is not uploaded.",
+  "attachmentPrivacy": "Stored on this device. Sent to Gemini through Firebase AI Logic only when you tap Scan all images.",
   "replaceAttachmentTitle": "Replace photo",
   "attachmentPickerFailed": "The photo could not be added. Check camera or library permission and try again.",
   "sectionBasicInfo": "Basic information",
@@ -204,7 +226,7 @@
   "fieldExpectedChanges": "Expected changes at renewal",
   "fieldNotes": "Notes",
   "sectionReminders": "Reminder preference",
-  "remindersHelper": "Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.",
+  "remindersHelper": "Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.",
   "reminderOnActionDate": "On action date",
   "reminder7Days": "7 days before",
   "reminder30Days": "30 days before",
@@ -249,7 +271,9 @@
   "deleteDocumentMessage": "{name} will be removed from this device.",
   "@deleteDocumentMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "deleteDocumentConfirm": "Delete",
@@ -285,7 +309,9 @@
   "maskedDocumentNumberLabel": "Masked document number {number}",
   "@maskedDocumentNumberLabel": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "ownerLabel": "Owner",
@@ -311,8 +337,12 @@
   "wizardStepOf": "Step {current} of {total}",
   "@wizardStepOf": {
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "wizardContinue": "Continue",
@@ -325,14 +355,14 @@
   "howToAddTitle": "How would you like to add it?",
   "scanDocumentTitle": "Scan document",
   "scanDocumentRecommended": "Recommended",
-  "scanDocumentSubtitle": "Take a photo or choose an image, then review extracted details.",
+  "scanDocumentSubtitle": "Add the front, back or another page. Scan when your images are ready.",
   "enterManuallyTitle": "Enter manually",
   "enterManuallySubtitle": "Type the details yourself, one step at a time.",
-  "ocrPrivacy": "Your scan is processed on this device. Nothing is saved until you confirm.",
-  "ocrReviewPrivacy": "Your scan is processed on this device. Review all extracted details before saving.",
+  "ocrPrivacy": "Images are sent to Gemini through Firebase AI Logic only when you start a scan. Nothing is saved until you confirm.",
+  "ocrReviewPrivacy": "Gemini results are not saved until you review, confirm and complete Save.",
   "scanAgain": "Scan again",
   "ocrProcessingTitle": "Reading this document",
-  "ocrProcessingMessage": "Text is being recognised on this device. You can cancel and enter details manually.",
+  "ocrProcessingMessage": "Gemini is reading all document images through Firebase AI Logic. You can cancel and enter details manually.",
   "ocrCancel": "Cancel scan",
   "ocrFailedTitle": "We could not read this scan",
   "ocrFailedMessage": "Keep the photo and enter details manually, or try another image.",
@@ -341,7 +371,9 @@
   "ocrFieldsFound": "{count, plural, =0{No fields found} one{1 field found} other{{count} fields found}}",
   "@ocrFieldsFound": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "ocrConfidenceHigh": "High confidence",
@@ -372,13 +404,17 @@
   "reviewDynamicCount": "{count, plural, =0{No extra fields} one{1 extra field} other{{count} extra fields}}",
   "@reviewDynamicCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "suggestedActionDate": "Suggested start date: {date}",
   "@suggestedActionDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "useSuggestedActionDate": "Use suggested date",
@@ -408,7 +444,7 @@
   "snapshotNinetyDayView": "90-day view",
   "profileMonogram": "R",
   "guidedSetup": "Guided setup",
-  "ocrOnDeviceEyebrow": "On-device extraction",
+  "ocrOnDeviceEyebrow": "AI-assisted extraction",
   "howToAddBody": "Scan for a faster start, or enter the details yourself.",
   "identityIntro": "A few details to organise your document.",
   "datesIntro": "Dates always include day, month and year.",
@@ -419,7 +455,7 @@
   "ocrDynamicTemplateTitle": "Dynamic field template",
   "ocrDynamicTemplateBody": "Fields change by country and document type. Unknown labels appear as custom fields.",
   "ocrReviewHint": "Review highlighted values before continuing.",
-  "ocrProcessingHint": "Text is being recognised on this device.",
+  "ocrProcessingHint": "Gemini is reading the images through Firebase AI Logic.",
   "horizonOpenCalendar": "Open calendar",
   "horizon90EmptyTitle": "Nothing in the next 90 days",
   "horizon90EmptyMessage": "Items with an action or renewal date in the next 90 days will appear here, earliest first.",
@@ -438,7 +474,9 @@
   "homeEstimatedMonthly": "{amount} / month",
   "@homeEstimatedMonthly": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "pulseDecideByEyebrow": "Decide by",
@@ -448,19 +486,25 @@
   "subscriptionsSavedSummary": "{count, plural, one{1 saved} other{{count} saved}}",
   "@subscriptionsSavedSummary": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "subscriptionsActiveSummary": "{count, plural, one{1 active plan} other{{count} active plans}}",
   "@subscriptionsActiveSummary": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "subscriptionsAttentionSummary": "{count, plural, =0{No decisions due} one{1 decision due} other{{count} decisions due}}",
   "@subscriptionsAttentionSummary": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "subscriptionsListHeader": "Plans",
@@ -475,7 +519,9 @@
   "estimatedMonthlyMultiple": "{count} currencies",
   "@estimatedMonthlyMultiple": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "fieldServiceName": "Service name",
@@ -549,7 +595,9 @@
   "cancelPlanMessage": "This only updates tracking for {name} in this app. It does not cancel the subscription with the provider.",
   "@cancelPlanMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "planMarkedCancelled": "Plan marked as cancelled on this device.",
@@ -558,7 +606,9 @@
   "reactivatePlanMessage": "Confirm the next payment date for {name}. This only resumes tracking in this app.",
   "@reactivatePlanMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "planReactivated": "Plan reactivated on this device.",
@@ -567,28 +617,36 @@
   "deleteSubscriptionMessage": "{name} will be removed from this device.",
   "@deleteSubscriptionMessage": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-  "subscriptionTrackingDisclaimer": "Registry tracks this plan but does not cancel or charge it automatically.",
+  "subscriptionTrackingDisclaimer": "Regiday tracks this plan but does not cancel or charge it automatically.",
   "homeHeroReview": "Review {title}",
   "@homeHeroReview": {
     "placeholders": {
-      "title": { "type": "String" }
+      "title": {
+        "type": "String"
+      }
     }
   },
   "homeHeroRenewalToday": "Renewal starts today",
   "homeHeroRenewalOn": "Renewal starts {date}",
   "@homeHeroRenewalOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "homeHeroDecideToday": "Decision due today",
   "homeHeroDecideOn": "Decide by {date}",
   "@homeHeroDecideOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "homeCalmUpcomingCta": "View upcoming",
@@ -604,7 +662,9 @@
   "homeSubscriptionCount": "{count, plural, =0{No subscriptions} one{1 subscription} other{{count} subscriptions}}",
   "@homeSubscriptionCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "homeViewAll": "View all",
@@ -615,20 +675,28 @@
   "comingUpThisWeek": "This week · {year}",
   "@comingUpThisWeek": {
     "placeholders": {
-      "year": { "type": "String" }
+      "year": {
+        "type": "String"
+      }
     }
   },
   "comingUpLaterThisMonth": "Later this month · {year}",
   "@comingUpLaterThisMonth": {
     "placeholders": {
-      "year": { "type": "String" }
+      "year": {
+        "type": "String"
+      }
     }
   },
   "comingUpMonthYear": "{month} · {year}",
   "@comingUpMonthYear": {
     "placeholders": {
-      "month": { "type": "String" },
-      "year": { "type": "String" }
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
     }
   },
   "comingUpEmptyFilter": "Nothing coming up in this view.",
@@ -653,20 +721,24 @@
   "attachmentAddedOn": "Added {date}",
   "@attachmentAddedOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "estimatedMonthlyCostValue": "Estimated monthly cost {amount}",
   "@estimatedMonthlyCostValue": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "selectedDocumentType": "Selected document type",
   "chooseOption": "Choose",
   "storageLoadingLabel": "Loading saved records",
   "storageErrorTitle": "Saved records could not be opened",
-  "storageErrorMessage": "Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.",
+  "storageErrorMessage": "Regiday could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.",
   "storageErrorRetry": "Try again",
   "reminderPermissionDenied": "Notifications are off, so no reminder will be scheduled. You can still save. Turn them on from Notification settings when you want reminders.",
   "reminderStatusScheduled": "A local reminder is scheduled on this device. Delivery is not guaranteed at exactly 9:00.",
@@ -678,81 +750,101 @@
   "notificationsScheduledCount": "{count, plural, =0{No local reminders are scheduled on this device.} one{1 local reminder is scheduled on this device.} other{{count} local reminders are scheduled on this device.}}",
   "@notificationsScheduledCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "notificationsPermissionOff": "Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.",
-  "notificationsLimits": "Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.",
+  "notificationsLimits": "Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.",
   "notificationsOmittedCount": "{count, plural, one{1 saved reminder was not scheduled because of that pending limit.} other{{count} saved reminders were not scheduled because of that pending limit.}}",
   "@notificationsOmittedCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "notificationsAllow": "Allow notifications",
   "notificationsOpenSettings": "Notification settings",
   "notificationsUnavailable": "This device cannot schedule local reminders right now. Saved reminder choices are unchanged.",
-  "notificationChannelName": "Registry reminders",
+  "notificationChannelName": "Regiday reminders",
   "notificationChannelDescription": "Local reminders for document dates and subscription payments. Delivery time is not exact.",
-  "notificationTitle": "Registry reminder",
+  "notificationTitle": "Regiday reminder",
   "reminderDocumentActionToday": "A document action date is today.",
   "reminderDocumentActionIn7": "A document action date is in 7 days, on {date}.",
   "@reminderDocumentActionIn7": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderDocumentActionIn30": "A document action date is in 30 days, on {date}.",
   "@reminderDocumentActionIn30": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderDocumentExpiryToday": "A document expiry date is today.",
   "reminderDocumentExpiryIn7": "A document expires in 7 days, on {date}.",
   "@reminderDocumentExpiryIn7": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderDocumentExpiryIn30": "A document expires in 30 days, on {date}.",
   "@reminderDocumentExpiryIn30": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderSubscriptionDecideIn7": "A subscription decision is due in 7 days, on {date}.",
   "@reminderSubscriptionDecideIn7": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderSubscriptionDecideIn1": "A subscription decision is due tomorrow, on {date}.",
   "@reminderSubscriptionDecideIn1": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderSubscriptionPaymentIn7": "A subscription payment is in 7 days, on {date}.",
   "@reminderSubscriptionPaymentIn7": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderSubscriptionPaymentIn1": "A subscription payment is tomorrow, on {date}.",
   "@reminderSubscriptionPaymentIn1": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "reminderSubscriptionChargeToday": "A subscription payment date is today.",
   "backupSectionTitle": "Backup & restore",
-  "backupSectionBody": "Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Registry does not store that password, and this does not encrypt the registry database already on this device.",
+  "backupSectionBody": "Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.",
   "backupExportAction": "Export backup",
   "backupImportAction": "Import backup",
   "backupExportTitle": "Export backup",
   "backupIncluded": "The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.",
-  "backupPasswordWarning": "Choose a password for this file. If you lose it, this backup cannot be restored. Registry does not save the password.",
+  "backupPasswordWarning": "Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.",
   "backupPasswordLabel": "Backup password",
   "backupConfirmPasswordLabel": "Confirm password",
   "backupPasswordTooShort": "Use at least 8 characters.",
@@ -761,7 +853,7 @@
   "backupHidePassword": "Hide password",
   "backupChooseSave": "Choose where to save",
   "backupImportTitle": "Import backup",
-  "backupImportIntro": "Choose a Registry backup file and enter its password. Importing replaces every document and subscription on this device.",
+  "backupImportIntro": "Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.",
   "backupChooseFile": "Choose backup file",
   "backupSelectedFile": "Backup file selected",
   "backupNoFile": "Choose a backup file first.",
@@ -769,9 +861,15 @@
   "backupPreview": "This backup contains {documents} documents, {subscriptions} subscriptions, and {attachments} images. Replacing this device's registry removes the records stored here and puts this backup in their place. Records are not merged.",
   "@backupPreview": {
     "placeholders": {
-      "documents": {"type": "int"},
-      "subscriptions": {"type": "int"},
-      "attachments": {"type": "int"}
+      "documents": {
+        "type": "int"
+      },
+      "subscriptions": {
+        "type": "int"
+      },
+      "attachments": {
+        "type": "int"
+      }
     }
   },
   "backupReplaceAction": "Replace this device's registry",
@@ -791,104 +889,104 @@
   "backupImportReplaced": "This device's registry was replaced from the backup.",
   "backupImportCancelled": "Import cancelled.",
   "backupWrongPassword": "That password does not open this backup.",
-  "backupUnsupportedVersion": "This backup was made by a newer version of Registry.",
-  "backupInvalidFile": "This file is not a valid Registry backup.",
+  "backupUnsupportedVersion": "This backup was made by a newer version of Regiday.",
+  "backupInvalidFile": "This file is not a valid Regiday backup.",
   "backupTampered": "This backup file is damaged or has been changed.",
   "backupImportTooLarge": "This backup is too large to restore.",
   "backupImportStorage": "There is not enough free space to restore this backup.",
   "backupImportFailed": "The restore did not finish.",
   "backupImportUnchanged": "Nothing on this device was changed.",
   "appLockSectionTitle": "App lock",
-  "appLockSectionBody": "Ask for this device's biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.",
+  "appLockSectionBody": "Ask for this device's biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.",
   "appLockEnabled": "App lock is on",
   "appLockDisabled": "App lock is off",
-  "appLockReason": "Unlock Registry to view records on this device.",
+  "appLockReason": "Unlock Regiday to view records on this device.",
   "appLockEnableReason": "Confirm it is you before turning on app lock.",
-  "appLockUnavailable": "This device has no biometrics or passcode Registry can use. App lock was not turned on.",
+  "appLockUnavailable": "This device has no biometrics or passcode Regiday can use. App lock was not turned on.",
   "appLockCancelled": "Authentication was cancelled. App lock was not turned on.",
   "appLockFailed": "Authentication failed. App lock was not turned on.",
-  "appLockPlatformError": "Registry could not use this device's authentication. App lock was not changed.",
+  "appLockPlatformError": "Regiday could not use this device's authentication. App lock was not changed.",
   "appLockDisableReason": "Confirm it is you before turning off app lock.",
   "appLockDisableCancelled": "Authentication was cancelled. App lock stays on.",
   "appLockDisableFailed": "Authentication failed. App lock stays on.",
   "appLockDisableUnavailable": "This device cannot authenticate right now. App lock stays on.",
   "appLockUnlock": "Unlock",
-  "appLockLockedTitle": "Registry is locked",
+  "appLockLockedTitle": "Regiday is locked",
   "appLockLockedBody": "Authenticate with this device to view your records. App lock does not encrypt the database.",
   "appLockUnlockCancelled": "Authentication was cancelled. Your records stay hidden.",
   "appLockUnlockFailed": "Authentication failed. Your records stay hidden.",
   "appLockUnlockUnavailable": "This device cannot authenticate right now. Your records stay hidden.",
-  "appLockUnlockPlatformError": "Registry could not use this device's authentication. Your records stay hidden.",
-  "appLockPrivacyCover": "Registry",
-  "localProTitle": "Local Pro",
-  "localProAction": "View Local Pro",
+  "appLockUnlockPlatformError": "Regiday could not use this device's authentication. Your records stay hidden.",
+  "appLockPrivacyCover": "Regiday",
+  "localProTitle": "Regiday Pro",
+  "localProAction": "View Regiday Pro",
   "localProEyebrow": "One-time purchase",
-  "localProHeadline": "Keep more records on this device",
-  "localProIntro": "Local Pro is a one-time purchase for the local features listed here. Future cloud services are separate and are not part of this purchase.",
+  "localProHeadline": "More room for what matters",
+  "localProIntro": "Regiday Pro is a one-time upgrade, not a subscription. Keep more records on this device.",
   "localProIncludedTitle": "Included",
-  "localProIncludedDocuments": "Removes the free limit of {count} documents.",
+  "localProIncludedDocuments": "More documents. Go beyond the free limit of {count}.",
   "@localProIncludedDocuments": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-  "localProIncludedSubscriptions": "Removes the free limit of {count} subscription records.",
+  "localProIncludedSubscriptions": "More subscriptions. Go beyond the free limit of {count}.",
   "@localProIncludedSubscriptions": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-  "localProTechnicalLimits": "Device storage, backup size, and the local reminder cap still apply.",
-  "localProNotIncludedTitle": "Not included",
-  "localProNotIncludedCloud": "Cloud sync and cloud backup are not included. An optional email can restore this store's Local Pro purchase only. It does not sync your records.",
+  "localProTechnicalLimits": "Subject to device storage, backup and reminder limits.",
+  "localProNotIncludedTitle": "Good to know",
+  "localProNotIncludedCloud": "Records stay on this device. Move them using an encrypted backup in Profile. No account or cloud sync.",
   "localProFreeTitle": "Stays free",
-  "localProFreeBody": "Viewing, editing, renewing, deleting, reminders, app lock, export, and restore stay available for records you already have.",
+  "localProFreeBody": "Reminders, scanning, app lock and encrypted backups stay free. You can always view, edit and export existing records.",
   "localProCurrentFree": "Current plan: Free",
-  "localProCurrentPro": "Current plan: Local Pro",
-  "localProPriceUnavailable": "The store price is unavailable until Local Pro is configured. There is nothing to buy yet.",
-  "localProBuy": "Buy Local Pro",
-  "localProOwned": "Local Pro is active on this device.",
-  "localProPurchasePending": "The store did not return a verified purchase. Local Pro stays off.",
+  "localProCurrentPro": "Current plan: Regiday Pro",
+  "localProBuy": "Buy Regiday Pro",
   "localProRestore": "Restore purchases",
-  "localProPurchaseCancelled": "The purchase was cancelled. Local Pro stays off.",
-  "localProPurchaseFailed": "The purchase could not be completed. Local Pro stays off.",
-  "localProPendingStore": "The store is still processing this purchase. Local Pro stays off until it is verified.",
-  "localProBindingMismatch": "This purchase is linked to another installation. Local Pro stays off here. If it is linked to your verified email, sign in and restore again so the store can be checked. Otherwise use the restore code from that installation. Android and iOS stay separate.",
-  "localProRecoveryTitle": "Save this restore code",
-  "localProRecoveryBody": "If this purchase is linked to a verified email, sign in on the new installation and use Restore purchases. The app asks the store for the current purchase, and the server checks it before Local Pro turns on. A purchase made before an account, or one that was not linked, still needs the restore code from that installation. Android and iOS stay separate. Verifying an email does not by itself turn on Local Pro.",
-  "localProRecoveryPrompt": "Restore code",
-  "localProRecoverySubmit": "Restore with code",
-  "localProNetworkUnchanged": "Registry could not reach purchase verification. Nothing on this device was changed.",
-  "localProRevoked": "The store revoked this purchase. Local Pro is off. Records you already have can still be viewed, edited, renewed, deleted, exported, and restored.",
-  "localProNotIncludedTransfer": "A Google Play purchase does not unlock the iOS app, and an App Store purchase does not unlock Android.",
-  "localProAccountTitle": "Optional email",
-  "localProAccountBody": "You can keep using Registry without an account. To recover a new Local Pro purchase after a reinstall or a new device, verify your email before you buy. The purchase is linked to that email only after the code is confirmed and the store accepts the purchase. Verifying the email does not turn on Local Pro. A backup file, a transaction id, or a switch in the app does not either.",
-  "localProAccountBeforeBuy": "If you buy before the email is verified, the purchase stays on this installation. It becomes linked only when Restore purchases sends the current restore code while you are signed in, and the server accepts the current store purchase. Signing in does not link it by itself. After it is linked, a new installation moves only when that same email is signed in and the server accepts the store purchase again. The restore code alone does not move it.",
-  "localProAccountSignedIn": "Signed in as {email}. On a new installation, sign in and tap Restore purchases. The app asks this store for the current purchase, and the server checks it before Local Pro can turn on. Android and iOS stay separate.",
-  "@localProAccountSignedIn": {
-    "placeholders": { "email": { "type": "String" } }
-  },
-  "localProAccountEmailLabel": "Email",
-  "localProAccountSendCode": "Send verification code",
-  "localProAccountCodeLabel": "Verification code",
-  "localProAccountConfirm": "Confirm email",
-  "localProAccountCodeSent": "A verification code was sent. It expires soon. The code does not turn on Local Pro.",
-  "localProAccountNotConfigured": "Email delivery is not set up. No verification code was sent.",
-  "localProAccountUnavailable": "This build cannot send a verification email. No code will be sent from this screen.",
-  "localProAccountDeliveryFailed": "The email could not be sent. No verification code was delivered.",
-  "localProAccountInvalidCode": "That code is not valid. Local Pro was not changed.",
-  "localProAccountOffline": "Registry could not reach account verification. Nothing was sent or changed.",
-  "localProAccountDeleted": "The account was removed. This purchase stays on this installation. A new device needs the current restore code. Deleting the account did not turn Local Pro on or off.",
-  "localProAccountDelete": "Delete account",
-  "localProAccountDeleteBody": "Deleting the account signs you out and removes the email link. It does not refund the store purchase. A purchase that was never linked still needs its restore code.",
-  "localProRecoveryCodeRequired": "This purchase is still tied to the original installation, not this email. It was not moved. Enter the current restore code and restore again to link it, or keep using that code without an account.",
-  "localProAccountSignInRequired": "This purchase is linked to a verified email. Local Pro stays off on this installation. Sign in with that email, then tap Restore purchases. The app asks the store for the current purchase, and the server checks it before the purchase can move. A restore code alone does not move it, and another email cannot take it.",
-  "localProAccountUnchanged": "This purchase stays on this installation. The email was not linked. Enter the current restore code with Restore purchases to link it.",
-  "localProAccountLinked": "This purchase is now linked to your verified email. A new installation of this store can restore it after you sign in.",
+  "localProPurchaseCancelled": "The purchase was cancelled. Regiday Pro stays off.",
+  "localProPurchaseFailed": "The purchase could not be completed. Regiday Pro stays off.",
+  "localProPendingStore": "The store is waiting for payment. Regiday Pro turns on after the store confirms the purchase. Nothing is unlocked yet.",
+  "localProRevoked": "The store no longer reports a Regiday Pro purchase for this account, for example after a refund. Regiday Pro is off. Records you already have can still be viewed, edited, and exported. New records stop at the Free limits.",
+  "localProNotIncludedTransfer": "Your purchase belongs to your app store. It does not transfer between Android and iOS or through backup files.",
+  "localProIncludedAds": "An ad-free experience",
+  "localProIncludedAdsOn": "No ads. Free users see one small banner on Home in this version. Regiday Pro removes it.",
+  "localProRestoreRequirements": "Restore purchases asks the store for Regiday Pro bought with the same Google Play or Apple account for this app. Android and iOS purchases stay separate.",
+  "localProStatusDisabled": "Coming soon. Purchases are not available yet; your free plan stays active.",
+  "localProStatusChecking": "Checking your purchase with the store…",
+  "localProStatusActive": "Regiday Pro is active. The store confirmed your purchase.",
+  "localProStatusActiveUnconfirmed": "Regiday Pro stays on from the store's last confirmation. The store cannot be reached right now, so a refund made since then is not detected until it can be.",
+  "localProStatusUnknown": "The store could not be reached, so a purchase cannot be confirmed right now. The Free limits apply until it can. Your records are not affected.",
+  "localProProductMissing": "The store did not return Regiday Pro. It may not be available for this store account or country yet.",
+  "localProStoreUnavailable": "The store's billing service is not available on this device. Check that you are signed in to the store, then try again.",
+  "localProStoreError": "Could not reach the store. Check your connection and try again. Nothing was changed.",
+  "localProRetry": "Try again",
+  "localProResultActive": "Regiday Pro is active.",
+  "localProRestoreNotFound": "The store found no Regiday Pro purchase for this account. Check that you are signed in with the account that bought it.",
+  "adsPrivacyTitle": "Ad privacy",
+  "adsPrivacyBody": "Review or change your choices for how ads may use your data.",
+  "adsPrivacyAction": "Privacy options",
   "profilePlanFree": "Free plan. New documents and subscriptions stop at the free limits. Records you already have stay usable.",
-  "freeLimitDocuments": "The free plan includes {count} documents. Local Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.",
+  "freeLimitDocuments": "The free plan includes {count} documents. Regiday Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.",
   "@freeLimitDocuments": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-  "freeLimitSubscriptions": "The free plan includes {count} subscription records. Local Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.",
+  "freeLimitSubscriptions": "The free plan includes {count} subscription records. Regiday Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.",
   "@freeLimitSubscriptions": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "recordAlreadyExists": "That record already exists, so it was not saved again.",
   "csvImportAction": "Import charges from CSV",
@@ -898,8 +996,12 @@
   "csvFormatBody": "UTF-8 text, at most {megabytes} MB and {maxRows} data rows, with a header row and comma-separated columns. You choose the date, merchant, amount, and currency columns. A usable example header is date, merchant, amount_minor, currency. Dates must be YYYY-MM-DD. Amounts must be whole minor units, such as cents, with no decimal point.",
   "@csvFormatBody": {
     "placeholders": {
-      "megabytes": { "type": "int" },
-      "maxRows": { "type": "int" }
+      "megabytes": {
+        "type": "int"
+      },
+      "maxRows": {
+        "type": "int"
+      }
     }
   },
   "csvChooseFile": "Choose CSV file",
@@ -907,11 +1009,19 @@
   "csvFileTooLarge": "This file is over the size limit. Nothing was added.",
   "csvTooManyRows": "This file has more than {count} charge rows. Nothing was added.",
   "@csvTooManyRows": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "csvTooManyColumns": "This file has more than {count} columns. Nothing was added.",
   "@csvTooManyColumns": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "csvInvalidFile": "This file is not a usable CSV. Nothing was added.",
   "csvMapTitle": "Map columns",
@@ -925,18 +1035,30 @@
   "csvNoCharges": "No charge rows could be read. Nothing was added.",
   "csvRowErrors": "{count} rows were skipped because the date, amount, merchant, or currency was not valid.",
   "@csvRowErrors": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "csvSuggestionsTitle": "Suggested recurring charges",
   "csvSuggestionsBody": "These groups look regular. That is a suggestion, not a confirmed subscription. Nothing is saved until you create the ones you select.",
   "csvNoSuggestions": "No recurring charge was suggested. One-off and irregular rows are not turned into subscriptions. Nothing was added.",
   "csvSourceRows": "Source rows {rows}",
   "@csvSourceRows": {
-    "placeholders": { "rows": { "type": "String" } }
+    "placeholders": {
+      "rows": {
+        "type": "String"
+      }
+    }
   },
   "csvNextDate": "Suggested next date {date}",
   "@csvNextDate": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "csvDuplicate": "Possible duplicate of a subscription already on this device.",
   "csvEditCandidate": "Correct suggestion",
@@ -949,7 +1071,16 @@
   "csvNothingSelected": "Select at least one suggestion. Nothing was added.",
   "csvCreated": "{count, plural, one{1 subscription added.} other{{count} subscriptions added.}}",
   "@csvCreated": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-  "csvSuggestionNote": "Suggested from a charge CSV. Recurrence was not confirmed."
+  "csvSuggestionNote": "Suggested from a charge CSV. Recurrence was not confirmed.",
+  "addOtherImage": "Add another image (optional)",
+  "scanAllImages": "Scan all images",
+  "firebaseAiScanPrivacy": "When you tap Scan all images, your document images are sent to Gemini through Firebase AI Logic. Review every field before saving.",
+  "firebaseAiScanProcessing": "Gemini is reading all document images through Firebase AI Logic. You can cancel and enter the details manually.",
+  "firebaseAiScanUnavailable": "AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually."
 }
