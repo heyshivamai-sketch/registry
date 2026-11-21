@@ -1,0 +1,3664 @@
+Subject: [PATCH] Subscription_add_document_gmail_connect_test_cases
+---
+Index: lib/features/subscriptions/presentation/subscriptions_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/subscriptions_screen.dart b/lib/features/subscriptions/presentation/subscriptions_screen.dart
+--- a/lib/features/subscriptions/presentation/subscriptions_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/subscriptions_screen.dart	(date 1795250172174)
+@@ -70,6 +70,7 @@
+             now: now,
+           );
+           final activeCount = items.where((item) => item.isActive).length;
++          final cancelledCount = items.where((item) => item.isCancelled).length;
+           final totals = SubscriptionEstimate.monthlyTotals(items);
+           final attention = SubscriptionStatus.attentionCount(items, now: now);
+ 
+@@ -84,6 +85,7 @@
+               _SubscriptionsHeader(
+                 savedCount: items.length,
+                 activeCount: activeCount,
++                cancelledCount: cancelledCount,
+                 isCalendarView: _isCalendarView,
+                 onToggleView: () =>
+                     setState(() => _isCalendarView = !_isCalendarView),
+@@ -97,17 +99,22 @@
+                 const SizedBox(height: AppSpacing.md),
+                 SizedBox(
+                   width: double.infinity,
+-                  child: OutlinedButton(
++                  child: OutlinedButton.icon(
+                     key: const ValueKey<String>('subscriptions-add-calendar'),
+                     onPressed: () => AppRoutes.openAddSubscription(context),
++                    icon: const Icon(Icons.add_rounded, size: 20),
++                    label: Text(l10n.addSubscription),
+                     style: OutlinedButton.styleFrom(
+-                      minimumSize: const Size(AppSpacing.minTapTarget, 45),
+-                      side: const BorderSide(color: Color(0xFFA9AFC2)),
++                      foregroundColor: Theme.of(context).colorScheme.onSurface,
++                      minimumSize: const Size(AppSpacing.minTapTarget, 48),
++                      side: BorderSide(
++                        color: Theme.of(context).colorScheme.outlineVariant,
++                        width: 1.2,
++                      ),
+                       shape: RoundedRectangleBorder(
+-                        borderRadius: BorderRadius.circular(15),
++                        borderRadius: BorderRadius.circular(16),
+                       ),
+                     ),
+-                    child: Text(l10n.addSubscription),
+                   ),
+                 ),
+                 SizedBox(
+@@ -134,6 +141,7 @@
+                     totals: totals,
+                     activeCount: activeCount,
+                     attentionCount: attention,
++                    cancelledCount: cancelledCount,
+                   ),
+                 ],
+                 const SizedBox(height: AppSpacing.md),
+@@ -219,12 +227,14 @@
+   const _SubscriptionsHeader({
+     required this.savedCount,
+     required this.activeCount,
++    this.cancelledCount = 0,
+     this.isCalendarView = false,
+     this.onToggleView,
+   });
+ 
+   final int savedCount;
+   final int activeCount;
++  final int cancelledCount;
+   final bool isCalendarView;
+   final VoidCallback? onToggleView;
+ 
+@@ -281,6 +291,49 @@
+                 ),
+               ),
+             ),
++            const SizedBox(width: AppSpacing.xs),
++            Semantics(
++              button: true,
++              label: l10n.cancelledSubscriptionsTitle,
++              child: Material(
++                color: colorScheme.surfaceContainerLowest,
++                shape: RoundedRectangleBorder(
++                  borderRadius: BorderRadius.circular(15),
++                  side: BorderSide(color: colorScheme.outlineVariant),
++                ),
++                child: InkWell(
++                  key: const ValueKey<String>('subscriptions-cancelled-button'),
++                  onTap: () => AppRoutes.openCancelledSubscriptions(context),
++                  borderRadius: BorderRadius.circular(15),
++                  child: SizedBox(
++                    width: AppSpacing.minTapTarget,
++                    height: AppSpacing.minTapTarget,
++                    child: Stack(
++                      alignment: Alignment.center,
++                      children: [
++                        Icon(
++                          Icons.event_busy_outlined,
++                          color: colorScheme.onSurface,
++                        ),
++                        if (cancelledCount > 0)
++                          Positioned(
++                            top: 10,
++                            right: 10,
++                            child: Container(
++                              width: 8,
++                              height: 8,
++                              decoration: BoxDecoration(
++                                color: colorScheme.error,
++                                shape: BoxShape.circle,
++                              ),
++                            ),
++                          ),
++                      ],
++                    ),
++                  ),
++                ),
++              ),
++            ),
+             const SizedBox(width: AppSpacing.xs),
+             Semantics(
+               button: true,
+@@ -353,6 +406,41 @@
+             l10n.subscriptionsActiveSummary(activeCount),
+             style: theme.textTheme.bodySmall,
+           ),
++          if (cancelledCount > 0) ...[
++            const SizedBox(height: AppSpacing.xs),
++            InkWell(
++              key: const ValueKey<String>('subscriptions-cancelled-link'),
++              onTap: () => AppRoutes.openCancelledSubscriptions(context),
++              borderRadius: BorderRadius.circular(10),
++              child: Padding(
++                padding: const EdgeInsets.symmetric(vertical: 2),
++                child: Row(
++                  mainAxisSize: MainAxisSize.min,
++                  children: [
++                    Icon(
++                      Icons.event_busy_outlined,
++                      size: 14,
++                      color: colorScheme.error,
++                    ),
++                    const SizedBox(width: 5),
++                    Text(
++                      l10n.cancelledSubscriptionsCount(cancelledCount),
++                      style: theme.textTheme.bodySmall?.copyWith(
++                        color: colorScheme.error,
++                        fontWeight: FontWeight.w600,
++                      ),
++                    ),
++                    const SizedBox(width: 3),
++                    Icon(
++                      Icons.arrow_forward_ios_rounded,
++                      size: 10,
++                      color: colorScheme.error,
++                    ),
++                  ],
++                ),
++              ),
++            ),
++          ],
+         ],
+       ],
+     );
+@@ -427,11 +515,13 @@
+     required this.totals,
+     required this.activeCount,
+     required this.attentionCount,
++    this.cancelledCount = 0,
+   });
+ 
+   final List<Money> totals;
+   final int activeCount;
+   final int attentionCount;
++  final int cancelledCount;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -496,6 +586,19 @@
+             l10n.subscriptionsAttentionSummary(attentionCount),
+             style: theme.textTheme.bodySmall,
+           ),
++          if (cancelledCount > 0) ...[
++            const SizedBox(height: AppSpacing.xs),
++            InkWell(
++              onTap: () => AppRoutes.openCancelledSubscriptions(context),
++              child: Text(
++                '${l10n.cancelledSubscriptionsCount(cancelledCount)} · ${l10n.viewCancelledAction}',
++                style: theme.textTheme.bodySmall?.copyWith(
++                  color: theme.colorScheme.primary,
++                  fontWeight: FontWeight.w600,
++                ),
++              ),
++            ),
++          ],
+         ],
+       ),
+     );
+Index: lib/features/subscriptions/data/gmail_client_gateway.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/data/gmail_client_gateway.dart b/lib/features/subscriptions/data/gmail_client_gateway.dart
+--- a/lib/features/subscriptions/data/gmail_client_gateway.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/data/gmail_client_gateway.dart	(date 1795250936154)
+@@ -27,8 +27,24 @@
+ 
+   @override
+   Future<String?> signIn() async {
+-    final account = await _googleSignIn.signIn();
+-    return account?.email;
++    try {
++      final account = await _googleSignIn.signIn();
++      return account?.email;
++    } catch (e) {
++      final str = e.toString().toLowerCase();
++      if (str.contains('failed_to_recover_auth') ||
++          str.contains('failed attempt to recover authentication')) {
++        // Clear any stale cached session and retry cleanly
++        try {
++          await _googleSignIn.signOut();
++          final account = await _googleSignIn.signIn();
++          return account?.email;
++        } catch (_) {
++          rethrow;
++        }
++      }
++      rethrow;
++    }
+   }
+ 
+   @override
+@@ -47,12 +63,28 @@
+     int maxResults = 50,
+   }) async {
+     var account = _googleSignIn.currentUser;
+-    account ??= await _googleSignIn.signInSilently();
++    if (account == null) {
++      for (var attempt = 1; attempt <= 2; attempt++) {
++        try {
++          account = await _googleSignIn.signInSilently();
++          break;
++        } catch (e) {
++          final err = e.toString().toLowerCase();
++          final isDeadlock =
++              err.contains('deadlock') || err.contains('main thread');
++          if (isDeadlock && attempt < 2) {
++            await Future<void>.delayed(const Duration(milliseconds: 500));
++            continue;
++          }
++          rethrow;
++        }
++      }
++    }
+     if (account == null) {
+       throw StateError('User is not signed into Google');
+     }
+ 
+-    final authHeaders = await account.authHeaders;
++    final authHeaders = await _fetchAuthHeaders(account);
+     final authenticateClient = _AuthenticatedClient(authHeaders, http.Client());
+     final gmailApi = gmail.GmailApi(authenticateClient);
+ 
+@@ -140,6 +172,28 @@
+ 
+     return rawMessages;
+   }
++
++  Future<Map<String, String>> _fetchAuthHeaders(
++    GoogleSignInAccount account,
++  ) async {
++    // Yield to let any active platform channel / Activity transition settle
++    await Future<void>.delayed(const Duration(milliseconds: 300));
++    for (var attempt = 1; attempt <= 3; attempt++) {
++      try {
++        return await account.authHeaders;
++      } catch (e) {
++        final err = e.toString().toLowerCase();
++        final isDeadlock =
++            err.contains('deadlock') || err.contains('main thread');
++        if (isDeadlock && attempt < 3) {
++          await Future<void>.delayed(Duration(milliseconds: 500 * attempt));
++          continue;
++        }
++        rethrow;
++      }
++    }
++    return await account.authHeaders;
++  }
+ }
+ 
+ class _AuthenticatedClient extends http.BaseClient {
+Index: lib/features/documents/presentation/document_detail_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/documents/presentation/document_detail_screen.dart b/lib/features/documents/presentation/document_detail_screen.dart
+--- a/lib/features/documents/presentation/document_detail_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/documents/presentation/document_detail_screen.dart	(date 1795252288731)
+@@ -1,6 +1,5 @@
+-import 'dart:typed_data';
+-
+ import 'package:flutter/material.dart';
++import 'package:flutter/services.dart';
+ import 'package:the_registry/app/navigation/app_routes.dart';
+ import 'package:the_registry/app/registry_dependencies.dart';
+ import 'package:the_registry/app/theme/app_spacing.dart';
+@@ -78,6 +77,10 @@
+             child: PopupMenuButton<String>(
+               key: const ValueKey<String>('document-actions'),
+               tooltip: l10n.moreActions,
++              shape: RoundedRectangleBorder(
++                borderRadius: BorderRadius.circular(16),
++              ),
++              elevation: 4,
+               onSelected: (value) {
+                 if (value == 'edit') {
+                   AppRoutes.openEditDocument(context, document.id);
+@@ -89,12 +92,35 @@
+                 PopupMenuItem(
+                   key: const ValueKey<String>('action-edit'),
+                   value: 'edit',
+-                  child: Text(l10n.editAction),
++                  child: Row(
++                    children: [
++                      Icon(
++                        Icons.edit_outlined,
++                        size: 20,
++                        color: theme.colorScheme.onSurface,
++                      ),
++                      const SizedBox(width: AppSpacing.sm),
++                      Text(l10n.editAction),
++                    ],
++                  ),
+                 ),
+                 PopupMenuItem(
+                   key: const ValueKey<String>('action-delete'),
+                   value: 'delete',
+-                  child: Text(l10n.deleteDocument),
++                  child: Row(
++                    children: [
++                      Icon(
++                        Icons.delete_outline,
++                        size: 20,
++                        color: theme.colorScheme.error,
++                      ),
++                      const SizedBox(width: AppSpacing.sm),
++                      Text(
++                        l10n.deleteDocument,
++                        style: TextStyle(color: theme.colorScheme.error),
++                      ),
++                    ],
++                  ),
+                 ),
+               ],
+             ),
+@@ -172,9 +198,10 @@
+                         value: document.issuingAuthority!,
+                       ),
+                     if (document.maskedDocumentNumber.isNotEmpty)
+-                      RegistryInfoRow(
++                      _DocumentNumberRow(
+                         label: l10n.fieldDocumentNumber,
+-                        value: document.maskedDocumentNumber,
++                        maskedValue: document.maskedDocumentNumber,
++                        rawValue: document.documentNumber,
+                       ),
+                     RegistryInfoRow(
+                       label: l10n.fieldImpact,
+@@ -391,6 +418,85 @@
+   }
+ }
+ 
++class _DocumentNumberRow extends StatelessWidget {
++  const _DocumentNumberRow({
++    required this.label,
++    required this.maskedValue,
++    this.rawValue,
++  });
++
++  final String label;
++  final String maskedValue;
++  final String? rawValue;
++
++  @override
++  Widget build(BuildContext context) {
++    final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
++
++    return DecoratedBox(
++      decoration: BoxDecoration(
++        border: Border(bottom: BorderSide(color: colorScheme.outlineVariant)),
++      ),
++      child: Padding(
++        padding: const EdgeInsets.symmetric(vertical: 9),
++        child: Row(
++          crossAxisAlignment: CrossAxisAlignment.center,
++          children: [
++            Expanded(
++              child: Column(
++                crossAxisAlignment: CrossAxisAlignment.start,
++                children: [
++                  Text(
++                    label,
++                    style: theme.textTheme.bodySmall?.copyWith(
++                      color: colorScheme.onSurfaceVariant,
++                      fontWeight: FontWeight.w500,
++                    ),
++                  ),
++                  const SizedBox(height: 3),
++                  Text(
++                    maskedValue,
++                    style: theme.textTheme.bodyLarge?.copyWith(
++                      fontWeight: FontWeight.w700,
++                      fontSize: 15,
++                      letterSpacing: 1.1,
++                      fontFamily: 'monospace',
++                      color: colorScheme.onSurface,
++                    ),
++                  ),
++                ],
++              ),
++            ),
++            IconButton(
++              icon: Icon(
++                Icons.copy_rounded,
++                size: 18,
++                color: colorScheme.primary,
++              ),
++              tooltip: 'Copy document number',
++              onPressed: () {
++                final textToCopy = (rawValue != null && rawValue!.isNotEmpty)
++                    ? rawValue!
++                    : maskedValue;
++                Clipboard.setData(ClipboardData(text: textToCopy));
++                ScaffoldMessenger.of(context)
++                  ..hideCurrentSnackBar()
++                  ..showSnackBar(
++                    const SnackBar(
++                      content: Text('Document number copied to clipboard'),
++                      duration: Duration(seconds: 2),
++                    ),
++                  );
++              },
++            ),
++          ],
++        ),
++      ),
++    );
++  }
++}
++
+ class _AttachmentRow extends StatelessWidget {
+   const _AttachmentRow({
+     required this.bytes,
+@@ -409,40 +515,64 @@
+   @override
+   Widget build(BuildContext context) {
+     final theme = Theme.of(context);
+-    final preview = ClipRRect(
+-      borderRadius: BorderRadius.circular(10),
+-      child: Image.memory(
+-        key: const ValueKey<String>('attachment-thumbnail'),
+-        bytes,
+-        height: 48,
+-        width: 40,
+-        fit: BoxFit.cover,
++    final colorScheme = theme.colorScheme;
++    final preview = Container(
++      decoration: BoxDecoration(
++        borderRadius: BorderRadius.circular(12),
++        border: Border.all(color: colorScheme.outlineVariant),
++        boxShadow: [
++          BoxShadow(
++            color: Colors.black.withValues(alpha: 0.05),
++            blurRadius: 4,
++            offset: const Offset(0, 2),
++          ),
++        ],
++      ),
++      child: ClipRRect(
++        borderRadius: BorderRadius.circular(11),
++        child: Image.memory(
++          key: const ValueKey<String>('attachment-thumbnail'),
++          bytes,
++          height: 52,
++          width: 44,
++          fit: BoxFit.cover,
++        ),
+       ),
+     );
+     final copy = Expanded(
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          Text(title, style: theme.textTheme.titleSmall),
++          Text(
++            title,
++            style: theme.textTheme.titleSmall?.copyWith(
++              fontWeight: FontWeight.w600,
++            ),
++          ),
++          const SizedBox(height: 2),
+           Text(
+             subtitle,
+-            maxLines: 3,
++            maxLines: 2,
+             overflow: TextOverflow.ellipsis,
+-            style: theme.textTheme.bodySmall,
++            style: theme.textTheme.bodySmall?.copyWith(
++              color: colorScheme.onSurfaceVariant,
++            ),
+           ),
+         ],
+       ),
+     );
+-    final action = TextButton(
++    final action = OutlinedButton.icon(
+       key: const ValueKey<String>('open-attachment'),
+-      style: TextButton.styleFrom(
+-        minimumSize: const Size(
+-          AppSpacing.minTapTarget,
+-          AppSpacing.minTapTarget,
+-        ),
++      style: OutlinedButton.styleFrom(
++        foregroundColor: colorScheme.primary,
++        side: BorderSide(color: colorScheme.outlineVariant),
++        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
++        visualDensity: VisualDensity.compact,
++        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+       ),
+       onPressed: onView,
+-      child: Text(actionLabel),
++      icon: const Icon(Icons.visibility_outlined, size: 16),
++      label: Text(actionLabel),
+     );
+     final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+     if (scale >= 1.4) {
+@@ -456,6 +586,7 @@
+               copy,
+             ],
+           ),
++          const SizedBox(height: AppSpacing.xs),
+           Align(alignment: AlignmentDirectional.centerEnd, child: action),
+         ],
+       );
+@@ -465,6 +596,7 @@
+         preview,
+         const SizedBox(width: AppSpacing.sm),
+         copy,
++        const SizedBox(width: AppSpacing.xs),
+         action,
+       ],
+     );
+@@ -487,16 +619,20 @@
+ 
+   @override
+   Widget build(BuildContext context) {
+-    final action = TextButton(
++    final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
++    final action = TextButton.icon(
+       key: actionKey,
+       style: TextButton.styleFrom(
++        foregroundColor: colorScheme.primary,
+         minimumSize: const Size(
+           AppSpacing.minTapTarget,
+           AppSpacing.minTapTarget,
+         ),
+       ),
+       onPressed: onPressed,
+-      child: Text(actionLabel, textAlign: TextAlign.center),
++      icon: const Icon(Icons.add_circle_outline, size: 16),
++      label: Text(actionLabel, textAlign: TextAlign.center),
+     );
+     return Wrap(
+       alignment: WrapAlignment.spaceBetween,
+@@ -504,7 +640,12 @@
+       spacing: AppSpacing.xs,
+       runSpacing: AppSpacing.xxs,
+       children: [
+-        Text(label, style: Theme.of(context).textTheme.bodyMedium),
++        Text(
++          label,
++          style: theme.textTheme.bodyMedium?.copyWith(
++            color: colorScheme.onSurfaceVariant,
++          ),
++        ),
+         action,
+       ],
+     );
+@@ -550,13 +691,30 @@
+       ),
+     ];
+ 
+-    return Row(
+-      children: [
+-        for (var i = 0; i < actions.length; i++) ...[
+-          if (i != 0) const SizedBox(width: 7),
+-          Expanded(child: actions[i]),
+-        ],
+-      ],
++    return LayoutBuilder(
++      builder: (context, constraints) {
++        final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
++        final stacked = constraints.maxWidth < 360 || scale >= 1.3;
++        if (stacked) {
++          return Row(
++            spacing: 8,
++            children: [
++              for (var i = 0; i < actions.length; i++) ...[
++                if (i != 0) const SizedBox(height: AppSpacing.xs),
++                Expanded(child: actions[i]),
++              ],
++            ],
++          );
++        }
++        return Row(
++          children: [
++            for (var i = 0; i < actions.length; i++) ...[
++              if (i != 0) const SizedBox(width: AppSpacing.sm),
++              Expanded(child: actions[i]),
++            ],
++          ],
++        );
++      },
+     );
+   }
+ }
+@@ -577,40 +735,80 @@
+   Widget build(BuildContext context) {
+     final theme = Theme.of(context);
+     final colorScheme = theme.colorScheme;
++    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+ 
+     return Material(
+       color: colorScheme.surfaceContainerLowest,
+       shape: RoundedRectangleBorder(
+-        borderRadius: BorderRadius.circular(18),
++        borderRadius: BorderRadius.circular(16),
+         side: BorderSide(color: colorScheme.outlineVariant),
+       ),
+       child: InkWell(
+         onTap: onPressed,
+-        borderRadius: BorderRadius.circular(18),
++        borderRadius: BorderRadius.circular(16),
+         child: ConstrainedBox(
+-          constraints: const BoxConstraints(minHeight: 48),
++          constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
+           child: Padding(
+             padding: const EdgeInsets.symmetric(
+-              horizontal: AppSpacing.xxs,
+-              vertical: AppSpacing.xs,
++              horizontal: AppSpacing.xs,
++              vertical: 8,
+             ),
+-            child: Column(
+-              mainAxisSize: MainAxisSize.min,
+-              children: [
+-                Icon(icon, color: colorScheme.primary),
+-                const SizedBox(height: AppSpacing.xxs),
+-                Text(
+-                  label,
+-                  textAlign: TextAlign.center,
+-                  maxLines: 2,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: theme.textTheme.labelMedium?.copyWith(
+-                    color: colorScheme.onSurfaceVariant,
+-                    letterSpacing: 0,
+-                  ),
+-                ),
+-              ],
+-            ),
++            child: scale >= 1.3
++                ? Row(
++                    mainAxisAlignment: MainAxisAlignment.center,
++                    children: [
++                      Container(
++                        padding: const EdgeInsets.all(6),
++                        decoration: BoxDecoration(
++                          color: colorScheme.primaryContainer.withValues(
++                            alpha: 0.5,
++                          ),
++                          shape: BoxShape.circle,
++                        ),
++                        child: Icon(icon, size: 18, color: colorScheme.primary),
++                      ),
++                      const SizedBox(width: AppSpacing.xs),
++                      Flexible(
++                        child: Text(
++                          label,
++                          textAlign: TextAlign.center,
++                          maxLines: 2,
++                          overflow: TextOverflow.ellipsis,
++                          style: theme.textTheme.labelMedium?.copyWith(
++                            fontWeight: FontWeight.w600,
++                            color: colorScheme.onSurface,
++                          ),
++                        ),
++                      ),
++                    ],
++                  )
++                : Column(
++                    mainAxisSize: MainAxisSize.min,
++                    children: [
++                      Container(
++                        padding: const EdgeInsets.all(7),
++                        decoration: BoxDecoration(
++                          color: colorScheme.primaryContainer.withValues(
++                            alpha: 0.5,
++                          ),
++                          shape: BoxShape.circle,
++                        ),
++                        child: Icon(icon, size: 19, color: colorScheme.primary),
++                      ),
++                      const SizedBox(height: 5),
++                      Text(
++                        label,
++                        textAlign: TextAlign.center,
++                        maxLines: 2,
++                        overflow: TextOverflow.ellipsis,
++                        style: theme.textTheme.labelMedium?.copyWith(
++                          fontWeight: FontWeight.w600,
++                          fontSize: 12,
++                          color: colorScheme.onSurface,
++                        ),
++                      ),
++                    ],
++                  ),
+           ),
+         ),
+       ),
+@@ -627,11 +825,12 @@
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+     final locale = l10n.localeName;
+-    final cells = <(String, String)>[
++    final cells = <(String, String, IconData)>[
+       if (document.issueDate != null)
+         (
+           l10n.fieldIssueDate,
+           RegistryDateFormatter.dayMonthYear(document.issueDate!, locale),
++          Icons.event_available_outlined,
+         ),
+       if (document.hasDistinctActionDate)
+         (
+@@ -640,18 +839,28 @@
+             document.displayActionDate,
+             locale,
+           ),
++          Icons.event_repeat_outlined,
+         ),
+       if (document.expiryDate.year < 2099)
+         (
+           l10n.pulseExpiresEyebrow,
+           RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),
++          Icons.event_busy_outlined,
+         ),
+     ];
++
++    if (cells.isEmpty) {
++      return const SizedBox.shrink();
++    }
+ 
+     return Column(
+       children: [
+         for (var i = 0; i < cells.length; i++)
+-          RegistryInfoRow(label: cells[i].$1, value: cells[i].$2),
++          RegistryInfoRow(
++            label: cells[i].$1,
++            value: cells[i].$2,
++            icon: cells[i].$3,
++          ),
+       ],
+     );
+   }
+Index: lib/core/widgets/registry_surface.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/core/widgets/registry_surface.dart b/lib/core/widgets/registry_surface.dart
+--- a/lib/core/widgets/registry_surface.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/core/widgets/registry_surface.dart	(date 1795249828183)
+@@ -155,10 +155,16 @@
+ }
+ 
+ class RegistryInfoRow extends StatelessWidget {
+-  const RegistryInfoRow({super.key, required this.label, required this.value});
++  const RegistryInfoRow({
++    super.key,
++    required this.label,
++    required this.value,
++    this.icon,
++  });
+ 
+   final String label;
+   final String value;
++  final IconData? icon;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -168,7 +174,8 @@
+     final theme = Theme.of(context);
+     final colorScheme = theme.colorScheme;
+     final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+-    final stacked = scale >= 1.4;
++    final isLong = value.length > 28 || value.contains('\n');
++    final stacked = scale >= 1.4 || isLong;
+     final labelStyle = theme.textTheme.bodySmall?.copyWith(
+       color: colorScheme.onSurfaceVariant,
+       fontWeight: FontWeight.w500,
+@@ -176,7 +183,7 @@
+     final valueStyle = theme.textTheme.bodyLarge?.copyWith(
+       fontWeight: FontWeight.w600,
+       fontSize: 14,
+-      height: 1.3,
++      height: 1.35,
+       color: colorScheme.onSurface,
+     );
+     return DecoratedBox(
+@@ -189,14 +196,30 @@
+             ? Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+-                  Text(label, style: labelStyle),
+-                  const SizedBox(height: 4),
+-                  Text(value, style: valueStyle),
++                  Row(
++                    children: [
++                      if (icon != null) ...[
++                        Icon(icon, size: 15, color: colorScheme.onSurfaceVariant),
++                        const SizedBox(width: 6),
++                      ],
++                      Expanded(child: Text(label, style: labelStyle)),
++                    ],
++                  ),
++                  const SizedBox(height: 5),
++                  Text(
++                    value,
++                    textAlign: TextAlign.start,
++                    style: valueStyle,
++                  ),
+                 ],
+               )
+             : Row(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
++                  if (icon != null) ...[
++                    Icon(icon, size: 15, color: colorScheme.onSurfaceVariant),
++                    const SizedBox(width: 6),
++                  ],
+                   Expanded(child: Text(label, style: labelStyle)),
+                   const SizedBox(width: AppSpacing.md),
+                   Expanded(
+Index: lib/features/subscriptions/presentation/add_subscription_controller.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/add_subscription_controller.dart b/lib/features/subscriptions/presentation/add_subscription_controller.dart
+--- a/lib/features/subscriptions/presentation/add_subscription_controller.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/add_subscription_controller.dart	(date 1795245098520)
+@@ -54,6 +54,12 @@
+ 
+   bool get isEditing => mode == SubscriptionFormMode.edit;
+ 
++  bool get isNextPaymentInPast {
++    if (nextPaymentDate == null) return false;
++    final today = RegistryDateFormatter.dateOnly(_clock.now());
++    return RegistryDateFormatter.dateOnly(nextPaymentDate!).isBefore(today);
++  }
++
+   int get stepIndex => AddSubscriptionStep.values.indexOf(step);
+ 
+   int get stepCount => AddSubscriptionStep.values.length;
+Index: lib/features/documents/presentation/add_document_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/documents/presentation/add_document_screen.dart b/lib/features/documents/presentation/add_document_screen.dart
+--- a/lib/features/documents/presentation/add_document_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/documents/presentation/add_document_screen.dart	(date 1795249828324)
+@@ -989,14 +989,17 @@
+                         ),
+                       ),
+                       const SizedBox(width: 8),
+-                      Text(
+-                        controller.additionalImages.isEmpty
+-                            ? "Add back side (optional)"
+-                            : l10n.addOtherImage,
+-                        style: const TextStyle(
+-                          fontSize: 13,
+-                          fontWeight: FontWeight.w700,
+-                          color: Color(0xFF111936),
++                      Flexible(
++                        child: Text(
++                          controller.additionalImages.isEmpty
++                              ? "Add back side (optional)"
++                              : l10n.addOtherImage,
++                          overflow: TextOverflow.ellipsis,
++                          style: const TextStyle(
++                            fontSize: 13,
++                            fontWeight: FontWeight.w700,
++                            color: Color(0xFF111936),
++                          ),
+                         ),
+                       ),
+                     ],
+@@ -1062,12 +1065,15 @@
+                     children: [
+                       Row(
+                         children: [
+-                          const Text(
+-                            "Gemini AI Auto-Extract",
+-                            style: TextStyle(
+-                              fontSize: 12,
+-                              fontWeight: FontWeight.w700,
+-                              color: Color(0xFF1E1B4B),
++                          const Flexible(
++                            child: Text(
++                              "Gemini AI Auto-Extract",
++                              overflow: TextOverflow.ellipsis,
++                              style: TextStyle(
++                                fontSize: 12,
++                                fontWeight: FontWeight.w700,
++                                color: Color(0xFF1E1B4B),
++                              ),
+                             ),
+                           ),
+                           const SizedBox(width: 5),
+@@ -1128,12 +1134,15 @@
+             label: Row(
+               mainAxisSize: MainAxisSize.min,
+               children: [
+-                Text(
+-                  l10n.scanAllImages,
+-                  style: const TextStyle(
+-                    fontSize: 15,
+-                    fontWeight: FontWeight.w700,
+-                    letterSpacing: 0.3,
++                Flexible(
++                  child: Text(
++                    l10n.scanAllImages,
++                    overflow: TextOverflow.ellipsis,
++                    style: const TextStyle(
++                      fontSize: 15,
++                      fontWeight: FontWeight.w700,
++                      letterSpacing: 0.3,
++                    ),
+                   ),
+                 ),
+                 const SizedBox(width: 8),
+Index: lib/features/subscriptions/presentation/add_subscription_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/add_subscription_screen.dart b/lib/features/subscriptions/presentation/add_subscription_screen.dart
+--- a/lib/features/subscriptions/presentation/add_subscription_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/add_subscription_screen.dart	(date 1795245136248)
+@@ -617,6 +617,7 @@
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+     final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
+     final estimate = _estimate(l10n);
+     return Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+@@ -713,6 +714,41 @@
+           helperText: l10n.nextPaymentHelper,
+           onTap: () => onPickDate('next-payment'),
+         ),
++        if (controller.isNextPaymentInPast) ...[
++          const SizedBox(height: AppSpacing.xs),
++          DecoratedBox(
++            decoration: BoxDecoration(
++              color: colorScheme.errorContainer.withValues(alpha: 0.5),
++              borderRadius: BorderRadius.circular(AppRadius.input),
++              border: Border.all(color: colorScheme.error.withValues(alpha: 0.3)),
++            ),
++            child: Padding(
++              padding: const EdgeInsets.symmetric(
++                horizontal: AppSpacing.sm,
++                vertical: AppSpacing.xs,
++              ),
++              child: Row(
++                children: [
++                  Icon(
++                    Icons.history_toggle_off,
++                    size: 16,
++                    color: colorScheme.error,
++                  ),
++                  const SizedBox(width: AppSpacing.xs),
++                  Expanded(
++                    child: Text(
++                      'Past payment date: This subscription will be tracked as overdue.',
++                      style: theme.textTheme.bodySmall?.copyWith(
++                        color: colorScheme.error,
++                        fontWeight: FontWeight.w500,
++                      ),
++                    ),
++                  ),
++                ],
++              ),
++            ),
++          ),
++        ],
+         if (estimate != null) ...[
+           const SizedBox(height: AppSpacing.md),
+           DecoratedBox(
+Index: lib/features/documents/presentation/documents_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/documents/presentation/documents_screen.dart b/lib/features/documents/presentation/documents_screen.dart
+--- a/lib/features/documents/presentation/documents_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/documents/presentation/documents_screen.dart	(date 1795249828542)
+@@ -151,17 +151,22 @@
+                 const SizedBox(height: AppSpacing.md),
+                 SizedBox(
+                   width: double.infinity,
+-                  child: OutlinedButton(
++                  child: OutlinedButton.icon(
+                     key: const ValueKey<String>('documents-add'),
+                     onPressed: () => AppRoutes.openAddDocument(context),
++                    icon: const Icon(Icons.add_rounded, size: 20),
++                    label: Text(l10n.addDocument),
+                     style: OutlinedButton.styleFrom(
+-                      minimumSize: const Size(AppSpacing.minTapTarget, 45),
+-                      side: const BorderSide(color: Color(0xFFA9AFC2)),
++                      minimumSize: const Size(AppSpacing.minTapTarget, 48),
++                      foregroundColor: Theme.of(context).colorScheme.primary,
++                      side: BorderSide(
++                        color: Theme.of(context).colorScheme.outlineVariant,
++                        width: 1.5,
++                      ),
+                       shape: RoundedRectangleBorder(
+-                        borderRadius: BorderRadius.circular(15),
++                        borderRadius: BorderRadius.circular(16),
+                       ),
+                     ),
+-                    child: Text(l10n.addDocument),
+                   ),
+                 ),
+               ],
+Index: lib/features/backup/presentation/import_backup_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/backup/presentation/import_backup_screen.dart b/lib/features/backup/presentation/import_backup_screen.dart
+--- a/lib/features/backup/presentation/import_backup_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/backup/presentation/import_backup_screen.dart	(date 1795249498333)
+@@ -2,6 +2,8 @@
+ 
+ import 'package:flutter/material.dart';
+ import 'package:the_registry/app/registry_dependencies.dart';
++import 'package:the_registry/app/theme/app_colors.dart';
++import 'package:the_registry/app/theme/app_radius.dart';
+ import 'package:the_registry/app/theme/app_spacing.dart';
+ import 'package:the_registry/core/widgets/registry_form_field.dart';
+ import 'package:the_registry/core/widgets/registry_primary_button.dart';
+@@ -84,7 +86,9 @@
+       _clearOpened();
+       setState(() {
+         _bytes = bytes;
+-        _fileName = l10n.backupSelectedFile;
++        _fileName = bytes.length > 1024
++            ? '${l10n.backupSelectedFile} (${(bytes.length / 1024).toStringAsFixed(1)} KB)'
++            : l10n.backupSelectedFile;
+         _status = null;
+         _statusIsError = false;
+       });
+@@ -168,6 +172,7 @@
+ 
+   Future<void> _replace() async {
+     final l10n = AppLocalizations.of(context);
++    final theme = Theme.of(context);
+     final opened = _opened;
+     if (opened == null || _working) {
+       return;
+@@ -176,8 +181,23 @@
+       context: context,
+       builder: (dialogContext) {
+         return AlertDialog(
+-          title: Text(l10n.backupReplaceTitle),
+-          content: Text(l10n.backupReplaceBody),
++          shape: const RoundedRectangleBorder(
++            borderRadius: AppRadius.cardBorder,
++          ),
++          icon: Icon(
++            Icons.warning_amber_rounded,
++            color: theme.colorScheme.error,
++            size: 36,
++          ),
++          title: Text(
++            l10n.backupReplaceTitle,
++            textAlign: TextAlign.center,
++          ),
++          content: Text(
++            l10n.backupReplaceBody,
++            textAlign: TextAlign.center,
++          ),
++          actionsAlignment: MainAxisAlignment.spaceEvenly,
+           actions: [
+             TextButton(
+               key: const ValueKey<String>('import-replace-cancel'),
+@@ -190,9 +210,11 @@
+               onPressed: () => Navigator.of(dialogContext).pop(false),
+               child: Text(l10n.backupCancel),
+             ),
+-            TextButton(
++            FilledButton(
+               key: const ValueKey<String>('import-replace-confirm'),
+-              style: TextButton.styleFrom(
++              style: FilledButton.styleFrom(
++                backgroundColor: theme.colorScheme.error,
++                foregroundColor: theme.colorScheme.onError,
+                 minimumSize: const Size(
+                   AppSpacing.minTapTarget,
+                   AppSpacing.minTapTarget,
+@@ -286,83 +308,304 @@
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+     final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
++    final statusColors = AppStatusColors.of(context);
+     final opened = _opened;
+     final status = _status;
++    final hasFile = _bytes != null;
++
+     return Scaffold(
+       resizeToAvoidBottomInset: true,
+       appBar: AppBar(title: Text(l10n.backupImportTitle)),
+       body: SafeArea(
+         child: ListView(
+           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+-          padding: const EdgeInsets.all(AppSpacing.screenPadding),
++          padding: const EdgeInsets.symmetric(
++            horizontal: AppSpacing.screenPadding,
++            vertical: AppSpacing.md,
++          ),
+           children: [
+-            Text(l10n.backupImportIntro, style: theme.textTheme.bodyLarge),
+-            const SizedBox(height: AppSpacing.md),
+-            OutlinedButton(
+-              key: const ValueKey<String>('import-pick'),
+-              onPressed: _working ? null : _pick,
+-              child: Text(l10n.backupChooseFile, textAlign: TextAlign.center),
+-            ),
+-            if (_fileName != null) ...[
+-              const SizedBox(height: AppSpacing.sm),
+-              Text(
+-                _fileName!,
+-                key: const ValueKey<String>('import-file-name'),
+-                style: theme.textTheme.bodyMedium,
+-              ),
+-            ],
+-            const SizedBox(height: AppSpacing.lg),
+-            RegistryTextField(
+-              fieldKey: const ValueKey<String>('import-password'),
+-              label: l10n.backupPasswordLabel,
+-              controller: _password,
+-              requiredField: true,
+-              obscureText: _obscure,
+-              enabled: !_working,
+-              errorText: _passwordError,
+-              autocorrect: false,
+-              enableSuggestions: false,
+-              enableIMEPersonalizedLearning: false,
+-              autofillHints: const [],
+-              textInputAction: TextInputAction.done,
+-              onChanged: (_) {
+-                if (_opened != null) {
+-                  _clearOpened();
+-                  setState(() {});
+-                }
+-              },
+-              suffixIcon: IconButton(
+-                tooltip: _obscure
+-                    ? l10n.backupShowPassword
+-                    : l10n.backupHidePassword,
+-                onPressed: _working
+-                    ? null
+-                    : () => setState(() => _obscure = !_obscure),
+-                icon: Icon(
+-                  _obscure
+-                      ? Icons.visibility_outlined
+-                      : Icons.visibility_off_outlined,
+-                ),
++            RegistrySurface(
++              padding: const EdgeInsets.all(AppSpacing.md),
++              child: Row(
++                crossAxisAlignment: CrossAxisAlignment.start,
++                children: [
++                  RegistryIconBadge(
++                    icon: Icons.settings_backup_restore_rounded,
++                    background: colorScheme.primaryContainer,
++                    foreground: colorScheme.onPrimaryContainer,
++                  ),
++                  const SizedBox(width: AppSpacing.md),
++                  Expanded(
++                    child: Column(
++                      crossAxisAlignment: CrossAxisAlignment.start,
++                      children: [
++                        Text(
++                          'Restore Registry',
++                          style: theme.textTheme.titleSmall,
++                        ),
++                        const SizedBox(height: AppSpacing.xxs),
++                        Text(
++                          l10n.backupImportIntro,
++                          style: theme.textTheme.bodyMedium,
++                        ),
++                      ],
++                    ),
++                  ),
++                ],
++              ),
++            ),
++            const SizedBox(height: AppSpacing.md),
++            if (!hasFile)
++              RegistrySurface(
++                padding: const EdgeInsets.all(AppSpacing.lg),
++                child: Column(
++                  children: [
++                    Container(
++                      width: 52,
++                      height: 52,
++                      decoration: BoxDecoration(
++                        color:
++                            colorScheme.primaryContainer.withValues(alpha: 0.6),
++                        shape: BoxShape.circle,
++                      ),
++                      child: Icon(
++                        Icons.folder_open_outlined,
++                        color: colorScheme.primary,
++                        size: 26,
++                      ),
++                    ),
++                    const SizedBox(height: AppSpacing.sm),
++                    Text(
++                      'No file selected',
++                      style: theme.textTheme.titleSmall,
++                    ),
++                    const SizedBox(height: AppSpacing.xxs),
++                    Text(
++                      'Choose an encrypted .rgry backup file from this device',
++                      style: theme.textTheme.bodySmall,
++                      textAlign: TextAlign.center,
++                    ),
++                    const SizedBox(height: AppSpacing.md),
++                    OutlinedButton.icon(
++                      key: const ValueKey<String>('import-pick'),
++                      onPressed: _working ? null : _pick,
++                      icon: const Icon(Icons.file_upload_outlined, size: 18),
++                      label: Text(l10n.backupChooseFile),
++                    ),
++                  ],
++                ),
++              )
++            else
++              RegistrySurface(
++                padding: const EdgeInsets.all(AppSpacing.md),
++                child: Row(
++                  children: [
++                    Container(
++                      width: 44,
++                      height: 44,
++                      decoration: BoxDecoration(
++                        color: statusColors.successContainer,
++                        borderRadius: BorderRadius.circular(AppRadius.md),
++                      ),
++                      child: Icon(
++                        Icons.inventory_2_outlined,
++                        color: statusColors.success,
++                        size: 22,
++                      ),
++                    ),
++                    const SizedBox(width: AppSpacing.md),
++                    Expanded(
++                      child: Column(
++                        crossAxisAlignment: CrossAxisAlignment.start,
++                        children: [
++                          Text(
++                            _fileName ?? l10n.backupSelectedFile,
++                            key: const ValueKey<String>('import-file-name'),
++                            style: theme.textTheme.titleSmall,
++                            maxLines: 1,
++                            overflow: TextOverflow.ellipsis,
++                          ),
++                          const SizedBox(height: 2),
++                          Row(
++                            children: [
++                              Icon(
++                                Icons.check_circle_rounded,
++                                size: 13,
++                                color: statusColors.success,
++                              ),
++                              const SizedBox(width: 4),
++                              Text(
++                                'Backup file loaded',
++                                style: theme.textTheme.bodySmall?.copyWith(
++                                  color: statusColors.success,
++                                  fontWeight: FontWeight.w600,
++                                ),
++                              ),
++                            ],
++                          ),
++                        ],
++                      ),
++                    ),
++                    const SizedBox(width: AppSpacing.xs),
++                    TextButton(
++                      key: const ValueKey<String>('import-pick'),
++                      onPressed: _working ? null : _pick,
++                      child: const Text('Change'),
++                    ),
++                  ],
++                ),
++              ),
++            const SizedBox(height: AppSpacing.md),
++            RegistrySurface(
++              padding: const EdgeInsets.all(AppSpacing.md),
++              child: Column(
++                crossAxisAlignment: CrossAxisAlignment.start,
++                children: [
++                  Text(
++                    'Backup password',
++                    style: theme.textTheme.titleSmall,
++                  ),
++                  const SizedBox(height: AppSpacing.xxs),
++                  Text(
++                    'Enter the password used when exporting this backup.',
++                    style: theme.textTheme.bodySmall,
++                  ),
++                  const SizedBox(height: AppSpacing.md),
++                  RegistryTextField(
++                    fieldKey: const ValueKey<String>('import-password'),
++                    label: l10n.backupPasswordLabel,
++                    controller: _password,
++                    requiredField: true,
++                    obscureText: _obscure,
++                    enabled: !_working,
++                    errorText: _passwordError,
++                    autocorrect: false,
++                    enableSuggestions: false,
++                    enableIMEPersonalizedLearning: false,
++                    autofillHints: const [],
++                    textInputAction: TextInputAction.done,
++                    onSubmitted: (_) {
++                      if (!_working && _opened == null) {
++                        _check();
++                      }
++                    },
++                    onChanged: (_) {
++                      if (_opened != null) {
++                        _clearOpened();
++                        setState(() {});
++                      }
++                    },
++                    suffixIcon: IconButton(
++                      tooltip: _obscure
++                          ? l10n.backupShowPassword
++                          : l10n.backupHidePassword,
++                      onPressed: _working
++                          ? null
++                          : () => setState(() => _obscure = !_obscure),
++                      icon: Icon(
++                        _obscure
++                            ? Icons.visibility_outlined
++                            : Icons.visibility_off_outlined,
++                      ),
++                    ),
++                  ),
++                ],
+               ),
+             ),
+             const SizedBox(height: AppSpacing.lg),
+-            RegistryPrimaryButton(
+-              key: const ValueKey<String>('import-check'),
+-              label: l10n.backupCheckAction,
+-              onPressed: _working ? null : _check,
+-            ),
++            if (opened == null) ...[
++              RegistryPrimaryButton(
++                key: const ValueKey<String>('import-check'),
++                label: l10n.backupCheckAction,
++                trailing: const Icon(Icons.arrow_forward_rounded, size: 18),
++                onPressed: _working ? null : _check,
++              ),
++            ],
+             if (opened != null) ...[
+-              const SizedBox(height: AppSpacing.lg),
+               RegistrySurface(
+                 key: const ValueKey<String>('import-preview'),
+                 padding: const EdgeInsets.all(AppSpacing.md),
+-                child: Text(
+-                  l10n.backupPreview(
+-                    opened.preview.documents,
+-                    opened.preview.subscriptions,
+-                    opened.preview.attachments,
+-                  ),
+-                  style: theme.textTheme.bodyLarge,
++                child: Column(
++                  crossAxisAlignment: CrossAxisAlignment.stretch,
++                  children: [
++                    Row(
++                      children: [
++                        Container(
++                          padding: const EdgeInsets.all(6),
++                          decoration: BoxDecoration(
++                            color: statusColors.successContainer,
++                            shape: BoxShape.circle,
++                          ),
++                          child: Icon(
++                            Icons.check_rounded,
++                            size: 16,
++                            color: statusColors.success,
++                          ),
++                        ),
++                        const SizedBox(width: AppSpacing.sm),
++                        Expanded(
++                          child: Column(
++                            crossAxisAlignment: CrossAxisAlignment.start,
++                            children: [
++                              Text(
++                                'Backup verified',
++                                style: theme.textTheme.titleMedium?.copyWith(
++                                  color: statusColors.success,
++                                  fontWeight: FontWeight.w700,
++                                ),
++                              ),
++                              Text(
++                                'Review contents before restoring',
++                                style: theme.textTheme.bodySmall,
++                              ),
++                            ],
++                          ),
++                        ),
++                      ],
++                    ),
++                    const SizedBox(height: AppSpacing.md),
++                    Row(
++                      children: [
++                        Expanded(
++                          child: _BackupMetricTile(
++                            icon: Icons.description_outlined,
++                            count: opened.preview.documents,
++                            label: opened.preview.documents == 1
++                                ? 'Document'
++                                : 'Documents',
++                          ),
++                        ),
++                        const SizedBox(width: AppSpacing.xs),
++                        Expanded(
++                          child: _BackupMetricTile(
++                            icon: Icons.autorenew_rounded,
++                            count: opened.preview.subscriptions,
++                            label: opened.preview.subscriptions == 1
++                                ? 'Subscription'
++                                : 'Subscriptions',
++                          ),
++                        ),
++                        const SizedBox(width: AppSpacing.xs),
++                        Expanded(
++                          child: _BackupMetricTile(
++                            icon: Icons.photo_library_outlined,
++                            count: opened.preview.attachments,
++                            label: opened.preview.attachments == 1
++                                ? 'Image'
++                                : 'Images',
++                          ),
++                        ),
++                      ],
++                    ),
++                    const SizedBox(height: AppSpacing.md),
++                    const RegistryCallout(
++                      tone: RegistryCalloutTone.warning,
++                      title: 'Replaces current registry',
++                      message:
++                          'Restoring will replace all documents and subscriptions on this device. Records cannot be merged.',
++                    ),
++                  ],
+                 ),
+               ),
+               const SizedBox(height: AppSpacing.md),
+@@ -371,18 +614,48 @@
+                 label: l10n.backupReplaceAction,
+                 backgroundColor: theme.colorScheme.error,
+                 foregroundColor: theme.colorScheme.onError,
++                trailing: const Icon(Icons.warning_amber_rounded, size: 18),
+                 onPressed: _working ? null : _replace,
+               ),
+             ],
+             if (status != null) ...[
+               const SizedBox(height: AppSpacing.md),
+-              Text(
+-                status,
+-                key: const ValueKey<String>('import-status'),
+-                style: theme.textTheme.bodyLarge?.copyWith(
+-                  color: _statusIsError
+-                      ? theme.colorScheme.error
+-                      : theme.colorScheme.onSurface,
++              DecoratedBox(
++                decoration: BoxDecoration(
++                  color: _statusIsError
++                      ? statusColors.urgentContainer
++                      : statusColors.warningContainer,
++                  borderRadius: BorderRadius.circular(AppRadius.md),
++                ),
++                child: Padding(
++                  padding: const EdgeInsets.all(AppSpacing.md),
++                  child: Row(
++                    crossAxisAlignment: CrossAxisAlignment.start,
++                    children: [
++                      Icon(
++                        _statusIsError
++                            ? Icons.error_outline_rounded
++                            : Icons.info_outline_rounded,
++                        color: _statusIsError
++                            ? statusColors.urgent
++                            : statusColors.warning,
++                        size: 20,
++                      ),
++                      const SizedBox(width: AppSpacing.sm),
++                      Expanded(
++                        child: Text(
++                          status,
++                          key: const ValueKey<String>('import-status'),
++                          style: theme.textTheme.bodyMedium?.copyWith(
++                            color: _statusIsError
++                                ? statusColors.onUrgentContainer
++                                : statusColors.onWarningContainer,
++                            fontWeight: FontWeight.w500,
++                          ),
++                        ),
++                      ),
++                    ],
++                  ),
+                 ),
+               ),
+             ],
+@@ -392,3 +665,51 @@
+     );
+   }
+ }
++
++class _BackupMetricTile extends StatelessWidget {
++  const _BackupMetricTile({
++    required this.icon,
++    required this.count,
++    required this.label,
++  });
++
++  final IconData icon;
++  final int count;
++  final String label;
++
++  @override
++  Widget build(BuildContext context) {
++    final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
++    return Container(
++      padding: const EdgeInsets.symmetric(
++        vertical: AppSpacing.sm,
++        horizontal: AppSpacing.xs,
++      ),
++      decoration: BoxDecoration(
++        color: colorScheme.surfaceContainer,
++        borderRadius: BorderRadius.circular(AppRadius.md),
++      ),
++      child: Column(
++        children: [
++          Icon(icon, size: 20, color: colorScheme.primary),
++          const SizedBox(height: AppSpacing.xxs),
++          Text(
++            '$count',
++            style: theme.textTheme.titleMedium?.copyWith(
++              fontWeight: FontWeight.w700,
++            ),
++          ),
++          const SizedBox(height: 2),
++          Text(
++            label,
++            style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
++            maxLines: 1,
++            overflow: TextOverflow.ellipsis,
++            textAlign: TextAlign.center,
++          ),
++        ],
++      ),
++    );
++  }
++}
+Index: lib/features/subscriptions/presentation/subscription_detail_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/subscription_detail_screen.dart b/lib/features/subscriptions/presentation/subscription_detail_screen.dart
+--- a/lib/features/subscriptions/presentation/subscription_detail_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/subscription_detail_screen.dart	(date 1795250170017)
+@@ -82,6 +82,14 @@
+           child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
++              if (subscription.isCancelled) ...[
++                RegistryCallout(
++                  tone: RegistryCalloutTone.warning,
++                  title: l10n.subscriptionCancelled,
++                  message: l10n.subscriptionTrackingDisclaimer,
++                ),
++                const SizedBox(height: AppSpacing.md),
++              ],
+               RegistrySurface(
+                 padding: const EdgeInsets.all(14),
+                 borderRadius: BorderRadius.circular(19),
+@@ -473,7 +481,15 @@
+   }
+   ScaffoldMessenger.of(context)
+     ..hideCurrentSnackBar()
+-    ..showSnackBar(SnackBar(content: Text(l10n.planMarkedCancelled)));
++    ..showSnackBar(
++      SnackBar(
++        content: Text(l10n.planMarkedCancelled),
++        action: SnackBarAction(
++          label: l10n.viewCancelledAction,
++          onPressed: () => AppRoutes.openCancelledSubscriptions(context),
++        ),
++      ),
++    );
+ }
+ 
+ Future<void> _confirmReactivate(
+Index: lib/features/subscriptions/presentation/gmail_connect_screen.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/gmail_connect_screen.dart b/lib/features/subscriptions/presentation/gmail_connect_screen.dart
+--- a/lib/features/subscriptions/presentation/gmail_connect_screen.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/gmail_connect_screen.dart	(date 1795251234840)
+@@ -1,4 +1,5 @@
+ import 'package:flutter/material.dart';
++import 'package:flutter/services.dart';
+ import 'package:the_registry/app/registry_dependencies.dart';
+ import 'package:the_registry/app/theme/app_radius.dart';
+ import 'package:the_registry/app/theme/app_shadows.dart';
+@@ -19,12 +20,13 @@
+ }
+ 
+ class _GmailConnectScreenState extends State<GmailConnectScreen> {
++  bool _connecting = false;
+   bool _scanning = false;
+   String? _errorMessage;
+ 
+   Future<void> _connect() async {
+     setState(() {
+-      _scanning = true;
++      _connecting = true;
+       _errorMessage = null;
+     });
+     final deps = RegistryDependencies.of(context);
+@@ -36,15 +38,20 @@
+           connectedAt: deps.clock.now(),
+         );
+         await deps.discovery.detectedRepository.saveGmailMetadata(metadata);
+-        await _scanEmails(silent: true);
++        // Allow the Google Sign-In activity dismissal and Android UI thread to settle
++        // before requesting tokens or starting scans.
++        await Future<void>.delayed(const Duration(milliseconds: 500));
++        if (mounted) {
++          await _scanEmails(silent: true);
++        }
+       }
+     } catch (e) {
+       if (mounted) {
+-        setState(() => _errorMessage = e.toString());
++        setState(() => _errorMessage = _formatGmailError(e));
+       }
+     } finally {
+       if (mounted) {
+-        setState(() => _scanning = false);
++        setState(() => _connecting = false);
+       }
+     }
+   }
+@@ -111,7 +118,7 @@
+       }
+     } catch (e) {
+       if (mounted) {
+-        setState(() => _errorMessage = e.toString());
++        setState(() => _errorMessage = _formatGmailError(e));
+       }
+     } finally {
+       if (mounted) {
+@@ -120,6 +127,45 @@
+     }
+   }
+ 
++  static const _gmailApiEnableUrl =
++      'https://console.developers.google.com/apis/api/gmail.googleapis.com/overview?project=359772476439';
++
++  String _formatGmailError(dynamic error) {
++    final str = error.toString();
++    if (str.contains('deadlock') || str.contains('main thread')) {
++      return 'Google Play Services was busy authenticating. Please tap "Scan New Emails" to retry.';
++    }
++    if (str.contains('failed_to_recover_auth') ||
++        str.contains('Failed attempt to recover authentication')) {
++      return 'Google authorization could not be completed. Please tap "Connect Gmail", select your account, and grant permission to search billing receipts.';
++    }
++    if (str.contains('sign_in_canceled') ||
++        str.contains('sign_in_failed') ||
++        str.contains('CANCELED')) {
++      return 'Sign-in was canceled. Please tap "Connect Gmail" to try again.';
++    }
++    if (str.contains('network_error') ||
++        str.contains('SocketException') ||
++        str.contains('Failed host lookup')) {
++      return 'Network connection error. Please check your internet connection and try again.';
++    }
++    if (str.contains('Gmail API has not been used') ||
++        str.contains('gmail.googleapis.com') ||
++        str.contains('DetailedApiRequestError(status: 403') ||
++        str.contains('is disabled')) {
++      return 'Gmail API is disabled in Google Cloud project 359772476439.\n\nEnable the Gmail API in Google Cloud Console, wait 1-2 minutes for propagation, then tap "Scan New Emails".';
++    }
++    if (str.contains('access_denied')) {
++      return 'Permission was denied. Regiday requires read-only Gmail access to detect billing receipts.';
++    }
++    if (error is PlatformException &&
++        error.message != null &&
++        error.message!.isNotEmpty) {
++      return error.message!;
++    }
++    return str;
++  }
++
+   @override
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+@@ -187,27 +233,62 @@
+                     color: colorScheme.errorContainer,
+                     borderRadius: BorderRadius.circular(12),
+                   ),
+-                  child: Row(
+-                    crossAxisAlignment: CrossAxisAlignment.start,
+-                    children: [
+-                      Icon(
+-                        Icons.error_outline,
+-                        color: colorScheme.onErrorContainer,
+-                        size: 20,
+-                      ),
+-                      const SizedBox(width: AppSpacing.sm),
+-                      Expanded(
+-                        child: Text(
+-                          _errorMessage!.contains('Gmail API has not been used') ||
+-                                  _errorMessage!.contains('gmail.googleapis.com')
+-                              ? 'Gmail API is disabled in your Google Cloud project.\n\nPlease enable the Gmail API in Google Cloud Console, then tap "Scan New Emails".'
+-                              : _errorMessage!,
+-                          style: TextStyle(
+-                            color: colorScheme.onErrorContainer,
+-                            fontSize: 13,
+-                          ),
+-                        ),
+-                      ),
++                  child: Column(
++                    crossAxisAlignment: CrossAxisAlignment.stretch,
++                    children: [
++                      Row(
++                        crossAxisAlignment: CrossAxisAlignment.start,
++                        children: [
++                          Icon(
++                            Icons.error_outline,
++                            color: colorScheme.onErrorContainer,
++                            size: 20,
++                          ),
++                          const SizedBox(width: AppSpacing.sm),
++                          Expanded(
++                            child: Text(
++                              _errorMessage!,
++                              style: TextStyle(
++                                color: colorScheme.onErrorContainer,
++                                fontSize: 13,
++                              ),
++                            ),
++                          ),
++                        ],
++                      ),
++                      if (_errorMessage!.contains('Gmail API is disabled') ||
++                          _errorMessage!.contains('359772476439')) ...[
++                        const SizedBox(height: AppSpacing.sm),
++                        Align(
++                          alignment: Alignment.centerLeft,
++                          child: OutlinedButton.icon(
++                            onPressed: () {
++                              Clipboard.setData(
++                                const ClipboardData(text: _gmailApiEnableUrl),
++                              );
++                              ScaffoldMessenger.of(context).showSnackBar(
++                                const SnackBar(
++                                  content: Text(
++                                    'Copied Gmail API Enable link to clipboard!',
++                                  ),
++                                  duration: Duration(seconds: 4),
++                                ),
++                              );
++                            },
++                            icon: const Icon(Icons.copy, size: 16),
++                            label: const Text('Copy Enable Link'),
++                            style: OutlinedButton.styleFrom(
++                              foregroundColor: colorScheme.onErrorContainer,
++                              side: BorderSide(
++                                color: colorScheme.onErrorContainer.withValues(
++                                  alpha: 0.5,
++                                ),
++                              ),
++                              visualDensity: VisualDensity.compact,
++                            ),
++                          ),
++                        ),
++                      ],
+                     ],
+                   ),
+                 ),
+@@ -215,14 +296,21 @@
+               ],
+               if (metadata == null) ...[
+                 const SizedBox(height: AppSpacing.xl),
+-                if (_scanning)
+-                  const Center(child: CircularProgressIndicator())
+-                else
+-                  RegistryPrimaryButton(
+-                    key: const ValueKey<String>('gmail-connect-button'),
+-                    label: l10n.connectGmailButton,
+-                    onPressed: _connect,
+-                  ),
++                RegistryPrimaryButton(
++                  key: const ValueKey<String>('gmail-connect-button'),
++                  label: _connecting ? 'Connecting...' : l10n.connectGmailButton,
++                  trailing: _connecting
++                      ? const SizedBox(
++                          width: 18,
++                          height: 18,
++                          child: CircularProgressIndicator(
++                            strokeWidth: 2.2,
++                            color: Colors.white,
++                          ),
++                        )
++                      : null,
++                  onPressed: _connecting ? null : _connect,
++                ),
+                 const SizedBox(height: AppSpacing.xl),
+               ] else ...[
+                 DecoratedBox(
+@@ -275,29 +363,46 @@
+                   ),
+                 ),
+                 const SizedBox(height: AppSpacing.lg),
+-                if (_scanning)
+-                  Column(
+-                    children: [
+-                      const CircularProgressIndicator(),
+-                      const SizedBox(height: AppSpacing.sm),
+-                      Text(l10n.scanningEmails),
+-                    ],
+-                  )
+-                else ...[
+-                  RegistryPrimaryButton(
+-                    key: const ValueKey<String>('gmail-scan-button'),
+-                    label: l10n.scanNewEmails,
+-                    onPressed: () => _scanEmails(),
++                RegistryPrimaryButton(
++                  key: const ValueKey<String>('gmail-scan-button'),
++                  label: _scanning ? l10n.scanningEmails : l10n.scanNewEmails,
++                  trailing: _scanning
++                      ? const SizedBox(
++                          width: 18,
++                          height: 18,
++                          child: CircularProgressIndicator(
++                            strokeWidth: 2.2,
++                            color: Colors.white,
++                          ),
++                        )
++                      : null,
++                  onPressed: _scanning || _connecting ? null : () => _scanEmails(),
++                ),
++                if (_scanning) ...[
++                  const SizedBox(height: AppSpacing.sm),
++                  ClipRRect(
++                    borderRadius: BorderRadius.circular(6),
++                    child: LinearProgressIndicator(
++                      minHeight: 4,
++                      backgroundColor: colorScheme.surfaceContainerHighest,
++                      valueColor: AlwaysStoppedAnimation<Color>(
++                        colorScheme.primary,
++                      ),
++                    ),
+                   ),
++                ],
++                if (!_scanning && !_connecting) ...[
+                   if (deps.discovery.pendingCandidates.isNotEmpty) ...[
+                     const SizedBox(height: AppSpacing.sm),
+                     RegistrySecondaryButton(
+                       key: const ValueKey<String>('gmail-view-detected-button'),
+-                      label: 'View Detected Subscriptions (${deps.discovery.pendingCandidates.length})',
++                      label:
++                          'View Detected Subscriptions (${deps.discovery.pendingCandidates.length})',
+                       onPressed: () {
+                         Navigator.of(context).push(
+                           MaterialPageRoute(
+-                            builder: (_) => const DetectedSubscriptionsScreen(),
++                            builder: (_) =>
++                                const DetectedSubscriptionsScreen(),
+                           ),
+                         );
+                       },
+Index: lib/l10n/app_fr.arb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_fr.arb b/lib/l10n/app_fr.arb
+--- a/lib/l10n/app_fr.arb	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_fr.arb	(date 1795251003048)
+@@ -481,6 +481,19 @@
+   "deleteSubscriptionTitle": "Supprimer cet abonnement ?",
+   "deleteSubscriptionMessage": "{name} sera retiré de cet appareil.",
+   "subscriptionTrackingDisclaimer": "Le registre suit cet abonnement mais ne l’annule pas et ne le facture pas automatiquement.",
++  "cancelledSubscriptionsTitle": "Abonnements annulés",
++  "cancelledSubscriptionsEmptyTitle": "Aucun abonnement annulé",
++  "cancelledSubscriptionsEmptyMessage": "Les abonnements que vous annulez apparaîtront ici pour que vous puissiez les consulter ou les réactiver à tout moment.",
++  "cancelledSubscriptionsSearchPlaceholder": "Rechercher des abonnements annulés",
++  "cancelledSubscriptionsCount": "{count, plural, one{1 abonnement annulé} other{{count} abonnements annulés}}",
++  "@cancelledSubscriptionsCount": {
++    "placeholders": {
++      "count": {
++        "type": "int"
++      }
++    }
++  },
++  "viewCancelledAction": "Voir",
+   "homeHeroReview": "Examiner {title}",
+   "homeHeroRenewalToday": "Le renouvellement commence aujourd’hui",
+   "homeHeroRenewalOn": "Le renouvellement commence le {date}",
+@@ -753,7 +766,7 @@
+     }
+   },
+   "notASubscription": "Pas un abonnement",
+-  "addToResiday": "Ajouter à ResiDay",
++  "addToResiday": "Ajouter à Regiday",
+   "connectGmailTitle": "Détection d'abonnements Gmail",
+   "connectGmailButton": "Connecter Gmail",
+   "disconnectGmailButton": "Déconnecter",
+@@ -783,7 +796,7 @@
+       }
+     }
+   },
+-  "gmailPrivacyNotice": "ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
++  "gmailPrivacyNotice": "Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
+   "candidateAddedSuccess": "Abonnement ajouté avec succès.",
+-  "candidateIgnored": "Marchand ignoré. ResiDay ne détectera plus ce marchand."
++  "candidateIgnored": "Marchand ignoré. Regiday ne détectera plus ce marchand."
+ }
+Index: lib/features/documents/data/firebase_ai_document_ocr_service.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/documents/data/firebase_ai_document_ocr_service.dart b/lib/features/documents/data/firebase_ai_document_ocr_service.dart
+--- a/lib/features/documents/data/firebase_ai_document_ocr_service.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/documents/data/firebase_ai_document_ocr_service.dart	(date 1795248324629)
+@@ -16,17 +16,21 @@
+ must be an empty string.
+ 
+ Identify:
+-- documentName: Full, specific title or name of the document as printed or recognized (e.g. "Aadhaar Card", "Permanent Account Number Card (PAN)", "Driving Licence", "Passport", "Voter ID Card", "Vehicle Registration Certificate", "Health Insurance Card", "Birth Certificate", "Electricity Bill", "Rental Agreement").
+-- documentType: Short type or classification (e.g. "Aadhaar", "Passport", "Driving Licence", "PAN Card", "National ID", "Invoice", "Certificate").
++- documentName: Full, specific title or name of the document as printed or recognized (e.g. "Aadhaar Card", "Permanent Account Number Card (PAN)", "Driving Licence", "Passport", "Voter ID Card", "Vehicle Registration Certificate", "Health Insurance Card", "Birth Certificate", "Electricity Bill", "Rental Agreement", "Business Registration").
++- documentType: Short type or classification (e.g. "Aadhaar", "Passport", "Driving Licence", "PAN Card", "National ID", "Invoice", "Certificate", "Registration").
+ - category: Standard category (e.g. "ID Card", "Passport", "Driving licence", "Vehicle", "Insurance", "Certificate", "Finance", "Housing", "Other").
+ - countryCode: Two-letter ISO 3166-1 alpha-2 code when clearly identifiable, otherwise empty.
+-- name: Document holder or owner name.
+-- documentNumber: Primary identifier or document number (Aadhaar number, Passport number, PAN, License number, etc.).
+-- dates (dateOfBirth, issueDate, expiryDate): Normalize any recognized date into YYYY-MM-DD format (convert DD/MM/YYYY, DD-MM-YYYY, YYYY/MM/DD, or written months). Return empty string if missing or unreadable.
++- name: Document holder, owner, or primary individual/business name.
++- documentNumber: Primary identifier or document number (Aadhaar number, Passport number, PAN, License number, Certificate number, etc.).
++- dates:
++  * dateOfBirth: Date of birth (look for DOB, Date of Birth, Year of Birth, YOB, Born).
++  * issueDate: Issue, registration, incorporation, agreement, or invoice date (look for Issue Date, Date of Issue, Reg Date, Registration Date, Dated, Valid From, Issued on).
++  * expiryDate: Expiry, validity, due date, valid until, valid thru, expiration date, or renewal date. Leave empty if no expiry applies.
++  * Normalize recognized dates into YYYY-MM-DD format.
+ - gender: "Male", "Female", or "Other" if printed.
+ - nationality: Nationality or citizenship if printed.
+ - address: Full printed address.
+-- issuingAuthority: Printed issuing country, authority, department, or company.
++- issuingAuthority: Printed issuing country, authority, department, government body, or company.
+ ''';
+ 
+ final _responseSchema = Schema.object(
+@@ -260,9 +264,11 @@
+               ? ''
+               : classification.category.name),
+       documentTypeLabel: resolvedDocName,
+-      overallConfidence: fields.any((field) => field.value.isNotEmpty)
+-          ? OcrConfidence.review
+-          : OcrConfidence.notDetected,
++      overallConfidence: fields.any((field) => field.confidence == OcrConfidence.high)
++          ? OcrConfidence.high
++          : (fields.any((field) => field.value.isNotEmpty)
++              ? OcrConfidence.review
++              : OcrConfidence.notDetected),
+     );
+   }
+ 
+@@ -287,18 +293,43 @@
+     bool sensitive = false,
+     bool isDate = false,
+   }) {
++    final trimmed = value.trim();
++    final confidence = _determineConfidence(key, trimmed, isDate: isDate);
+     return ExtractedDocumentField(
+       id: key,
+       fieldKey: key,
+-      value: value,
+-      confidence: value.isEmpty
+-          ? OcrConfidence.notDetected
+-          : OcrConfidence.review,
++      value: trimmed,
++      confidence: confidence,
+       sensitive: sensitive,
+       isDate: isDate,
+     );
+   }
+ 
++  static OcrConfidence _determineConfidence(
++    String key,
++    String value, {
++    required bool isDate,
++  }) {
++    if (value.isEmpty) {
++      return OcrConfidence.notDetected;
++    }
++    if (isDate) {
++      return RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)
++          ? OcrConfidence.high
++          : OcrConfidence.review;
++    }
++    if (key == DocumentFieldKeys.fullName || key == DocumentFieldKeys.name) {
++      return value.length >= 2 ? OcrConfidence.high : OcrConfidence.review;
++    }
++    if (key == DocumentFieldKeys.address) {
++      return value.length >= 5 ? OcrConfidence.high : OcrConfidence.review;
++    }
++    if (key == DocumentFieldKeys.issuingAuthority) {
++      return value.length >= 3 ? OcrConfidence.high : OcrConfidence.review;
++    }
++    return value.length >= 3 ? OcrConfidence.high : OcrConfidence.review;
++  }
++
+   static DocumentClassification _classification(
+     _FirebaseDocumentExtraction value,
+   ) {
+@@ -430,7 +461,8 @@
+ 
+   factory _FirebaseDocumentExtraction.fromJson(Map<String, dynamic> json) {
+     String read(String key) => (json[key] as String? ?? '').trim();
+-    String readDate(String key) => _normalizeFullDate(read(key));
++    String readDate(String key, {bool isDob = false}) =>
++        _normalizeFullDate(read(key), isDob: isDob);
+ 
+     return _FirebaseDocumentExtraction(
+       documentName: read('documentName'),
+@@ -438,7 +470,7 @@
+       countryCode: read('countryCode'),
+       name: read('name'),
+       documentNumber: read('documentNumber'),
+-      dateOfBirth: readDate('dateOfBirth'),
++      dateOfBirth: readDate('dateOfBirth', isDob: true),
+       issueDate: readDate('issueDate'),
+       expiryDate: readDate('expiryDate'),
+       gender: read('gender'),
+@@ -464,10 +496,21 @@
+   final String category;
+ }
+ 
+-String _normalizeFullDate(String raw) {
+-  final value = raw.trim();
++String _normalizeFullDate(String raw, {bool isDob = false}) {
++  var value = raw.trim();
+   if (value.isEmpty) return '';
+-  final ymdMatch = RegExp(r'^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$').firstMatch(value);
++
++  // Extract date from prefix if present: e.g. "DOB: 15/08/1990", "Dated 12/04/2020", "Validity: 2030-05-01"
++  final prefixMatch = RegExp(
++    r'(?:dob|date\s*of\s*birth|birth|issued?|dated?|expiry|validity|valid\s*until|valid\s*thru)[:\s]+(.+)',
++    caseSensitive: false,
++  ).firstMatch(value);
++  if (prefixMatch != null) {
++    value = prefixMatch.group(1)!.trim();
++  }
++
++  // 1. ISO format: YYYY-MM-DD or YYYY/MM/DD (allowing spaces around separators)
++  final ymdMatch = RegExp(r'^(\d{4})\s*[-/.]\s*(\d{1,2})\s*[-/.]\s*(\d{1,2})').firstMatch(value);
+   if (ymdMatch != null) {
+     final year = int.parse(ymdMatch.group(1)!);
+     final month = int.parse(ymdMatch.group(2)!);
+@@ -476,7 +519,9 @@
+       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+     }
+   }
+-  final dmyMatch = RegExp(r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$').firstMatch(value);
++
++  // 2. Day-Month-Year: DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY (allowing spaces)
++  final dmyMatch = RegExp(r'^(\d{1,2})\s*[-/.]\s*(\d{1,2})\s*[-/.]\s*(\d{2,4})').firstMatch(value);
+   if (dmyMatch != null) {
+     final dRaw = int.parse(dmyMatch.group(1)!);
+     final mRaw = int.parse(dmyMatch.group(2)!);
+@@ -494,8 +539,10 @@
+       return '${yRaw.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+     }
+   }
++
++  // 3. Textual month DD Month YYYY (e.g. 15 Aug 1990, 15-August-1990)
+   final textDmyMatch = RegExp(
+-    r'^(\d{1,2})[./\-\s,]+(\p{L}{2,})[./\-\s,]+(\d{2,4})$',
++    r'^(\d{1,2})[./\-\s,]+(\p{L}{2,})[./\-\s,]+(\d{2,4})',
+     unicode: true,
+   ).firstMatch(value);
+   if (textDmyMatch != null) {
+@@ -508,8 +555,10 @@
+       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+     }
+   }
++
++  // 4. Textual month Month DD, YYYY (e.g. Aug 15, 1990)
+   final textMdyMatch = RegExp(
+-    r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})$',
++    r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})',
+     unicode: true,
+   ).firstMatch(value);
+   if (textMdyMatch != null) {
+@@ -522,6 +571,15 @@
+       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+     }
+   }
++
++  // 5. 4-digit year only (e.g. "1985" for Aadhaar Year of Birth)
++  if (isDob) {
++    final yearMatch = RegExp(r'^(19\d{2}|20\d{2})$').firstMatch(value);
++    if (yearMatch != null) {
++      return '${yearMatch.group(1)!}-01-01';
++    }
++  }
++
+   return '';
+ }
+ 
+Index: lib/l10n/app_localizations.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_localizations.dart b/lib/l10n/app_localizations.dart
+--- a/lib/l10n/app_localizations.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_localizations.dart	(date 1795252203060)
+@@ -2716,6 +2716,42 @@
+   /// **'Regiday tracks this plan but does not cancel or charge it automatically.'**
+   String get subscriptionTrackingDisclaimer;
+ 
++  /// No description provided for @cancelledSubscriptionsTitle.
++  ///
++  /// In en, this message translates to:
++  /// **'Cancelled subscriptions'**
++  String get cancelledSubscriptionsTitle;
++
++  /// No description provided for @cancelledSubscriptionsEmptyTitle.
++  ///
++  /// In en, this message translates to:
++  /// **'No cancelled subscriptions'**
++  String get cancelledSubscriptionsEmptyTitle;
++
++  /// No description provided for @cancelledSubscriptionsEmptyMessage.
++  ///
++  /// In en, this message translates to:
++  /// **'Subscriptions you cancel will appear here so you can review or reactivate them anytime.'**
++  String get cancelledSubscriptionsEmptyMessage;
++
++  /// No description provided for @cancelledSubscriptionsSearchPlaceholder.
++  ///
++  /// In en, this message translates to:
++  /// **'Search cancelled subscriptions'**
++  String get cancelledSubscriptionsSearchPlaceholder;
++
++  /// No description provided for @cancelledSubscriptionsCount.
++  ///
++  /// In en, this message translates to:
++  /// **'{count, plural, one{1 cancelled plan} other{{count} cancelled plans}}'**
++  String cancelledSubscriptionsCount(int count);
++
++  /// No description provided for @viewCancelledAction.
++  ///
++  /// In en, this message translates to:
++  /// **'View'**
++  String get viewCancelledAction;
++
+   /// No description provided for @homeHeroReview.
+   ///
+   /// In en, this message translates to:
+@@ -3199,7 +3235,7 @@
+   /// No description provided for @backupSectionBody.
+   ///
+   /// In en, this message translates to:
+-  /// **'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.'**
++  /// **'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.'**
+   String get backupSectionBody;
+ 
+   /// No description provided for @backupExportAction.
+@@ -3223,13 +3259,13 @@
+   /// No description provided for @backupIncluded.
+   ///
+   /// In en, this message translates to:
+-  /// **'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.'**
++  /// **'Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.'**
+   String get backupIncluded;
+ 
+   /// No description provided for @backupPasswordWarning.
+   ///
+   /// In en, this message translates to:
+-  /// **'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.'**
++  /// **'Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.'**
+   String get backupPasswordWarning;
+ 
+   /// No description provided for @backupPasswordLabel.
+@@ -3283,7 +3319,7 @@
+   /// No description provided for @backupImportIntro.
+   ///
+   /// In en, this message translates to:
+-  /// **'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.'**
++  /// **'Restore your documents and subscriptions from an encrypted Regiday backup file.'**
+   String get backupImportIntro;
+ 
+   /// No description provided for @backupChooseFile.
+@@ -3331,7 +3367,7 @@
+   /// No description provided for @backupReplaceBody.
+   ///
+   /// In en, this message translates to:
+-  /// **'Documents, subscriptions, and images on this device will be replaced by this backup.'**
++  /// **'Existing documents, subscriptions, and images on this device will be replaced.'**
+   String get backupReplaceBody;
+ 
+   /// No description provided for @backupCancel.
+@@ -4183,7 +4219,7 @@
+   /// No description provided for @addToResiday.
+   ///
+   /// In en, this message translates to:
+-  /// **'Add to ResiDay'**
++  /// **'Add to Regiday'**
+   String get addToResiday;
+ 
+   /// No description provided for @connectGmailTitle.
+@@ -4237,7 +4273,7 @@
+   /// No description provided for @gmailPrivacyNotice.
+   ///
+   /// In en, this message translates to:
+-  /// **'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
++  /// **'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
+   String get gmailPrivacyNotice;
+ 
+   /// No description provided for @candidateAddedSuccess.
+@@ -4249,7 +4285,7 @@
+   /// No description provided for @candidateIgnored.
+   ///
+   /// In en, this message translates to:
+-  /// **'Merchant ignored. ResiDay will not detect this merchant again.'**
++  /// **'Merchant ignored. Regiday will not detect this merchant again.'**
+   String get candidateIgnored;
+ }
+ 
+Index: lib/l10n/app_ar.arb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_ar.arb b/lib/l10n/app_ar.arb
+--- a/lib/l10n/app_ar.arb	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_ar.arb	(date 1795250992539)
+@@ -481,6 +481,19 @@
+   "deleteSubscriptionTitle": "حذف هذه الخطة؟",
+   "deleteSubscriptionMessage": "ستُزال {name} من هذا الجهاز.",
+   "subscriptionTrackingDisclaimer": "يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.",
++  "cancelledSubscriptionsTitle": "الاشتراكات الملغاة",
++  "cancelledSubscriptionsEmptyTitle": "لا توجد اشتراكات ملغاة",
++  "cancelledSubscriptionsEmptyMessage": "الاشتراكات التي تلغيها ستظهر هنا لتتمكن من مراجعتها أو إعادة تفعيلها في أي وقت.",
++  "cancelledSubscriptionsSearchPlaceholder": "البحث في الاشتراكات الملغاة",
++  "cancelledSubscriptionsCount": "{count, plural, zero{لا توجد اشتراكات ملغاة} one{اشتراك ملغى واحد} two{اشتراكان ملغيان} few{{count} اشتراكات ملغاة} many{{count} اشتراكًا ملغى} other{{count} اشتراك ملغى}}",
++  "@cancelledSubscriptionsCount": {
++    "placeholders": {
++      "count": {
++        "type": "int"
++      }
++    }
++  },
++  "viewCancelledAction": "عرض",
+   "homeHeroReview": "راجع {title}",
+   "homeHeroRenewalToday": "يبدأ التجديد اليوم",
+   "homeHeroRenewalOn": "يبدأ التجديد في {date}",
+@@ -754,7 +767,7 @@
+     }
+   },
+   "notASubscription": "ليس اشتراكاً",
+-  "addToResiday": "إضافة إلى ResiDay",
++  "addToResiday": "إضافة إلى Regiday",
+   "connectGmailTitle": "اكتشاف اشتراكات Gmail",
+   "connectGmailButton": "ربط Gmail",
+   "disconnectGmailButton": "إلغاء الربط",
+@@ -784,7 +797,7 @@
+       }
+     }
+   },
+-  "gmailPrivacyNotice": "يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
++  "gmailPrivacyNotice": "يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
+   "candidateAddedSuccess": "تمت إضافة الاشتراك بنجاح.",
+-  "candidateIgnored": "تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى."
++  "candidateIgnored": "تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى."
+ }
+Index: lib/l10n/app_en.arb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_en.arb b/lib/l10n/app_en.arb
+--- a/lib/l10n/app_en.arb	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_en.arb	(date 1795250981904)
+@@ -623,6 +623,19 @@
+     }
+   },
+   "subscriptionTrackingDisclaimer": "Regiday tracks this plan but does not cancel or charge it automatically.",
++  "cancelledSubscriptionsTitle": "Cancelled subscriptions",
++  "cancelledSubscriptionsEmptyTitle": "No cancelled subscriptions",
++  "cancelledSubscriptionsEmptyMessage": "Subscriptions you cancel will appear here so you can review or reactivate them anytime.",
++  "cancelledSubscriptionsSearchPlaceholder": "Search cancelled subscriptions",
++  "cancelledSubscriptionsCount": "{count, plural, one{1 cancelled plan} other{{count} cancelled plans}}",
++  "@cancelledSubscriptionsCount": {
++    "placeholders": {
++      "count": {
++        "type": "int"
++      }
++    }
++  },
++  "viewCancelledAction": "View",
+   "homeHeroReview": "Review {title}",
+   "@homeHeroReview": {
+     "placeholders": {
+@@ -839,12 +852,12 @@
+   },
+   "reminderSubscriptionChargeToday": "A subscription payment date is today.",
+   "backupSectionTitle": "Backup & restore",
+-  "backupSectionBody": "Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.",
++  "backupSectionBody": "Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.",
+   "backupExportAction": "Export backup",
+   "backupImportAction": "Import backup",
+   "backupExportTitle": "Export backup",
+-  "backupIncluded": "The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.",
+-  "backupPasswordWarning": "Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.",
++  "backupIncluded": "Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.",
++  "backupPasswordWarning": "Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.",
+   "backupPasswordLabel": "Backup password",
+   "backupConfirmPasswordLabel": "Confirm password",
+   "backupPasswordTooShort": "Use at least 8 characters.",
+@@ -853,7 +866,7 @@
+   "backupHidePassword": "Hide password",
+   "backupChooseSave": "Choose where to save",
+   "backupImportTitle": "Import backup",
+-  "backupImportIntro": "Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.",
++  "backupImportIntro": "Restore your documents and subscriptions from an encrypted Regiday backup file.",
+   "backupChooseFile": "Choose backup file",
+   "backupSelectedFile": "Backup file selected",
+   "backupNoFile": "Choose a backup file first.",
+@@ -874,7 +887,7 @@
+   },
+   "backupReplaceAction": "Replace this device's registry",
+   "backupReplaceTitle": "Replace this device's registry?",
+-  "backupReplaceBody": "Documents, subscriptions, and images on this device will be replaced by this backup.",
++  "backupReplaceBody": "Existing documents, subscriptions, and images on this device will be replaced.",
+   "backupCancel": "Cancel",
+   "backupPhaseProtecting": "Protecting the backup…",
+   "backupPhaseWriting": "Saving the backup file…",
+@@ -1110,7 +1123,7 @@
+     }
+   },
+   "notASubscription": "Not a Subscription",
+-  "addToResiday": "Add to ResiDay",
++  "addToResiday": "Add to Regiday",
+   "connectGmailTitle": "Gmail Subscription Detection",
+   "connectGmailButton": "Connect Gmail",
+   "disconnectGmailButton": "Disconnect",
+@@ -1140,7 +1153,7 @@
+       }
+     }
+   },
+-  "gmailPrivacyNotice": "ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.",
++  "gmailPrivacyNotice": "Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.",
+   "candidateAddedSuccess": "Subscription added successfully.",
+-  "candidateIgnored": "Merchant ignored. ResiDay will not detect this merchant again."
++  "candidateIgnored": "Merchant ignored. Regiday will not detect this merchant again."
+ }
+Index: lib/l10n/app_localizations_fr.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_localizations_fr.dart b/lib/l10n/app_localizations_fr.dart
+--- a/lib/l10n/app_localizations_fr.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_localizations_fr.dart	(date 1795252203026)
+@@ -1500,6 +1500,34 @@
+   String get subscriptionTrackingDisclaimer =>
+       'Le registre suit cet abonnement mais ne l’annule pas et ne le facture pas automatiquement.';
+ 
++  @override
++  String get cancelledSubscriptionsTitle => 'Abonnements annulés';
++
++  @override
++  String get cancelledSubscriptionsEmptyTitle => 'Aucun abonnement annulé';
++
++  @override
++  String get cancelledSubscriptionsEmptyMessage =>
++      'Les abonnements que vous annulez apparaîtront ici pour que vous puissiez les consulter ou les réactiver à tout moment.';
++
++  @override
++  String get cancelledSubscriptionsSearchPlaceholder =>
++      'Rechercher des abonnements annulés';
++
++  @override
++  String cancelledSubscriptionsCount(int count) {
++    String _temp0 = intl.Intl.pluralLogic(
++      count,
++      locale: localeName,
++      other: '$count abonnements annulés',
++      one: '1 abonnement annulé',
++    );
++    return '$_temp0';
++  }
++
++  @override
++  String get viewCancelledAction => 'Voir';
++
+   @override
+   String homeHeroReview(String title) {
+     return 'Examiner $title';
+@@ -2424,7 +2452,7 @@
+   String get notASubscription => 'Pas un abonnement';
+ 
+   @override
+-  String get addToResiday => 'Ajouter à ResiDay';
++  String get addToResiday => 'Ajouter à Regiday';
+ 
+   @override
+   String get connectGmailTitle => 'Détection d\'abonnements Gmail';
+@@ -2458,12 +2486,12 @@
+ 
+   @override
+   String get gmailPrivacyNotice =>
+-      'ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
++      'Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
+ 
+   @override
+   String get candidateAddedSuccess => 'Abonnement ajouté avec succès.';
+ 
+   @override
+   String get candidateIgnored =>
+-      'Marchand ignoré. ResiDay ne détectera plus ce marchand.';
++      'Marchand ignoré. Regiday ne détectera plus ce marchand.';
+ }
+Index: lib/l10n/app_localizations_ar.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_localizations_ar.dart b/lib/l10n/app_localizations_ar.dart
+--- a/lib/l10n/app_localizations_ar.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_localizations_ar.dart	(date 1795252202893)
+@@ -1481,6 +1481,38 @@
+   String get subscriptionTrackingDisclaimer =>
+       'يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.';
+ 
++  @override
++  String get cancelledSubscriptionsTitle => 'الاشتراكات الملغاة';
++
++  @override
++  String get cancelledSubscriptionsEmptyTitle => 'لا توجد اشتراكات ملغاة';
++
++  @override
++  String get cancelledSubscriptionsEmptyMessage =>
++      'الاشتراكات التي تلغيها ستظهر هنا لتتمكن من مراجعتها أو إعادة تفعيلها في أي وقت.';
++
++  @override
++  String get cancelledSubscriptionsSearchPlaceholder =>
++      'البحث في الاشتراكات الملغاة';
++
++  @override
++  String cancelledSubscriptionsCount(int count) {
++    String _temp0 = intl.Intl.pluralLogic(
++      count,
++      locale: localeName,
++      other: '$count اشتراك ملغى',
++      many: '$count اشتراكًا ملغى',
++      few: '$count اشتراكات ملغاة',
++      two: 'اشتراكان ملغيان',
++      one: 'اشتراك ملغى واحد',
++      zero: 'لا توجد اشتراكات ملغاة',
++    );
++    return '$_temp0';
++  }
++
++  @override
++  String get viewCancelledAction => 'عرض';
++
+   @override
+   String homeHeroReview(String title) {
+     return 'راجع $title';
+@@ -2373,7 +2405,7 @@
+   String get notASubscription => 'ليس اشتراكاً';
+ 
+   @override
+-  String get addToResiday => 'إضافة إلى ResiDay';
++  String get addToResiday => 'إضافة إلى Regiday';
+ 
+   @override
+   String get connectGmailTitle => 'اكتشاف اشتراكات Gmail';
+@@ -2407,12 +2439,12 @@
+ 
+   @override
+   String get gmailPrivacyNotice =>
+-      'يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
++      'يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
+ 
+   @override
+   String get candidateAddedSuccess => 'تمت إضافة الاشتراك بنجاح.';
+ 
+   @override
+   String get candidateIgnored =>
+-      'تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى.';
++      'تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى.';
+ }
+Index: lib/l10n/app_localizations_en.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/l10n/app_localizations_en.dart b/lib/l10n/app_localizations_en.dart
+--- a/lib/l10n/app_localizations_en.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/l10n/app_localizations_en.dart	(date 1795252202938)
+@@ -1482,6 +1482,34 @@
+   String get subscriptionTrackingDisclaimer =>
+       'Regiday tracks this plan but does not cancel or charge it automatically.';
+ 
++  @override
++  String get cancelledSubscriptionsTitle => 'Cancelled subscriptions';
++
++  @override
++  String get cancelledSubscriptionsEmptyTitle => 'No cancelled subscriptions';
++
++  @override
++  String get cancelledSubscriptionsEmptyMessage =>
++      'Subscriptions you cancel will appear here so you can review or reactivate them anytime.';
++
++  @override
++  String get cancelledSubscriptionsSearchPlaceholder =>
++      'Search cancelled subscriptions';
++
++  @override
++  String cancelledSubscriptionsCount(int count) {
++    String _temp0 = intl.Intl.pluralLogic(
++      count,
++      locale: localeName,
++      other: '$count cancelled plans',
++      one: '1 cancelled plan',
++    );
++    return '$_temp0';
++  }
++
++  @override
++  String get viewCancelledAction => 'View';
++
+   @override
+   String homeHeroReview(String title) {
+     return 'Review $title';
+@@ -1800,7 +1828,7 @@
+ 
+   @override
+   String get backupSectionBody =>
+-      'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.';
++      'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.';
+ 
+   @override
+   String get backupExportAction => 'Export backup';
+@@ -1813,11 +1841,11 @@
+ 
+   @override
+   String get backupIncluded =>
+-      'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.';
++      'Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.';
+ 
+   @override
+   String get backupPasswordWarning =>
+-      'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.';
++      'Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.';
+ 
+   @override
+   String get backupPasswordLabel => 'Backup password';
+@@ -1845,7 +1873,7 @@
+ 
+   @override
+   String get backupImportIntro =>
+-      'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.';
++      'Restore your documents and subscriptions from an encrypted Regiday backup file.';
+ 
+   @override
+   String get backupChooseFile => 'Choose backup file';
+@@ -1872,7 +1900,7 @@
+ 
+   @override
+   String get backupReplaceBody =>
+-      'Documents, subscriptions, and images on this device will be replaced by this backup.';
++      'Existing documents, subscriptions, and images on this device will be replaced.';
+ 
+   @override
+   String get backupCancel => 'Cancel';
+@@ -2390,7 +2418,7 @@
+   String get notASubscription => 'Not a Subscription';
+ 
+   @override
+-  String get addToResiday => 'Add to ResiDay';
++  String get addToResiday => 'Add to Regiday';
+ 
+   @override
+   String get connectGmailTitle => 'Gmail Subscription Detection';
+@@ -2424,12 +2452,12 @@
+ 
+   @override
+   String get gmailPrivacyNotice =>
+-      'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.';
++      'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.';
+ 
+   @override
+   String get candidateAddedSuccess => 'Subscription added successfully.';
+ 
+   @override
+   String get candidateIgnored =>
+-      'Merchant ignored. ResiDay will not detect this merchant again.';
++      'Merchant ignored. Regiday will not detect this merchant again.';
+ }
+Index: lib/features/subscriptions/presentation/subscription_calendar_view.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/subscriptions/presentation/subscription_calendar_view.dart b/lib/features/subscriptions/presentation/subscription_calendar_view.dart
+--- a/lib/features/subscriptions/presentation/subscription_calendar_view.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/subscriptions/presentation/subscription_calendar_view.dart	(date 1795250492863)
+@@ -66,8 +66,7 @@
+     switch (sub.billingCycle) {
+       case BillingCycle.monthly:
+         final targetDay = next.day;
+-        final daysInThisMonth =
+-            DateTime(date.year, date.month + 1, 0).day;
++        final daysInThisMonth = DateTime(date.year, date.month + 1, 0).day;
+         final effectiveDay =
+             targetDay > daysInThisMonth ? daysInThisMonth : targetDay;
+         return date.day == effectiveDay;
+@@ -79,8 +78,7 @@
+         final monthDiff =
+             (date.year - next.year) * 12 + (date.month - next.month);
+         if (monthDiff % 3 != 0) return false;
+-        final daysInThisMonth =
+-            DateTime(date.year, date.month + 1, 0).day;
++        final daysInThisMonth = DateTime(date.year, date.month + 1, 0).day;
+         final effectiveDay =
+             next.day > daysInThisMonth ? daysInThisMonth : next.day;
+         return date.day == effectiveDay;
+@@ -97,6 +95,7 @@
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+     final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
+ 
+     final year = _focusedMonth.year;
+     final month = _focusedMonth.month;
+@@ -141,7 +140,8 @@
+             ?.amount
+             .currencyCode ??
+         'INR';
+-    final effectiveCurrency = currencySymbol.isEmpty ? fallbackCurrency : currencySymbol;
++    final effectiveCurrency =
++        currencySymbol.isEmpty ? fallbackCurrency : currencySymbol;
+ 
+     final totalMoney = Money(
+       minorUnits: totalCents,
+@@ -155,31 +155,34 @@
+     return Column(
+       crossAxisAlignment: CrossAxisAlignment.stretch,
+       children: [
+-        // 1. Month Header
++        // 1. Month Header & Navigation
+         Padding(
+-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
++          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+           child: Row(
+             children: [
+               Text(
+                 monthTitle,
+                 style: theme.textTheme.headlineSmall?.copyWith(
+-                  fontWeight: FontWeight.bold,
++                  fontWeight: FontWeight.w800,
+                   letterSpacing: -0.5,
+                 ),
+               ),
+               const Spacer(),
+               _RoundIconButton(
+                 icon: Icons.calendar_today_outlined,
++                tooltip: 'Select month',
+                 onPressed: _pickMonth,
+               ),
+-              const SizedBox(width: 8),
++              const SizedBox(width: AppSpacing.xs),
+               _RoundIconButton(
+                 icon: Icons.chevron_left_rounded,
++                tooltip: 'Previous month',
+                 onPressed: _prevMonth,
+               ),
+-              const SizedBox(width: 8),
++              const SizedBox(width: AppSpacing.xs),
+               _RoundIconButton(
+                 icon: Icons.chevron_right_rounded,
++                tooltip: 'Next month',
+                 onPressed: _nextMonth,
+               ),
+             ],
+@@ -188,136 +191,236 @@
+ 
+         const SizedBox(height: AppSpacing.sm),
+ 
+-        // 2. Weekdays Header
++        // 2. Executive Snapshot Cards (Total & Upcoming)
+         Row(
+-          children: const ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+-              .map(
+-                (day) => Expanded(
+-                  child: Center(
+-                    child: Text(
+-                      day,
+-                      style: const TextStyle(
+-                        fontSize: 13,
+-                        fontWeight: FontWeight.w600,
+-                        color: Color(0xFF64748B),
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              )
+-              .toList(),
+-        ),
++          children: [
++            Expanded(
++              child: Container(
++                padding: const EdgeInsets.symmetric(
++                  horizontal: 14,
++                  vertical: 12,
++                ),
++                decoration: BoxDecoration(
++                  color: colorScheme.surfaceContainerLowest,
++                  borderRadius: BorderRadius.circular(16),
++                  border: Border.all(color: colorScheme.outlineVariant),
++                  boxShadow: [
++                    BoxShadow(
++                      color: colorScheme.shadow.withValues(alpha: 0.03),
++                      blurRadius: 6,
++                      offset: const Offset(0, 2),
++                    ),
++                  ],
++                ),
++                child: Column(
++                  crossAxisAlignment: CrossAxisAlignment.start,
++                  children: [
++                    Row(
++                      children: [
++                        Container(
++                          padding: const EdgeInsets.all(4),
++                          decoration: BoxDecoration(
++                            color: colorScheme.primaryContainer.withValues(alpha: 0.5),
++                            borderRadius: BorderRadius.circular(6),
++                          ),
++                          child: Icon(
++                            Icons.account_balance_wallet_outlined,
++                            size: 14,
++                            color: colorScheme.primary,
++                          ),
++                        ),
++                        const SizedBox(width: 6),
++                        Text(
++                          'Total',
++                          style: theme.textTheme.labelMedium?.copyWith(
++                            color: colorScheme.onSurfaceVariant,
++                            fontWeight: FontWeight.w600,
++                          ),
++                        ),
++                      ],
++                    ),
++                    const SizedBox(height: 6),
++                    FittedBox(
++                      fit: BoxFit.scaleDown,
++                      alignment: Alignment.centerLeft,
++                      child: Text(
++                        MoneyFormat.format(totalMoney, l10n.localeName),
++                        style: theme.textTheme.titleMedium?.copyWith(
++                          fontWeight: FontWeight.w800,
++                          letterSpacing: -0.3,
++                        ),
++                      ),
++                    ),
++                  ],
++                ),
++              ),
++            ),
++            const SizedBox(width: AppSpacing.sm),
++            Expanded(
++              child: Container(
++                padding: const EdgeInsets.symmetric(
++                  horizontal: 14,
++                  vertical: 12,
++                ),
++                decoration: BoxDecoration(
++                  color: colorScheme.surfaceContainerLowest,
++                  borderRadius: BorderRadius.circular(16),
++                  border: Border.all(color: colorScheme.outlineVariant),
++                  boxShadow: [
++                    BoxShadow(
++                      color: colorScheme.shadow.withValues(alpha: 0.03),
++                      blurRadius: 6,
++                      offset: const Offset(0, 2),
++                    ),
++                  ],
++                ),
++                child: Column(
++                  crossAxisAlignment: CrossAxisAlignment.start,
++                  children: [
++                    Row(
++                      children: [
++                        Container(
++                          padding: const EdgeInsets.all(4),
++                          decoration: BoxDecoration(
++                            color: const Color(0xFFDFF8F2),
++                            borderRadius: BorderRadius.circular(6),
++                          ),
++                          child: const Icon(
++                            Icons.upcoming_outlined,
++                            size: 14,
++                            color: Color(0xFF086B59),
++                          ),
++                        ),
++                        const SizedBox(width: 6),
++                        Text(
++                          'Upcoming',
++                          style: theme.textTheme.labelMedium?.copyWith(
++                            color: colorScheme.onSurfaceVariant,
++                            fontWeight: FontWeight.w600,
++                          ),
++                        ),
++                      ],
++                    ),
++                    const SizedBox(height: 6),
++                    FittedBox(
++                      fit: BoxFit.scaleDown,
++                      alignment: Alignment.centerLeft,
++                      child: Text(
++                        MoneyFormat.format(upcomingMoney, l10n.localeName),
++                        style: theme.textTheme.titleMedium?.copyWith(
++                          fontWeight: FontWeight.w800,
++                          letterSpacing: -0.3,
++                        ),
++                      ),
++                    ),
++                  ],
++                ),
++              ),
++            ),
++          ],
++        ),
++
++        const SizedBox(height: AppSpacing.sm),
++
++        // 3. Calendar Card (Weekdays + Date Grid)
++        Container(
++          padding: const EdgeInsets.all(AppSpacing.sm),
++          decoration: BoxDecoration(
++            color: colorScheme.surfaceContainerLowest,
++            borderRadius: BorderRadius.circular(20),
++            border: Border.all(color: colorScheme.outlineVariant),
++            boxShadow: [
++              BoxShadow(
++                color: colorScheme.shadow.withValues(alpha: 0.04),
++                blurRadius: 8,
++                offset: const Offset(0, 2),
++              ),
++            ],
++          ),
++          child: Column(
++            children: [
++              // Weekdays Header
++              Padding(
++                padding: const EdgeInsets.only(bottom: 8),
++                child: Row(
++                  children: const ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
++                      .map(
++                        (day) => Expanded(
++                          child: Center(
++                            child: Text(
++                              day,
++                              style: TextStyle(
++                                fontSize: 12,
++                                fontWeight: FontWeight.w700,
++                                color: colorScheme.onSurfaceVariant,
++                              ),
++                            ),
++                          ),
++                        ),
++                      )
++                      .toList(),
++                ),
++              ),
+ 
+-        const SizedBox(height: AppSpacing.xs),
+-
+-        // 3. Calendar Grid
+-        GridView.builder(
+-          shrinkWrap: true,
+-          physics: const NeverScrollableScrollPhysics(),
+-          itemCount: totalCells,
+-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+-            crossAxisCount: 7,
+-            mainAxisSpacing: 6,
+-            crossAxisSpacing: 6,
+-            childAspectRatio: 0.72,
+-          ),
+-          itemBuilder: (context, index) {
+-            DateTime cellDate;
+-            bool isCurrentMonthDay = true;
++              // Calendar Grid
++              GridView.builder(
++                shrinkWrap: true,
++                physics: const NeverScrollableScrollPhysics(),
++                itemCount: totalCells,
++                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
++                  crossAxisCount: 7,
++                  mainAxisSpacing: 5,
++                  crossAxisSpacing: 5,
++                  childAspectRatio: 0.88,
++                ),
++                itemBuilder: (context, index) {
++                  DateTime cellDate;
++                  bool isCurrentMonthDay = true;
+ 
+-            if (index < leadingDays) {
+-              final prevDay = prevMonthLastDay - (leadingDays - 1 - index);
+-              cellDate = DateTime(year, month - 1, prevDay);
+-              isCurrentMonthDay = false;
+-            } else if (index >= leadingDays + daysInCurrentMonth) {
+-              final nextDay = index - (leadingDays + daysInCurrentMonth) + 1;
+-              cellDate = DateTime(year, month + 1, nextDay);
+-              isCurrentMonthDay = false;
+-            } else {
+-              final day = index - leadingDays + 1;
+-              cellDate = DateTime(year, month, day);
+-            }
++                  if (index < leadingDays) {
++                    final prevDay = prevMonthLastDay - (leadingDays - 1 - index);
++                    cellDate = DateTime(year, month - 1, prevDay);
++                    isCurrentMonthDay = false;
++                  } else if (index >= leadingDays + daysInCurrentMonth) {
++                    final nextDay =
++                        index - (leadingDays + daysInCurrentMonth) + 1;
++                    cellDate = DateTime(year, month + 1, nextDay);
++                    isCurrentMonthDay = false;
++                  } else {
++                    final day = index - leadingDays + 1;
++                    cellDate = DateTime(year, month, day);
++                  }
+ 
+-            final daySubs =
+-                isCurrentMonthDay ? _getSubscriptionsForDay(cellDate) : <RegistrySubscription>[];
+-            final isToday = cellDate.year == widget.now.year &&
+-                cellDate.month == widget.now.month &&
+-                cellDate.day == widget.now.day;
++                  final daySubs = isCurrentMonthDay
++                      ? _getSubscriptionsForDay(cellDate)
++                      : <RegistrySubscription>[];
++                  final isToday = cellDate.year == widget.now.year &&
++                      cellDate.month == widget.now.month &&
++                      cellDate.day == widget.now.day;
++                  final isSelected = _selectedDate != null &&
++                      cellDate.year == _selectedDate!.year &&
++                      cellDate.month == _selectedDate!.month &&
++                      cellDate.day == _selectedDate!.day;
+ 
+-            return _CalendarDayCell(
+-              date: cellDate,
+-              isCurrentMonth: isCurrentMonthDay,
+-              isToday: isToday,
+-              subscriptions: daySubs,
+-              onTap: isCurrentMonthDay
+-                  ? () => _onDayTapped(cellDate, daySubs)
+-                  : null,
+-            );
+-          },
+-        ),
+-
+-        const SizedBox(height: AppSpacing.md),
+-
+-        // 4. Bottom Summary Bar (Total & Upcoming)
+-        Container(
+-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+-          decoration: const BoxDecoration(
+-            border: Border(
+-              top: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+-            ),
+-          ),
+-          child: Row(
+-            children: [
+-              Expanded(
+-                child: Text.rich(
+-                  TextSpan(
+-                    children: [
+-                      TextSpan(
+-                        text: '${MoneyFormat.format(totalMoney, l10n.localeName)} ',
+-                        style: theme.textTheme.titleMedium?.copyWith(
+-                          fontWeight: FontWeight.bold,
+-                          letterSpacing: -0.3,
+-                        ),
+-                      ),
+-                      TextSpan(
+-                        text: '\nTotal',
+-                        style: theme.textTheme.bodyMedium?.copyWith(
+-                          color: const Color(0xFF64748B),
+-                          fontWeight: FontWeight.w500,
+-                        ),
+-                      ),
+-                    ],
+-                  ),
+-                ),
+-              ),
+-              const SizedBox(width: AppSpacing.lg),
+-              Expanded(
+-                child: Text.rich(
+-                  TextSpan(
+-                    children: [
+-                      TextSpan(
+-                        text: '${MoneyFormat.format(upcomingMoney, l10n.localeName)} ',
+-                        style: theme.textTheme.titleMedium?.copyWith(
+-                          fontWeight: FontWeight.bold,
+-                          letterSpacing: -0.3,
+-                        ),
+-                      ),
+-                      TextSpan(
+-                        text: '\nUpcoming',
+-                        style: theme.textTheme.bodyMedium?.copyWith(
+-                          color: const Color(0xFF64748B),
+-                          fontWeight: FontWeight.w500,
+-                        ),
+-                      ),
+-                    ],
+-                  ),
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
++                  return _CalendarDayCell(
++                    date: cellDate,
++                    isCurrentMonth: isCurrentMonthDay,
++                    isToday: isToday,
++                    isSelected: isSelected,
++                    subscriptions: daySubs,
++                    onTap: isCurrentMonthDay
++                        ? () => _onDayTapped(cellDate, daySubs)
++                        : null,
++                  );
++                },
++              ),
++            ],
++          ),
++        ),
++
++        const SizedBox(height: AppSpacing.sm),
+ 
+-        // 5. Selected Day Subscriptions List (if tapped)
++        // 4. Selected Day Subscriptions Drawer
+         if (_selectedDate != null) ...[
+           _DaySubscriptionsDrawer(
+             date: _selectedDate!,
+@@ -341,6 +444,7 @@
+     required this.date,
+     required this.isCurrentMonth,
+     required this.isToday,
++    required this.isSelected,
+     required this.subscriptions,
+     this.onTap,
+   });
+@@ -348,75 +452,93 @@
+   final DateTime date;
+   final bool isCurrentMonth;
+   final bool isToday;
++  final bool isSelected;
+   final List<RegistrySubscription> subscriptions;
+   final VoidCallback? onTap;
+ 
+   @override
+   Widget build(BuildContext context) {
++    final colorScheme = Theme.of(context).colorScheme;
+     final hasSubs = subscriptions.isNotEmpty;
+ 
+-    final cellColor = hasSubs
+-        ? const Color(0xFF2563EB) // Vibrant blue card like in the screenshot
+-        : isCurrentMonth
+-            ? const Color(0xFFF8FAFC)
+-            : const Color(0xFFF1F5F9).withValues(alpha: 0.5);
++    final BoxDecoration decoration;
++    final Color dateColor;
+ 
+-    final textColor = hasSubs
+-        ? Colors.white
+-        : isCurrentMonth
+-            ? const Color(0xFF0F172A)
+-            : const Color(0xFF94A3B8);
+-
+-    return InkWell(
+-      onTap: onTap,
+-      borderRadius: BorderRadius.circular(10),
+-      child: AnimatedContainer(
+-        duration: const Duration(milliseconds: 200),
+-        decoration: BoxDecoration(
+-          color: cellColor,
+-          borderRadius: BorderRadius.circular(10),
+-          border: isToday && !hasSubs
+-              ? Border.all(color: const Color(0xFF2563EB), width: 1.5)
+-              : null,
+-          boxShadow: hasSubs
+-              ? [
+-                  BoxShadow(
+-                    color: const Color(0xFF2563EB).withValues(alpha: 0.25),
+-                    blurRadius: 4,
+-                    offset: const Offset(0, 2),
+-                  ),
+-                ]
+-              : null,
++    if (!isCurrentMonth) {
++      decoration = const BoxDecoration();
++      dateColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.3);
++    } else if (isSelected) {
++      decoration = BoxDecoration(
++        color: const Color(0xFF1E2B58),
++        borderRadius: BorderRadius.circular(12),
++        boxShadow: [
++          BoxShadow(
++            color: const Color(0xFF1E2B58).withValues(alpha: 0.25),
++            blurRadius: 4,
++            offset: const Offset(0, 2),
++          ),
++        ],
++      );
++      dateColor = Colors.white;
++    } else if (hasSubs) {
++      decoration = BoxDecoration(
++        color: const Color(0xFFECE8FB),
++        borderRadius: BorderRadius.circular(12),
++        border: Border.all(
++          color: const Color(0xFFD4CCF7),
++          width: 1,
+         ),
+-        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
++      );
++      dateColor = const Color(0xFF111936);
++    } else if (isToday) {
++      decoration = BoxDecoration(
++        color: colorScheme.primaryContainer.withValues(alpha: 0.35),
++        borderRadius: BorderRadius.circular(12),
++        border: Border.all(
++          color: colorScheme.primary,
++          width: 1.2,
++        ),
++      );
++      dateColor = colorScheme.primary;
++    } else {
++      decoration = BoxDecoration(
++        color: const Color(0xFFFAF9F6),
++        borderRadius: BorderRadius.circular(12),
++        border: Border.all(
++          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
++          width: 0.8,
++        ),
++      );
++      dateColor = colorScheme.onSurface;
++    }
++
++    return InkWell(
++      onTap: onTap,
++      borderRadius: BorderRadius.circular(12),
++      child: AnimatedContainer(
++        duration: const Duration(milliseconds: 180),
++        decoration: decoration,
++        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+         child: Column(
+-          crossAxisAlignment: CrossAxisAlignment.stretch,
+           children: [
+-            // Date number
+             Text(
+               '${date.day}',
+               textAlign: TextAlign.center,
+               style: TextStyle(
+                 fontSize: 12,
+-                fontWeight: hasSubs || isToday ? FontWeight.bold : FontWeight.w500,
+-                color: textColor,
++                fontWeight: (hasSubs || isToday || isSelected)
++                    ? FontWeight.w800
++                    : FontWeight.w600,
++                color: dateColor,
+               ),
+             ),
+             if (hasSubs) ...[
+               const Spacer(),
+-              // Service brand badge (matches ACKO badge in screenshot)
+               Container(
+-                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
++                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                 decoration: BoxDecoration(
+-                  color: Colors.white,
+-                  borderRadius: BorderRadius.circular(6),
+-                  boxShadow: [
+-                    BoxShadow(
+-                      color: Colors.black.withValues(alpha: 0.08),
+-                      blurRadius: 2,
+-                      offset: const Offset(0, 1),
+-                    ),
+-                  ],
++                  color: isSelected ? Colors.white : const Color(0xFF5544DB),
++                  borderRadius: BorderRadius.circular(5),
+                 ),
+                 child: Row(
+                   mainAxisSize: MainAxisSize.min,
+@@ -424,8 +546,10 @@
+                   children: [
+                     Icon(
+                       SubscriptionCopy.iconFor(subscriptions.first.category),
+-                      size: 10,
+-                      color: const Color(0xFF2563EB),
++                      size: 9,
++                      color: isSelected
++                          ? const Color(0xFF1E2B58)
++                          : Colors.white,
+                     ),
+                     const SizedBox(width: 2),
+                     Flexible(
+@@ -433,10 +557,12 @@
+                         subscriptions.first.serviceName,
+                         maxLines: 1,
+                         overflow: TextOverflow.ellipsis,
+-                        style: const TextStyle(
+-                          fontSize: 9,
++                        style: TextStyle(
++                          fontSize: 8.5,
+                           fontWeight: FontWeight.w800,
+-                          color: Color(0xFF1E293B),
++                          color: isSelected
++                              ? const Color(0xFF1E2B58)
++                              : Colors.white,
+                           letterSpacing: -0.2,
+                         ),
+                       ),
+@@ -447,12 +573,13 @@
+               if (subscriptions.length > 1) ...[
+                 const SizedBox(height: 1),
+                 Text(
+-                  '+${subscriptions.length - 1} more',
+-                  textAlign: TextAlign.center,
+-                  style: const TextStyle(
+-                    fontSize: 8,
+-                    fontWeight: FontWeight.bold,
+-                    color: Colors.white,
++                  '+${subscriptions.length - 1}',
++                  style: TextStyle(
++                    fontSize: 7.5,
++                    fontWeight: FontWeight.w700,
++                    color: isSelected
++                        ? Colors.white
++                        : const Color(0xFF5544DB),
+                   ),
+                 ),
+               ],
+@@ -466,26 +593,39 @@
+ }
+ 
+ class _RoundIconButton extends StatelessWidget {
+-  const _RoundIconButton({required this.icon, required this.onPressed});
++  const _RoundIconButton({
++    required this.icon,
++    required this.onPressed,
++    this.tooltip,
++  });
+ 
+   final IconData icon;
+   final VoidCallback onPressed;
++  final String? tooltip;
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return Material(
+-      color: const Color(0xFFF1F5F9),
+-      shape: const CircleBorder(),
++    final colorScheme = Theme.of(context).colorScheme;
++    final button = Material(
++      color: colorScheme.surfaceContainerLowest,
++      shape: CircleBorder(
++        side: BorderSide(color: colorScheme.outlineVariant),
++      ),
+       clipBehavior: Clip.antiAlias,
+       child: InkWell(
+         onTap: onPressed,
+         child: SizedBox(
+           width: 36,
+           height: 36,
+-          child: Icon(icon, size: 18, color: const Color(0xFF334155)),
++          child: Icon(icon, size: 18, color: colorScheme.onSurface),
+         ),
+       ),
+     );
++
++    if (tooltip != null) {
++      return Tooltip(message: tooltip!, child: button);
++    }
++    return button;
+   }
+ }
+ 
+@@ -504,121 +644,162 @@
+   Widget build(BuildContext context) {
+     final l10n = AppLocalizations.of(context);
+     final theme = Theme.of(context);
++    final colorScheme = theme.colorScheme;
+     final formattedDate = DateFormat.yMMMMd(l10n.localeName).format(date);
+ 
+-    if (subscriptions.isEmpty) {
+-      return Padding(
+-        padding: const EdgeInsets.symmetric(vertical: 8),
+-        child: Text(
+-          'No subscriptions due on $formattedDate',
+-          style: theme.textTheme.bodySmall?.copyWith(
+-            color: const Color(0xFF64748B),
+-          ),
+-        ),
+-      );
+-    }
+-
+     return Container(
+-      margin: const EdgeInsets.only(top: 8),
++      margin: const EdgeInsets.only(top: 4),
+       padding: const EdgeInsets.all(AppSpacing.md),
+       decoration: BoxDecoration(
+-        color: const Color(0xFFF8FAFC),
+-        borderRadius: BorderRadius.circular(16),
+-        border: Border.all(color: const Color(0xFFE2E8F0)),
++        color: colorScheme.surfaceContainerLowest,
++        borderRadius: BorderRadius.circular(18),
++        border: Border.all(color: colorScheme.outlineVariant),
++        boxShadow: [
++          BoxShadow(
++            color: colorScheme.shadow.withValues(alpha: 0.04),
++            blurRadius: 8,
++            offset: const Offset(0, 2),
++          ),
++        ],
+       ),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           Row(
+             children: [
+-              const Icon(
+-                Icons.event_note_rounded,
+-                size: 16,
+-                color: Color(0xFF2563EB),
++              Container(
++                padding: const EdgeInsets.all(6),
++                decoration: BoxDecoration(
++                  color: colorScheme.primaryContainer.withValues(alpha: 0.6),
++                  shape: BoxShape.circle,
++                ),
++                child: Icon(
++                  Icons.event_note_rounded,
++                  size: 16,
++                  color: colorScheme.primary,
++                ),
+               ),
+-              const SizedBox(width: 6),
+-              Text(
+-                'Due on $formattedDate',
+-                style: const TextStyle(
+-                  fontSize: 13,
+-                  fontWeight: FontWeight.bold,
+-                  color: Color(0xFF1E293B),
++              const SizedBox(width: 8),
++              Expanded(
++                child: Text(
++                  'Due on $formattedDate',
++                  style: theme.textTheme.titleSmall?.copyWith(
++                    fontWeight: FontWeight.w700,
++                  ),
+                 ),
+               ),
++              if (subscriptions.isNotEmpty)
++                Container(
++                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
++                  decoration: BoxDecoration(
++                    color: colorScheme.primaryContainer,
++                    borderRadius: BorderRadius.circular(10),
++                  ),
++                  child: Text(
++                    '${subscriptions.length} ${subscriptions.length == 1 ? "bill" : "bills"}',
++                    style: TextStyle(
++                      fontSize: 11,
++                      fontWeight: FontWeight.w700,
++                      color: colorScheme.onPrimaryContainer,
++                    ),
++                  ),
++                ),
+             ],
+           ),
+           const SizedBox(height: AppSpacing.sm),
+-          for (final sub in subscriptions) ...[
+-            InkWell(
+-              onTap: () => AppRoutes.openSubscriptionDetail(context, sub.id),
+-              borderRadius: BorderRadius.circular(12),
+-              child: Container(
+-                margin: const EdgeInsets.only(bottom: 6),
+-                padding: const EdgeInsets.symmetric(
+-                  horizontal: 12,
+-                  vertical: 10,
+-                ),
+-                decoration: BoxDecoration(
+-                  color: Colors.white,
+-                  borderRadius: BorderRadius.circular(12),
+-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+-                ),
+-                child: Row(
+-                  children: [
+-                    Container(
+-                      width: 32,
+-                      height: 32,
+-                      decoration: BoxDecoration(
+-                        color: const Color(0xFFEFF6FF),
+-                        borderRadius: BorderRadius.circular(8),
+-                      ),
+-                      child: Icon(
+-                        SubscriptionCopy.iconFor(sub.category),
+-                        size: 18,
+-                        color: const Color(0xFF2563EB),
+-                      ),
+-                    ),
+-                    const SizedBox(width: 10),
+-                    Expanded(
+-                      child: Column(
+-                        crossAxisAlignment: CrossAxisAlignment.start,
+-                        children: [
+-                          Text(
+-                            sub.serviceName,
+-                            style: const TextStyle(
+-                              fontSize: 14,
+-                              fontWeight: FontWeight.bold,
+-                              color: Color(0xFF0F172A),
+-                            ),
+-                          ),
+-                          Text(
+-                            SubscriptionCopy.cycle(l10n, sub.billingCycle),
+-                            style: const TextStyle(
+-                              fontSize: 12,
+-                              color: Color(0xFF64748B),
+-                            ),
+-                          ),
+-                        ],
+-                      ),
+-                    ),
+-                    Text(
+-                      MoneyFormat.format(sub.amount, l10n.localeName),
+-                      style: const TextStyle(
+-                        fontSize: 14,
+-                        fontWeight: FontWeight.bold,
+-                        color: Color(0xFF0F172A),
+-                      ),
+-                    ),
+-                    const SizedBox(width: 4),
+-                    const Icon(
+-                      Icons.chevron_right_rounded,
+-                      size: 16,
+-                      color: Color(0xFF94A3B8),
+-                    ),
+-                  ],
+-                ),
+-              ),
+-            ),
++          if (subscriptions.isEmpty)
++            Padding(
++              padding: const EdgeInsets.symmetric(vertical: 8),
++              child: Row(
++                children: [
++                  const Icon(
++                    Icons.check_circle_outline_rounded,
++                    size: 18,
++                    color: Color(0xFF1AA392),
++                  ),
++                  const SizedBox(width: 8),
++                  Expanded(
++                    child: Text(
++                      'No subscriptions due on $formattedDate',
++                      style: theme.textTheme.bodyMedium?.copyWith(
++                        color: colorScheme.onSurfaceVariant,
++                      ),
++                    ),
++                  ),
++                ],
++              ),
++            )
++          else ...[
++            for (final sub in subscriptions) ...[
++              Material(
++                color: Colors.white,
++                shape: RoundedRectangleBorder(
++                  borderRadius: BorderRadius.circular(14),
++                  side: BorderSide(color: colorScheme.outlineVariant),
++                ),
++                child: InkWell(
++                  onTap: () => AppRoutes.openSubscriptionDetail(context, sub.id),
++                  borderRadius: BorderRadius.circular(14),
++                  child: Padding(
++                    padding: const EdgeInsets.symmetric(
++                      horizontal: 14,
++                      vertical: 12,
++                    ),
++                    child: Row(
++                      children: [
++                        Container(
++                          width: 38,
++                          height: 38,
++                          decoration: BoxDecoration(
++                            color: const Color(0xFFEDE9FE),
++                            borderRadius: BorderRadius.circular(10),
++                          ),
++                          child: Icon(
++                            SubscriptionCopy.iconFor(sub.category),
++                            size: 20,
++                            color: const Color(0xFF6558F5),
++                          ),
++                        ),
++                        const SizedBox(width: 12),
++                        Expanded(
++                          child: Column(
++                            crossAxisAlignment: CrossAxisAlignment.start,
++                            children: [
++                              Text(
++                                sub.serviceName,
++                                style: theme.textTheme.titleSmall?.copyWith(
++                                  fontWeight: FontWeight.w700,
++                                ),
++                              ),
++                              const SizedBox(height: 2),
++                              Text(
++                                SubscriptionCopy.cycle(l10n, sub.billingCycle),
++                                style: theme.textTheme.bodySmall?.copyWith(
++                                  color: colorScheme.onSurfaceVariant,
++                                ),
++                              ),
++                            ],
++                          ),
++                        ),
++                        Text(
++                          MoneyFormat.format(sub.amount, l10n.localeName),
++                          style: theme.textTheme.titleSmall?.copyWith(
++                            fontWeight: FontWeight.w800,
++                          ),
++                        ),
++                        const SizedBox(width: 6),
++                        Icon(
++                          Icons.chevron_right_rounded,
++                          size: 18,
++                          color: colorScheme.onSurfaceVariant,
++                        ),
++                      ],
++                    ),
++                  ),
++                ),
++              ),
++              const SizedBox(height: 8),
++            ],
+           ],
+         ],
+       ),
+Index: lib/app/navigation/app_routes.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/app/navigation/app_routes.dart b/lib/app/navigation/app_routes.dart
+--- a/lib/app/navigation/app_routes.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/app/navigation/app_routes.dart	(date 1795250072150)
+@@ -13,6 +13,7 @@
+ import 'package:the_registry/features/notifications/presentation/notifications_screen.dart';
+ import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
+ import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
++import 'package:the_registry/features/subscriptions/presentation/cancelled_subscriptions_screen.dart';
+ import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
+ import 'package:the_registry/features/subscriptions/presentation/gmail_connect_screen.dart';
+ import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_screen.dart';
+@@ -143,6 +144,14 @@
+     );
+   }
+ 
++  static Future<void> openCancelledSubscriptions(BuildContext context) {
++    return Navigator.of(context).push(
++      MaterialPageRoute<void>(
++        builder: (_) => const CancelledSubscriptionsScreen(),
++      ),
++    );
++  }
++
+   static Future<void> openSubscriptionDetail(BuildContext context, String id) {
+     return Navigator.of(context).push(
+       MaterialPageRoute<void>(
+Index: lib/features/documents/presentation/add_document_controller.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/features/documents/presentation/add_document_controller.dart b/lib/features/documents/presentation/add_document_controller.dart
+--- a/lib/features/documents/presentation/add_document_controller.dart	(revision 28798aa1950eae7a376e1e484bca15ad4745f68a)
++++ b/lib/features/documents/presentation/add_document_controller.dart	(date 1795248324909)
+@@ -609,7 +609,7 @@
+             value: value,
+             confidence: value.trim().isEmpty
+                 ? OcrConfidence.notDetected
+-                : OcrConfidence.review,
++                : OcrConfidence.high,
+           )
+         else
+           field,
