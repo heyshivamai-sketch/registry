@@ -11,9 +11,9 @@ import 'subscription_copy.dart';
 
 class SubscriptionCalendarView extends StatefulWidget {
   const SubscriptionCalendarView({
-    super.key,
     required this.subscriptions,
     required this.now,
+    super.key,
   });
 
   final List<RegistrySubscription> subscriptions;
@@ -564,7 +564,6 @@ class _RoundIconButton extends StatelessWidget {
       shape: CircleBorder(
         side: BorderSide(color: colorScheme.outlineVariant, width: 1.1),
       ),
-      elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
