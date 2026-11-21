@@ -106,11 +106,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     icon: const Icon(Icons.add_rounded, size: 20),
                     label: Text(l10n.addSubscription),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(AppSpacing.minTapTarget, 48),
                       side: BorderSide(
                         color: Theme.of(context).colorScheme.outlineVariant,
-                        width: 1.2,
+                        width: 1.5,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -118,11 +118,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height:
-                      AppSpacing.minTapTarget *
-                      MediaQuery.textScalerOf(context).scale(1),
-                ),
+                const SizedBox(height: AppSpacing.xxl),
               ] else ...[
                 RegistryAuraSearchField(
                   controller: _searchController,

@@ -1,21 +1,27 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/gmail/v1.dart' as gmail;
 import 'package:http/http.dart' as http;
-import '../domain/gmail_subscription_detection_service.dart';
+import 'package:the_registry/features/subscriptions/domain/gmail_subscription_detection_service.dart';
 
 abstract interface class GmailClientGateway {
   Future<String?> signIn();
-
   Future<void> signOut();
-
   Future<String?> getCurrentUserEmail();
-
-  Future<List<GmailRawMessage>> searchBillingEmails({DateTime? since, int maxResults = 50});
+  Future<List<GmailRawMessage>> searchBillingEmails({
+    DateTime? since,
+    int maxResults = 50,
+  });
 }
 
 class GoogleApiGmailGateway implements GmailClientGateway {
-  GoogleApiGmailGateway({GoogleSignIn? googleSignIn})
-    : _googleSignIn = googleSignIn ?? GoogleSignIn(scopes: const ['https://www.googleapis.com/auth/gmail.readonly']);
+  GoogleApiGmailGateway({
+    GoogleSignIn? googleSignIn,
+  }) : _googleSignIn = googleSignIn ??
+            GoogleSignIn(
+              scopes: const [
+                'https://www.googleapis.com/auth/gmail.readonly',
+              ],
+            );
 
   final GoogleSignIn _googleSignIn;
 
@@ -52,7 +58,10 @@ class GoogleApiGmailGateway implements GmailClientGateway {
   }
 
   @override
-  Future<List<GmailRawMessage>> searchBillingEmails({DateTime? since, int maxResults = 50}) async {
+  Future<List<GmailRawMessage>> searchBillingEmails({
+    DateTime? since,
+    int maxResults = 50,
+  }) async {
     var account = _googleSignIn.currentUser;
     if (account == null) {
       for (var attempt = 1; attempt <= 2; attempt++) {
@@ -85,7 +94,11 @@ class GoogleApiGmailGateway implements GmailClientGateway {
       query += ' after:$epochSeconds';
     }
 
-    final listResponse = await gmailApi.users.messages.list('me', q: query, maxResults: maxResults);
+    final listResponse = await gmailApi.users.messages.list(
+      'me',
+      q: query,
+      maxResults: maxResults,
+    );
 
     final messages = listResponse.messages;
     if (messages == null || messages.isEmpty) {
@@ -99,7 +112,11 @@ class GoogleApiGmailGateway implements GmailClientGateway {
       if (msgId == null) continue;
 
       try {
-        final message = await gmailApi.users.messages.get('me', msgId, format: 'full');
+        final message = await gmailApi.users.messages.get(
+          'me',
+          msgId,
+          format: 'full',
+        );
 
         final headersMap = <String, String>{};
         final payloadHeaders = message.payload?.headers;
@@ -191,3 +208,4 @@ class _AuthenticatedClient extends http.BaseClient {
     return _client.send(request);
   }
 }
+
