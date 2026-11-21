@@ -284,7 +284,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       discovery: _discovery,
       gmailClient: _gmailClient,
       child: MaterialApp(
-        onGenerateTitle: (context) => 'Regiday',
+        onGenerateTitle: (context) => 'Registry',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),

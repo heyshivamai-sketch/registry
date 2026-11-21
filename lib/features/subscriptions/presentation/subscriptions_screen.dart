@@ -15,7 +15,7 @@ import '../domain/subscription_estimate.dart';
 import '../domain/subscription_status.dart';
 import '../domain/subscription_wallet.dart';
 import '../widgets/subscription_list_card.dart';
-import 'subscription_calendar_view.dart';
+// import 'subscription_calendar_view.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
@@ -27,7 +27,7 @@ class SubscriptionsScreen extends StatefulWidget {
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   final TextEditingController _searchController = TextEditingController();
   SubscriptionWalletFilter _filter = SubscriptionWalletFilter.all;
-  bool _isCalendarView = false;
+  // bool _isCalendarView = false;
 
   @override
   void initState() {
@@ -87,11 +87,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 savedCount: items.length,
                 activeCount: activeCount,
                 cancelledCount: cancelledCount,
-                isCalendarView: _isCalendarView,
-                onToggleView: () =>
-                    setState(() => _isCalendarView = !_isCalendarView),
+                // isCalendarView: _isCalendarView,
+                // onToggleView: () =>
+                //     setState(() => _isCalendarView = !_isCalendarView),
               ),
               const SizedBox(height: AppSpacing.sm),
+              /*
               if (_isCalendarView) ...[
                 SubscriptionCalendarView(
                   subscriptions: items.where((item) => item.isActive).toList(),
@@ -119,7 +120,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-              ] else ...[
+              ] else
+              */
+              ...[
                 RegistryAuraSearchField(
                   controller: _searchController,
                   hintText: l10n.subscriptionsSearchPlaceholder,
@@ -229,15 +232,15 @@ class _SubscriptionsHeader extends StatelessWidget {
     required this.savedCount,
     required this.activeCount,
     this.cancelledCount = 0,
-    this.isCalendarView = false,
-    this.onToggleView,
+    // this.isCalendarView = false,
+    // this.onToggleView,
   });
 
   final int savedCount;
   final int activeCount;
   final int cancelledCount;
-  final bool isCalendarView;
-  final VoidCallback? onToggleView;
+  // final bool isCalendarView;
+  // final VoidCallback? onToggleView;
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +261,8 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
+            // Calendar view toggle (commented out)
+            /*
             Semantics(
               button: true,
               label: isCalendarView ? 'List view' : 'Calendar view',
@@ -293,6 +298,7 @@ class _SubscriptionsHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.xs),
+            */
             Semantics(
               button: true,
               label: l10n.cancelledSubscriptionsTitle,
@@ -335,6 +341,8 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
+            // Detect subscription (commented out)
+            /*
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
@@ -360,6 +368,7 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
+            */
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
