@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import '../domain/detected_subscription.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
 
 class GmailSyncMetadata {
   const GmailSyncMetadata({
     required this.emailAddress,
+    required this.connectedAt,
     this.lastSuccessfulScan,
     this.lastScannedMessageId,
-    required this.connectedAt,
   });
 
   final String emailAddress;
@@ -36,25 +36,31 @@ class GmailSyncMetadata {
 
 abstract interface class DetectedSubscriptionRepository extends ChangeNotifier {
   List<DetectedSubscriptionCandidate> get candidates;
+
   Set<String> get ignoredMerchants;
+
   GmailSyncMetadata? get gmailMetadata;
 
   Future<void> saveCandidates(List<DetectedSubscriptionCandidate> newCandidates);
+
   Future<void> updateCandidateStatus(String id, DetectionReviewStatus status);
+
   Future<void> ignoreMerchant(String merchantName);
+
   Future<void> unignoreMerchant(String merchantName);
+
   Future<void> saveGmailMetadata(GmailSyncMetadata metadata);
+
   Future<void> clearGmailMetadata();
 }
 
-class InMemoryDetectedSubscriptionRepository extends ChangeNotifier
-    implements DetectedSubscriptionRepository {
+class InMemoryDetectedSubscriptionRepository extends ChangeNotifier implements DetectedSubscriptionRepository {
   InMemoryDetectedSubscriptionRepository({
     List<DetectedSubscriptionCandidate>? initialCandidates,
     Set<String>? initialIgnored,
     this.gmailMetadata,
-  })  : _candidates = initialCandidates ?? [],
-        _ignoredMerchants = initialIgnored ?? {};
+  }) : _candidates = initialCandidates ?? [],
+       _ignoredMerchants = initialIgnored ?? {};
 
   final List<DetectedSubscriptionCandidate> _candidates;
   final Set<String> _ignoredMerchants;
@@ -62,15 +68,13 @@ class InMemoryDetectedSubscriptionRepository extends ChangeNotifier
   GmailSyncMetadata? gmailMetadata;
 
   @override
-  List<DetectedSubscriptionCandidate> get candidates =>
-      List.unmodifiable(_candidates);
+  List<DetectedSubscriptionCandidate> get candidates => List.unmodifiable(_candidates);
 
   @override
   Set<String> get ignoredMerchants => Set.unmodifiable(_ignoredMerchants);
 
   @override
-  Future<void> saveCandidates(
-      List<DetectedSubscriptionCandidate> newCandidates) async {
+  Future<void> saveCandidates(List<DetectedSubscriptionCandidate> newCandidates) async {
     for (final candidate in newCandidates) {
       final index = _candidates.indexWhere((c) => c.id == candidate.id);
       if (index >= 0) {
@@ -83,8 +87,7 @@ class InMemoryDetectedSubscriptionRepository extends ChangeNotifier
   }
 
   @override
-  Future<void> updateCandidateStatus(
-      String id, DetectionReviewStatus status) async {
+  Future<void> updateCandidateStatus(String id, DetectionReviewStatus status) async {
     final index = _candidates.indexWhere((c) => c.id == id);
     if (index >= 0) {
       _candidates[index] = _candidates[index].copyWith(reviewStatus: status);
@@ -97,10 +100,8 @@ class InMemoryDetectedSubscriptionRepository extends ChangeNotifier
     _ignoredMerchants.add(merchantName.toLowerCase().trim());
     // Mark pending candidates for this merchant as ignored
     for (var i = 0; i < _candidates.length; i++) {
-      if (_candidates[i].merchantName.toLowerCase().trim() ==
-          merchantName.toLowerCase().trim()) {
-        _candidates[i] = _candidates[i]
-            .copyWith(reviewStatus: DetectionReviewStatus.ignored);
+      if (_candidates[i].merchantName.toLowerCase().trim() == merchantName.toLowerCase().trim()) {
+        _candidates[i] = _candidates[i].copyWith(reviewStatus: DetectionReviewStatus.ignored);
       }
     }
     notifyListeners();
@@ -125,8 +126,7 @@ class InMemoryDetectedSubscriptionRepository extends ChangeNotifier
   }
 }
 
-class SqliteDetectedSubscriptionRepository extends ChangeNotifier
-    implements DetectedSubscriptionRepository {
+class SqliteDetectedSubscriptionRepository extends ChangeNotifier implements DetectedSubscriptionRepository {
   SqliteDetectedSubscriptionRepository._(this._database);
 
   final Database _database;
@@ -134,16 +134,14 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
   final Set<String> _ignoredMerchants = {};
   GmailSyncMetadata? _gmailMetadata;
 
-  static Future<SqliteDetectedSubscriptionRepository> load(
-      Database database) async {
+  static Future<SqliteDetectedSubscriptionRepository> load(Database database) async {
     final repo = SqliteDetectedSubscriptionRepository._(database);
     await repo._readAll();
     return repo;
   }
 
   @override
-  List<DetectedSubscriptionCandidate> get candidates =>
-      List.unmodifiable(_candidates);
+  List<DetectedSubscriptionCandidate> get candidates => List.unmodifiable(_candidates);
 
   @override
   Set<String> get ignoredMerchants => Set.unmodifiable(_ignoredMerchants);
@@ -153,10 +151,7 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
 
   Future<void> _readAll() async {
     // 1. Read candidates
-    final candidateRows = await _database.query(
-      'detected_subscriptions',
-      orderBy: 'created_at DESC',
-    );
+    final candidateRows = await _database.query('detected_subscriptions', orderBy: 'created_at DESC');
     _candidates.clear();
     for (final row in candidateRows) {
       _candidates.add(_fromRow(row));
@@ -173,11 +168,7 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
     }
 
     // 3. Read gmail sync metadata
-    final metadataRows = await _database.query(
-      'gmail_sync_metadata',
-      where: 'key = ?',
-      whereArgs: ['connection'],
-    );
+    final metadataRows = await _database.query('gmail_sync_metadata', where: 'key = ?', whereArgs: ['connection']);
     if (metadataRows.isNotEmpty) {
       final row = metadataRows.first;
       _gmailMetadata = GmailSyncMetadata(
@@ -198,15 +189,10 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
   }
 
   @override
-  Future<void> saveCandidates(
-      List<DetectedSubscriptionCandidate> newCandidates) async {
+  Future<void> saveCandidates(List<DetectedSubscriptionCandidate> newCandidates) async {
     await _database.transaction((txn) async {
       for (final candidate in newCandidates) {
-        await txn.insert(
-          'detected_subscriptions',
-          _toRow(candidate),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+        await txn.insert('detected_subscriptions', _toRow(candidate), conflictAlgorithm: ConflictAlgorithm.replace);
       }
     });
 
@@ -222,14 +208,8 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
   }
 
   @override
-  Future<void> updateCandidateStatus(
-      String id, DetectionReviewStatus status) async {
-    await _database.update(
-      'detected_subscriptions',
-      {'review_status': status.name},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  Future<void> updateCandidateStatus(String id, DetectionReviewStatus status) async {
+    await _database.update('detected_subscriptions', {'review_status': status.name}, where: 'id = ?', whereArgs: [id]);
     final index = _candidates.indexWhere((c) => c.id == id);
     if (index >= 0) {
       _candidates[index] = _candidates[index].copyWith(reviewStatus: status);
@@ -240,14 +220,10 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
   @override
   Future<void> ignoreMerchant(String merchantName) async {
     final normalized = merchantName.toLowerCase().trim();
-    await _database.insert(
-      'ignored_merchants',
-      {
-        'merchant_name': normalized,
-        'suppressed_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _database.insert('ignored_merchants', {
+      'merchant_name': normalized,
+      'suppressed_at': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
     _ignoredMerchants.add(normalized);
 
     // Also mark matching pending candidates as ignored in database
@@ -260,8 +236,7 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
 
     for (var i = 0; i < _candidates.length; i++) {
       if (_candidates[i].merchantName.toLowerCase().trim() == normalized) {
-        _candidates[i] = _candidates[i]
-            .copyWith(reviewStatus: DetectionReviewStatus.ignored);
+        _candidates[i] = _candidates[i].copyWith(reviewStatus: DetectionReviewStatus.ignored);
       }
     }
     notifyListeners();
@@ -270,39 +245,27 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
   @override
   Future<void> unignoreMerchant(String merchantName) async {
     final normalized = merchantName.toLowerCase().trim();
-    await _database.delete(
-      'ignored_merchants',
-      where: 'merchant_name = ?',
-      whereArgs: [normalized],
-    );
+    await _database.delete('ignored_merchants', where: 'merchant_name = ?', whereArgs: [normalized]);
     _ignoredMerchants.remove(normalized);
     notifyListeners();
   }
 
   @override
   Future<void> saveGmailMetadata(GmailSyncMetadata metadata) async {
-    await _database.insert(
-      'gmail_sync_metadata',
-      {
-        'key': 'connection',
-        'email_address': metadata.emailAddress,
-        'last_successful_scan': metadata.lastSuccessfulScan?.toIso8601String(),
-        'last_scanned_message_id': metadata.lastScannedMessageId,
-        'connected_at': metadata.connectedAt.toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _database.insert('gmail_sync_metadata', {
+      'key': 'connection',
+      'email_address': metadata.emailAddress,
+      'last_successful_scan': metadata.lastSuccessfulScan?.toIso8601String(),
+      'last_scanned_message_id': metadata.lastScannedMessageId,
+      'connected_at': metadata.connectedAt.toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
     _gmailMetadata = metadata;
     notifyListeners();
   }
 
   @override
   Future<void> clearGmailMetadata() async {
-    await _database.delete(
-      'gmail_sync_metadata',
-      where: 'key = ?',
-      whereArgs: ['connection'],
-    );
+    await _database.delete('gmail_sync_metadata', where: 'key = ?', whereArgs: ['connection']);
     _gmailMetadata = null;
     notifyListeners();
   }
@@ -321,38 +284,27 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
       'confidence_score': c.confidenceScore,
       'review_status': c.reviewStatus.name,
       'bank_evidence': jsonEncode(c.bankEvidence.map((e) => e.toJson()).toList()),
-      'email_evidence':
-          jsonEncode(c.emailEvidence.map((e) => e.toJson()).toList()),
+      'email_evidence': jsonEncode(c.emailEvidence.map((e) => e.toJson()).toList()),
       'created_at': c.createdAt.toIso8601String(),
       'updated_at': c.updatedAt?.toIso8601String(),
     };
   }
 
   static DetectedSubscriptionCandidate _fromRow(Map<String, dynamic> row) {
-    final sourcesList = (jsonDecode(row['source_types'] as String) as List)
-        .cast<String>();
+    final sourcesList = (jsonDecode(row['source_types'] as String) as List).cast<String>();
     final sources = sourcesList
-        .map((s) => DetectionSource.values.firstWhere(
-              (v) => v.name == s,
-              orElse: () => DetectionSource.bankStatement,
-            ))
+        .map((s) => DetectionSource.values.firstWhere((v) => v.name == s, orElse: () => DetectionSource.bankStatement))
         .toSet();
 
     final bankEvidenceJson = row['bank_evidence'] != null
-        ? (jsonDecode(row['bank_evidence'] as String) as List)
-            .cast<Map<String, dynamic>>()
+        ? (jsonDecode(row['bank_evidence'] as String) as List).cast<Map<String, dynamic>>()
         : <Map<String, dynamic>>[];
-    final bankEvidence = bankEvidenceJson
-        .map((json) => BankTransactionEvidence.fromJson(json))
-        .toList();
+    final bankEvidence = bankEvidenceJson.map(BankTransactionEvidence.fromJson).toList();
 
     final emailEvidenceJson = row['email_evidence'] != null
-        ? (jsonDecode(row['email_evidence'] as String) as List)
-            .cast<Map<String, dynamic>>()
+        ? (jsonDecode(row['email_evidence'] as String) as List).cast<Map<String, dynamic>>()
         : <Map<String, dynamic>>[];
-    final emailEvidence = emailEvidenceJson
-        .map((json) => EmailEvidence.fromJson(json))
-        .toList();
+    final emailEvidence = emailEvidenceJson.map(EmailEvidence.fromJson).toList();
 
     final cycle = BillingCycle.values.firstWhere(
       (c) => c.name == row['billing_cycle'],
@@ -367,15 +319,10 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
     return DetectedSubscriptionCandidate(
       id: row['id'] as String,
       merchantName: row['merchant_name'] as String,
-      amount: Money(
-        minorUnits: row['minor_units'] as int,
-        currencyCode: row['currency_code'] as String,
-      ),
+      amount: Money(minorUnits: row['minor_units'] as int, currencyCode: row['currency_code'] as String),
       billingCycle: cycle,
       lastPaymentDate: DateTime.parse(row['last_payment_date'] as String),
-      nextPaymentDate: row['next_payment_date'] != null
-          ? DateTime.parse(row['next_payment_date'] as String)
-          : null,
+      nextPaymentDate: row['next_payment_date'] != null ? DateTime.parse(row['next_payment_date'] as String) : null,
       nextPaymentIsEstimated: (row['next_payment_is_estimated'] as int) == 1,
       sourceTypes: sources,
       confidenceScore: (row['confidence_score'] as num).toDouble(),
@@ -383,10 +330,7 @@ class SqliteDetectedSubscriptionRepository extends ChangeNotifier
       bankEvidence: bankEvidence,
       emailEvidence: emailEvidence,
       createdAt: DateTime.parse(row['created_at'] as String),
-      updatedAt: row['updated_at'] != null
-          ? DateTime.parse(row['updated_at'] as String)
-          : null,
+      updatedAt: row['updated_at'] != null ? DateTime.parse(row['updated_at'] as String) : null,
     );
   }
 }
-

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
+import '../../app/theme/app_spacing.dart';
+import 'registry_empty_state.dart';
+import 'registry_primary_button.dart';
 
 class RegistryPlaceholderPage extends StatelessWidget {
   const RegistryPlaceholderPage({

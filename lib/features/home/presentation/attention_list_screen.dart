@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/features/home/data/registry_read_model.dart';
-import 'package:the_registry/features/home/widgets/home_attention_card.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/registry_read_model.dart';
+import '../widgets/home_attention_card.dart';
 
 class AttentionListScreen extends StatelessWidget {
   const AttentionListScreen({super.key});

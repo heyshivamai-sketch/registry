@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 /// Material 3 type scale with premium, readable hierarchy.
 abstract final class AppTypography {
   static TextTheme textTheme(ColorScheme colorScheme) {
-    final base = Typography.material2021(platform: TargetPlatform.android).black
-        .apply(
-          bodyColor: colorScheme.onSurface,
-          displayColor: colorScheme.onSurface,
-        );
+    final base = Typography.material2021().black.apply(
+      bodyColor: colorScheme.onSurface,
+      displayColor: colorScheme.onSurface,
+    );
 
     return base.copyWith(
       headlineLarge: base.headlineLarge?.copyWith(

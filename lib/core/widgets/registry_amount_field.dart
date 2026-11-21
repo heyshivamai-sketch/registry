@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
-import 'package:the_registry/core/widgets/registry_selector_field.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../app/theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
+import 'registry_form_field.dart';
+import 'registry_selector_field.dart';
 
 class RegistryAmountCurrencyField extends StatelessWidget {
   const RegistryAmountCurrencyField({

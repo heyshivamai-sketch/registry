@@ -1,18 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/documents/domain/document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+
+import '../documents/domain/document_repository.dart';
+import '../documents/domain/registry_document.dart';
+import '../subscriptions/domain/registry_subscription.dart';
+import '../subscriptions/domain/subscription_repository.dart';
+import 'entitlement_policy.dart';
+import 'registry_plan.dart';
 
 /// Reads the store-backed plan and admits new records in one place.
 class EntitlementService extends ChangeNotifier {
-  EntitlementService({
-    required this.documents,
-    required this.subscriptions,
-    required RegistryPlanSource source,
-  }) {
+  EntitlementService({required this.documents, required this.subscriptions, required RegistryPlanSource source}) {
     _source = source;
     _source.addListener(notifyListeners);
   }
@@ -48,11 +45,7 @@ class EntitlementService extends ChangeNotifier {
 
 /// New-record writes. Widgets call this instead of checking plan limits.
 class RegistryWrites {
-  RegistryWrites({
-    required this.documents,
-    required this.subscriptions,
-    required this.entitlements,
-  });
+  RegistryWrites({required this.documents, required this.subscriptions, required this.entitlements});
 
   final DocumentRepository documents;
   final SubscriptionRepository subscriptions;
@@ -80,22 +73,17 @@ class RegistryWrites {
     await subscriptions.save(subscription);
   }
 
-  Future<void> createSubscriptions(
-    List<RegistrySubscription> subscriptions,
-  ) async {
+  Future<void> createSubscriptions(List<RegistrySubscription> subscriptions) async {
     if (subscriptions.isEmpty) {
       return;
     }
     final seen = <String>{};
     for (final subscription in subscriptions) {
-      if (!seen.add(subscription.id) ||
-          this.subscriptions.findById(subscription.id) != null) {
+      if (!seen.add(subscription.id) || this.subscriptions.findById(subscription.id) != null) {
         throw const DuplicateRecordId();
       }
     }
-    final decision = entitlements.admitNewSubscriptions(
-      additional: subscriptions.length,
-    );
+    final decision = entitlements.admitNewSubscriptions(additional: subscriptions.length);
     if (!decision.allowed) {
       throw EntitlementDenied(decision);
     }

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/features/documents/domain/document_icons.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/home/data/mock_registry_catalog.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/document_icons.dart';
+import '../../documents/domain/document_status.dart';
+import '../../documents/domain/registry_document.dart';
+import '../../subscriptions/domain/registry_subscription.dart';
+import '../../subscriptions/domain/subscription_status.dart';
+import '../../subscriptions/presentation/subscription_copy.dart';
+import 'mock_registry_catalog.dart';
+import 'registry_item.dart';
 
 abstract final class RegistryIds {
   static String document(String id) => 'document:$id';
+
   static String subscription(String id) => 'subscription:$id';
 
   static bool isDocument(String id) => id.startsWith('document:');
+
   static bool isSubscription(String id) => id.startsWith('subscription:');
 
   static String sourceId(String id) {

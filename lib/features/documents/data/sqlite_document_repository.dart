@@ -1,14 +1,14 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:the_registry/core/persistence/document_attachment_store.dart';
-import 'package:the_registry/core/persistence/persisted_values.dart';
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
+import '../../../core/persistence/document_attachment_store.dart';
+import '../../../core/persistence/persisted_values.dart';
+import '../domain/document_field_value.dart';
+import '../domain/document_repository.dart';
+import '../domain/registry_document.dart';
+import '../domain/renewal_history_entry.dart';
 
 class SqliteDocumentRepository extends ChangeNotifier
     implements DocumentRepository {

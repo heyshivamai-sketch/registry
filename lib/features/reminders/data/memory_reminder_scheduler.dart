@@ -1,5 +1,5 @@
-import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
-import 'package:the_registry/features/reminders/domain/reminder_plan.dart';
+import '../domain/local_reminder_scheduler.dart';
+import '../domain/reminder_plan.dart';
 
 /// In-memory scheduler used by tests and by app previews that have no
 /// platform notification plugin.

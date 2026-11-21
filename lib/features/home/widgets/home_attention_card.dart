@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/registry_date_formatter.dart';
+import '../data/registry_item.dart';
 
 class HomeAttentionCard extends StatelessWidget {
-  const HomeAttentionCard({
-    super.key,
-    required this.item,
-    this.onTap,
-    this.now,
-  });
+  const HomeAttentionCard({super.key, required this.item, this.onTap, this.now});
 
   final RegistryItem item;
   final VoidCallback? onTap;
@@ -33,10 +29,7 @@ class HomeAttentionCard extends StatelessWidget {
         : item.statusLabel(l10n);
 
     final chip = DecoratedBox(
-      decoration: BoxDecoration(
-        color: status.urgentContainer,
-        borderRadius: BorderRadius.circular(999),
-      ),
+      decoration: BoxDecoration(color: status.urgentContainer, borderRadius: BorderRadius.circular(999)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Text(
@@ -68,15 +61,8 @@ class HomeAttentionCard extends StatelessWidget {
             child: Row(
               children: [
                 DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: status.urgentContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: Icon(item.icon, size: 18, color: status.urgent),
-                  ),
+                  decoration: BoxDecoration(color: status.urgentContainer, shape: BoxShape.circle),
+                  child: SizedBox(width: 36, height: 36, child: Icon(item.icon, size: 18, color: status.urgent)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -86,17 +72,10 @@ class HomeAttentionCard extends StatelessWidget {
                       Text(
                         item.title(l10n),
 
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: theme.textTheme.titleSmall?.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        '${item.compactActionLabel(l10n)} · $date',
-
-                        style: theme.textTheme.bodySmall,
-                      ),
+                      Text('${item.compactActionLabel(l10n)} · $date', style: theme.textTheme.bodySmall),
                       const SizedBox(height: 6),
                       chip,
                     ],

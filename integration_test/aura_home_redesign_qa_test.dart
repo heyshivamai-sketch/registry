@@ -19,10 +19,7 @@ import '../test/support/sample_document.dart';
 import '../test/support/sample_subscription.dart';
 
 Finder _homeScrollable() {
-  return find.descendant(
-    of: find.byType(HomeScreen),
-    matching: find.byType(Scrollable),
-  );
+  return find.descendant(of: find.byType(HomeScreen), matching: find.byType(Scrollable));
 }
 
 Future<void> _assertAboveDock(WidgetTester tester, Finder item) async {
@@ -37,10 +34,7 @@ Future<void> _hold(WidgetTester tester, String tag) async {
   await tester.pump(const Duration(seconds: 6));
 }
 
-Future<void> _seed(
-  InMemoryDocumentRepository documents,
-  InMemorySubscriptionRepository subscriptions,
-) async {
+Future<void> _seed(InMemoryDocumentRepository documents, InMemorySubscriptionRepository subscriptions) async {
   await documents.save(
     sampleDocument(
       id: 'insurance',
@@ -96,28 +90,20 @@ void main() {
     await tester.pumpAndSettle();
     await _hold(tester, 'empty');
 
-    await tester.tap(
-      find.byKey(const ValueKey<String>('home-add-first-document')),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('home-add-first-document')));
     await tester.pumpAndSettle();
     expect(find.byType(AddDocumentScreen), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(const ValueKey<String>('home-add-first-subscription')),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('home-add-first-subscription')));
     await tester.pumpAndSettle();
     expect(find.byType(AddSubscriptionScreen), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     final emptyBenefit = find.text('Stay in control of your spending.');
-    await tester.scrollUntilVisible(
-      emptyBenefit,
-      80,
-      scrollable: _homeScrollable().first,
-    );
+    await tester.scrollUntilVisible(emptyBenefit, 80, scrollable: _homeScrollable().first);
     await tester.pumpAndSettle();
     await _assertAboveDock(tester, emptyBenefit);
     await _hold(tester, 'empty_bottom');
@@ -150,9 +136,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(const ValueKey<String>('metric-subscriptions')),
-    );
+    await tester.tap(find.byKey(const ValueKey<String>('metric-subscriptions')));
     await tester.pumpAndSettle();
     expect(find.byType(SubscriptionsScreen), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
@@ -162,11 +146,7 @@ void main() {
     await tester.pumpAndSettle();
     final lastComingUp = find.text('Passport');
     if (lastComingUp.evaluate().isNotEmpty) {
-      await tester.scrollUntilVisible(
-        lastComingUp.first,
-        80,
-        scrollable: _homeScrollable().first,
-      );
+      await tester.scrollUntilVisible(lastComingUp.first, 80, scrollable: _homeScrollable().first);
       await tester.pumpAndSettle();
       await _assertAboveDock(tester, lastComingUp.first);
     }
@@ -193,10 +173,7 @@ void main() {
     tester.state<AppShellState>(find.byType(AppShell)).selectTab(2);
     await tester.pumpAndSettle();
     await _hold(tester, 'subscriptions');
-    final subscriptionsAdd = find.byKey(
-      const ValueKey<String>('subscriptions-add'),
-      skipOffstage: false,
-    );
+    final subscriptionsAdd = find.byKey(const ValueKey<String>('subscriptions-add'), skipOffstage: false);
     expect(subscriptionsAdd, findsOneWidget);
     await tester.ensureVisible(subscriptionsAdd);
     await tester.pumpAndSettle();
@@ -209,9 +186,7 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
-    final messenger = ScaffoldMessenger.of(
-      tester.element(find.byType(AppShell)),
-    );
+    final messenger = ScaffoldMessenger.of(tester.element(find.byType(AppShell)));
     messenger.showSnackBar(const SnackBar(content: Text('QA snackbar')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
@@ -222,17 +197,11 @@ void main() {
 
     await tester.drag(find.byType(HomeScreen), const Offset(0, 800));
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('home-search')),
-      'zzzzzz',
-    );
+    await tester.enterText(find.byKey(const ValueKey<String>('home-search')), 'zzzzzz');
     await tester.pumpAndSettle();
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
-    expect(
-      find.byKey(const ValueKey<String>('home-search-empty')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey<String>('home-search-empty')), findsOneWidget);
     await _hold(tester, 'search');
 
     await tester.pumpWidget(
@@ -246,14 +215,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(
-      Directionality.of(tester.element(find.byType(AppShell))),
-      TextDirection.rtl,
-    );
-    expect(
-      tester.getSemantics(find.byKey(const ValueKey<String>('nav-home'))).label,
-      isNotEmpty,
-    );
+    expect(Directionality.of(tester.element(find.byType(AppShell))), TextDirection.rtl);
+    expect(tester.getSemantics(find.byKey(const ValueKey<String>('nav-home'))).label, isNotEmpty);
     await _hold(tester, 'arabic');
 
     tester.platformDispatcher.textScaleFactorTestValue = 1.8;
@@ -270,16 +233,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
-    expect(
-      tester.getSemantics(find.byKey(const ValueKey<String>('nav-home'))).label,
-      isNotEmpty,
-    );
-    expect(
-      tester
-          .getSemantics(find.byKey(const ValueKey<String>('nav-documents')))
-          .label,
-      isNotEmpty,
-    );
+    expect(tester.getSemantics(find.byKey(const ValueKey<String>('nav-home'))).label, isNotEmpty);
+    expect(tester.getSemantics(find.byKey(const ValueKey<String>('nav-documents'))).label, isNotEmpty);
     await _hold(tester, 'large');
   });
 }

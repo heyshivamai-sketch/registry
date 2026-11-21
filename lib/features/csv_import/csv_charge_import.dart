@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/csv_import/csv_import_limits.dart';
-import 'package:the_registry/features/csv_import/csv_table.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/subscriptions/domain/bank_subscription_detection_service.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+import '../../core/time/clock.dart';
+import '../documents/domain/registry_document.dart';
+import '../entitlements/entitlement_policy.dart';
+import '../entitlements/entitlement_service.dart';
+import '../subscriptions/domain/bank_subscription_detection_service.dart';
+import '../subscriptions/domain/money.dart';
+import '../subscriptions/domain/registry_subscription.dart';
+import '../subscriptions/domain/subscription_repository.dart';
+import 'csv_import_limits.dart';
+import 'csv_table.dart';
 
 enum CsvImportStep { choose, map, review }
 
@@ -439,8 +439,9 @@ CsvChargeRow? _chargeFromRow(
 
 DateTime? parseCsvDate(String raw) {
   final trimmed = raw.trim();
-  final isoMatch =
-      RegExp(r'^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$').firstMatch(trimmed);
+  final isoMatch = RegExp(
+    r'^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$',
+  ).firstMatch(trimmed);
   if (isoMatch != null) {
     final year = int.parse(isoMatch.group(1)!);
     final month = int.parse(isoMatch.group(2)!);
@@ -454,12 +455,23 @@ DateTime? parseCsvDate(String raw) {
   }
 
   // Support dd-MMM-yyyy (e.g. 05-Sep-2026, 05-SEP-2026, 5 Sep 2026)
-  final dMmmYMatch =
-      RegExp(r'^(\d{1,2})[-/ ]([A-Za-z]{3})[-/ ](\d{4})$').firstMatch(trimmed);
+  final dMmmYMatch = RegExp(
+    r'^(\d{1,2})[-/ ]([A-Za-z]{3})[-/ ](\d{4})$',
+  ).firstMatch(trimmed);
   if (dMmmYMatch != null) {
     const months = {
-      'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
-      'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
+      'jan': 1,
+      'feb': 2,
+      'mar': 3,
+      'apr': 4,
+      'may': 5,
+      'jun': 6,
+      'jul': 7,
+      'aug': 8,
+      'sep': 9,
+      'oct': 10,
+      'nov': 11,
+      'dec': 12,
     };
     final day = int.parse(dMmmYMatch.group(1)!);
     final monthStr = dMmmYMatch.group(2)!.toLowerCase();
@@ -474,8 +486,9 @@ DateTime? parseCsvDate(String raw) {
   }
 
   // Support dd-MM-yyyy or dd/MM/yyyy
-  final dMyMatch =
-      RegExp(r'^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$').firstMatch(trimmed);
+  final dMyMatch = RegExp(
+    r'^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$',
+  ).firstMatch(trimmed);
   if (dMyMatch != null) {
     final part1 = int.parse(dMyMatch.group(1)!);
     final part2 = int.parse(dMyMatch.group(2)!);
@@ -518,9 +531,11 @@ List<RecurringChargeCandidate> suggestRecurringCharges({
     }
     final normalized = bankDetector.normalizeMerchant(charge.merchant);
     final lowerNorm = normalized.toLowerCase();
-    if (ignoredMerchants.any((ignored) =>
-        lowerNorm == ignored.toLowerCase() ||
-        lowerNorm.contains(ignored.toLowerCase()))) {
+    if (ignoredMerchants.any(
+      (ignored) =>
+          lowerNorm == ignored.toLowerCase() ||
+          lowerNorm.contains(ignored.toLowerCase()),
+    )) {
       continue;
     }
     final key = '$lowerNorm|${charge.currencyCode}|${charge.minorUnits}';
@@ -541,7 +556,9 @@ List<RecurringChargeCandidate> suggestRecurringCharges({
       (subscription) =>
           (normalizeMerchant(subscription.serviceName) ==
                   normalizeMerchant(sample.merchant) ||
-              bankDetector.normalizeMerchant(subscription.serviceName).toLowerCase() ==
+              bankDetector
+                      .normalizeMerchant(subscription.serviceName)
+                      .toLowerCase() ==
                   normalizedName.toLowerCase()) &&
           subscription.amount.minorUnits == sample.minorUnits &&
           subscription.amount.code == sample.currencyCode,

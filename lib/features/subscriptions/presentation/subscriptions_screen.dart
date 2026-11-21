@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_search_field.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_wallet.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_view.dart';
-import 'package:the_registry/features/subscriptions/widgets/subscription_list_card.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_search_field.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_selectable_chip.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/money.dart';
+import '../domain/subscription_estimate.dart';
+import '../domain/subscription_status.dart';
+import '../domain/subscription_wallet.dart';
+import '../widgets/subscription_list_card.dart';
+import 'subscription_calendar_view.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
@@ -120,7 +121,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   controller: _searchController,
                   hintText: l10n.subscriptionsSearchPlaceholder,
                   fieldKey: const ValueKey<String>('subscriptions-search'),
-                  clearKey: const ValueKey<String>('subscriptions-search-clear'),
+                  clearKey: const ValueKey<String>(
+                    'subscriptions-search-clear',
+                  ),
                 ),
                 if (items.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.sm),
@@ -167,7 +170,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   RegistryAuraSectionHeader(
                     title: l10n.subscriptionsListHeader,
                     actionLabel: l10n.addSubscriptionShort,
-                    actionKey: const ValueKey<String>('subscriptions-add-header'),
+                    actionKey: const ValueKey<String>(
+                      'subscriptions-add-header',
+                    ),
                     onAction: () => AppRoutes.openAddSubscription(context),
                   ),
                   const SizedBox(height: AppSpacing.sm),

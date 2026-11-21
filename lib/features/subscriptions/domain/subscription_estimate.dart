@@ -1,5 +1,5 @@
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import 'money.dart';
+import 'registry_subscription.dart';
 
 abstract final class SubscriptionEstimate {
   static MoneyRational monthlyShare(RegistrySubscription subscription) {
@@ -10,10 +10,7 @@ abstract final class SubscriptionEstimate {
         denominator: BigInt.from(12),
         currencyCode: amount.code,
       ),
-      BillingCycle.monthly => MoneyRational.fromMinor(
-        amount.minorUnits,
-        amount.code,
-      ),
+      BillingCycle.monthly => MoneyRational.fromMinor(amount.minorUnits, amount.code),
       BillingCycle.quarterly => MoneyRational(
         numerator: BigInt.from(amount.minorUnits),
         denominator: BigInt.from(3),
@@ -27,9 +24,7 @@ abstract final class SubscriptionEstimate {
     };
   }
 
-  static List<Money> monthlyTotals(
-    Iterable<RegistrySubscription> subscriptions,
-  ) {
+  static List<Money> monthlyTotals(Iterable<RegistrySubscription> subscriptions) {
     final totals = <String, MoneyRational>{};
     for (final subscription in subscriptions) {
       if (!subscription.isActive) {

@@ -1,24 +1,11 @@
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import 'money.dart';
+import 'registry_subscription.dart';
 
-enum DetectionSource {
-  bankStatement,
-  gmail,
-}
+enum DetectionSource { bankStatement, gmail }
 
-enum DetectionReviewStatus {
-  pendingReview,
-  accepted,
-  ignored,
-  duplicate,
-  expired,
-}
+enum DetectionReviewStatus { pendingReview, accepted, ignored, duplicate, expired }
 
-enum DetectionConfidence {
-  low,
-  medium,
-  high,
-}
+enum DetectionConfidence { low, medium, high }
 
 class EmailEvidence {
   const EmailEvidence({
@@ -29,6 +16,14 @@ class EmailEvidence {
     this.snippet = '',
   });
 
+  factory EmailEvidence.fromJson(Map<String, dynamic> json) => EmailEvidence(
+    messageId: json['messageId'] as String? ?? '',
+    subject: json['subject'] as String? ?? '',
+    sender: json['sender'] as String? ?? '',
+    date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0),
+    snippet: json['snippet'] as String? ?? '',
+  );
+
   final String messageId;
   final String subject;
   final String sender;
@@ -36,21 +31,12 @@ class EmailEvidence {
   final String snippet;
 
   Map<String, dynamic> toJson() => {
-        'messageId': messageId,
-        'subject': subject,
-        'sender': sender,
-        'date': date.toIso8601String(),
-        'snippet': snippet,
-      };
-
-  factory EmailEvidence.fromJson(Map<String, dynamic> json) => EmailEvidence(
-        messageId: json['messageId'] as String? ?? '',
-        subject: json['subject'] as String? ?? '',
-        sender: json['sender'] as String? ?? '',
-        date: DateTime.tryParse(json['date'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0),
-        snippet: json['snippet'] as String? ?? '',
-      );
+    'messageId': messageId,
+    'subject': subject,
+    'sender': sender,
+    'date': date.toIso8601String(),
+    'snippet': snippet,
+  };
 }
 
 class BankTransactionEvidence {
@@ -62,6 +48,14 @@ class BankTransactionEvidence {
     this.reference = '',
   });
 
+  factory BankTransactionEvidence.fromJson(Map<String, dynamic> json) => BankTransactionEvidence(
+    lineNumber: json['lineNumber'] as int? ?? 0,
+    date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0),
+    originalDescription: json['originalDescription'] as String? ?? '',
+    amount: Money(minorUnits: json['minorUnits'] as int? ?? 0, currencyCode: json['currencyCode'] as String? ?? 'USD'),
+    reference: json['reference'] as String? ?? '',
+  );
+
   final int lineNumber;
   final DateTime date;
   final String originalDescription;
@@ -69,26 +63,13 @@ class BankTransactionEvidence {
   final String reference;
 
   Map<String, dynamic> toJson() => {
-        'lineNumber': lineNumber,
-        'date': date.toIso8601String(),
-        'originalDescription': originalDescription,
-        'minorUnits': amount.minorUnits,
-        'currencyCode': amount.code,
-        'reference': reference,
-      };
-
-  factory BankTransactionEvidence.fromJson(Map<String, dynamic> json) =>
-      BankTransactionEvidence(
-        lineNumber: json['lineNumber'] as int? ?? 0,
-        date: DateTime.tryParse(json['date'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0),
-        originalDescription: json['originalDescription'] as String? ?? '',
-        amount: Money(
-          minorUnits: json['minorUnits'] as int? ?? 0,
-          currencyCode: json['currencyCode'] as String? ?? 'USD',
-        ),
-        reference: json['reference'] as String? ?? '',
-      );
+    'lineNumber': lineNumber,
+    'date': date.toIso8601String(),
+    'originalDescription': originalDescription,
+    'minorUnits': amount.minorUnits,
+    'currencyCode': amount.code,
+    'reference': reference,
+  };
 }
 
 class DetectedSubscriptionCandidate {
@@ -98,14 +79,14 @@ class DetectedSubscriptionCandidate {
     required this.amount,
     required this.billingCycle,
     required this.lastPaymentDate,
-    this.nextPaymentDate,
-    this.nextPaymentIsEstimated = true,
     required this.sourceTypes,
     required this.confidenceScore,
+    required this.createdAt,
+    this.nextPaymentDate,
+    this.nextPaymentIsEstimated = true,
     this.reviewStatus = DetectionReviewStatus.pendingReview,
     this.bankEvidence = const [],
     this.emailEvidence = const [],
-    required this.createdAt,
     this.updatedAt,
     this.possibleDuplicate = false,
   });
@@ -137,6 +118,7 @@ class DetectedSubscriptionCandidate {
   }
 
   bool get hasBankSource => sourceTypes.contains(DetectionSource.bankStatement);
+
   bool get hasGmailSource => sourceTypes.contains(DetectionSource.gmail);
 
   DetectedSubscriptionCandidate copyWith({
@@ -163,8 +145,7 @@ class DetectedSubscriptionCandidate {
       billingCycle: billingCycle ?? this.billingCycle,
       lastPaymentDate: lastPaymentDate ?? this.lastPaymentDate,
       nextPaymentDate: nextPaymentDate ?? this.nextPaymentDate,
-      nextPaymentIsEstimated:
-          nextPaymentIsEstimated ?? this.nextPaymentIsEstimated,
+      nextPaymentIsEstimated: nextPaymentIsEstimated ?? this.nextPaymentIsEstimated,
       sourceTypes: sourceTypes ?? this.sourceTypes,
       confidenceScore: confidenceScore ?? this.confidenceScore,
       reviewStatus: reviewStatus ?? this.reviewStatus,
@@ -176,4 +157,3 @@ class DetectedSubscriptionCandidate {
     );
   }
 }
-

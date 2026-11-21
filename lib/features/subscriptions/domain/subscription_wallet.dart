@@ -1,8 +1,8 @@
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../presentation/subscription_copy.dart';
+import 'registry_subscription.dart';
+import 'subscription_status.dart';
 
 enum SubscriptionWalletFilter {
   all,

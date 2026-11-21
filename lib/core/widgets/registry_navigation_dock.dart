@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_motion.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_motion.dart';
+import '../../app/theme/app_radius.dart';
+import '../../app/theme/app_shadows.dart';
+import '../../app/theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class RegistryAuraNavigationDock extends StatelessWidget {
   const RegistryAuraNavigationDock({

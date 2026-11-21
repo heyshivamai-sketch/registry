@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+
+import 'registry_subscription.dart';
 
 abstract class SubscriptionRepository implements Listenable {
   List<RegistrySubscription> get subscriptions;

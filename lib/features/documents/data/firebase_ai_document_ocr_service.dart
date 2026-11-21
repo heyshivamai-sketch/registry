@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import '../domain/document_ocr.dart';
+import '../domain/document_schema.dart';
+import '../domain/registry_document.dart';
 
 const _documentPrompt = '''
 These images are the front, back, or additional pages of one document.
@@ -32,7 +32,8 @@ Identify:
 final _responseSchema = Schema.object(
   properties: {
     'documentName': Schema.string(
-      description: 'Specific title or name of the document (e.g., Aadhaar Card, Passport, Driving Licence, PAN Card, Health Insurance Card, Vehicle Registration).',
+      description:
+          'Specific title or name of the document (e.g., Aadhaar Card, Passport, Driving Licence, PAN Card, Health Insurance Card, Vehicle Registration).',
     ),
     'documentType': Schema.string(
       description: 'Short document type or classification.',
@@ -95,11 +96,8 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
       'gemini-1.5-flash',
       'gemini-3-pro',
     ],
-  })  : _ai = ai ?? FirebaseAI.googleAI(),
-        _models = [
-          model,
-          ...fallbackModels.where((m) => m != model),
-        ];
+  }) : _ai = ai ?? FirebaseAI.googleAI(),
+       _models = [model, ...fallbackModels.where((m) => m != model)];
 
   final FirebaseAI _ai;
   final List<String> _models;
@@ -138,14 +136,16 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
         } catch (error) {
           lastError = error;
           final errorStr = error.toString();
-          final isTransient = errorStr.contains('503') ||
+          final isTransient =
+              errorStr.contains('503') ||
               errorStr.contains('500') ||
               errorStr.contains('429') ||
               errorStr.contains('UNAVAILABLE') ||
               errorStr.contains('Deadline expired') ||
               errorStr.contains('high demand') ||
               errorStr.contains('RESOURCE_EXHAUSTED');
-          final isUnavailable = errorStr.contains('no longer available') ||
+          final isUnavailable =
+              errorStr.contains('no longer available') ||
               errorStr.contains('not found') ||
               errorStr.contains('404');
           if (isTransient) {
@@ -153,7 +153,9 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
               'Model $modelName transient error (attempt $attempt): $errorStr',
             );
             if (attempt < 3) {
-              await Future<void>.delayed(Duration(milliseconds: attempt * 1200));
+              await Future<void>.delayed(
+                Duration(milliseconds: attempt * 1200),
+              );
               continue;
             }
             debugPrint('Switching from $modelName to next available model...');
@@ -232,8 +234,8 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
     final resolvedDocName = value.documentName.trim().isNotEmpty
         ? value.documentName.trim()
         : (value.documentType.trim().isNotEmpty
-            ? value.documentType.trim()
-            : _defaultDocumentName(schema.id, value.category));
+              ? value.documentType.trim()
+              : _defaultDocumentName(schema.id, value.category));
 
     final fields = <ExtractedDocumentField>[
       _field(DocumentFieldKeys.fullName, value.name),
@@ -257,8 +259,8 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
       categoryLabel: value.category.isNotEmpty
           ? value.category
           : (classification.category == DocumentCategory.other
-              ? ''
-              : classification.category.name),
+                ? ''
+                : classification.category.name),
       documentTypeLabel: resolvedDocName,
       overallConfidence: fields.any((field) => field.value.isNotEmpty)
           ? OcrConfidence.review
@@ -315,7 +317,9 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
         text.contains('unique identification') ||
         (country == DocumentCountryCodes.india &&
             (text.contains('mera aadhaar') ||
-                RegExp(r'\b\d{4}\s\d{4}\s\d{4}\b').hasMatch(value.documentNumber)))) {
+                RegExp(
+                  r'\b\d{4}\s\d{4}\s\d{4}\b',
+                ).hasMatch(value.documentNumber)))) {
       return const DocumentClassification(
         schemaId: DocumentSchemaIds.indiaAadhaar,
         countryCode: DocumentCountryCodes.india,
@@ -467,7 +471,9 @@ class _FirebaseDocumentExtraction {
 String _normalizeFullDate(String raw) {
   final value = raw.trim();
   if (value.isEmpty) return '';
-  final ymdMatch = RegExp(r'^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$').firstMatch(value);
+  final ymdMatch = RegExp(
+    r'^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$',
+  ).firstMatch(value);
   if (ymdMatch != null) {
     final year = int.parse(ymdMatch.group(1)!);
     final month = int.parse(ymdMatch.group(2)!);
@@ -476,7 +482,9 @@ String _normalizeFullDate(String raw) {
       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
     }
   }
-  final dmyMatch = RegExp(r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$').firstMatch(value);
+  final dmyMatch = RegExp(
+    r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$',
+  ).firstMatch(value);
   if (dmyMatch != null) {
     final dRaw = int.parse(dmyMatch.group(1)!);
     final mRaw = int.parse(dmyMatch.group(2)!);

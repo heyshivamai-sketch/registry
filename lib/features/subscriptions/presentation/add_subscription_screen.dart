@@ -1,41 +1,38 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
-import 'package:the_registry/features/entitlements/entitlement_copy.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_amount_field.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_searchable_sheet.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
-import 'package:the_registry/core/widgets/registry_selector_field.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/presentation/document_copy.dart';
-import 'package:the_registry/features/documents/widgets/document_date_field.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/presentation/add_subscription_controller.dart';
-import 'package:the_registry/features/reminders/presentation/reminder_permission_note.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_amount_field.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_form_field.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_searchable_sheet.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../core/widgets/registry_selectable_chip.dart';
+import '../../../core/widgets/registry_selector_field.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/registry_document.dart';
+import '../../documents/presentation/document_copy.dart';
+import '../../documents/widgets/document_date_field.dart';
+import '../../entitlements/entitlement_copy.dart';
+import '../../entitlements/entitlement_policy.dart';
+import '../../entitlements/presentation/local_pro_screen.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../../reminders/presentation/reminder_permission_note.dart';
+import '../domain/detected_subscription.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
+import '../domain/subscription_estimate.dart';
+import 'add_subscription_controller.dart';
+import 'subscription_copy.dart';
 
 class AddSubscriptionScreen extends StatefulWidget {
-  const AddSubscriptionScreen({
-    super.key,
-    this.subscriptionId,
-    this.initialCandidate,
-  });
+  const AddSubscriptionScreen({super.key, this.subscriptionId, this.initialCandidate});
 
   final String? subscriptionId;
   final DetectedSubscriptionCandidate? initialCandidate;
@@ -113,17 +110,10 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(
-            _isEditing ? l10n.discardChangesTitle : l10n.discardDraftTitle,
-          ),
-          content: Text(
-            _isEditing ? l10n.discardChangesMessage : l10n.discardDraftMessage,
-          ),
+          title: Text(_isEditing ? l10n.discardChangesTitle : l10n.discardDraftTitle),
+          content: Text(_isEditing ? l10n.discardChangesMessage : l10n.discardDraftMessage),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(l10n.discardDraftKeep),
-            ),
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(l10n.discardDraftKeep)),
             TextButton(
               key: const ValueKey<String>('discard-confirm'),
               onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -166,11 +156,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
       selected: _controller.currencyCode,
       options: [
         for (final code in CurrencyInfo.supportedCodes)
-          RegistrySearchableOption(
-            value: code,
-            label: code,
-            itemKey: 'currency-$code',
-          ),
+          RegistrySearchableOption(value: code, label: code, itemKey: 'currency-$code'),
       ],
     );
     if (selected != null) {
@@ -180,14 +166,8 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
 
   Future<void> _pickDate(String fieldId) async {
     final deps = RegistryDependencies.of(context);
-    final initial = fieldId == 'decide-by'
-        ? _controller.decideByDate
-        : _controller.nextPaymentDate;
-    final picked = await deps.datePicker.pickDate(
-      context,
-      fieldId: fieldId,
-      initialDate: initial,
-    );
+    final initial = fieldId == 'decide-by' ? _controller.decideByDate : _controller.nextPaymentDate;
+    final picked = await deps.datePicker.pickDate(context, fieldId: fieldId, initialDate: initial);
     if (picked == null) {
       return;
     }
@@ -239,11 +219,8 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
       showEntitlementLimit(
         context,
         error.decision,
-        onUpgrade: () => unawaited(
-          Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => const LocalProScreen()),
-          ),
-        ),
+        onUpgrade: () =>
+            unawaited(Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const LocalProScreen()))),
       );
     } on DuplicateRecordId {
       if (!mounted) {
@@ -306,14 +283,12 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
                 children: [
                   Text(
                     l10n.guidedSetup,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.tertiary),
                   ),
                   Text(
-                    _isEditing
-                        ? l10n.editSubscriptionTitle
-                        : l10n.addSubscriptionTitle,
+                    _isEditing ? l10n.editSubscriptionTitle : l10n.addSubscriptionTitle,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
@@ -334,8 +309,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
                   Expanded(
                     child: SingleChildScrollView(
                       key: const ValueKey<String>('add-subscription-scroll'),
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                       padding: const EdgeInsetsDirectional.fromSTEB(
                         AppSpacing.screenPadding,
                         AppSpacing.md,
@@ -400,10 +374,7 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
         onPickDate: _pickDate,
         onToggleReminder: _toggleReminder,
       ),
-      AddSubscriptionStep.review => _ReviewStep(
-        controller: _controller,
-        onJump: _controller.goToStep,
-      ),
+      AddSubscriptionStep.review => _ReviewStep(controller: _controller, onJump: _controller.goToStep),
     };
   }
 }
@@ -427,12 +398,7 @@ class _ProgressHeader extends StatelessWidget {
 }
 
 class _ActionBar extends StatelessWidget {
-  const _ActionBar({
-    required this.controller,
-    required this.isEditing,
-    required this.onBack,
-    required this.onContinue,
-  });
+  const _ActionBar({required this.controller, required this.isEditing, required this.onBack, required this.onContinue});
 
   final AddSubscriptionController controller;
   final bool isEditing;
@@ -443,9 +409,7 @@ class _ActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final onReview = controller.step == AddSubscriptionStep.review;
-    final continueLabel = onReview
-        ? (isEditing ? l10n.saveChanges : l10n.saveSubscription)
-        : l10n.wizardContinue;
+    final continueLabel = onReview ? (isEditing ? l10n.saveChanges : l10n.saveSubscription) : l10n.wizardContinue;
     final scheme = Theme.of(context).colorScheme;
 
     return Material(
@@ -464,9 +428,7 @@ class _ActionBar extends StatelessWidget {
               Text(
                 controller.saveError!,
                 key: const ValueKey<String>('subscription-save-error'),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: scheme.error),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.error),
               ),
               const SizedBox(height: AppSpacing.xs),
             ],
@@ -480,20 +442,15 @@ class _ActionBar extends StatelessWidget {
                       onPressed: controller.saving ? null : onBack,
                     ),
                   ),
-                if (controller.canGoBack || controller.stepIndex > 0)
-                  const SizedBox(width: AppSpacing.sm),
+                if (controller.canGoBack || controller.stepIndex > 0) const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   flex: 2,
                   child: RegistryPrimaryButton(
-                    key: ValueKey<String>(
-                      onReview ? 'save-subscription' : 'sub-wizard-continue',
-                    ),
+                    key: ValueKey<String>(onReview ? 'save-subscription' : 'sub-wizard-continue'),
                     label: continueLabel,
                     backgroundColor: scheme.tertiary,
                     foregroundColor: scheme.onTertiary,
-                    trailing: onReview
-                        ? null
-                        : const Icon(Icons.arrow_forward_rounded, size: 18),
+                    trailing: onReview ? null : const Icon(Icons.arrow_forward_rounded, size: 18),
                     onPressed: controller.saving ? null : onContinue,
                   ),
                 ),
@@ -526,10 +483,7 @@ class _ServiceStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.subscriptionServiceIntroTitle,
-          style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
-        ),
+        Text(l10n.subscriptionServiceIntroTitle, style: theme.textTheme.titleLarge?.copyWith(fontSize: 22)),
         const SizedBox(height: AppSpacing.xs),
         Text(l10n.subscriptionServiceIntro, style: theme.textTheme.bodyMedium),
         const SizedBox(height: AppSpacing.md),
@@ -547,9 +501,7 @@ class _ServiceStep extends StatelessWidget {
         RegistrySelectorField(
           fieldKey: 'field-subscription-category',
           label: l10n.fieldCategory,
-          value: controller.category == null
-              ? ''
-              : SubscriptionCopy.category(l10n, controller.category!),
+          value: controller.category == null ? '' : SubscriptionCopy.category(l10n, controller.category!),
           empty: controller.category == null,
           requiredField: true,
           errorText: controller.categoryError,
@@ -584,16 +536,11 @@ class _BillingStep extends StatelessWidget {
   final ValueChanged<String> onPickDate;
 
   String? _estimate(AppLocalizations l10n) {
-    if (controller.currencyCode == null ||
-        controller.billingCycle == null ||
-        controller.amountText.trim().isEmpty) {
+    if (controller.currencyCode == null || controller.billingCycle == null || controller.amountText.trim().isEmpty) {
       return null;
     }
     try {
-      final money = MoneyParser.parse(
-        controller.amountText,
-        controller.currencyCode!,
-      );
+      final money = MoneyParser.parse(controller.amountText, controller.currencyCode!);
       final draft = RegistrySubscription(
         id: 'draft',
         createdAt: DateTime.fromMillisecondsSinceEpoch(0),
@@ -621,10 +568,7 @@ class _BillingStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.subscriptionBillingIntroTitle,
-          style: theme.textTheme.titleLarge?.copyWith(fontSize: 22),
-        ),
+        Text(l10n.subscriptionBillingIntroTitle, style: theme.textTheme.titleLarge?.copyWith(fontSize: 22)),
         const SizedBox(height: AppSpacing.xs),
         Text(l10n.subscriptionBillingIntro, style: theme.textTheme.bodyMedium),
         if (controller.serviceName.trim().isNotEmpty) ...[
@@ -639,9 +583,7 @@ class _BillingStep extends StatelessWidget {
                   backgroundColor: AppColors.lavenderSurface,
                   child: Text(
                     controller.serviceName.trim().substring(0, 1).toUpperCase(),
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.tertiary,
-                    ),
+                    style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.tertiary),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -649,15 +591,9 @@ class _BillingStep extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        controller.serviceName.trim(),
-                        style: theme.textTheme.titleSmall,
-                      ),
+                      Text(controller.serviceName.trim(), style: theme.textTheme.titleSmall),
                       if (controller.planName.trim().isNotEmpty)
-                        Text(
-                          controller.planName.trim(),
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(controller.planName.trim(), style: theme.textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -680,12 +616,7 @@ class _BillingStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         RegistryFieldLabel(label: l10n.fieldBillingCycle, requiredField: true),
         if (controller.cycleError != null)
-          Text(
-            controller.cycleError!,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
+          Text(controller.cycleError!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error)),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
@@ -725,21 +656,15 @@ class _BillingStep extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.info_outline, color: AppColors.violet, size: 20),
+                  const Icon(Icons.info_outline, color: AppColors.violet, size: 20),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          l10n.estimatedMonthlyCostValue(estimate),
-                          style: theme.textTheme.titleSmall,
-                        ),
+                        Text(l10n.estimatedMonthlyCostValue(estimate), style: theme.textTheme.titleSmall),
                         const SizedBox(height: 2),
-                        Text(
-                          l10n.estimatedMonthlyDisclaimer,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(l10n.estimatedMonthlyDisclaimer, style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ),
@@ -773,15 +698,9 @@ class _PreferencesStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.subscriptionPreferencesIntroTitle,
-          style: theme.textTheme.titleLarge,
-        ),
+        Text(l10n.subscriptionPreferencesIntroTitle, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.xs),
-        Text(
-          l10n.subscriptionPreferencesIntro,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(l10n.subscriptionPreferencesIntro, style: theme.textTheme.bodyMedium),
         const SizedBox(height: AppSpacing.md),
         DocumentDateField(
           fieldId: 'decide-by',
@@ -795,9 +714,7 @@ class _PreferencesStep extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           child: TextButton(
             key: const ValueKey<String>('clear-decide-by'),
-            onPressed: controller.decideByDate == null
-                ? null
-                : () => controller.setDecideByDate(null),
+            onPressed: controller.decideByDate == null ? null : () => controller.setDecideByDate(null),
             child: Text(l10n.clearDecideBy),
           ),
         ),
@@ -812,12 +729,7 @@ class _PreferencesStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         Text(l10n.fieldImpact, style: theme.textTheme.titleSmall),
         if (controller.impactError != null)
-          Text(
-            controller.impactError!,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
+          Text(controller.impactError!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error)),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
@@ -835,10 +747,7 @@ class _PreferencesStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         Text(l10n.remindersTitle, style: theme.textTheme.titleSmall),
         const SizedBox(height: AppSpacing.xxs),
-        Text(
-          l10n.subscriptionRemindersHelper,
-          style: theme.textTheme.bodySmall,
-        ),
+        Text(l10n.subscriptionRemindersHelper, style: theme.textTheme.bodySmall),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
@@ -865,11 +774,7 @@ class _PreferencesStep extends StatelessWidget {
           onChanged: controller.setNotes,
         ),
         const SizedBox(height: AppSpacing.md),
-        RegistryCallout(
-          tone: RegistryCalloutTone.tip,
-          title: l10n.decideByWhyTitle,
-          message: l10n.decideByWhyMessage,
-        ),
+        RegistryCallout(tone: RegistryCalloutTone.tip, title: l10n.decideByWhyTitle, message: l10n.decideByWhyMessage),
       ],
     );
   }
@@ -889,10 +794,7 @@ class _ReviewStep extends StatelessWidget {
     Money? amount;
     try {
       if (controller.currencyCode != null) {
-        amount = MoneyParser.parse(
-          controller.amountText,
-          controller.currencyCode!,
-        );
+        amount = MoneyParser.parse(controller.amountText, controller.currencyCode!);
       }
     } on MoneyParseException {
       amount = null;
@@ -900,10 +802,7 @@ class _ReviewStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.subscriptionReviewIntroTitle,
-          style: theme.textTheme.titleLarge,
-        ),
+        Text(l10n.subscriptionReviewIntroTitle, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.xs),
         Text(l10n.subscriptionReviewIntro, style: theme.textTheme.bodyMedium),
         const SizedBox(height: AppSpacing.md),
@@ -915,18 +814,15 @@ class _ReviewStep extends StatelessWidget {
               Text(
                 [
                   controller.serviceName.trim(),
-                  if (controller.planName.trim().isNotEmpty)
-                    controller.planName.trim(),
+                  if (controller.planName.trim().isNotEmpty) controller.planName.trim(),
                 ].join(' '),
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: AppSpacing.xxs),
               Text(
                 [
-                  if (controller.category != null)
-                    SubscriptionCopy.category(l10n, controller.category!),
-                  if (controller.billingCycle != null)
-                    SubscriptionCopy.cycle(l10n, controller.billingCycle!),
+                  if (controller.category != null) SubscriptionCopy.category(l10n, controller.category!),
+                  if (controller.billingCycle != null) SubscriptionCopy.cycle(l10n, controller.billingCycle!),
                 ].join(' · '),
                 style: theme.textTheme.bodyMedium,
               ),
@@ -941,35 +837,20 @@ class _ReviewStep extends StatelessWidget {
               if (controller.nextPaymentDate != null)
                 RegistryInfoRow(
                   label: l10n.fieldNextPayment,
-                  value: RegistryDateFormatter.dayMonthYear(
-                    controller.nextPaymentDate!,
-                    locale,
-                  ),
+                  value: RegistryDateFormatter.dayMonthYear(controller.nextPaymentDate!, locale),
                 ),
               if (controller.decideByDate != null)
                 RegistryInfoRow(
                   label: l10n.fieldDecideBy,
-                  value: RegistryDateFormatter.dayMonthYear(
-                    controller.decideByDate!,
-                    locale,
-                  ),
+                  value: RegistryDateFormatter.dayMonthYear(controller.decideByDate!, locale),
                 ),
               RegistryInfoRow(
                 label: l10n.fieldAutoRenew,
-                value: controller.autoRenew
-                    ? l10n.autoRenewOn
-                    : l10n.autoRenewOff,
+                value: controller.autoRenew ? l10n.autoRenewOn : l10n.autoRenewOff,
               ),
               if (controller.impact != null)
-                RegistryInfoRow(
-                  label: l10n.fieldImpact,
-                  value: DocumentCopy.impact(l10n, controller.impact!),
-                ),
-              if (controller.notes.trim().isNotEmpty)
-                RegistryInfoRow(
-                  label: l10n.fieldNotes,
-                  value: controller.notes,
-                ),
+                RegistryInfoRow(label: l10n.fieldImpact, value: DocumentCopy.impact(l10n, controller.impact!)),
+              if (controller.notes.trim().isNotEmpty) RegistryInfoRow(label: l10n.fieldNotes, value: controller.notes),
             ],
           ),
         ),
@@ -997,10 +878,7 @@ class _ReviewStep extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
-        RegistryCallout(
-          tone: RegistryCalloutTone.privacy,
-          message: l10n.subscriptionSessionNote,
-        ),
+        RegistryCallout(message: l10n.subscriptionSessionNote),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'package:the_registry/features/reminders/domain/reminder_plan.dart';
+import 'reminder_plan.dart';
 
 enum ReminderPermission { unknown, granted, denied, unavailable }
 

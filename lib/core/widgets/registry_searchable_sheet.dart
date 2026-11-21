@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_search_field.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../app/theme/app_spacing.dart';
+import 'registry_search_field.dart';
+import '../../l10n/app_localizations.dart';
 
 class RegistrySearchableOption<T> {
   const RegistrySearchableOption({

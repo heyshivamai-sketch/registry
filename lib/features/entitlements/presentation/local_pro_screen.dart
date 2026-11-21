@@ -1,18 +1,19 @@
 import 'dart:async';
-import 'package:the_registry/core/widgets/attention_entrance.dart';
-import 'package:the_registry/features/home/widgets/registry_hero_pass_stack.dart';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
-import 'package:the_registry/features/entitlements/local_pro_store.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/attention_entrance.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/widgets/registry_hero_pass_stack.dart';
+import '../entitlement_policy.dart';
+import '../local_pro_entitlement.dart';
+import '../local_pro_store.dart';
+import '../registry_plan.dart';
 
 class LocalProScreen extends StatefulWidget {
   const LocalProScreen({super.key});
@@ -38,9 +39,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
     }
   }
 
-  Future<void> _run(
-    Future<LocalProActionResult> Function(LocalProEntitlement localPro) action,
-  ) async {
+  Future<void> _run(Future<LocalProActionResult> Function(LocalProEntitlement localPro) action) async {
     if (_busy) {
       return;
     }
@@ -108,31 +107,19 @@ class _LocalProScreenState extends State<LocalProScreen> {
                 _Section(
                   title: l10n.localProIncludedTitle,
                   lines: [
-                    l10n.localProIncludedDocuments(
-                      EntitlementPolicy.freeDocumentLimit,
-                    ),
-                    l10n.localProIncludedSubscriptions(
-                      EntitlementPolicy.freeSubscriptionLimit,
-                    ),
-                    deps.ads.enabled
-                        ? l10n.localProIncludedAdsOn
-                        : l10n.localProIncludedAds,
+                    l10n.localProIncludedDocuments(EntitlementPolicy.freeDocumentLimit),
+                    l10n.localProIncludedSubscriptions(EntitlementPolicy.freeSubscriptionLimit),
+                    if (deps.ads.enabled) l10n.localProIncludedAdsOn else l10n.localProIncludedAds,
                     l10n.localProTechnicalLimits,
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _Section(
                   title: l10n.localProNotIncludedTitle,
-                  lines: [
-                    l10n.localProNotIncludedCloud,
-                    l10n.localProNotIncludedTransfer,
-                  ],
+                  lines: [l10n.localProNotIncludedCloud, l10n.localProNotIncludedTransfer],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                _Section(
-                  title: l10n.localProFreeTitle,
-                  lines: [l10n.localProFreeBody],
-                ),
+                _Section(title: l10n.localProFreeTitle, lines: [l10n.localProFreeBody]),
                 const SizedBox(height: AppSpacing.lg),
                 _StatusBlock(localPro: localPro),
                 const SizedBox(height: AppSpacing.md),
@@ -159,11 +146,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
           style: theme.textTheme.bodyLarge,
         ),
         const SizedBox(height: AppSpacing.md),
-        RegistryPrimaryButton(
-          key: const ValueKey<String>('local-pro-buy'),
-          label: l10n.localProBuy,
-          onPressed: null,
-        ),
+        RegistryPrimaryButton(key: const ValueKey<String>('local-pro-buy'), label: l10n.localProBuy),
       ];
     }
     final owned = localPro.status == LocalProStatus.active;
@@ -189,9 +172,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
             alignment: AlignmentDirectional.centerStart,
             child: TextButton(
               key: const ValueKey<String>('local-pro-retry'),
-              onPressed: _busy
-                  ? null
-                  : () => unawaited(localPro.loadProduct(force: true)),
+              onPressed: _busy ? null : () => unawaited(localPro.loadProduct(force: true)),
               child: Text(l10n.localProRetry),
             ),
           ),
@@ -200,11 +181,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
         RegistryPrimaryButton(
           key: const ValueKey<String>('local-pro-buy'),
           label: l10n.localProBuy,
-          onPressed:
-              !_busy &&
-                  product != null &&
-                  product.isAvailable &&
-                  localPro.plan == RegistryPlan.free
+          onPressed: !_busy && product != null && product.isAvailable && localPro.plan == RegistryPlan.free
               ? () => unawaited(_run((localPro) => localPro.buy()))
               : null,
         ),
@@ -214,9 +191,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
       const SizedBox(height: AppSpacing.sm),
       OutlinedButton(
         key: const ValueKey<String>('local-pro-restore'),
-        onPressed: _busy
-            ? null
-            : () => unawaited(_run((localPro) => localPro.restore())),
+        onPressed: _busy ? null : () => unawaited(_run((localPro) => localPro.restore())),
         child: Text(l10n.localProRestore, textAlign: TextAlign.center),
       ),
     ];
@@ -226,8 +201,7 @@ class _LocalProScreenState extends State<LocalProScreen> {
     return switch (status) {
       StoreProductStatus.missing => l10n.localProProductMissing,
       StoreProductStatus.unavailable => l10n.localProStoreUnavailable,
-      StoreProductStatus.error ||
-      StoreProductStatus.available => l10n.localProStoreError,
+      StoreProductStatus.error || StoreProductStatus.available => l10n.localProStoreError,
     };
   }
 }
@@ -264,40 +238,22 @@ class _Hero extends StatelessWidget {
             const Row(
               children: [
                 DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFE8AD),
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: Color(0xFFFFE8AD), shape: BoxShape.circle),
                   child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: Icon(
-                      Icons.auto_awesome_rounded,
-                      size: 32,
-                      color: Color(0xFF6A4510),
-                    ),
+                    child: Icon(Icons.auto_awesome_rounded, size: 32, color: Color(0xFF6A4510)),
                   ),
                 ),
                 Spacer(),
-                ExcludeSemantics(
-                  child: RegistryHeroPassStack(
-                    icon: Icons.verified_user_outlined,
-                  ),
-                ),
+                ExcludeSemantics(child: RegistryHeroPassStack(icon: Icons.verified_user_outlined)),
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              l10n.localProEyebrow,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.onPrimary,
-              ),
-            ),
+            Text(l10n.localProEyebrow, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
             const SizedBox(height: AppSpacing.xs),
             Text(
               l10n.localProHeadline,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: theme.colorScheme.onPrimary,
-              ),
+              style: theme.textTheme.headlineMedium?.copyWith(color: theme.colorScheme.onPrimary),
             ),
           ],
         ),
@@ -326,11 +282,7 @@ class _Section extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.check_circle_outline_rounded,
-                  size: 20,
-                  color: theme.colorScheme.tertiary,
-                ),
+                Icon(Icons.check_circle_outline_rounded, size: 20, color: theme.colorScheme.tertiary),
                 const SizedBox(width: 10),
                 Expanded(child: Text(line, style: theme.textTheme.bodyMedium)),
               ],
@@ -365,18 +317,12 @@ class _StatusBlock extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          localPro.plan == RegistryPlan.localPro
-              ? l10n.localProCurrentPro
-              : l10n.localProCurrentFree,
+          localPro.plan == RegistryPlan.localPro ? l10n.localProCurrentPro : l10n.localProCurrentFree,
           style: theme.textTheme.titleSmall,
         ),
         if (detail != null) ...[
           const SizedBox(height: AppSpacing.xs),
-          Text(
-            detail,
-            key: ValueKey<String>('local-pro-status-${status.name}'),
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(detail, key: ValueKey<String>('local-pro-status-${status.name}'), style: theme.textTheme.bodyMedium),
         ],
         if (localPro.revokedThisSession) ...[
           const SizedBox(height: AppSpacing.xs),

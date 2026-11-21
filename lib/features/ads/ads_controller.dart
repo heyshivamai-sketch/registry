@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/ads/ads_config.dart';
-import 'package:the_registry/features/ads/ads_platform.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
+import 'ads_config.dart';
+import 'ads_platform.dart';
+import '../entitlements/registry_plan.dart';
 
 /// Decides whether a banner may be requested.
 ///

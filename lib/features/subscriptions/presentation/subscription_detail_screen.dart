@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/widgets/document_date_field.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
-import 'package:the_registry/features/reminders/presentation/reminder_status_line.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/widgets/document_date_field.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../../reminders/presentation/reminder_status_line.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
+import '../domain/subscription_status.dart';
+import 'subscription_copy.dart';
 
 class SubscriptionDetailScreen extends StatelessWidget {
   const SubscriptionDetailScreen({super.key, required this.subscriptionId});
@@ -23,7 +24,9 @@ class SubscriptionDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final repository = RegistryDependencies.of(context).subscriptions;
+    final repository = RegistryDependencies
+        .of(context)
+        .subscriptions;
 
     return ListenableBuilder(
       listenable: repository,
@@ -58,7 +61,10 @@ class _SubscriptionDetailBody extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final locale = l10n.localeName;
-    final now = RegistryDependencies.of(context).clock.now();
+    final now = RegistryDependencies
+        .of(context)
+        .clock
+        .now();
     final status = SubscriptionStatus.resolve(subscription, now: now);
 
     return Scaffold(
@@ -121,7 +127,9 @@ class _SubscriptionDetailBody extends StatelessWidget {
                     ],
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      '${MoneyFormat.format(subscription.amount, locale)} ${SubscriptionCopy.cycleSuffix(l10n, subscription.billingCycle)}',
+                      '${MoneyFormat.format(
+                          subscription.amount, locale)} ${SubscriptionCopy
+                          .cycleSuffix(l10n, subscription.billingCycle)}',
                       style: theme.textTheme.titleLarge,
                     ),
                   ],
@@ -141,10 +149,10 @@ class _SubscriptionDetailBody extends StatelessWidget {
                       actionLabel: subscription.isCancelled
                           ? l10n.subscriptionCancelled
                           : SubscriptionStatus.remainingLabel(
-                              l10n,
-                              subscription,
-                              now: now,
-                            ),
+                        l10n,
+                        subscription,
+                        now: now,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     _DetailGrid(subscription: subscription),
@@ -225,26 +233,32 @@ class _SubscriptionDetailBody extends StatelessWidget {
                           style: theme.textTheme.bodyMedium,
                         ),
                       )
-                    else ...[
-                      RegistryInfoRow(
-                        label: l10n.remindMePrefix,
-                        value: [
-                          for (final reminder in SubscriptionReminder.values)
-                            if (subscription.reminders.contains(reminder))
-                              SubscriptionCopy.reminder(l10n, reminder),
-                        ].join(', '),
-                      ),
-                      ListenableBuilder(
-                        listenable: RegistryDependencies.of(context).reminders,
-                        builder: (context, _) {
-                          return ReminderStatusLine(
-                            status: RegistryDependencies.of(
-                              context,
-                            ).reminders.statusForSubscription(subscription),
-                          );
-                        },
-                      ),
-                    ],
+                    else
+                      ...[
+                        RegistryInfoRow(
+                          label: l10n.remindMePrefix,
+                          value: [
+                            for (final reminder in SubscriptionReminder.values)
+                              if (subscription.reminders.contains(reminder))
+                                SubscriptionCopy.reminder(l10n, reminder),
+                          ].join(', '),
+                        ),
+                        ListenableBuilder(
+                          listenable: RegistryDependencies
+                              .of(context)
+                              .reminders,
+                          builder: (context, _) {
+                            return ReminderStatusLine(
+                              status: RegistryDependencies
+                                  .of(
+                                context,
+                              )
+                                  .reminders
+                                  .statusForSubscription(subscription),
+                            );
+                          },
+                        ),
+                      ],
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       l10n.subscriptionRemindersHelper,
@@ -278,26 +292,26 @@ class _DetailGrid extends StatelessWidget {
     final cells = <(String, String)>[
       if (subscription.decideByDate != null)
         (
-          l10n.fieldDecideBy,
-          RegistryDateFormatter.dayMonthYear(
-            subscription.decideByDate!,
-            locale,
-          ),
-        ),
-      (
-        l10n.fieldNextPayment,
+        l10n.fieldDecideBy,
         RegistryDateFormatter.dayMonthYear(
-          subscription.nextPaymentDate,
+          subscription.decideByDate!,
           locale,
         ),
+        ),
+      (
+      l10n.fieldNextPayment,
+      RegistryDateFormatter.dayMonthYear(
+        subscription.nextPaymentDate,
+        locale,
+      ),
       ),
       (
-        l10n.fieldBillingCycle,
-        SubscriptionCopy.cycle(l10n, subscription.billingCycle),
+      l10n.fieldBillingCycle,
+      SubscriptionCopy.cycle(l10n, subscription.billingCycle),
       ),
       (
-        l10n.fieldAutoRenew,
-        subscription.autoRenew ? l10n.autoRenewOn : l10n.autoRenewOff,
+      l10n.fieldAutoRenew,
+      subscription.autoRenew ? l10n.autoRenewOn : l10n.autoRenewOff,
       ),
     ];
 
@@ -433,10 +447,8 @@ class _PlanAction extends StatelessWidget {
   }
 }
 
-Future<void> _confirmCancel(
-  BuildContext context,
-  RegistrySubscription subscription,
-) async {
+Future<void> _confirmCancel(BuildContext context,
+    RegistrySubscription subscription,) async {
   final l10n = AppLocalizations.of(context);
   final confirmed = await showDialog<bool>(
     context: context,
@@ -476,10 +488,8 @@ Future<void> _confirmCancel(
     ..showSnackBar(SnackBar(content: Text(l10n.planMarkedCancelled)));
 }
 
-Future<void> _confirmReactivate(
-  BuildContext context,
-  RegistrySubscription subscription,
-) async {
+Future<void> _confirmReactivate(BuildContext context,
+    RegistrySubscription subscription,) async {
   final l10n = AppLocalizations.of(context);
   DateTime nextPayment = subscription.nextPaymentDate;
   final confirmed = await showDialog<bool>(
@@ -524,10 +534,8 @@ Future<void> _confirmReactivate(
     ..showSnackBar(SnackBar(content: Text(l10n.planReactivated)));
 }
 
-Future<void> _confirmDelete(
-  BuildContext context,
-  RegistrySubscription subscription,
-) async {
+Future<void> _confirmDelete(BuildContext context,
+    RegistrySubscription subscription,) async {
   final l10n = AppLocalizations.of(context);
   final confirmed = await showDialog<bool>(
     context: context,
@@ -544,7 +552,10 @@ Future<void> _confirmDelete(
           TextButton(
             key: const ValueKey<String>('delete-sub-confirm'),
             style: TextButton.styleFrom(
-              foregroundColor: Theme.of(dialogContext).colorScheme.error,
+              foregroundColor: Theme
+                  .of(dialogContext)
+                  .colorScheme
+                  .error,
             ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l10n.deleteDocumentConfirm),
@@ -558,9 +569,12 @@ Future<void> _confirmDelete(
   }
   final messenger = ScaffoldMessenger.of(context);
   final navigator = Navigator.of(context);
-  final deleted = await RegistryDependencies.of(
+  final deleted = await RegistryDependencies
+      .of(
     context,
-  ).subscriptions.delete(subscription.id);
+  )
+      .subscriptions
+      .delete(subscription.id);
   if (!deleted) {
     return;
   }
@@ -600,12 +614,14 @@ class _ReactivateDialogState extends State<_ReactivateDialog> {
           value: _nextPayment,
           requiredField: true,
           onTap: () async {
-            final picked = await RegistryDependencies.of(context).datePicker
+            final picked = await RegistryDependencies
+                .of(context)
+                .datePicker
                 .pickDate(
-                  context,
-                  fieldId: 'reactivate-next-payment',
-                  initialDate: _nextPayment,
-                );
+              context,
+              fieldId: 'reactivate-next-payment',
+              initialDate: _nextPayment,
+            );
             if (picked != null) {
               setState(() => _nextPayment = picked);
               widget.onDateChanged(picked);

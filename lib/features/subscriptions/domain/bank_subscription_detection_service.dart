@@ -1,13 +1,10 @@
 import 'dart:math' as math;
 
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import 'detected_subscription.dart';
+import 'money.dart';
+import 'registry_subscription.dart';
 
-enum TransactionDirection {
-  debit,
-  credit,
-}
+enum TransactionDirection { debit, credit }
 
 class BankTransaction {
   const BankTransaction({
@@ -29,6 +26,7 @@ class BankTransaction {
   final String? merchantOverride;
 
   bool get isDebit => direction == TransactionDirection.debit;
+
   bool get isCredit => direction == TransactionDirection.credit;
 }
 
@@ -59,10 +57,7 @@ class BankSubscriptionDetectionService {
     caseSensitive: false,
   );
 
-  static final RegExp _upiSuffix = RegExp(
-    r'(?:/[0-9A-Za-z_\.\-]+)?@[a-zA-Z0-9_\.\-]+$',
-    caseSensitive: false,
-  );
+  static final RegExp _upiSuffix = RegExp(r'(?:/[0-9A-Za-z_\.\-]+)?@[a-zA-Z0-9_\.\-]+$', caseSensitive: false);
 
   static final RegExp _domainSuffixes = RegExp(
     r'\.(?:COM|IN|ORG|NET|IO|CO|AI|APP|UK|DE|FR|US|INFO)\b',
@@ -83,17 +78,32 @@ class BankSubscriptionDetectionService {
     // Rent & Housing
     RegExp(r'\b(?:RENT|HOUSE\s*RENT|FLAT\s*RENT|SOCIETY\s*MAINTENANCE|LANDLORD|TENANT)\b', caseSensitive: false),
     // Utilities
-    RegExp(r'\b(?:ELECTRICITY|POWER|WATER\s*BILL|WATER\s*BOARD|JAL\s*BOARD|GAS\s*BILL|CYLINDER|BESCOM|TNEB|MSEB|ADANI\s*ELECTRICITY|DHBVN|UPPCL)\b', caseSensitive: false),
+    RegExp(
+      r'\b(?:ELECTRICITY|POWER|WATER\s*BILL|WATER\s*BOARD|JAL\s*BOARD|GAS\s*BILL|CYLINDER|BESCOM|TNEB|MSEB|ADANI\s*ELECTRICITY|DHBVN|UPPCL)\b',
+      caseSensitive: false,
+    ),
     // Groceries & Food Delivery / Supermarkets
-    RegExp(r'\b(?:GROCERY|GROCERIES|SUPERMARKET|BLINKIT|ZEPTO|INSTAMART|BIGBASKET|DMART|WALMART|COSTCO|RELIANCE\s*FRESH|NATURES\s*BASKET|SPENCERS)\b', caseSensitive: false),
+    RegExp(
+      r'\b(?:GROCERY|GROCERIES|SUPERMARKET|BLINKIT|ZEPTO|INSTAMART|BIGBASKET|DMART|WALMART|COSTCO|RELIANCE\s*FRESH|NATURES\s*BASKET|SPENCERS)\b',
+      caseSensitive: false,
+    ),
     // Loan & EMI
-    RegExp(r'\b(?:EMI|LOAN|HOME\s*LOAN|CAR\s*LOAN|PERSONAL\s*LOAN|BAJAJ\s*FINANCE|HDFC\s*CREDILA|IDFC\s*FIRST\s*LOAN|MUTHOOT|MANAPPURAM)\b', caseSensitive: false),
+    RegExp(
+      r'\b(?:EMI|LOAN|HOME\s*LOAN|CAR\s*LOAN|PERSONAL\s*LOAN|BAJAJ\s*FINANCE|HDFC\s*CREDILA|IDFC\s*FIRST\s*LOAN|MUTHOOT|MANAPPURAM)\b',
+      caseSensitive: false,
+    ),
     // Credit card bill payments
-    RegExp(r'\b(?:CREDIT\s*CARD|CC\s*PAYMENT|CARD\s*PAYMENT|CRED\s*PAYMENT|CRED\.CLUB|CARD\s*BILL)\b', caseSensitive: false),
+    RegExp(
+      r'\b(?:CREDIT\s*CARD|CC\s*PAYMENT|CARD\s*PAYMENT|CRED\s*PAYMENT|CRED\.CLUB|CARD\s*BILL)\b',
+      caseSensitive: false,
+    ),
     // Salary & Deposits (in case not tagged credit)
     RegExp(r'\b(?:SALARY|PAYROLL|STIPEND|DIVIDEND|INTEREST\s*CREDIT|CASH\s*DEPOSIT)\b', caseSensitive: false),
     // Internal & P2P bank transfers
-    RegExp(r'\b(?:SELF\s*TRANSFER|FUND\s*TRANSFER|TRANSFER\s*TO\s*SELF|INTER\s*ACCOUNT|TO\s*SAVINGS)\b', caseSensitive: false),
+    RegExp(
+      r'\b(?:SELF\s*TRANSFER|FUND\s*TRANSFER|TRANSFER\s*TO\s*SELF|INTER\s*ACCOUNT|TO\s*SAVINGS)\b',
+      caseSensitive: false,
+    ),
   ];
 
   static final List<String> _subscriptionKeywords = [
@@ -143,10 +153,13 @@ class BankSubscriptionDetectionService {
     if (text.isEmpty) {
       return raw.trim();
     }
-    return text.split(' ').map((word) {
-      if (word.isEmpty) return '';
-      return word[0].toUpperCase() + word.substring(1);
-    }).join(' ');
+    return text
+        .split(' ')
+        .map((word) {
+          if (word.isEmpty) return '';
+          return word[0].toUpperCase() + word.substring(1);
+        })
+        .join(' ');
   }
 
   /// Tests if a transaction description matches non-subscription categories (rent, utilities, EMI, etc.).
@@ -163,8 +176,8 @@ class BankSubscriptionDetectionService {
   List<DetectedSubscriptionCandidate> detectSubscriptions({
     required List<BankTransaction> transactions,
     required List<RegistrySubscription> existingSubscriptions,
-    Set<String> ignoredMerchants = const {},
     required DateTime Function() now,
+    Set<String> ignoredMerchants = const {},
     String Function(int index)? idGenerator,
   }) {
     // Step 1: Filter out credit transactions (deposits/refunds)
@@ -225,26 +238,28 @@ class BankSubscriptionDetectionService {
       }
 
       final latest = group.last;
-      final merchantName = normalizeMerchant(
-        latest.merchantOverride ?? latest.description,
-      );
+      final merchantName = normalizeMerchant(latest.merchantOverride ?? latest.description);
 
       // Check if existing manual or active subscription already exists
-      final duplicate = existingSubscriptions.any((sub) =>
-          normalizeMerchant(sub.serviceName).toLowerCase() ==
-              merchantName.toLowerCase() &&
-          sub.amount.code == latest.amount.code &&
-          (sub.amount.minorUnits == latest.amount.minorUnits ||
-              (sub.amount.minorUnits - latest.amount.minorUnits).abs() <=
-                  (latest.amount.minorUnits * 0.15).toInt()));
+      final duplicate = existingSubscriptions.any(
+        (sub) =>
+            normalizeMerchant(sub.serviceName).toLowerCase() == merchantName.toLowerCase() &&
+            sub.amount.code == latest.amount.code &&
+            (sub.amount.minorUnits == latest.amount.minorUnits ||
+                (sub.amount.minorUnits - latest.amount.minorUnits).abs() <= (latest.amount.minorUnits * 0.15).toInt()),
+      );
 
-      final evidence = group.map((t) => BankTransactionEvidence(
-            lineNumber: t.lineNumber,
-            date: t.date,
-            originalDescription: t.description,
-            amount: t.amount,
-            reference: t.reference,
-          )).toList();
+      final evidence = group
+          .map(
+            (t) => BankTransactionEvidence(
+              lineNumber: t.lineNumber,
+              date: t.date,
+              originalDescription: t.description,
+              amount: t.amount,
+              reference: t.reference,
+            ),
+          )
+          .toList();
 
       final candidateId = idGenerator != null
           ? idGenerator(candidateIndex++)
@@ -258,10 +273,8 @@ class BankSubscriptionDetectionService {
           billingCycle: cycle,
           lastPaymentDate: latest.date,
           nextPaymentDate: _estimateNextPaymentDate(latest.date, cycle),
-          nextPaymentIsEstimated: true,
           sourceTypes: {DetectionSource.bankStatement},
           confidenceScore: score,
-          reviewStatus: DetectionReviewStatus.pendingReview,
           bankEvidence: evidence,
           createdAt: now(),
           possibleDuplicate: duplicate,
@@ -273,16 +286,14 @@ class BankSubscriptionDetectionService {
   }
 
   BillingCycle? _detectBillingCycle(List<BankTransaction> group) {
-    final uniqueDates = group.map((t) => DateTime(t.date.year, t.date.month, t.date.day)).toSet().toList()
-      ..sort();
+    final uniqueDates = group.map((t) => DateTime(t.date.year, t.date.month, t.date.day)).toSet().toList()..sort();
 
     if (uniqueDates.length < 2) {
       return null;
     }
 
     final intervals = <int>[
-      for (var i = 1; i < uniqueDates.length; i++)
-        uniqueDates[i].difference(uniqueDates[i - 1]).inDays,
+      for (var i = 1; i < uniqueDates.length; i++) uniqueDates[i].difference(uniqueDates[i - 1]).inDays,
     ];
 
     final medianInterval = _median(intervals);
@@ -307,11 +318,9 @@ class BankSubscriptionDetectionService {
     final merchantScore = group.length >= 3 ? 1.0 : 0.70;
 
     // 2. Billing interval consistency (30%)
-    final uniqueDates = group.map((t) => DateTime(t.date.year, t.date.month, t.date.day)).toSet().toList()
-      ..sort();
+    final uniqueDates = group.map((t) => DateTime(t.date.year, t.date.month, t.date.day)).toSet().toList()..sort();
     final intervals = [
-      for (var i = 1; i < uniqueDates.length; i++)
-        uniqueDates[i].difference(uniqueDates[i - 1]).inDays,
+      for (var i = 1; i < uniqueDates.length; i++) uniqueDates[i].difference(uniqueDates[i - 1]).inDays,
     ];
     final matchCount = intervals.where((days) => _cycleForIntervalDays(days) == cycle).length;
     final intervalRatio = intervals.isNotEmpty ? matchCount / intervals.length : 0.0;
@@ -326,7 +335,7 @@ class BankSubscriptionDetectionService {
     var keywordFound = false;
     for (final t in group) {
       final desc = t.description.toLowerCase();
-      if (_subscriptionKeywords.any((kw) => desc.contains(kw))) {
+      if (_subscriptionKeywords.any(desc.contains)) {
         keywordFound = true;
         break;
       }
@@ -336,7 +345,8 @@ class BankSubscriptionDetectionService {
     // 5. Independent evidence (5%)
     final evidenceScore = group.length >= 3 ? 1.0 : 0.50;
 
-    final totalScore = (merchantScore * merchantSimilarityWeight) +
+    final totalScore =
+        (merchantScore * merchantSimilarityWeight) +
         (intervalRatio * intervalConsistencyWeight) +
         (amountRatio * amountConsistencyWeight) +
         (keywordScore * descriptionKeywordsWeight) +
@@ -380,7 +390,7 @@ class BankSubscriptionDetectionService {
   }
 
   DateTime _addMonths(DateTime date, int months) {
-    final monthStart = DateTime(date.year, date.month + months, 1);
+    final monthStart = DateTime(date.year, date.month + months);
     final lastDay = DateTime(monthStart.year, monthStart.month + 1, 0).day;
     final day = date.day > lastDay ? lastDay : date.day;
     return DateTime(monthStart.year, monthStart.month, day);

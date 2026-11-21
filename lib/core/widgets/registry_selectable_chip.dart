@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import '../../app/theme/app_spacing.dart';
 
 /// Compact Aura filter/choice chip. Selected state uses the ink surface.
 class RegistrySelectableChip extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
+import 'registry_form_field.dart';
 
 /// Filled selector with a persistent label above the value, never overlaid.
 class RegistrySelectorField extends StatelessWidget {

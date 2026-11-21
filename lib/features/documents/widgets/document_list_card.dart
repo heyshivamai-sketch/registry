@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/document_icons.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../domain/document_icons.dart';
+import '../domain/document_status.dart';
+import '../domain/registry_document.dart';
 
 class DocumentListCard extends StatelessWidget {
   const DocumentListCard({super.key, required this.document, this.onTap});
@@ -24,19 +25,11 @@ class DocumentListCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final statusColors = AppStatusColors.of(context);
     final locale = l10n.localeName;
-    final actionDate = RegistryDateFormatter.dayMonthYear(
-      document.displayActionDate,
-      locale,
-    );
-    final expiryDate = RegistryDateFormatter.dayMonthYear(
-      document.expiryDate,
-      locale,
-    );
+    final actionDate = RegistryDateFormatter.dayMonthYear(document.displayActionDate, locale);
+    final expiryDate = RegistryDateFormatter.dayMonthYear(document.expiryDate, locale);
     final registryStatus = DocumentStatus.resolve(document);
     final accent = registryStatus.accent(statusColors);
-    final fill = registryStatus == RegistryStatus.urgent
-        ? const Color(0xFFFFF8F7)
-        : colorScheme.surfaceContainerLowest;
+    final fill = registryStatus == RegistryStatus.urgent ? const Color(0xFFFFF8F7) : colorScheme.surfaceContainerLowest;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -53,14 +46,10 @@ class DocumentListCard extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: AppRadius.cardBorder,
-              border: BorderDirectional(
-                start: BorderSide(color: accent, width: 3),
-              ),
+              border: BorderDirectional(start: BorderSide(color: accent, width: 3)),
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: AppSpacing.minTapTarget,
-              ),
+              constraints: const BoxConstraints(minHeight: AppSpacing.minTapTarget),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
@@ -80,9 +69,7 @@ class DocumentListCard extends StatelessWidget {
                             document.name,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontSize: 13,
-                            ),
+                            style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
                           ),
                           if (document.hasDistinctActionDate || document.expiryDate.year < 2099) ...[
                             const SizedBox(height: 4),
@@ -101,20 +88,13 @@ class DocumentListCard extends StatelessWidget {
                             children: [
                               RegistryStatusChip(
                                 status: registryStatus,
-                                label: DocumentStatus.label(
-                                  l10n,
-                                  registryStatus,
-                                ),
+                                label: DocumentStatus.label(l10n, registryStatus),
                                 compact: true,
                               ),
                               if (document.hasAttachment)
                                 Semantics(
                                   label: l10n.hasAttachment,
-                                  child: Icon(
-                                    Icons.attach_file_rounded,
-                                    size: 16,
-                                    color: colorScheme.primary,
-                                  ),
+                                  child: Icon(Icons.attach_file_rounded, size: 16, color: colorScheme.primary),
                                 ),
                             ],
                           ),

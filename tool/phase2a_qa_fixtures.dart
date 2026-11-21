@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/features/backup/backup_crypto.dart';
 import 'package:the_registry/features/backup/backup_models.dart';
 import 'package:the_registry/features/backup/backup_payload.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
@@ -18,81 +17,71 @@ import 'package:the_registry/features/subscriptions/domain/registry_subscription
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test(
-    'write synthetic phase 2a qa files',
-    () async {
-      const password = 'phase2a-qa-password';
-      final out = Directory('screenshots/phase2a_local_pro/fixtures');
-      await out.create(recursive: true);
+  test('write synthetic phase 2a qa files', () async {
+    const password = 'phase2a-qa-password';
+    final out = Directory('screenshots/phase2a_local_pro/fixtures');
+    await out.create(recursive: true);
 
-      await _writeBackup(
-        file: File('${out.path}/qa_lock_marker.rgry'),
-        password: password,
-        documents: [
+    await _writeBackup(
+      file: File('${out.path}/qa_lock_marker.rgry'),
+      password: password,
+      documents: [
+        _document(id: 'qa-lock-marker', name: 'QA Lock Marker', index: 1, withAttachment: true, withHistory: true),
+      ],
+      subscriptions: const [],
+    );
+
+    await _writeBackup(
+      file: File('${out.path}/qa_exact_free_limit.rgry'),
+      password: password,
+      documents: [
+        for (var index = 1; index <= 10; index++)
           _document(
-            id: 'qa-lock-marker',
-            name: 'QA Lock Marker',
-            index: 1,
+            id: 'qa-exact-doc-${index.toString().padLeft(2, '0')}',
+            name: 'QA Exact Doc ${index.toString().padLeft(2, '0')}',
+            index: index,
             withAttachment: true,
             withHistory: true,
           ),
-        ],
-        subscriptions: const [],
-      );
+      ],
+      subscriptions: [
+        for (var index = 1; index <= 5; index++)
+          _subscription(
+            id: 'qa-exact-sub-${index.toString().padLeft(2, '0')}',
+            name: 'QA Exact Plan ${index.toString().padLeft(2, '0')}',
+            index: index,
+          ),
+      ],
+    );
 
-      await _writeBackup(
-        file: File('${out.path}/qa_exact_free_limit.rgry'),
-        password: password,
-        documents: [
-          for (var index = 1; index <= 10; index++)
-            _document(
-              id: 'qa-exact-doc-${index.toString().padLeft(2, '0')}',
-              name: 'QA Exact Doc ${index.toString().padLeft(2, '0')}',
-              index: index,
-              withAttachment: true,
-              withHistory: true,
-            ),
-        ],
-        subscriptions: [
-          for (var index = 1; index <= 5; index++)
-            _subscription(
-              id: 'qa-exact-sub-${index.toString().padLeft(2, '0')}',
-              name: 'QA Exact Plan ${index.toString().padLeft(2, '0')}',
-              index: index,
-            ),
-        ],
-      );
+    await _writeBackup(
+      file: File('${out.path}/qa_above_free_limit.rgry'),
+      password: password,
+      documents: [
+        for (var index = 1; index <= 12; index++)
+          _document(
+            id: 'qa-above-doc-${index.toString().padLeft(2, '0')}',
+            name: 'QA Above Doc ${index.toString().padLeft(2, '0')}',
+            index: 100 + index,
+            withAttachment: true,
+            withHistory: true,
+          ),
+      ],
+      subscriptions: [
+        for (var index = 1; index <= 7; index++)
+          _subscription(
+            id: 'qa-above-sub-${index.toString().padLeft(2, '0')}',
+            name: 'QA Above Plan ${index.toString().padLeft(2, '0')}',
+            index: index,
+          ),
+      ],
+    );
 
-      await _writeBackup(
-        file: File('${out.path}/qa_above_free_limit.rgry'),
-        password: password,
-        documents: [
-          for (var index = 1; index <= 12; index++)
-            _document(
-              id: 'qa-above-doc-${index.toString().padLeft(2, '0')}',
-              name: 'QA Above Doc ${index.toString().padLeft(2, '0')}',
-              index: 100 + index,
-              withAttachment: true,
-              withHistory: true,
-            ),
-        ],
-        subscriptions: [
-          for (var index = 1; index <= 7; index++)
-            _subscription(
-              id: 'qa-above-sub-${index.toString().padLeft(2, '0')}',
-              name: 'QA Above Plan ${index.toString().padLeft(2, '0')}',
-              index: index,
-            ),
-        ],
-      );
-
-      File('${out.path}/small_recurring.csv').writeAsStringSync(_smallCsv);
-      File('${out.path}/malformed_mixed.csv').writeAsStringSync(_mixedCsv);
-      File('${out.path}/over_limit.csv').writeAsStringSync(_overLimitCsv);
-      File(
-        '${out.path}/invalid.csv',
-      ).writeAsStringSync('this is not a charge table\n');
-      File('${out.path}/FIXTURES.txt').writeAsStringSync('''
+    File('${out.path}/small_recurring.csv').writeAsStringSync(_smallCsv);
+    File('${out.path}/malformed_mixed.csv').writeAsStringSync(_mixedCsv);
+    File('${out.path}/over_limit.csv').writeAsStringSync(_overLimitCsv);
+    File('${out.path}/invalid.csv').writeAsStringSync('this is not a charge table\n');
+    File('${out.path}/FIXTURES.txt').writeAsStringSync('''
 Synthetic Phase 2A QA fixtures. Not a bank statement.
 Backup password: phase2a-qa-password
 qa_lock_marker.rgry: 1 document, attachment, one renewal.
@@ -100,9 +89,7 @@ qa_exact_free_limit.rgry: 10 documents and 5 subscriptions, each document has a 
 qa_above_free_limit.rgry: 12 documents and 7 subscriptions, each document has a unique attachment and one renewal.
 CSV files use the documented date,merchant,amount_minor,currency header.
 ''');
-    },
-    timeout: const Timeout(Duration(minutes: 5)),
-  );
+  }, timeout: const Timeout(Duration(minutes: 5)));
 }
 
 Future<void> _writeBackup({
@@ -111,9 +98,7 @@ Future<void> _writeBackup({
   required List<RegistryDocument> documents,
   required List<RegistrySubscription> subscriptions,
 }) async {
-  final plaintext = RegistryBackupPayload.encode(
-    BackupSnapshot(documents: documents, subscriptions: subscriptions),
-  );
+  final plaintext = RegistryBackupPayload.encode(BackupSnapshot(documents: documents, subscriptions: subscriptions));
   final encrypted = await RegistryBackupCrypto.encrypt(
     plaintext: plaintext,
     password: password,
@@ -137,9 +122,7 @@ RegistryDocument _document({
     expiryDate: expiry,
     impact: DocumentImpact.medium,
     createdAt: DateTime.utc(2026, 1, 15, 12, index),
-    schemaId: DocumentSchemaIds.genericOther,
     notes: 'Synthetic QA fixture $id',
-    reminders: const {},
     attachmentBytes: withAttachment ? _attachment(id) : null,
     renewalHistory: withHistory
         ? [
@@ -155,11 +138,7 @@ RegistryDocument _document({
   );
 }
 
-RegistrySubscription _subscription({
-  required String id,
-  required String name,
-  required int index,
-}) {
+RegistrySubscription _subscription({required String id, required String name, required int index}) {
   return RegistrySubscription(
     id: id,
     createdAt: DateTime.utc(2026, 1, 15, 12, index),
@@ -171,7 +150,6 @@ RegistrySubscription _subscription({
     autoRenew: true,
     lifecycle: SubscriptionLifecycle.active,
     impact: DocumentImpact.low,
-    reminders: const {},
     notes: 'Synthetic QA fixture $id',
   );
 }

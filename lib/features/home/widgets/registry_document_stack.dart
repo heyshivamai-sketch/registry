@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
+import '../../../app/theme/app_colors.dart';
 
 enum RegistryDocumentStackSize { hero, tile, empty }
 
@@ -100,7 +100,7 @@ class RegistryDocumentStack extends StatelessWidget {
                 top: 0,
                 child: Transform.rotate(
                   angle: 0.16,
-                  child: _PaperCard(scale: 0.42, faint: true),
+                  child: const _PaperCard(scale: 0.42, faint: true),
                 ),
               ),
             PositionedDirectional(

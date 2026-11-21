@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/document_icons.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/presentation/document_copy.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../domain/document_icons.dart';
+import '../domain/document_status.dart';
+import '../domain/registry_document.dart';
+import '../presentation/document_copy.dart';
 
 class DocumentDigitalPass extends StatelessWidget {
   const DocumentDigitalPass({
@@ -34,11 +35,8 @@ class DocumentDigitalPass extends StatelessWidget {
     final status = DocumentStatus.resolve(document);
     final category = DocumentCopy.category(l10n, document.category);
     final country = DocumentCopy.country(l10n, document.countryCode);
-    final onHero = Colors.white;
-    final expiry = RegistryDateFormatter.dayMonthYear(
-      document.expiryDate,
-      locale,
-    );
+    const onHero = Colors.white;
+    final expiry = RegistryDateFormatter.dayMonthYear(document.expiryDate, locale);
 
     final content = Padding(
       padding: EdgeInsets.all(compact ? 14 : (large ? 19 : 17)),
@@ -80,12 +78,7 @@ class DocumentDigitalPass extends StatelessWidget {
                   fontSize: 10,
                 ),
               ),
-              Text(
-                '·',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: const Color(0xFFAEB9DB),
-                ),
-              ),
+              Text('·', style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFFAEB9DB))),
               Text(
                 category,
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -99,20 +92,13 @@ class DocumentDigitalPass extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             document.name,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: onHero,
-              fontSize: 24,
-              height: 1.15,
-            ),
+            style: theme.textTheme.headlineMedium?.copyWith(color: onHero, fontSize: 24, height: 1.15),
           ),
           if (_present(document.ownerName)) ...[
             const SizedBox(height: 3),
             Text(
               document.ownerName!,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: const Color(0xFFCCD3EB),
-                fontSize: 12,
-              ),
+              style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFCCD3EB), fontSize: 12),
             ),
           ],
           if (showExpiry && document.expiryDate.year < 2099) ...[
@@ -125,9 +111,7 @@ class DocumentDigitalPass extends StatelessWidget {
               children: [
                 if (document.maskedDocumentNumber.isNotEmpty)
                   Semantics(
-                    label: l10n.maskedDocumentNumberLabel(
-                      document.maskedDocumentNumber,
-                    ),
+                    label: l10n.maskedDocumentNumberLabel(document.maskedDocumentNumber),
                     child: Text(
                       document.maskedDocumentNumber,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -150,14 +134,8 @@ class DocumentDigitalPass extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        RegistryDateFormatter.dayMonthYear(
-                          document.displayActionDate,
-                          locale,
-                        ),
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: onHero,
-                          fontSize: 13,
-                        ),
+                        RegistryDateFormatter.dayMonthYear(document.displayActionDate, locale),
+                        style: theme.textTheme.titleSmall?.copyWith(color: onHero, fontSize: 13),
                       ),
                     ],
                   ),
@@ -172,13 +150,7 @@ class DocumentDigitalPass extends StatelessWidget {
                         fontSize: 10,
                       ),
                     ),
-                    Text(
-                      expiry,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: onHero,
-                        fontSize: 13,
-                      ),
-                    ),
+                    Text(expiry, style: theme.textTheme.titleSmall?.copyWith(color: onHero, fontSize: 13)),
                   ],
                 ),
               ],
@@ -196,10 +168,10 @@ class DocumentDigitalPass extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.passRadius),
           boxShadow: AppShadows.pulse(context),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [const Color(0xFF141D43), const Color(0xFF283E79)],
+            colors: [Color(0xFF141D43), Color(0xFF283E79)],
           ),
         ),
         child: ClipRRect(
@@ -235,11 +207,7 @@ class DocumentDigitalPass extends StatelessWidget {
       return pass;
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: pass,
-    );
+    return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: pass);
   }
 
   bool _present(String? value) => value != null && value.trim().isNotEmpty;

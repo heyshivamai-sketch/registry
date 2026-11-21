@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:the_registry/core/persistence/persisted_values.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import '../../core/persistence/persisted_values.dart';
+import 'backup_models.dart';
+import '../documents/domain/document_field_value.dart';
+import '../documents/domain/registry_document.dart';
+import '../documents/domain/renewal_history_entry.dart';
+import '../subscriptions/domain/money.dart';
+import '../subscriptions/domain/registry_subscription.dart';
 
 /// Version 1 plaintext payload.
 ///

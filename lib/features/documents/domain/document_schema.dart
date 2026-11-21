@@ -1,4 +1,4 @@
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'registry_document.dart';
 
 enum DocumentFieldInputType { text, number, multiline, date }
 

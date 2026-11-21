@@ -1,33 +1,179 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
-
+# Enable strong analysis for better code quality and safety.
 analyzer:
+  strong-mode:
+    implicit-casts: false   # Disable implicit casts for better type safety.
+    implicit-dynamic: false # Require explicit types for better type checking.
+
+  language:
+    strict-raw-types: true  # Ensure that generics are properly typed.
+
+  errors:
+    must_be_immutable: error          # Ensure classes that extend StatelessWidget or StatefulWidget are immutable.
+    unused_element: warning           # Warn when code is defined but never used.
+    dead_code: warning                # Warn about code that is unreachable.
+    prefer_null_aware_method_calls: warning  # Encourage null-aware calls.
+    avoid_classes_with_only_static_members: warning  # Avoid creating classes that only contain static members.
+    always_specify_types: warning     # Warn when types are not specified.
+    invalid_annotation_target: ignore # Ignore invalid annotation targets.
   exclude:
-    # Swift Package Manager checkouts of plugin sources, including their tests.
+    # Exclude generated files from analysis.
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.freezed.test.dart"
+    - "**/*.config.dart"
+    - "**/*.mock.dart"
+    - '**/*_generated.dart'
+    - "test/**"
     - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+# Customize error and warning levels.
+errors:
+  unused_local_variable: warning      # Warn about unused local variables.
+  unused_import: warning              # Warn about unused imports.
+  missing_return: error               # Treat missing returns as an error.
+  missing_required_param: error       # Treat missing required parameters as an error.
+  todo: ignore                        # Ignore todo comments, but can be changed to warning if needed.
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    # Enforce the use of const where possible.
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_const_constructors_in_immutables
+    - prefer_typing_uninitialized_variables
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    # Enforce naming conventions for classes, methods, and variables.
+    - camel_case_types
+    - non_constant_identifier_names
+    - constant_identifier_names
+
+    # Avoid using unnecessary widgets or containers.
+    - avoid_unnecessary_containers
+    - sized_box_for_whitespace
+
+    # Encourage the use of final for local variables to improve immutability.
+    - prefer_final_locals
+    - prefer_final_fields
+
+    # Best practices for null safety and null handling.
+    - avoid_positional_boolean_parameters
+    - avoid_private_typedef_functions
+    - prefer_null_aware_method_calls
+    - avoid_bool_literals_in_conditional_expressions
+    - avoid_returning_null_for_void
+    - avoid_shadowing_type_parameters
+    - avoid_void_async
+    - avoid_double_and_int_checks
+
+    # Dart language best practices.
+    - always_declare_return_types
+    - always_put_required_named_parameters_first
+    - annotate_overrides
+    - avoid_return_types_on_setters
+    - avoid_print                         # Avoid print statements, use proper logging.
+    - use_rethrow_when_possible           # Prefer rethrowing caught exceptions.
+    - avoid_empty_else                   # Avoid empty else statements.
+    - avoid_function_literals_in_foreach_calls
+    - avoid_field_initializers_in_const_classes
+    - close_sinks                        # Ensure streams are properly closed.
+
+    # Encourage the use of proper collection literals.
+    - prefer_collection_literals
+    - prefer_spread_collections
+    - prefer_for_elements_to_map_fromIterable
+
+    # Ensure the use of proper import ordering and relative imports.
+    - prefer_relative_imports
+    - directives_ordering
+    - implementation_imports               # Avoid direct imports of implementation files.
+    - avoid_relative_lib_imports           # Avoid relative imports outside the lib folder.
+
+
+    # Flutter-specific best practices.
+    - use_key_in_widget_constructors      # Ensure key usage in widgets.
+    - prefer_const_declarations           # Prefer using const declarations where possible.
+    - use_full_hex_values_for_flutter_colors  # Avoid shorthand hex colors.
+    - avoid_web_libraries_in_flutter      # Ensure Flutter-specific libraries are used.
+    - use_build_context_synchronously     # Ensure async context use is avoided.
+    - avoid_redundant_argument_values     # Avoid passing default argument values.
+
+    # Ensure proper handling of streams and subscriptions.
+    - cancel_subscriptions
+    - await_only_futures
+
+    # Good documentation practices.
+    - comment_references
+    - slash_for_doc_comments
+
+    # Code formatting and structure.
+    - eol_at_end_of_file                   # Ensure files end with a newline.
+    - file_names                           # Ensure file names follow a consistent naming pattern.
+    - prefer_generic_function_type_aliases # Use generic function type aliases.
+    - prefer_single_quotes
+
+
+
+    # Ensure test best practices.
+    - test_types_in_equals                # Ensure types are tested correctly in equality checks.
+    - use_test_throws_matchers             # Prefer using `throws` matchers in tests.
+    - prefer_asserts_in_initializer_lists  # Prefer asserts in constructor initializer lists.
+
+
+    # Sort child properties and constructor declarations for readability.
+    - sort_child_properties_last
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
+
+    # Encourage the use of conditional expressions in if/else scenarios.
+    - prefer_if_elements_to_conditional_expressions
+    - prefer_conditional_assignment
+
+    # Performance improvements.
+    - avoid_slow_async_io                 # Avoid slow async operations.
+    - prefer_interpolation_to_compose_strings
+    - join_return_with_assignment
+    - use_string_buffers
+
+    # Catch unnecessary statements and avoid code redundancy.
+    - unnecessary_const
+    - unnecessary_this
+    - unnecessary_statements
+    - unnecessary_parenthesis
+    - unnecessary_lambdas
+    - unnecessary_null_checks
+    - unnecessary_null_in_if_null_operators
+    - cast_nullable_to_non_nullable
+
+    # Error handling and exceptions.
+    - throw_in_finally                     # Throw exceptions in finally blocks cautiously.
+    - control_flow_in_finally              # Ensure correct control flow in `finally` blocks.
+
+
+    # Avoid unnecessary overrides of getters and setters.
+    - unnecessary_overrides
+    - unnecessary_new
+    - unnecessary_getters_setters
+    - unnecessary_await_in_return
+    - unnecessary_string_interpolations
+
+    # Miscellaneous
+    - valid_regexps  # Ensure that regexps are valid.
+    - no_adjacent_strings_in_list          # Prevent adjacent strings in list literals.
+    - no_runtimeType_toString              # Avoid using `.runtimeType.toString()`.
+    - avoid_escaping_inner_quotes          # Avoid unnecessary escaping of inner quotes.
+    - prefer_final_in_for_each             # Enforce `final` in `forEach` loop variables.
+
+
+include: package:flutter_lints/flutter.yaml
+
+# Additional performance and safety improvements for GetIt usage (dependency injection)
+get_it:
+  lint:
+    - prefer_final_locals                # Make local variables final when possible.
+    - prefer_const_constructors_in_immutables # Use const for immutable constructors.

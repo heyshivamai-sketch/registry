@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_radius.dart';
+import '../../app/theme/app_spacing.dart';
 
 /// Shared Aura field chrome: persistent label above a filled, rounded surface.
 abstract final class RegistryFieldStyle {
@@ -352,7 +352,7 @@ class RegistryWizardProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accent = theme.colorScheme.tertiary;
-    final track = const Color(0xFFE4E1F2);
+    const track = Color(0xFFE4E1F2);
     return Row(
       children: [
         Expanded(

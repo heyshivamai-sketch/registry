@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../app/theme/app_radius.dart';
+import '../../app/theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class RegistrySearchField extends StatelessWidget {
   const RegistrySearchField({

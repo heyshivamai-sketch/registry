@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
+import 'app_colors.dart';
 
 /// Subtle elevation used sparingly on Aura surfaces.
 abstract final class AppShadows {

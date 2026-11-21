@@ -1,6 +1,6 @@
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
+import '../../home/data/registry_date_formatter.dart';
+import 'registry_document.dart';
+import 'renewal_history_entry.dart';
 
 abstract final class DocumentRenewal {
   static bool isNewExpiryValid({

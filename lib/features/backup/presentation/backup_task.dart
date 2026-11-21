@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../backup_models.dart';
 
 Future<T> runBackupTask<T>({
   required BuildContext context,

@@ -3,24 +3,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_registry/app/app.dart';
-import 'package:the_registry/app/launch_config.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/app/theme/app_theme.dart';
-import 'package:the_registry/core/persistence/registry_store.dart';
-import 'package:the_registry/features/ads/ads_config.dart';
-import 'package:the_registry/features/ads/ads_platform.dart';
-import 'package:the_registry/features/app_lock/app_lock_store.dart';
-import 'package:the_registry/features/backup/registry_archive.dart';
-import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
-import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/entitlements/in_app_purchase_store.dart';
-import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
-import 'package:the_registry/features/onboarding/data/shared_preferences_onboarding_repository.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../core/persistence/registry_store.dart';
+import '../core/widgets/registry_primary_button.dart';
+import '../features/ads/ads_config.dart';
+import '../features/ads/ads_platform.dart';
+import '../features/app_lock/app_lock_store.dart';
+import '../features/backup/registry_archive.dart';
+import '../features/documents/domain/document_ocr.dart';
+import '../features/entitlements/in_app_purchase_store.dart';
+import '../features/entitlements/local_pro_entitlement.dart';
+import '../features/onboarding/data/onboarding_repository.dart';
+import '../features/onboarding/data/shared_preferences_onboarding_repository.dart';
+import '../features/reminders/data/notification_prompt_store.dart';
+import '../features/reminders/domain/local_reminder_scheduler.dart';
+import '../l10n/app_localizations.dart';
+import 'app.dart';
+import 'launch_config.dart';
+import 'theme/app_spacing.dart';
+import 'theme/app_theme.dart';
 
 /// Loads on-device records before any repository-backed screen is built.
 ///

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../core/widgets/registry_form_field.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
 
 class DocumentDateField extends StatelessWidget {
   const DocumentDateField({
@@ -30,9 +31,7 @@ class DocumentDateField extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final empty = value == null;
-    final display = empty
-        ? l10n.selectDate
-        : RegistryDateFormatter.dayMonthYear(value!, l10n.localeName);
+    final display = empty ? l10n.selectDate : RegistryDateFormatter.dayMonthYear(value!, l10n.localeName);
 
     return RegistryLabeledField(
       label: label,
@@ -56,16 +55,11 @@ class DocumentDateField extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: empty
-                        ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onSurface,
+                    color: empty ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.onSurface,
                   ),
                 ),
               ),
-              Icon(
-                Icons.calendar_today_outlined,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              Icon(Icons.calendar_today_outlined, color: theme.colorScheme.onSurfaceVariant),
             ],
           ),
         ),

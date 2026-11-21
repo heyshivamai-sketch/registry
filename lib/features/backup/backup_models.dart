@@ -1,5 +1,5 @@
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import '../documents/domain/registry_document.dart';
+import '../subscriptions/domain/registry_subscription.dart';
 
 /// Practical bounds for one portable backup.
 ///

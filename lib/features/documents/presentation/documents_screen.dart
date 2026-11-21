@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_search_field.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/documents/domain/document_wallet.dart';
-import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
-import 'package:the_registry/features/documents/widgets/document_list_card.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_search_field.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_selectable_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/document_status.dart';
+import '../domain/document_wallet.dart';
+import '../widgets/document_digital_pass.dart';
+import '../widgets/document_list_card.dart';
 
 class DocumentsScreen extends StatefulWidget {
   const DocumentsScreen({super.key});
@@ -54,17 +55,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         builder: (context, _) {
           final items = documents.documents;
           final query = _searchController.text;
-          final visible = DocumentWallet.visible(
-            items,
-            query: query,
-            filter: _filter,
-            l10n: l10n,
-          );
+          final visible = DocumentWallet.visible(items, query: query, filter: _filter, l10n: l10n);
           final featured = DocumentWallet.featured(visible);
-          final remaining = DocumentWallet.remaining(
-            visible,
-            featuredDocument: featured,
-          );
+          final remaining = DocumentWallet.remaining(visible, featuredDocument: featured);
 
           return ListView(
             padding: EdgeInsetsDirectional.fromSTEB(
@@ -74,10 +67,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               AppSpacing.scrollClearanceForDock(this.context),
             ),
             children: [
-              _DocumentsHeader(
-                savedCount: items.length,
-                attentionCount: DocumentStatus.attentionCount(items),
-              ),
+              _DocumentsHeader(savedCount: items.length, attentionCount: DocumentStatus.attentionCount(items)),
               const SizedBox(height: AppSpacing.sm),
               RegistryAuraSearchField(
                 controller: _searchController,
@@ -112,12 +102,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               else if (visible.isEmpty)
                 RegistryEmptyState(
                   key: const ValueKey<String>('documents-filter-empty'),
-                  title: query.trim().isEmpty
-                      ? l10n.documentsFilterEmptyTitle
-                      : l10n.documentsSearchEmptyTitle,
-                  message: query.trim().isEmpty
-                      ? l10n.documentsFilterEmptyMessage
-                      : l10n.documentsSearchEmptyMessage,
+                  title: query.trim().isEmpty ? l10n.documentsFilterEmptyTitle : l10n.documentsSearchEmptyTitle,
+                  message: query.trim().isEmpty ? l10n.documentsFilterEmptyMessage : l10n.documentsSearchEmptyMessage,
                   icon: Icons.search_off_rounded,
                 )
               else ...[
@@ -125,8 +111,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                   DocumentDigitalPass(
                     key: const ValueKey<String>('featured-document-pass'),
                     document: featured,
-                    onTap: () =>
-                        AppRoutes.openDocumentDetail(context, featured.id),
+                    onTap: () => AppRoutes.openDocumentDetail(context, featured.id),
                   ),
                   const SizedBox(height: AppSpacing.md),
                 ],
@@ -140,8 +125,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     DocumentListCard(
                       key: ValueKey<String>(document.id),
                       document: document,
-                      onTap: () =>
-                          AppRoutes.openDocumentDetail(context, document.id),
+                      onTap: () => AppRoutes.openDocumentDetail(context, document.id),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],
@@ -157,9 +141,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(AppSpacing.minTapTarget, 45),
                       side: const BorderSide(color: Color(0xFFA9AFC2)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
                     child: Text(l10n.addDocument),
                   ),
@@ -174,10 +156,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 }
 
 class _DocumentsHeader extends StatelessWidget {
-  const _DocumentsHeader({
-    required this.savedCount,
-    required this.attentionCount,
-  });
+  const _DocumentsHeader({required this.savedCount, required this.attentionCount});
 
   final int savedCount;
   final int attentionCount;
@@ -196,9 +175,7 @@ class _DocumentsHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 l10n.documentsEyebrow,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.tertiary,
-                ),
+                style: theme.textTheme.labelSmall?.copyWith(color: colorScheme.tertiary),
               ),
             ),
             Semantics(
@@ -216,10 +193,7 @@ class _DocumentsHeader extends StatelessWidget {
                   child: SizedBox(
                     width: AppSpacing.minTapTarget,
                     height: AppSpacing.minTapTarget,
-                    child: Icon(
-                      Icons.notifications_none_rounded,
-                      color: colorScheme.onSurface,
-                    ),
+                    child: Icon(Icons.notifications_none_rounded, color: colorScheme.onSurface),
                   ),
                 ),
               ),
@@ -230,14 +204,8 @@ class _DocumentsHeader extends StatelessWidget {
         Text(l10n.documentsTitle, style: theme.textTheme.headlineMedium),
         if (savedCount > 0) ...[
           const SizedBox(height: AppSpacing.xs),
-          Text(
-            l10n.documentsSummary(savedCount),
-            style: theme.textTheme.titleSmall,
-          ),
-          Text(
-            l10n.documentsAttentionSummary(attentionCount),
-            style: theme.textTheme.bodySmall,
-          ),
+          Text(l10n.documentsSummary(savedCount), style: theme.textTheme.titleSmall),
+          Text(l10n.documentsAttentionSummary(attentionCount), style: theme.textTheme.bodySmall),
         ],
       ],
     );
@@ -245,11 +213,7 @@ class _DocumentsHeader extends StatelessWidget {
 }
 
 class _DocumentsFilters extends StatelessWidget {
-  const _DocumentsFilters({
-    required this.selected,
-    required this.totalCount,
-    required this.onSelected,
-  });
+  const _DocumentsFilters({required this.selected, required this.totalCount, required this.onSelected});
 
   final DocumentWalletFilter selected;
   final int totalCount;
@@ -259,31 +223,11 @@ class _DocumentsFilters extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final filters = <(DocumentWalletFilter, String, Key)>[
-      (
-        DocumentWalletFilter.all,
-        '${l10n.documentsFilterAll} $totalCount',
-        const ValueKey<String>('filter-all'),
-      ),
-      (
-        DocumentWalletFilter.actionNeeded,
-        l10n.actionNeeded,
-        const ValueKey<String>('filter-action'),
-      ),
-      (
-        DocumentWalletFilter.upcoming,
-        l10n.statusUpcoming,
-        const ValueKey<String>('filter-upcoming'),
-      ),
-      (
-        DocumentWalletFilter.active,
-        l10n.statusActive,
-        const ValueKey<String>('filter-active'),
-      ),
-      (
-        DocumentWalletFilter.overdue,
-        l10n.statusOverdue,
-        const ValueKey<String>('filter-overdue'),
-      ),
+      (DocumentWalletFilter.all, '${l10n.documentsFilterAll} $totalCount', const ValueKey<String>('filter-all')),
+      (DocumentWalletFilter.actionNeeded, l10n.actionNeeded, const ValueKey<String>('filter-action')),
+      (DocumentWalletFilter.upcoming, l10n.statusUpcoming, const ValueKey<String>('filter-upcoming')),
+      (DocumentWalletFilter.active, l10n.statusActive, const ValueKey<String>('filter-active')),
+      (DocumentWalletFilter.overdue, l10n.statusOverdue, const ValueKey<String>('filter-overdue')),
     ];
 
     return Wrap(

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_registry/app/launch_config.dart';
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/entitlements/local_pro_store.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
+import '../../app/launch_config.dart';
+import '../../core/time/clock.dart';
+import 'local_pro_store.dart';
+import 'registry_plan.dart';
 
 /// What the Local Pro screen and Profile show.
 enum LocalProStatus {

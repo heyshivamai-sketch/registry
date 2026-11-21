@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/app/launch_config.dart';
+import '../../app/launch_config.dart';
 
 enum AdsMode { off, test, live }
 

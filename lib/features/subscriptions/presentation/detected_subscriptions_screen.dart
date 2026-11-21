@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../domain/detected_subscription.dart';
+import '../domain/money.dart';
+import 'subscription_copy.dart';
 
 class DetectedSubscriptionsScreen extends StatefulWidget {
   const DetectedSubscriptionsScreen({super.key});
@@ -34,8 +35,7 @@ class _DetectedSubscriptionsScreenState
     }
   }
 
-  Future<void> _ignoreCandidate(
-      DetectedSubscriptionCandidate candidate) async {
+  Future<void> _ignoreCandidate(DetectedSubscriptionCandidate candidate) async {
     final l10n = AppLocalizations.of(context);
     final deps = RegistryDependencies.of(context);
     await deps.discovery.ignoreCandidate(candidate.id);
@@ -81,7 +81,9 @@ class _DetectedSubscriptionsScreenState
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       RegistryPrimaryButton(
-                        key: const ValueKey<String>('detected-empty-connect-gmail'),
+                        key: const ValueKey<String>(
+                          'detected-empty-connect-gmail',
+                        ),
                         label: l10n.connectGmailButton,
                         onPressed: () => AppRoutes.openGmailConnect(context),
                       ),
@@ -94,8 +96,7 @@ class _DetectedSubscriptionsScreenState
             return ListView.separated(
               padding: const EdgeInsets.all(AppSpacing.screenPadding),
               itemCount: candidates.length,
-              separatorBuilder: (_, _) =>
-                  const SizedBox(height: AppSpacing.md),
+              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
                 final candidate = candidates[index];
                 return _DetectedCandidateCard(
@@ -134,10 +135,7 @@ class _DetectedCandidateCard extends StatelessWidget {
     final cycleLabel = SubscriptionCopy.cycle(l10n, candidate.billingCycle);
 
     final nextDate = candidate.nextPaymentDate != null
-        ? RegistryDateFormatter.dayMonthYear(
-            candidate.nextPaymentDate!,
-            locale,
-          )
+        ? RegistryDateFormatter.dayMonthYear(candidate.nextPaymentDate!, locale)
         : null;
 
     final lastDate = RegistryDateFormatter.dayMonthYear(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_view.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import 'subscription_calendar_view.dart';
 
 class SubscriptionCalendarScreen extends StatelessWidget {
   const SubscriptionCalendarScreen({super.key});
@@ -12,9 +12,7 @@ class SubscriptionCalendarScreen extends StatelessWidget {
     final now = deps.clock.now();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Subscription Calendar'),
-      ),
+      appBar: AppBar(title: const Text('Subscription Calendar')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(

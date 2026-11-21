@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DatesIllustration extends StatelessWidget {
   const DatesIllustration({super.key, required this.l10n});
@@ -26,21 +26,11 @@ class DatesIllustration extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.description_outlined,
-                    color: colorScheme.primary,
-                    size: AppSpacing.iconMd,
-                  ),
+                  Icon(Icons.description_outlined, color: colorScheme.primary, size: AppSpacing.iconMd),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    l10n.onboardingDocumentName,
-                    style: textTheme.titleSmall,
-                  ),
+                  Text(l10n.onboardingDocumentName, style: textTheme.titleSmall),
                   const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    l10n.onboardingDocumentExpiry,
-                    style: textTheme.bodySmall,
-                  ),
+                  Text(l10n.onboardingDocumentExpiry, style: textTheme.bodySmall),
                 ],
               ),
             ),
@@ -52,11 +42,7 @@ class DatesIllustration extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.calendar_month_outlined,
-                    color: colorScheme.secondary,
-                    size: AppSpacing.iconMd,
-                  ),
+                  Icon(Icons.calendar_month_outlined, color: colorScheme.secondary, size: AppSpacing.iconMd),
                   const SizedBox(height: AppSpacing.xxs),
                   Text('12', style: textTheme.titleLarge),
                 ],
@@ -67,15 +53,9 @@ class DatesIllustration extends StatelessWidget {
             alignment: const AlignmentDirectional(-0.7, 0.85),
             child: UnconstrainedBox(
               child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: colorScheme.secondaryContainer,
-                  borderRadius: AppRadius.chipBorder,
-                ),
+                decoration: BoxDecoration(color: colorScheme.secondaryContainer, borderRadius: AppRadius.chipBorder),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -87,9 +67,7 @@ class DatesIllustration extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xxs),
                       Text(
                         l10n.onboardingReminder,
-                        style: textTheme.labelMedium?.copyWith(
-                          color: colorScheme.onSecondaryContainer,
-                        ),
+                        style: textTheme.labelMedium?.copyWith(color: colorScheme.onSecondaryContainer),
                       ),
                     ],
                   ),
@@ -126,15 +104,9 @@ class SubscriptionsIllustration extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.subscriptions_outlined,
-                      color: colorScheme.primary,
-                    ),
+                    Icon(Icons.subscriptions_outlined, color: colorScheme.primary),
                     const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      l10n.onboardingSubscriptionName,
-                      style: textTheme.titleSmall,
-                    ),
+                    Text(l10n.onboardingSubscriptionName, style: textTheme.titleSmall),
                   ],
                 ),
               ),
@@ -148,17 +120,9 @@ class SubscriptionsIllustration extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    l10n.onboardingUpcomingCharge,
-                    style: textTheme.titleSmall,
-                  ),
+                  Text(l10n.onboardingUpcomingCharge, style: textTheme.titleSmall),
                   const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    l10n.onboardingDecisionDate,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.secondary,
-                    ),
-                  ),
+                  Text(l10n.onboardingDecisionDate, style: textTheme.bodySmall?.copyWith(color: colorScheme.secondary)),
                 ],
               ),
             ),
@@ -187,18 +151,11 @@ class PrivacyIllustration extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              Icon(
-                Icons.smartphone_outlined,
-                size: 88,
-                color: colorScheme.primary,
-              ),
+              Icon(Icons.smartphone_outlined, size: 88, color: colorScheme.primary),
               Positioned(
                 bottom: AppSpacing.xs,
                 child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colorScheme.secondaryContainer,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: colorScheme.secondaryContainer, shape: BoxShape.circle),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.xs),
                     child: Icon(
@@ -219,18 +176,11 @@ class PrivacyIllustration extends StatelessWidget {
               border: Border.all(color: colorScheme.outlineVariant),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.xs,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.lock_outline,
-                    size: AppSpacing.md,
-                    color: colorScheme.primary,
-                  ),
+                  Icon(Icons.lock_outline, size: AppSpacing.md, color: colorScheme.primary),
                   const SizedBox(width: AppSpacing.xs),
                   Text(l10n.onboardingPrivacyLock, style: textTheme.labelLarge),
                 ],
@@ -270,10 +220,7 @@ class _IllustrationFrame extends StatelessWidget {
               ],
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: child,
-          ),
+          child: Padding(padding: const EdgeInsets.all(AppSpacing.md), child: child),
         ),
       ),
     );
@@ -299,10 +246,7 @@ class _MiniCard extends StatelessWidget {
             borderRadius: AppRadius.cardBorder,
             border: Border.all(color: colorScheme.outlineVariant),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: child,
-          ),
+          child: Padding(padding: const EdgeInsets.all(AppSpacing.md), child: child),
         ),
       ),
     );

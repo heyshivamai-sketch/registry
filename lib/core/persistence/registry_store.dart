@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:the_registry/core/persistence/document_attachment_store.dart';
-import 'package:the_registry/core/persistence/registry_database.dart';
-import 'package:the_registry/features/documents/data/sqlite_document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/data/sqlite_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+
+import '../../features/documents/data/sqlite_document_repository.dart';
+import '../../features/documents/domain/registry_document.dart';
+import '../../features/subscriptions/data/detected_subscription_repository.dart';
+import '../../features/subscriptions/data/sqlite_subscription_repository.dart';
+import '../../features/subscriptions/domain/registry_subscription.dart';
+import 'document_attachment_store.dart';
+import 'registry_database.dart';
 
 /// Opens the on-device database and returns repositories that are already loaded.
 ///

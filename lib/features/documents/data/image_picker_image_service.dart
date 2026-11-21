@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:the_registry/features/documents/domain/image_picker_service.dart';
+import '../domain/image_picker_service.dart';
 
 class ImagePickerImageService implements ImagePickerService {
   ImagePickerImageService({ImagePicker? picker})

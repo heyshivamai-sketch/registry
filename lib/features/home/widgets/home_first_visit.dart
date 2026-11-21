@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/home/widgets/registry_document_stack.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import 'registry_document_stack.dart';
 
 class HomeFirstVisit extends StatelessWidget {
   const HomeFirstVisit({super.key});
@@ -19,7 +20,6 @@ class HomeFirstVisit extends StatelessWidget {
       key: const ValueKey<String>('home-first-visit'),
       children: [
         const RegistryDocumentStack(
-          size: RegistryDocumentStackSize.empty,
           showGlow: true,
         ),
         const SizedBox(height: AppSpacing.sm),

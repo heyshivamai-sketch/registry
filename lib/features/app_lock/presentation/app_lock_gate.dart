@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/app_lock/app_lock_controller.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../app_lock_controller.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AppLockGate extends StatelessWidget {
   const AppLockGate({super.key, required this.child});

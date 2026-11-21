@@ -4,28 +4,19 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/documents/domain/document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/reminders/data/notification_prompt_store.dart';
-import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
-import 'package:the_registry/features/reminders/domain/reminder_plan.dart';
-import 'package:the_registry/features/reminders/reminder_copy.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../core/time/clock.dart';
+import '../../l10n/app_localizations.dart';
+import '../documents/domain/document_repository.dart';
+import '../documents/domain/registry_document.dart';
+import '../home/data/registry_date_formatter.dart';
+import '../subscriptions/domain/registry_subscription.dart';
+import '../subscriptions/domain/subscription_repository.dart';
+import 'data/notification_prompt_store.dart';
+import 'domain/local_reminder_scheduler.dart';
+import 'domain/reminder_plan.dart';
+import 'reminder_copy.dart';
 
-enum ReminderUiStatus {
-  none,
-  pending,
-  scheduled,
-  permissionOff,
-  past,
-  limited,
-  cancelled,
-  unavailable,
-}
+enum ReminderUiStatus { none, pending, scheduled, permissionOff, past, limited, cancelled, unavailable }
 
 Locale resolveReminderLocale(List<Locale>? locales) {
   const supported = ['en', 'fr', 'ar'];
@@ -84,9 +75,7 @@ class ReminderCoordinator extends ChangeNotifier {
   /// After a denial, the way back on is system settings rather than another
   /// permission dialog.
   bool get shouldOpenNotificationSettings =>
-      _prompted &&
-      _promptInFlight == null &&
-      permission == ReminderPermission.denied;
+      _prompted && _promptInFlight == null && permission == ReminderPermission.denied;
 
   Future<void> start() {
     _promptLoaded ??= _loadPrompted();
@@ -181,10 +170,7 @@ class ReminderCoordinator extends ChangeNotifier {
     if (subscription.reminders.isEmpty) {
       return ReminderUiStatus.none;
     }
-    return _status(
-      recordKey: _subscriptionKey(subscription.id),
-      cancelled: subscription.isCancelled,
-    );
+    return _status(recordKey: _subscriptionKey(subscription.id), cancelled: subscription.isCancelled);
   }
 
   @override
@@ -213,26 +199,14 @@ class ReminderCoordinator extends ChangeNotifier {
       final now = clock.now();
       final intents = <ReminderIntent>[
         for (final document in documents.documents)
-          ...planDocumentReminders(
-            document: document,
-            now: now,
-            location: location,
-          ),
+          ...planDocumentReminders(document: document, now: now, location: location),
         for (final subscription in subscriptions.subscriptions)
-          ...planSubscriptionReminders(
-            subscription: subscription,
-            now: now,
-            location: location,
-          ),
+          ...planSubscriptionReminders(subscription: subscription, now: now, location: location),
       ];
       final capped = capReminders(intents);
       final l10n = lookupAppLocalizations(locale);
-      final accepted = [
-        for (final intent in capped.accepted) _scheduled(intent, l10n),
-      ];
-      final nextReport = await scheduler.apply(
-        ReminderBatch(accepted: accepted, omitted: capped.omitted),
-      );
+      final accepted = [for (final intent in capped.accepted) _scheduled(intent, l10n)];
+      final nextReport = await scheduler.apply(ReminderBatch(accepted: accepted, omitted: capped.omitted));
       if (_disposed) {
         return;
       }
@@ -263,10 +237,7 @@ class ReminderCoordinator extends ChangeNotifier {
   }
 
   ScheduledReminder _scheduled(ReminderIntent intent, AppLocalizations l10n) {
-    final date = RegistryDateFormatter.dayMonthYear(
-      intent.eventDate,
-      l10n.localeName,
-    );
+    final date = RegistryDateFormatter.dayMonthYear(intent.eventDate, l10n.localeName);
     return ScheduledReminder(
       id: intent.id,
       payload: intent.payload,
@@ -281,18 +252,14 @@ class ReminderCoordinator extends ChangeNotifier {
     );
   }
 
-  ReminderUiStatus _status({
-    required String recordKey,
-    required bool cancelled,
-  }) {
+  ReminderUiStatus _status({required String recordKey, required bool cancelled}) {
     if (!ready) {
       return ReminderUiStatus.pending;
     }
     if (cancelled) {
       return ReminderUiStatus.cancelled;
     }
-    if (!report.schedulingAvailable ||
-        permission == ReminderPermission.unavailable) {
+    if (!report.schedulingAvailable || permission == ReminderPermission.unavailable) {
       return ReminderUiStatus.unavailable;
     }
     if (permission != ReminderPermission.granted) {
@@ -312,9 +279,7 @@ class ReminderCoordinator extends ChangeNotifier {
     return ReminderUiStatus.past;
   }
 
-  Iterable<MapEntry<String, Set<int>>> _futureEntries(
-    List<ReminderIntent> intents,
-  ) sync* {
+  Iterable<MapEntry<String, Set<int>>> _futureEntries(List<ReminderIntent> intents) sync* {
     final grouped = <String, Set<int>>{};
     for (final intent in intents) {
       final key = intent.subject == ReminderSubject.document

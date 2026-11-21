@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/domain/bank_subscription_detection_service.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+import '../data/detected_subscription_repository.dart';
+import 'bank_subscription_detection_service.dart';
+import 'detected_subscription.dart';
+import 'subscription_repository.dart';
 
 class SubscriptionDiscoveryService extends ChangeNotifier {
   SubscriptionDiscoveryService({
@@ -34,8 +34,7 @@ class SubscriptionDiscoveryService extends ChangeNotifier {
 
   /// Merges cross-source candidates (Bank Statement + Gmail), eliminating duplicates,
   /// fusing evidence, boosting confidence, and persisting them to storage.
-  Future<List<DetectedSubscriptionCandidate>> mergeAndIngestCandidates(
-    List<DetectedSubscriptionCandidate> incoming, {
+  Future<List<DetectedSubscriptionCandidate>> mergeAndIngestCandidates(List<DetectedSubscriptionCandidate> incoming, {
     required DateTime Function() now,
   }) async {
     final existingList = List<DetectedSubscriptionCandidate>.from(allCandidates);
@@ -49,7 +48,7 @@ class SubscriptionDiscoveryService extends ChangeNotifier {
 
       // Check if suppressed
       if (suppressed.any((ignored) =>
-          normalizedName == ignored || normalizedName.contains(ignored))) {
+      normalizedName == ignored || normalizedName.contains(ignored))) {
         continue;
       }
 
@@ -129,8 +128,8 @@ class SubscriptionDiscoveryService extends ChangeNotifier {
       } else {
         // Check if existing manual or active subscription matches
         final isDuplicate = activeSubs.any((sub) =>
-            _bankService.normalizeMerchant(sub.serviceName).toLowerCase() ==
-                normalizedName &&
+        _bankService.normalizeMerchant(sub.serviceName).toLowerCase() ==
+            normalizedName &&
             sub.amount.code == inc.amount.code);
 
         merged.add(inc.copyWith(possibleDuplicate: isDuplicate));

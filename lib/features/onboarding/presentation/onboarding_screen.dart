@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_shell.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
-import 'package:the_registry/features/onboarding/widgets/onboarding_illustrations.dart';
-import 'package:the_registry/features/onboarding/widgets/onboarding_page_content.dart';
-import 'package:the_registry/features/onboarding/widgets/onboarding_page_indicator.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_shell.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/onboarding_repository.dart';
+import '../widgets/onboarding_illustrations.dart';
+import '../widgets/onboarding_page_content.dart';
+import '../widgets/onboarding_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this.repository});
@@ -30,17 +31,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Duration _pageDuration(BuildContext context) {
-    return MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : const Duration(milliseconds: 320);
+    return MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 320);
   }
 
   Future<void> _goTo(int index) {
-    return _controller.animateToPage(
-      index,
-      duration: _pageDuration(context),
-      curve: Curves.easeOutCubic,
-    );
+    return _controller.animateToPage(index, duration: _pageDuration(context), curve: Curves.easeOutCubic);
   }
 
   Future<void> _complete() async {
@@ -48,9 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (!mounted) {
       return;
     }
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const AppShell()),
-    );
+    await Navigator.of(context).pushReplacement(MaterialPageRoute<void>(builder: (_) => const AppShell()));
   }
 
   void _onSystemBack() {
@@ -85,10 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           key: const ValueKey<String>('onboarding-skip'),
                           onPressed: _complete,
                           style: TextButton.styleFrom(
-                            minimumSize: const Size(
-                              AppSpacing.minTapTarget,
-                              AppSpacing.minTapTarget,
-                            ),
+                            minimumSize: const Size(AppSpacing.minTapTarget, AppSpacing.minTapTarget),
                           ),
                           child: Text(l10n.onboardingSkip),
                         ),
@@ -130,14 +120,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: RegistryPrimaryButton(
-                    key: ValueKey<String>(
-                      isLastPage
-                          ? 'onboarding-get-started'
-                          : 'onboarding-continue',
-                    ),
-                    label: isLastPage
-                        ? l10n.onboardingGetStarted
-                        : l10n.onboardingContinue,
+                    key: ValueKey<String>(isLastPage ? 'onboarding-get-started' : 'onboarding-continue'),
+                    label: isLastPage ? l10n.onboardingGetStarted : l10n.onboardingContinue,
                     onPressed: isLastPage ? _complete : () => _goTo(_index + 1),
                   ),
                 ),

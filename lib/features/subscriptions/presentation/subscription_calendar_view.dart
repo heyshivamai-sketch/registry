@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
+import 'subscription_copy.dart';
 
 class SubscriptionCalendarView extends StatefulWidget {
   const SubscriptionCalendarView({
@@ -29,19 +30,19 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
   @override
   void initState() {
     super.initState();
-    _focusedMonth = DateTime(widget.now.year, widget.now.month, 1);
+    _focusedMonth = DateTime(widget.now.year, widget.now.month);
     _selectedDate = DateTime(widget.now.year, widget.now.month, widget.now.day);
   }
 
   void _prevMonth() {
     setState(() {
-      _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1, 1);
+      _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1);
     });
   }
 
   void _nextMonth() {
     setState(() {
-      _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1, 1);
+      _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1);
     });
   }
 
@@ -55,7 +56,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
     );
     if (picked != null) {
       setState(() {
-        _focusedMonth = DateTime(picked.year, picked.month, 1);
+        _focusedMonth = DateTime(picked.year, picked.month);
       });
     }
   }
@@ -66,10 +67,10 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
     switch (sub.billingCycle) {
       case BillingCycle.monthly:
         final targetDay = next.day;
-        final daysInThisMonth =
-            DateTime(date.year, date.month + 1, 0).day;
-        final effectiveDay =
-            targetDay > daysInThisMonth ? daysInThisMonth : targetDay;
+        final daysInThisMonth = DateTime(date.year, date.month + 1, 0).day;
+        final effectiveDay = targetDay > daysInThisMonth
+            ? daysInThisMonth
+            : targetDay;
         return date.day == effectiveDay;
       case BillingCycle.weekly:
         return date.weekday == next.weekday;
@@ -79,10 +80,10 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
         final monthDiff =
             (date.year - next.year) * 12 + (date.month - next.month);
         if (monthDiff % 3 != 0) return false;
-        final daysInThisMonth =
-            DateTime(date.year, date.month + 1, 0).day;
-        final effectiveDay =
-            next.day > daysInThisMonth ? daysInThisMonth : next.day;
+        final daysInThisMonth = DateTime(date.year, date.month + 1, 0).day;
+        final effectiveDay = next.day > daysInThisMonth
+            ? daysInThisMonth
+            : next.day;
         return date.day == effectiveDay;
     }
   }
@@ -100,7 +101,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
 
     final year = _focusedMonth.year;
     final month = _focusedMonth.month;
-    final firstDayOfMonth = DateTime(year, month, 1);
+    final firstDayOfMonth = DateTime(year, month);
     final daysInCurrentMonth = DateTime(year, month + 1, 0).day;
     final prevMonthLastDay = DateTime(year, month, 0).day;
 
@@ -125,7 +126,8 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
           currencySymbol = sub.amount.currencyCode;
         }
         totalCents += sub.amount.minorUnits;
-        final isUpcoming = date.isAfter(widget.now) ||
+        final isUpcoming =
+            date.isAfter(widget.now) ||
             (date.year == widget.now.year &&
                 date.month == widget.now.month &&
                 date.day == widget.now.day);
@@ -135,13 +137,16 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
       }
     }
 
-    final fallbackCurrency = widget.subscriptions
+    final fallbackCurrency =
+        widget.subscriptions
             .where((sub) => sub.isActive)
             .firstOrNull
             ?.amount
             .currencyCode ??
         'INR';
-    final effectiveCurrency = currencySymbol.isEmpty ? fallbackCurrency : currencySymbol;
+    final effectiveCurrency = currencySymbol.isEmpty
+        ? fallbackCurrency
+        : currencySymbol;
 
     final totalMoney = Money(
       minorUnits: totalCents,
@@ -238,9 +243,11 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
               cellDate = DateTime(year, month, day);
             }
 
-            final daySubs =
-                isCurrentMonthDay ? _getSubscriptionsForDay(cellDate) : <RegistrySubscription>[];
-            final isToday = cellDate.year == widget.now.year &&
+            final daySubs = isCurrentMonthDay
+                ? _getSubscriptionsForDay(cellDate)
+                : <RegistrySubscription>[];
+            final isToday =
+                cellDate.year == widget.now.year &&
                 cellDate.month == widget.now.month &&
                 cellDate.day == widget.now.day;
 
@@ -262,9 +269,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Color(0xFFE2E8F0), width: 1),
-            ),
+            border: Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
           ),
           child: Row(
             children: [
@@ -273,7 +278,8 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${MoneyFormat.format(totalMoney, l10n.localeName)} ',
+                        text:
+                            '${MoneyFormat.format(totalMoney, l10n.localeName)} ',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           letterSpacing: -0.3,
@@ -296,7 +302,8 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${MoneyFormat.format(upcomingMoney, l10n.localeName)} ',
+                        text:
+                            '${MoneyFormat.format(upcomingMoney, l10n.localeName)} ',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           letterSpacing: -0.3,
@@ -358,14 +365,14 @@ class _CalendarDayCell extends StatelessWidget {
     final cellColor = hasSubs
         ? const Color(0xFF2563EB) // Vibrant blue card like in the screenshot
         : isCurrentMonth
-            ? const Color(0xFFF8FAFC)
-            : const Color(0xFFF1F5F9).withValues(alpha: 0.5);
+        ? const Color(0xFFF8FAFC)
+        : const Color(0xFFF1F5F9).withValues(alpha: 0.5);
 
     final textColor = hasSubs
         ? Colors.white
         : isCurrentMonth
-            ? const Color(0xFF0F172A)
-            : const Color(0xFF94A3B8);
+        ? const Color(0xFF0F172A)
+        : const Color(0xFF94A3B8);
 
     return InkWell(
       onTap: onTap,
@@ -398,7 +405,9 @@ class _CalendarDayCell extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: hasSubs || isToday ? FontWeight.bold : FontWeight.w500,
+                fontWeight: hasSubs || isToday
+                    ? FontWeight.bold
+                    : FontWeight.w500,
                 color: textColor,
               ),
             ),
