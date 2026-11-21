@@ -1,14 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+
 import '../../../app/registry_dependencies.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/registry_form_field.dart';
 import '../../../core/widgets/registry_primary_button.dart';
 import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
 import '../backup_models.dart';
 import 'backup_task.dart';
-import '../../../l10n/app_localizations.dart';
 
 class ImportBackupScreen extends StatefulWidget {
   const ImportBackupScreen({super.key});
@@ -115,8 +116,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
       return;
     }
     final password = _password.text;
-    if (password.length < BackupLimits.minPasswordLength ||
-        password.length > BackupLimits.maxPasswordLength) {
+    if (password.length < BackupLimits.minPasswordLength || password.length > BackupLimits.maxPasswordLength) {
       setState(() => _passwordError = l10n.backupPasswordTooShort);
       return;
     }
@@ -131,12 +131,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
         context: context,
         label: (phase) => _phaseLabel(l10n, phase),
         task: (cancel, onProgress) {
-          return backups.openBackup(
-            bytes: bytes,
-            password: password,
-            cancel: cancel,
-            onProgress: onProgress,
-          );
+          return backups.openBackup(bytes: bytes, password: password, cancel: cancel, onProgress: onProgress);
         },
       );
       if (!mounted) {
@@ -181,23 +176,13 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
           actions: [
             TextButton(
               key: const ValueKey<String>('import-replace-cancel'),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(
-                  AppSpacing.minTapTarget,
-                  AppSpacing.minTapTarget,
-                ),
-              ),
+              style: TextButton.styleFrom(minimumSize: const Size(AppSpacing.minTapTarget, AppSpacing.minTapTarget)),
               onPressed: () => Navigator.of(dialogContext).pop(false),
               child: Text(l10n.backupCancel),
             ),
             TextButton(
               key: const ValueKey<String>('import-replace-confirm'),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(
-                  AppSpacing.minTapTarget,
-                  AppSpacing.minTapTarget,
-                ),
-              ),
+              style: TextButton.styleFrom(minimumSize: const Size(AppSpacing.minTapTarget, AppSpacing.minTapTarget)),
               onPressed: () => Navigator.of(dialogContext).pop(true),
               child: Text(l10n.backupReplaceAction),
             ),
@@ -224,11 +209,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
         context: context,
         label: (phase) => _phaseLabel(l10n, phase),
         task: (cancel, onProgress) {
-          return backups.restoreBackup(
-            opened: opened,
-            cancel: cancel,
-            onProgress: onProgress,
-          );
+          return backups.restoreBackup(opened: opened, cancel: cancel, onProgress: onProgress);
         },
       );
       if (!mounted) {
@@ -305,11 +286,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
             ),
             if (_fileName != null) ...[
               const SizedBox(height: AppSpacing.sm),
-              Text(
-                _fileName!,
-                key: const ValueKey<String>('import-file-name'),
-                style: theme.textTheme.bodyMedium,
-              ),
+              Text(_fileName!, key: const ValueKey<String>('import-file-name'), style: theme.textTheme.bodyMedium),
             ],
             const SizedBox(height: AppSpacing.lg),
             RegistryTextField(
@@ -332,17 +309,9 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                 }
               },
               suffixIcon: IconButton(
-                tooltip: _obscure
-                    ? l10n.backupShowPassword
-                    : l10n.backupHidePassword,
-                onPressed: _working
-                    ? null
-                    : () => setState(() => _obscure = !_obscure),
-                icon: Icon(
-                  _obscure
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                ),
+                tooltip: _obscure ? l10n.backupShowPassword : l10n.backupHidePassword,
+                onPressed: _working ? null : () => setState(() => _obscure = !_obscure),
+                icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -380,9 +349,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                 status,
                 key: const ValueKey<String>('import-status'),
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: _statusIsError
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface,
+                  color: _statusIsError ? theme.colorScheme.error : theme.colorScheme.onSurface,
                 ),
               ),
             ],

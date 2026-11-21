@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import '../../core/persistence/registry_store.dart';
-import 'backup_models.dart';
 import '../documents/data/in_memory_document_repository.dart';
 import '../documents/domain/registry_document.dart';
 import '../subscriptions/data/in_memory_subscription_repository.dart';
 import '../subscriptions/domain/registry_subscription.dart';
+import 'backup_models.dart';
 
 abstract class RegistryArchive {
   List<RegistryDocument> get documents;
@@ -20,10 +20,7 @@ abstract class RegistryArchive {
 }
 
 class MemoryRegistryArchive implements RegistryArchive {
-  MemoryRegistryArchive({
-    required this.documentsRepository,
-    required this.subscriptionsRepository,
-  });
+  MemoryRegistryArchive({required this.documentsRepository, required this.subscriptionsRepository});
 
   final InMemoryDocumentRepository documentsRepository;
   final InMemorySubscriptionRepository subscriptionsRepository;
@@ -32,8 +29,7 @@ class MemoryRegistryArchive implements RegistryArchive {
   List<RegistryDocument> get documents => documentsRepository.documents;
 
   @override
-  List<RegistrySubscription> get subscriptions =>
-      subscriptionsRepository.subscriptions;
+  List<RegistrySubscription> get subscriptions => subscriptionsRepository.subscriptions;
 
   @override
   Future<void> replaceAll({
@@ -63,8 +59,7 @@ class SqliteRegistryArchive implements RegistryArchive {
   List<RegistryDocument> get documents => store.documents.documents;
 
   @override
-  List<RegistrySubscription> get subscriptions =>
-      store.subscriptions.subscriptions;
+  List<RegistrySubscription> get subscriptions => store.subscriptions.subscriptions;
 
   @override
   Future<void> replaceAll({
@@ -89,8 +84,7 @@ class SqliteRegistryArchive implements RegistryArchive {
 
 BackupException _storageOrRestore(FileSystemException error) {
   final code = error.osError?.errorCode;
-  final message = '${error.message} ${error.osError?.message ?? ''}'
-      .toLowerCase();
+  final message = '${error.message} ${error.osError?.message ?? ''}'.toLowerCase();
   if (code == 28 ||
       code == 112 ||
       message.contains('no space') ||

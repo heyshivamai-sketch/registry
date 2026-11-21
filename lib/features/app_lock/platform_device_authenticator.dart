@@ -26,10 +26,7 @@ class _PluginLocalAuthGateway implements LocalAuthGateway {
   Future<bool> authenticate({required String localizedReason}) {
     return _authentication.authenticate(
       localizedReason: localizedReason,
-      options: const AuthenticationOptions(
-        biometricOnly: false,
-        stickyAuth: true,
-      ),
+      options: const AuthenticationOptions(stickyAuth: true),
     );
   }
 }
@@ -47,11 +44,8 @@ class _PluginLocalAuthGateway implements LocalAuthGateway {
 /// Only [PlatformException.code] is read. The message and details are
 /// ignored so credentials and record data are never logged or shown.
 class PlatformDeviceAuthenticator implements DeviceAuthenticator {
-  PlatformDeviceAuthenticator({
-    LocalAuthentication? authentication,
-    @visibleForTesting LocalAuthGateway? gateway,
-  }) : _gateway =
-           gateway ?? _PluginLocalAuthGateway(authentication: authentication);
+  PlatformDeviceAuthenticator({LocalAuthentication? authentication, @visibleForTesting LocalAuthGateway? gateway})
+    : _gateway = gateway ?? _PluginLocalAuthGateway(authentication: authentication);
 
   final LocalAuthGateway _gateway;
 
@@ -69,13 +63,9 @@ class PlatformDeviceAuthenticator implements DeviceAuthenticator {
   }
 
   @override
-  Future<DeviceAuthAttempt> authenticate({
-    required String localizedReason,
-  }) async {
+  Future<DeviceAuthAttempt> authenticate({required String localizedReason}) async {
     try {
-      final authenticated = await _gateway.authenticate(
-        localizedReason: localizedReason,
-      );
+      final authenticated = await _gateway.authenticate(localizedReason: localizedReason);
       if (authenticated) {
         return DeviceAuthAttempt.authenticated;
       }
@@ -90,12 +80,8 @@ class PlatformDeviceAuthenticator implements DeviceAuthenticator {
 
 DeviceAuthAttempt _falseAttempt(TargetPlatform platform) {
   return switch (platform) {
-    TargetPlatform.iOS ||
-    TargetPlatform.macOS ||
-    TargetPlatform.windows => DeviceAuthAttempt.failed,
-    TargetPlatform.android ||
-    TargetPlatform.linux ||
-    TargetPlatform.fuchsia => DeviceAuthAttempt.cancelled,
+    TargetPlatform.iOS || TargetPlatform.macOS || TargetPlatform.windows => DeviceAuthAttempt.failed,
+    TargetPlatform.android || TargetPlatform.linux || TargetPlatform.fuchsia => DeviceAuthAttempt.cancelled,
   };
 }
 

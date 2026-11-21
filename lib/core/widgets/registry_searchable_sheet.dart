@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_spacing.dart';
-import 'registry_search_field.dart';
 import '../../l10n/app_localizations.dart';
+import 'registry_search_field.dart';
 
 class RegistrySearchableOption<T> {
   const RegistrySearchableOption({
@@ -75,10 +76,12 @@ class _SearchableSheetBodyState<T> extends State<_SearchableSheetBody<T>> {
     final filtered = needle.isEmpty
         ? widget.options
         : [
-            for (final option in widget.options)
-              if (option.label.toLowerCase().contains(needle)) option,
-          ];
-    final height = MediaQuery.sizeOf(context).height * 0.7;
+      for (final option in widget.options)
+        if (option.label.toLowerCase().contains(needle)) option,
+    ];
+    final height = MediaQuery
+        .sizeOf(context)
+        .height * 0.7;
 
     return SafeArea(
       child: SizedBox(
@@ -95,7 +98,10 @@ class _SearchableSheetBodyState<T> extends State<_SearchableSheetBody<T>> {
               ),
               child: Text(
                 widget.title,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleMedium,
               ),
             ),
             Padding(

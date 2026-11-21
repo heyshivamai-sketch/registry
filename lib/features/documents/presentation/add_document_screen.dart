@@ -581,7 +581,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         onSchema: _pickSchema,
         onCategory: _pickCategory,
         onCountry: _pickCountry,
-        onRetake: () => _replaceAttachment(runOcr: false),
+        onRetake: _replaceAttachment,
       );
     }
     return switch (_controller.step) {
@@ -592,11 +592,11 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
           _controller.upsertUnboundSchemaValues();
           _syncDynamicControllers();
         },
-        onTakePhoto: () => _pickImage(fromCamera: true, runOcr: false),
+        onTakePhoto: () => _pickImage(fromCamera: true),
         onAddPhoto: () => _pickImage(fromCamera: true, additional: true),
         onAddGallery: () => _pickImage(fromCamera: false, additional: true),
         onChooseGallery: () => _pickImage(fromCamera: false),
-        onReplace: () => _replaceAttachment(runOcr: false),
+        onReplace: _replaceAttachment,
         onScanAgain: () async {
           final deps = RegistryDependencies.of(context);
           if (deps.documentOcr.isAvailable) {

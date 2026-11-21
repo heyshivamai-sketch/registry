@@ -9,10 +9,10 @@ abstract class PrivacyFlag {
 }
 
 class PlatformPrivacyFlag implements PrivacyFlag {
-  static const channelName = 'com.residay.app/privacy';
-
   const PlatformPrivacyFlag({MethodChannel? channel})
-    : _channel = channel ?? const MethodChannel(channelName);
+      : _channel = channel ?? const MethodChannel(channelName);
+
+  static const channelName = 'com.residay.app/privacy';
 
   final MethodChannel _channel;
 

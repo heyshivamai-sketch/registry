@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../../core/persistence/persisted_values.dart';
-import 'backup_models.dart';
 import '../documents/domain/document_field_value.dart';
 import '../documents/domain/registry_document.dart';
 import '../documents/domain/renewal_history_entry.dart';
 import '../subscriptions/domain/money.dart';
 import '../subscriptions/domain/registry_subscription.dart';
+import 'backup_models.dart';
 
 /// Version 1 plaintext payload.
 ///
@@ -64,8 +64,7 @@ abstract final class RegistryBackupPayload {
     }
     final documentCount = reader.u32();
     final subscriptionCount = reader.u32();
-    if (documentCount > BackupLimits.maxDocuments ||
-        subscriptionCount > BackupLimits.maxSubscriptions) {
+    if (documentCount > BackupLimits.maxDocuments || subscriptionCount > BackupLimits.maxSubscriptions) {
       throw const BackupOversized();
     }
     final documents = <RegistryDocument>[];
@@ -84,11 +83,7 @@ abstract final class RegistryBackupPayload {
     return BackupSnapshot(documents: documents, subscriptions: subscriptions);
   }
 
-  static void _writeDocument(
-    _Writer writer,
-    RegistryDocument document,
-    Set<String> seenIds,
-  ) {
+  static void _writeDocument(_Writer writer, RegistryDocument document, Set<String> seenIds) {
     _writeId(writer, document.id, seenIds);
     _writeText(writer, document.name, required: true);
     writer.str(document.category.name);
@@ -159,11 +154,7 @@ abstract final class RegistryBackupPayload {
     }
   }
 
-  static RegistryDocument _readDocument(
-    _Reader reader,
-    Set<String> seenIds,
-    int version,
-  ) {
+  static RegistryDocument _readDocument(_Reader reader, Set<String> seenIds, int version) {
     final id = _readId(reader, seenIds);
     final name = _readText(reader, required: true);
     final category = _enumValue(DocumentCategory.values, reader.str());
@@ -175,9 +166,7 @@ abstract final class RegistryBackupPayload {
     final actionDate = _readOptionalDate(reader);
     final impact = _enumValue(DocumentImpact.values, reader.str());
     final effortName = reader.optStr();
-    final renewalEffort = effortName == null
-        ? null
-        : _enumValue(RenewalEffort.values, effortName);
+    final renewalEffort = effortName == null ? null : _enumValue(RenewalEffort.values, effortName);
     final costOfLapsing = reader.optStr();
     final dependency = reader.optStr();
     final expectedChanges = reader.optStr();
@@ -279,11 +268,7 @@ abstract final class RegistryBackupPayload {
     );
   }
 
-  static void _writeSubscription(
-    _Writer writer,
-    RegistrySubscription subscription,
-    Set<String> seenIds,
-  ) {
+  static void _writeSubscription(_Writer writer, RegistrySubscription subscription, Set<String> seenIds) {
     _writeId(writer, subscription.id, seenIds);
     writer.str(_date(subscription.createdAt)!);
     writer.optStr(_date(subscription.updatedAt));
@@ -303,10 +288,7 @@ abstract final class RegistryBackupPayload {
     writer.optStr(subscription.notes);
   }
 
-  static RegistrySubscription _readSubscription(
-    _Reader reader,
-    Set<String> seenIds,
-  ) {
+  static RegistrySubscription _readSubscription(_Reader reader, Set<String> seenIds) {
     final id = _readId(reader, seenIds);
     final createdAt = _readDate(reader.str());
     final updatedAt = _readOptionalDate(reader);
@@ -386,11 +368,7 @@ abstract final class RegistryBackupPayload {
     }
   }
 
-  static void _writeToken(
-    _Writer writer,
-    String value, {
-    required int maxLength,
-  }) {
+  static void _writeToken(_Writer writer, String value, {required int maxLength}) {
     _requireToken(value, maxLength: maxLength);
     writer.str(value);
   }
@@ -402,8 +380,7 @@ abstract final class RegistryBackupPayload {
   }
 
   static void _requireToken(String value, {required int maxLength}) {
-    if (value.length > maxLength ||
-        !RegExp(r'^[A-Za-z0-9_-]+$').hasMatch(value)) {
+    if (value.length > maxLength || !RegExp(r'^[A-Za-z0-9_-]+$').hasMatch(value)) {
       throw const BackupInvalid('token');
     }
   }
@@ -420,11 +397,7 @@ abstract final class RegistryBackupPayload {
     }
   }
 
-  static void _writeText(
-    _Writer writer,
-    String value, {
-    required bool required,
-  }) {
+  static void _writeText(_Writer writer, String value, {required bool required}) {
     _checkText(value, required: required);
     writer.str(value);
   }
@@ -564,10 +537,7 @@ class _Reader {
   int u32() {
     _need(4);
     final value =
-        (_bytes[_offset] << 24) |
-        (_bytes[_offset + 1] << 16) |
-        (_bytes[_offset + 2] << 8) |
-        _bytes[_offset + 3];
+        (_bytes[_offset] << 24) | (_bytes[_offset + 1] << 16) | (_bytes[_offset + 2] << 8) | _bytes[_offset + 3];
     _offset += 4;
     return value;
   }

@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+
+import '../entitlements/registry_plan.dart';
 import 'ads_config.dart';
 import 'ads_platform.dart';
-import '../entitlements/registry_plan.dart';
 
 /// Decides whether a banner may be requested.
 ///
@@ -30,11 +31,7 @@ class AdsController extends ChangeNotifier {
 
   /// A banner may be requested and shown now.
   bool get showBanners =>
-      config.enabled &&
-      _initialized &&
-      _canRequestAds &&
-      plan.plan == RegistryPlan.free &&
-      plan.adsMayBeRequested;
+      config.enabled && _initialized && _canRequestAds && plan.plan == RegistryPlan.free && plan.adsMayBeRequested;
 
   /// Profile shows the privacy options entry point.
   bool get privacyOptionsRequired => config.enabled && _privacyOptionsRequired;
@@ -54,9 +51,7 @@ class AdsController extends ChangeNotifier {
     if (_disposed) {
       return;
     }
-    if (!_consentRequested &&
-        plan.plan == RegistryPlan.free &&
-        plan.adsMayBeRequested) {
+    if (!_consentRequested && plan.plan == RegistryPlan.free && plan.adsMayBeRequested) {
       _consentRequested = true;
       unawaited(_gatherConsent());
     }

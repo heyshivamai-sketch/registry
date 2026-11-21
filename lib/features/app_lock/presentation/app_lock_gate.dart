@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/registry_dependencies.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/registry_primary_button.dart';
-import '../app_lock_controller.dart';
 import '../../../l10n/app_localizations.dart';
+import '../app_lock_controller.dart';
 
 class AppLockGate extends StatelessWidget {
   const AppLockGate({super.key, required this.child});
@@ -50,12 +51,7 @@ class AppPrivacyCover extends StatelessWidget {
       key: const ValueKey<String>('app-privacy-cover'),
       color: theme.colorScheme.surface,
       child: SafeArea(
-        child: Center(
-          child: Text(
-            l10n.appLockPrivacyCover,
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
+        child: Center(child: Text(l10n.appLockPrivacyCover, style: theme.textTheme.titleLarge)),
       ),
     );
   }
@@ -91,33 +87,17 @@ class AppLockScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.lock_outline,
-                        size: AppSpacing.iconLg,
-                        color: theme.colorScheme.tertiary,
-                      ),
+                      Icon(Icons.lock_outline, size: AppSpacing.iconLg, color: theme.colorScheme.tertiary),
                       const SizedBox(height: AppSpacing.md),
-                      Text(
-                        l10n.appLockLockedTitle,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.headlineMedium,
-                      ),
+                      Text(l10n.appLockLockedTitle, textAlign: TextAlign.center, style: theme.textTheme.headlineMedium),
                       const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        detail,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyLarge,
-                      ),
+                      Text(detail, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
                       const SizedBox(height: AppSpacing.lg),
                       RegistryPrimaryButton(
                         key: const ValueKey<String>('app-lock-unlock'),
                         label: l10n.appLockUnlock,
                         expanded: false,
-                        onPressed: lock.authenticating
-                            ? null
-                            : () => lock.unlock(
-                                localizedReason: l10n.appLockReason,
-                              ),
+                        onPressed: lock.authenticating ? null : () => lock.unlock(localizedReason: l10n.appLockReason),
                       ),
                     ],
                   ),

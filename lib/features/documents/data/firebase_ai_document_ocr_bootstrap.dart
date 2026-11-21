@@ -12,7 +12,7 @@ const _modelName = String.fromEnvironment('FIREBASE_AI_MODEL', defaultValue: 'ge
 /// App Check is bypassed by default so local development and testing
 /// works seamlessly on any device without registering debug tokens.
 /// Pass `--dart-define=ENABLE_APP_CHECK=true` for production Play Store release.
-const bool _enableAppCheck = bool.fromEnvironment('ENABLE_APP_CHECK', defaultValue: false);
+const bool _enableAppCheck = bool.fromEnvironment('ENABLE_APP_CHECK');
 
 Future<DocumentOcrService> initializeFirebaseAiDocumentScanner() async {
   try {
@@ -24,7 +24,7 @@ Future<DocumentOcrService> initializeFirebaseAiDocumentScanner() async {
       );
     }
     final ai = FirebaseAI.googleAI(app: app, useLimitedUseAppCheckTokens: _enableAppCheck);
-    return FirebaseAiDocumentOcrService(FirebaseAiLogicDocumentClient(ai: ai, model: _modelName));
+    return FirebaseAiDocumentOcrService(FirebaseAiLogicDocumentClient(ai: ai));
   } on Object catch (error) {
     debugPrint('Firebase AI Scan is disabled because Firebase is not configured: $error');
     return const DisabledDocumentOcrService();

@@ -57,7 +57,6 @@ Future<void> _seed(InMemoryDocumentRepository documents, InMemorySubscriptionRep
       id: 'stream',
       serviceName: 'Streaming',
       minorUnits: 1200,
-      currencyCode: 'USD',
       nextPaymentDate: DateTime(2026, 9, 24),
       decideByDate: DateTime(2026, 9, 24),
     ),
