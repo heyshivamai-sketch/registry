@@ -218,6 +218,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           itemCount: totalCells,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7,
@@ -266,7 +267,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
           },
         ),
 
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.sm),
 
         // 4. Executive Summary Card (Total & Upcoming)
         Container(

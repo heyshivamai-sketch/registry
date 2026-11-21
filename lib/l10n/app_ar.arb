@@ -766,7 +766,7 @@
       }
     }
   },
-  "notASubscription": "ليس اشتراكاً",
+  "notASubscription": "تجاهل",
   "addToResiday": "إضافة إلى Regiday",
   "connectGmailTitle": "اكتشاف اشتراكات Gmail",
   "connectGmailButton": "ربط Gmail",

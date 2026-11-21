@@ -2402,7 +2402,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get notASubscription => 'ليس اشتراكاً';
+  String get notASubscription => 'تجاهل';
 
   @override
   String get addToResiday => 'إضافة إلى Regiday';

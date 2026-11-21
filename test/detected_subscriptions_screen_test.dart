@@ -159,7 +159,7 @@ void main() {
     expect(find.text('Gmail'), findsOneWidget);
     expect(find.text('High confidence'), findsOneWidget);
 
-    // Tap "Not a Subscription"
+    // Tap "Ignore"
     final ignoreButton =
         find.byKey(const ValueKey('ignore-candidate-cand_test_netflix'));
     expect(ignoreButton, findsOneWidget);
@@ -169,5 +169,122 @@ void main() {
     // Candidate should now be removed from pending list
     expect(find.text('Netflix'), findsNothing);
     expect(detectedRepo.ignoredMerchants.contains('netflix'), isTrue);
+  });
+
+  testWidgets(
+      'candidate remains in detected list when added and displays Added in green',
+      (tester) async {
+    final subscriptions = InMemorySubscriptionRepository();
+    final candidate = DetectedSubscriptionCandidate(
+      id: 'cand_google_ai',
+      merchantName: 'Google Ai Plus',
+      amount: const Money(minorUnits: 300, currencyCode: 'INR'),
+      billingCycle: BillingCycle.monthly,
+      lastPaymentDate: DateTime(2026, 9, 23),
+      nextPaymentDate: DateTime(2026, 10, 23),
+      sourceTypes: {DetectionSource.gmail},
+      confidenceScore: 0.60,
+      createdAt: DateTime(2026, 11, 21),
+    );
+    final detectedRepo = InMemoryDetectedSubscriptionRepository(
+      initialCandidates: [candidate],
+    );
+    final discovery = SubscriptionDiscoveryService(
+      detectedRepository: detectedRepo,
+      subscriptionRepository: subscriptions,
+    );
+
+    await tester.pumpWidget(
+      buildTestScreen(
+        subscriptions: subscriptions,
+        detectedRepo: detectedRepo,
+        discovery: discovery,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Before adding: options are there
+    expect(find.text('Google Ai Plus'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('add-candidate-cand_google_ai')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('ignore-candidate-cand_google_ai')),
+      findsOneWidget,
+    );
+    expect(find.text('Added'), findsNothing);
+
+    // Accept / Add candidate
+    await discovery.acceptCandidate('cand_google_ai');
+    await tester.pumpAndSettle();
+
+    // After adding: card is NOT removed from detected subscriptions list
+    expect(find.text('Google Ai Plus'), findsOneWidget);
+    // Says "Added" in green (both top badge and bottom banner)
+    expect(find.text('Added'), findsWidgets);
+    expect(
+      find.byKey(const ValueKey('candidate-added-cand_google_ai')),
+      findsOneWidget,
+    );
+    // Add/Ignore buttons are gone
+    expect(
+      find.byKey(const ValueKey('add-candidate-cand_google_ai')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('ignore-candidate-cand_google_ai')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('button labels are single-line and fitted', (tester) async {
+    final subscriptions = InMemorySubscriptionRepository();
+    final detectedRepo = InMemoryDetectedSubscriptionRepository(
+      initialCandidates: [
+        DetectedSubscriptionCandidate(
+          id: 'cand_google_ai',
+          merchantName: 'Google Ai Plus',
+          amount: const Money(minorUnits: 300, currencyCode: 'INR'),
+          billingCycle: BillingCycle.monthly,
+          lastPaymentDate: DateTime(2026, 9, 23),
+          sourceTypes: {DetectionSource.gmail},
+          confidenceScore: 0.85,
+          createdAt: DateTime(2026, 9, 23),
+        ),
+      ],
+    );
+    final discovery = SubscriptionDiscoveryService(
+      detectedRepository: detectedRepo,
+      subscriptionRepository: subscriptions,
+    );
+
+    await tester.pumpWidget(
+      buildTestScreen(
+        subscriptions: subscriptions,
+        detectedRepo: detectedRepo,
+        discovery: discovery,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final ignoreBtnText = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(const ValueKey('ignore-candidate-cand_google_ai')),
+        matching: find.byType(Text),
+      ),
+    );
+    expect(ignoreBtnText.maxLines, 1);
+    expect(ignoreBtnText.softWrap, isFalse);
+    expect(ignoreBtnText.data, 'Ignore');
+
+    final addBtnText = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(const ValueKey('add-candidate-cand_google_ai')),
+        matching: find.byType(Text),
+      ),
+    );
+    expect(addBtnText.maxLines, 1);
+    expect(addBtnText.softWrap, isFalse);
   });
 }

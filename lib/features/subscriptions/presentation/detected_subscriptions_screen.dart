@@ -25,13 +25,18 @@ class DetectedSubscriptionsScreen extends StatefulWidget {
 class _DetectedSubscriptionsScreenState
     extends State<DetectedSubscriptionsScreen> {
   Future<void> _addCandidate(DetectedSubscriptionCandidate candidate) async {
+    final l10n = AppLocalizations.of(context);
     final deps = RegistryDependencies.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     final saved = await AppRoutes.openAddSubscription(
       context,
       initialCandidate: candidate,
     );
     if (saved && mounted) {
       await deps.discovery.acceptCandidate(candidate.id);
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.candidateAddedSuccess)));
     }
   }
 
@@ -66,7 +71,7 @@ class _DetectedSubscriptionsScreenState
         child: ListenableBuilder(
           listenable: deps.discovery,
           builder: (context, _) {
-            final candidates = deps.discovery.pendingCandidates;
+            final candidates = deps.discovery.visibleCandidates;
             if (candidates.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
@@ -99,8 +104,10 @@ class _DetectedSubscriptionsScreenState
               separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
                 final candidate = candidates[index];
+                final isAdded = deps.discovery.isCandidateAdded(candidate);
                 return _DetectedCandidateCard(
                   candidate: candidate,
+                  isAdded: isAdded,
                   onAdd: () => _addCandidate(candidate),
                   onIgnore: () => _ignoreCandidate(candidate),
                 );
@@ -116,11 +123,13 @@ class _DetectedSubscriptionsScreenState
 class _DetectedCandidateCard extends StatelessWidget {
   const _DetectedCandidateCard({
     required this.candidate,
+    required this.isAdded,
     required this.onAdd,
     required this.onIgnore,
   });
 
   final DetectedSubscriptionCandidate candidate;
+  final bool isAdded;
   final VoidCallback onAdd;
   final VoidCallback onIgnore;
 
@@ -177,13 +186,49 @@ class _DetectedCandidateCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
-                Text(
-                  cycleLabel,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                Expanded(
+                  child: Text(
+                    cycleLabel,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: AppSpacing.xs),
+                if (isAdded) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFDFF8F2),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: const Color(0xFF086B59).withValues(alpha: 0.35),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_rounded,
+                          size: 13,
+                          color: Color(0xFF086B59),
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          'Added',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF086B59),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                ],
                 _ConfidenceBadge(confidence: candidate.confidence),
               ],
             ),
@@ -230,25 +275,65 @@ class _DetectedCandidateCard extends StatelessWidget {
               ),
             ],
             const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: RegistrySecondaryButton(
-                    key: ValueKey<String>('ignore-candidate-${candidate.id}'),
-                    label: l10n.notASubscription,
-                    onPressed: onIgnore,
+            if (isAdded)
+              Container(
+                key: ValueKey<String>('candidate-added-${candidate.id}'),
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFDFF8F2),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF086B59).withValues(alpha: 0.25),
+                    width: 1.2,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: RegistryPrimaryButton(
-                    key: ValueKey<String>('add-candidate-${candidate.id}'),
-                    label: l10n.addToResiday,
-                    onPressed: onAdd,
-                  ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.check_circle_rounded,
+                      size: 20,
+                      color: Color(0xFF086B59),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Added',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF086B59),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            else
+              Row(
+                children: [
+                  Expanded(
+                    child: RegistrySecondaryButton(
+                      key: ValueKey<String>('ignore-candidate-${candidate.id}'),
+                      label: l10n.notASubscription,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                      ),
+                      onPressed: onIgnore,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: RegistryPrimaryButton(
+                      key: ValueKey<String>('add-candidate-${candidate.id}'),
+                      label: l10n.addToResiday,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                      ),
+                      onPressed: onAdd,
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),

@@ -11,6 +11,9 @@ class RegistryPrimaryButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.textAlign,
+    this.maxLines = 1,
+    this.fitText = true,
+    this.padding,
   });
 
   final String label;
@@ -20,15 +23,22 @@ class RegistryPrimaryButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final TextAlign? textAlign;
+  final int maxLines;
+  final bool fitText;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
-    final labelText = Text(
+    final textWidget = Text(
       label,
-      maxLines: 2,
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       textAlign: textAlign ?? TextAlign.center,
+      softWrap: maxLines > 1,
     );
+    final labelText = fitText
+        ? FittedBox(fit: BoxFit.scaleDown, child: textWidget)
+        : textWidget;
     final double? trailingWidth;
     final trailingWidget = trailing;
     if (trailingWidget is Icon) {
@@ -57,7 +67,7 @@ class RegistryPrimaryButton extends StatelessWidget {
           expanded ? double.infinity : AppSpacing.minTapTarget,
           AppSpacing.buttonHeight,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       ),
       child: child,
     );

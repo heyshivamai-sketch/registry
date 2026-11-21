@@ -2449,7 +2449,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get notASubscription => 'Pas un abonnement';
+  String get notASubscription => 'Ignorer';
 
   @override
   String get addToResiday => 'Ajouter à Regiday';

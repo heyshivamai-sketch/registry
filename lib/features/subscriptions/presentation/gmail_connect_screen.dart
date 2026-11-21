@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/domain/gmail_subscription_detection_service.dart';
-import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../data/detected_subscription_repository.dart';
+import '../domain/gmail_subscription_detection_service.dart';
+import 'detected_subscriptions_screen.dart';
 
 class GmailConnectScreen extends StatefulWidget {
   const GmailConnectScreen({super.key});
@@ -271,7 +272,6 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                                   content: Text(
                                     'Copied Gmail API Enable link to clipboard!',
                                   ),
-                                  duration: Duration(seconds: 4),
                                 ),
                               );
                             },
@@ -392,12 +392,12 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                   ),
                 ],
                 if (!_scanning && !_connecting) ...[
-                  if (deps.discovery.pendingCandidates.isNotEmpty) ...[
+                  if (deps.discovery.visibleCandidates.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.sm),
                     RegistrySecondaryButton(
                       key: const ValueKey<String>('gmail-view-detected-button'),
                       label:
-                          'View Detected Subscriptions (${deps.discovery.pendingCandidates.length})',
+                          'View Detected Subscriptions (${deps.discovery.visibleCandidates.length})',
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

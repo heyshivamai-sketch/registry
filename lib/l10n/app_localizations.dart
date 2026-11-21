@@ -4213,7 +4213,7 @@ abstract class AppLocalizations {
   /// No description provided for @notASubscription.
   ///
   /// In en, this message translates to:
-  /// **'Not a Subscription'**
+  /// **'Ignore'**
   String get notASubscription;
 
   /// No description provided for @addToResiday.

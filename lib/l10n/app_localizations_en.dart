@@ -2415,7 +2415,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notASubscription => 'Not a Subscription';
+  String get notASubscription => 'Ignore';
 
   @override
   String get addToResiday => 'Add to Regiday';

@@ -1122,7 +1122,7 @@
       }
     }
   },
-  "notASubscription": "Not a Subscription",
+  "notASubscription": "Ignore",
   "addToResiday": "Add to Regiday",
   "connectGmailTitle": "Gmail Subscription Detection",
   "connectGmailButton": "Connect Gmail",

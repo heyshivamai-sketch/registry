@@ -28,6 +28,36 @@ class SubscriptionDiscoveryService extends ChangeNotifier {
           .where((c) => c.reviewStatus == DetectionReviewStatus.pendingReview)
           .toList();
 
+  List<DetectedSubscriptionCandidate> get visibleCandidates {
+    final list = detectedRepository.candidates
+        .where((c) => c.reviewStatus != DetectionReviewStatus.ignored)
+        .toList();
+    list.sort((a, b) {
+      final aAdded = isCandidateAdded(a);
+      final bAdded = isCandidateAdded(b);
+      if (aAdded != bAdded) {
+        return aAdded ? 1 : -1;
+      }
+      return b.lastPaymentDate.compareTo(a.lastPaymentDate);
+    });
+    return list;
+  }
+
+  bool isCandidateAdded(DetectedSubscriptionCandidate candidate) {
+    if (candidate.reviewStatus == DetectionReviewStatus.accepted) {
+      return true;
+    }
+    final normCandidate =
+        _bankService.normalizeMerchant(candidate.merchantName).toLowerCase();
+    return subscriptionRepository.subscriptions.any((sub) {
+      final normSub =
+          _bankService.normalizeMerchant(sub.serviceName).toLowerCase();
+      return normSub == normCandidate ||
+          normSub.contains(normCandidate) ||
+          normCandidate.contains(normSub);
+    });
+  }
+
   Set<String> get ignoredMerchants => detectedRepository.ignoredMerchants;
 
   GmailSyncMetadata? get gmailMetadata => detectedRepository.gmailMetadata;

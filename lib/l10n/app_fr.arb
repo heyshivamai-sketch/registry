@@ -765,7 +765,7 @@
       }
     }
   },
-  "notASubscription": "Pas un abonnement",
+  "notASubscription": "Ignorer",
   "addToResiday": "Ajouter à Regiday",
   "connectGmailTitle": "Détection d'abonnements Gmail",
   "connectGmailButton": "Connecter Gmail",
