@@ -623,6 +623,19 @@
     }
   },
   "subscriptionTrackingDisclaimer": "Regiday tracks this plan but does not cancel or charge it automatically.",
+  "cancelledSubscriptionsTitle": "Cancelled subscriptions",
+  "cancelledSubscriptionsEmptyTitle": "No cancelled subscriptions",
+  "cancelledSubscriptionsEmptyMessage": "Subscriptions you cancel will appear here so you can review or reactivate them anytime.",
+  "cancelledSubscriptionsSearchPlaceholder": "Search cancelled subscriptions",
+  "cancelledSubscriptionsCount": "{count, plural, one{1 cancelled plan} other{{count} cancelled plans}}",
+  "@cancelledSubscriptionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewCancelledAction": "View",
   "homeHeroReview": "Review {title}",
   "@homeHeroReview": {
     "placeholders": {
@@ -839,12 +852,12 @@
   },
   "reminderSubscriptionChargeToday": "A subscription payment date is today.",
   "backupSectionTitle": "Backup & restore",
-  "backupSectionBody": "Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.",
+  "backupSectionBody": "Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.",
   "backupExportAction": "Export backup",
   "backupImportAction": "Import backup",
   "backupExportTitle": "Export backup",
-  "backupIncluded": "The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.",
-  "backupPasswordWarning": "Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.",
+  "backupIncluded": "Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.",
+  "backupPasswordWarning": "Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.",
   "backupPasswordLabel": "Backup password",
   "backupConfirmPasswordLabel": "Confirm password",
   "backupPasswordTooShort": "Use at least 8 characters.",
@@ -853,7 +866,7 @@
   "backupHidePassword": "Hide password",
   "backupChooseSave": "Choose where to save",
   "backupImportTitle": "Import backup",
-  "backupImportIntro": "Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.",
+  "backupImportIntro": "Restore your documents and subscriptions from an encrypted Regiday backup file.",
   "backupChooseFile": "Choose backup file",
   "backupSelectedFile": "Backup file selected",
   "backupNoFile": "Choose a backup file first.",
@@ -874,7 +887,7 @@
   },
   "backupReplaceAction": "Replace this device's registry",
   "backupReplaceTitle": "Replace this device's registry?",
-  "backupReplaceBody": "Documents, subscriptions, and images on this device will be replaced by this backup.",
+  "backupReplaceBody": "Existing documents, subscriptions, and images on this device will be replaced.",
   "backupCancel": "Cancel",
   "backupPhaseProtecting": "Protecting the backup…",
   "backupPhaseWriting": "Saving the backup file…",
@@ -1110,7 +1123,7 @@
     }
   },
   "notASubscription": "Not a Subscription",
-  "addToResiday": "Add to ResiDay",
+  "addToResiday": "Add to Regiday",
   "connectGmailTitle": "Gmail Subscription Detection",
   "connectGmailButton": "Connect Gmail",
   "disconnectGmailButton": "Disconnect",
@@ -1140,7 +1153,7 @@
       }
     }
   },
-  "gmailPrivacyNotice": "ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.",
+  "gmailPrivacyNotice": "Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.",
   "candidateAddedSuccess": "Subscription added successfully.",
-  "candidateIgnored": "Merchant ignored. ResiDay will not detect this merchant again."
+  "candidateIgnored": "Merchant ignored. Regiday will not detect this merchant again."
 }

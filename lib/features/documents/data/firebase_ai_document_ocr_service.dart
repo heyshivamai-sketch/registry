@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/foundation.dart';
-import '../domain/document_ocr.dart';
-import '../domain/document_schema.dart';
-import '../domain/registry_document.dart';
+import 'package:the_registry/features/documents/domain/document_ocr.dart';
+import 'package:the_registry/features/documents/domain/document_schema.dart';
+import 'package:the_registry/features/documents/domain/registry_document.dart';
 
 const _documentPrompt = '''
 These images are the front, back, or additional pages of one document.
@@ -16,24 +16,27 @@ invent an expiry date. If the document has no printed expiry date, expiryDate
 must be an empty string.
 
 Identify:
-- documentName: Full, specific title or name of the document as printed or recognized (e.g. "Aadhaar Card", "Permanent Account Number Card (PAN)", "Driving Licence", "Passport", "Voter ID Card", "Vehicle Registration Certificate", "Health Insurance Card", "Birth Certificate", "Electricity Bill", "Rental Agreement").
-- documentType: Short type or classification (e.g. "Aadhaar", "Passport", "Driving Licence", "PAN Card", "National ID", "Invoice", "Certificate").
+- documentName: Full, specific title or name of the document as printed or recognized (e.g. "Aadhaar Card", "Permanent Account Number Card (PAN)", "Driving Licence", "Passport", "Voter ID Card", "Vehicle Registration Certificate", "Health Insurance Card", "Birth Certificate", "Electricity Bill", "Rental Agreement", "Business Registration").
+- documentType: Short type or classification (e.g. "Aadhaar", "Passport", "Driving Licence", "PAN Card", "National ID", "Invoice", "Certificate", "Registration").
 - category: Standard category (e.g. "ID Card", "Passport", "Driving licence", "Vehicle", "Insurance", "Certificate", "Finance", "Housing", "Other").
 - countryCode: Two-letter ISO 3166-1 alpha-2 code when clearly identifiable, otherwise empty.
-- name: Document holder or owner name.
-- documentNumber: Primary identifier or document number (Aadhaar number, Passport number, PAN, License number, etc.).
-- dates (dateOfBirth, issueDate, expiryDate): Normalize any recognized date into YYYY-MM-DD format (convert DD/MM/YYYY, DD-MM-YYYY, YYYY/MM/DD, or written months). Return empty string if missing or unreadable.
+- name: Document holder, owner, or primary individual/business name.
+- documentNumber: Primary identifier or document number (Aadhaar number, Passport number, PAN, License number, Certificate number, etc.).
+- dates:
+  * dateOfBirth: Date of birth (look for DOB, Date of Birth, Year of Birth, YOB, Born).
+  * issueDate: Issue, registration, incorporation, agreement, or invoice date (look for Issue Date, Date of Issue, Reg Date, Registration Date, Dated, Valid From, Issued on).
+  * expiryDate: Expiry, validity, due date, valid until, valid thru, expiration date, or renewal date. Leave empty if no expiry applies.
+  * Normalize recognized dates into YYYY-MM-DD format.
 - gender: "Male", "Female", or "Other" if printed.
 - nationality: Nationality or citizenship if printed.
 - address: Full printed address.
-- issuingAuthority: Printed issuing country, authority, department, or company.
+- issuingAuthority: Printed issuing country, authority, department, government body, or company.
 ''';
 
 final _responseSchema = Schema.object(
   properties: {
     'documentName': Schema.string(
-      description:
-          'Specific title or name of the document (e.g., Aadhaar Card, Passport, Driving Licence, PAN Card, Health Insurance Card, Vehicle Registration).',
+      description: 'Specific title or name of the document (e.g., Aadhaar Card, Passport, Driving Licence, PAN Card, Health Insurance Card, Vehicle Registration).',
     ),
     'documentType': Schema.string(
       description: 'Short document type or classification.',
@@ -96,8 +99,11 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
       'gemini-1.5-flash',
       'gemini-3-pro',
     ],
-  }) : _ai = ai ?? FirebaseAI.googleAI(),
-       _models = [model, ...fallbackModels.where((m) => m != model)];
+  })  : _ai = ai ?? FirebaseAI.googleAI(),
+        _models = [
+          model,
+          ...fallbackModels.where((m) => m != model),
+        ];
 
   final FirebaseAI _ai;
   final List<String> _models;
@@ -136,16 +142,14 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
         } catch (error) {
           lastError = error;
           final errorStr = error.toString();
-          final isTransient =
-              errorStr.contains('503') ||
+          final isTransient = errorStr.contains('503') ||
               errorStr.contains('500') ||
               errorStr.contains('429') ||
               errorStr.contains('UNAVAILABLE') ||
               errorStr.contains('Deadline expired') ||
               errorStr.contains('high demand') ||
               errorStr.contains('RESOURCE_EXHAUSTED');
-          final isUnavailable =
-              errorStr.contains('no longer available') ||
+          final isUnavailable = errorStr.contains('no longer available') ||
               errorStr.contains('not found') ||
               errorStr.contains('404');
           if (isTransient) {
@@ -153,9 +157,7 @@ class FirebaseAiLogicDocumentClient implements FirebaseAiDocumentClient {
               'Model $modelName transient error (attempt $attempt): $errorStr',
             );
             if (attempt < 3) {
-              await Future<void>.delayed(
-                Duration(milliseconds: attempt * 1200),
-              );
+              await Future<void>.delayed(Duration(milliseconds: attempt * 1200));
               continue;
             }
             debugPrint('Switching from $modelName to next available model...');
@@ -234,8 +236,8 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
     final resolvedDocName = value.documentName.trim().isNotEmpty
         ? value.documentName.trim()
         : (value.documentType.trim().isNotEmpty
-              ? value.documentType.trim()
-              : _defaultDocumentName(schema.id, value.category));
+            ? value.documentType.trim()
+            : _defaultDocumentName(schema.id, value.category));
 
     final fields = <ExtractedDocumentField>[
       _field(DocumentFieldKeys.fullName, value.name),
@@ -259,12 +261,14 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
       categoryLabel: value.category.isNotEmpty
           ? value.category
           : (classification.category == DocumentCategory.other
-                ? ''
-                : classification.category.name),
+              ? ''
+              : classification.category.name),
       documentTypeLabel: resolvedDocName,
-      overallConfidence: fields.any((field) => field.value.isNotEmpty)
-          ? OcrConfidence.review
-          : OcrConfidence.notDetected,
+      overallConfidence: fields.any((field) => field.confidence == OcrConfidence.high)
+          ? OcrConfidence.high
+          : (fields.any((field) => field.value.isNotEmpty)
+              ? OcrConfidence.review
+              : OcrConfidence.notDetected),
     );
   }
 
@@ -289,16 +293,41 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
     bool sensitive = false,
     bool isDate = false,
   }) {
+    final trimmed = value.trim();
+    final confidence = _determineConfidence(key, trimmed, isDate: isDate);
     return ExtractedDocumentField(
       id: key,
       fieldKey: key,
-      value: value,
-      confidence: value.isEmpty
-          ? OcrConfidence.notDetected
-          : OcrConfidence.review,
+      value: trimmed,
+      confidence: confidence,
       sensitive: sensitive,
       isDate: isDate,
     );
+  }
+
+  static OcrConfidence _determineConfidence(
+    String key,
+    String value, {
+    required bool isDate,
+  }) {
+    if (value.isEmpty) {
+      return OcrConfidence.notDetected;
+    }
+    if (isDate) {
+      return RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)
+          ? OcrConfidence.high
+          : OcrConfidence.review;
+    }
+    if (key == DocumentFieldKeys.fullName || key == DocumentFieldKeys.name) {
+      return value.length >= 2 ? OcrConfidence.high : OcrConfidence.review;
+    }
+    if (key == DocumentFieldKeys.address) {
+      return value.length >= 5 ? OcrConfidence.high : OcrConfidence.review;
+    }
+    if (key == DocumentFieldKeys.issuingAuthority) {
+      return value.length >= 3 ? OcrConfidence.high : OcrConfidence.review;
+    }
+    return value.length >= 3 ? OcrConfidence.high : OcrConfidence.review;
   }
 
   static DocumentClassification _classification(
@@ -317,9 +346,7 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
         text.contains('unique identification') ||
         (country == DocumentCountryCodes.india &&
             (text.contains('mera aadhaar') ||
-                RegExp(
-                  r'\b\d{4}\s\d{4}\s\d{4}\b',
-                ).hasMatch(value.documentNumber)))) {
+                RegExp(r'\b\d{4}\s\d{4}\s\d{4}\b').hasMatch(value.documentNumber)))) {
       return const DocumentClassification(
         schemaId: DocumentSchemaIds.indiaAadhaar,
         countryCode: DocumentCountryCodes.india,
@@ -434,7 +461,8 @@ class _FirebaseDocumentExtraction {
 
   factory _FirebaseDocumentExtraction.fromJson(Map<String, dynamic> json) {
     String read(String key) => (json[key] as String? ?? '').trim();
-    String readDate(String key) => _normalizeFullDate(read(key));
+    String readDate(String key, {bool isDob = false}) =>
+        _normalizeFullDate(read(key), isDob: isDob);
 
     return _FirebaseDocumentExtraction(
       documentName: read('documentName'),
@@ -442,7 +470,7 @@ class _FirebaseDocumentExtraction {
       countryCode: read('countryCode'),
       name: read('name'),
       documentNumber: read('documentNumber'),
-      dateOfBirth: readDate('dateOfBirth'),
+      dateOfBirth: readDate('dateOfBirth', isDob: true),
       issueDate: readDate('issueDate'),
       expiryDate: readDate('expiryDate'),
       gender: read('gender'),
@@ -468,12 +496,21 @@ class _FirebaseDocumentExtraction {
   final String category;
 }
 
-String _normalizeFullDate(String raw) {
-  final value = raw.trim();
+String _normalizeFullDate(String raw, {bool isDob = false}) {
+  var value = raw.trim();
   if (value.isEmpty) return '';
-  final ymdMatch = RegExp(
-    r'^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$',
+
+  // Extract date from prefix if present: e.g. "DOB: 15/08/1990", "Dated 12/04/2020", "Validity: 2030-05-01"
+  final prefixMatch = RegExp(
+    r'(?:dob|date\s*of\s*birth|birth|issued?|dated?|expiry|validity|valid\s*until|valid\s*thru)[:\s]+(.+)',
+    caseSensitive: false,
   ).firstMatch(value);
+  if (prefixMatch != null) {
+    value = prefixMatch.group(1)!.trim();
+  }
+
+  // 1. ISO format: YYYY-MM-DD or YYYY/MM/DD (allowing spaces around separators)
+  final ymdMatch = RegExp(r'^(\d{4})\s*[-/.]\s*(\d{1,2})\s*[-/.]\s*(\d{1,2})').firstMatch(value);
   if (ymdMatch != null) {
     final year = int.parse(ymdMatch.group(1)!);
     final month = int.parse(ymdMatch.group(2)!);
@@ -482,9 +519,9 @@ String _normalizeFullDate(String raw) {
       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
     }
   }
-  final dmyMatch = RegExp(
-    r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$',
-  ).firstMatch(value);
+
+  // 2. Day-Month-Year: DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY (allowing spaces)
+  final dmyMatch = RegExp(r'^(\d{1,2})\s*[-/.]\s*(\d{1,2})\s*[-/.]\s*(\d{2,4})').firstMatch(value);
   if (dmyMatch != null) {
     final dRaw = int.parse(dmyMatch.group(1)!);
     final mRaw = int.parse(dmyMatch.group(2)!);
@@ -502,8 +539,10 @@ String _normalizeFullDate(String raw) {
       return '${yRaw.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
     }
   }
+
+  // 3. Textual month DD Month YYYY (e.g. 15 Aug 1990, 15-August-1990)
   final textDmyMatch = RegExp(
-    r'^(\d{1,2})[./\-\s,]+(\p{L}{2,})[./\-\s,]+(\d{2,4})$',
+    r'^(\d{1,2})[./\-\s,]+(\p{L}{2,})[./\-\s,]+(\d{2,4})',
     unicode: true,
   ).firstMatch(value);
   if (textDmyMatch != null) {
@@ -516,8 +555,10 @@ String _normalizeFullDate(String raw) {
       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
     }
   }
+
+  // 4. Textual month Month DD, YYYY (e.g. Aug 15, 1990)
   final textMdyMatch = RegExp(
-    r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})$',
+    r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})',
     unicode: true,
   ).firstMatch(value);
   if (textMdyMatch != null) {
@@ -530,6 +571,15 @@ String _normalizeFullDate(String raw) {
       return '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
     }
   }
+
+  // 5. 4-digit year only (e.g. "1985" for Aadhaar Year of Birth)
+  if (isDob) {
+    final yearMatch = RegExp(r'^(19\d{2}|20\d{2})$').firstMatch(value);
+    if (yearMatch != null) {
+      return '${yearMatch.group(1)!}-01-01';
+    }
+  }
+
   return '';
 }
 

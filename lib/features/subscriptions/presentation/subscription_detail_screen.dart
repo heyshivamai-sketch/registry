@@ -88,6 +88,14 @@ class _SubscriptionDetailBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (subscription.isCancelled) ...[
+                RegistryCallout(
+                  tone: RegistryCalloutTone.warning,
+                  title: l10n.subscriptionCancelled,
+                  message: l10n.subscriptionTrackingDisclaimer,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               RegistrySurface(
                 padding: const EdgeInsets.all(14),
                 borderRadius: BorderRadius.circular(19),
@@ -485,7 +493,15 @@ Future<void> _confirmCancel(BuildContext context,
   }
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text(l10n.planMarkedCancelled)));
+    ..showSnackBar(
+      SnackBar(
+        content: Text(l10n.planMarkedCancelled),
+        action: SnackBarAction(
+          label: l10n.viewCancelledAction,
+          onPressed: () => AppRoutes.openCancelledSubscriptions(context),
+        ),
+      ),
+    );
 }
 
 Future<void> _confirmReactivate(BuildContext context,

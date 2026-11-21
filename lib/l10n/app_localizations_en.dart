@@ -1483,6 +1483,34 @@ class AppLocalizationsEn extends AppLocalizations {
       'Regiday tracks this plan but does not cancel or charge it automatically.';
 
   @override
+  String get cancelledSubscriptionsTitle => 'Cancelled subscriptions';
+
+  @override
+  String get cancelledSubscriptionsEmptyTitle => 'No cancelled subscriptions';
+
+  @override
+  String get cancelledSubscriptionsEmptyMessage =>
+      'Subscriptions you cancel will appear here so you can review or reactivate them anytime.';
+
+  @override
+  String get cancelledSubscriptionsSearchPlaceholder =>
+      'Search cancelled subscriptions';
+
+  @override
+  String cancelledSubscriptionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cancelled plans',
+      one: '1 cancelled plan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewCancelledAction => 'View';
+
+  @override
   String homeHeroReview(String title) {
     return 'Review $title';
   }
@@ -1800,7 +1828,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.';
+      'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.';
 
   @override
   String get backupExportAction => 'Export backup';
@@ -1813,11 +1841,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupIncluded =>
-      'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.';
+      'Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.';
 
   @override
   String get backupPasswordWarning =>
-      'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.';
+      'Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.';
 
   @override
   String get backupPasswordLabel => 'Backup password';
@@ -1845,7 +1873,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupImportIntro =>
-      'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.';
+      'Restore your documents and subscriptions from an encrypted Regiday backup file.';
 
   @override
   String get backupChooseFile => 'Choose backup file';
@@ -1872,7 +1900,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupReplaceBody =>
-      'Documents, subscriptions, and images on this device will be replaced by this backup.';
+      'Existing documents, subscriptions, and images on this device will be replaced.';
 
   @override
   String get backupCancel => 'Cancel';
@@ -2390,7 +2418,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notASubscription => 'Not a Subscription';
 
   @override
-  String get addToResiday => 'Add to ResiDay';
+  String get addToResiday => 'Add to Regiday';
 
   @override
   String get connectGmailTitle => 'Gmail Subscription Detection';
@@ -2424,12 +2452,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gmailPrivacyNotice =>
-      'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.';
+      'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.';
 
   @override
   String get candidateAddedSuccess => 'Subscription added successfully.';
 
   @override
   String get candidateIgnored =>
-      'Merchant ignored. ResiDay will not detect this merchant again.';
+      'Merchant ignored. Regiday will not detect this merchant again.';
 }

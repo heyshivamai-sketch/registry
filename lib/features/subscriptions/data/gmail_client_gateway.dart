@@ -21,8 +21,24 @@ class GoogleApiGmailGateway implements GmailClientGateway {
 
   @override
   Future<String?> signIn() async {
-    final account = await _googleSignIn.signIn();
-    return account?.email;
+    try {
+      final account = await _googleSignIn.signIn();
+      return account?.email;
+    } catch (e) {
+      final str = e.toString().toLowerCase();
+      if (str.contains('failed_to_recover_auth') ||
+          str.contains('failed attempt to recover authentication')) {
+        // Clear any stale cached session and retry cleanly
+        try {
+          await _googleSignIn.signOut();
+          final account = await _googleSignIn.signIn();
+          return account?.email;
+        } catch (_) {
+          rethrow;
+        }
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -38,12 +54,28 @@ class GoogleApiGmailGateway implements GmailClientGateway {
   @override
   Future<List<GmailRawMessage>> searchBillingEmails({DateTime? since, int maxResults = 50}) async {
     var account = _googleSignIn.currentUser;
-    account ??= await _googleSignIn.signInSilently();
+    if (account == null) {
+      for (var attempt = 1; attempt <= 2; attempt++) {
+        try {
+          account = await _googleSignIn.signInSilently();
+          break;
+        } catch (e) {
+          final err = e.toString().toLowerCase();
+          final isDeadlock =
+              err.contains('deadlock') || err.contains('main thread');
+          if (isDeadlock && attempt < 2) {
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+            continue;
+          }
+          rethrow;
+        }
+      }
+    }
     if (account == null) {
       throw StateError('User is not signed into Google');
     }
 
-    final authHeaders = await account.authHeaders;
+    final authHeaders = await _fetchAuthHeaders(account);
     final authenticateClient = _AuthenticatedClient(authHeaders, http.Client());
     final gmailApi = gmail.GmailApi(authenticateClient);
 
@@ -122,6 +154,28 @@ class GoogleApiGmailGateway implements GmailClientGateway {
     }
 
     return rawMessages;
+  }
+
+  Future<Map<String, String>> _fetchAuthHeaders(
+    GoogleSignInAccount account,
+  ) async {
+    // Yield to let any active platform channel / Activity transition settle
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    for (var attempt = 1; attempt <= 3; attempt++) {
+      try {
+        return await account.authHeaders;
+      } catch (e) {
+        final err = e.toString().toLowerCase();
+        final isDeadlock =
+            err.contains('deadlock') || err.contains('main thread');
+        if (isDeadlock && attempt < 3) {
+          await Future<void>.delayed(Duration(milliseconds: 500 * attempt));
+          continue;
+        }
+        rethrow;
+      }
+    }
+    return await account.authHeaders;
   }
 }
 

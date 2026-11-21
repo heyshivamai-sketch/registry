@@ -1482,6 +1482,38 @@ class AppLocalizationsAr extends AppLocalizations {
       'يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.';
 
   @override
+  String get cancelledSubscriptionsTitle => 'الاشتراكات الملغاة';
+
+  @override
+  String get cancelledSubscriptionsEmptyTitle => 'لا توجد اشتراكات ملغاة';
+
+  @override
+  String get cancelledSubscriptionsEmptyMessage =>
+      'الاشتراكات التي تلغيها ستظهر هنا لتتمكن من مراجعتها أو إعادة تفعيلها في أي وقت.';
+
+  @override
+  String get cancelledSubscriptionsSearchPlaceholder =>
+      'البحث في الاشتراكات الملغاة';
+
+  @override
+  String cancelledSubscriptionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اشتراك ملغى',
+      many: '$count اشتراكًا ملغى',
+      few: '$count اشتراكات ملغاة',
+      two: 'اشتراكان ملغيان',
+      one: 'اشتراك ملغى واحد',
+      zero: 'لا توجد اشتراكات ملغاة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewCancelledAction => 'عرض';
+
+  @override
   String homeHeroReview(String title) {
     return 'راجع $title';
   }
@@ -2373,7 +2405,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notASubscription => 'ليس اشتراكاً';
 
   @override
-  String get addToResiday => 'إضافة إلى ResiDay';
+  String get addToResiday => 'إضافة إلى Regiday';
 
   @override
   String get connectGmailTitle => 'اكتشاف اشتراكات Gmail';
@@ -2407,12 +2439,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get gmailPrivacyNotice =>
-      'يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
+      'يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
 
   @override
   String get candidateAddedSuccess => 'تمت إضافة الاشتراك بنجاح.';
 
   @override
   String get candidateIgnored =>
-      'تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى.';
+      'تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى.';
 }

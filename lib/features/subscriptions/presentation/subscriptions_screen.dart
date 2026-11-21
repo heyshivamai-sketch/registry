@@ -71,6 +71,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             now: now,
           );
           final activeCount = items.where((item) => item.isActive).length;
+          final cancelledCount = items.where((item) => item.isCancelled).length;
           final totals = SubscriptionEstimate.monthlyTotals(items);
           final attention = SubscriptionStatus.attentionCount(items, now: now);
 
@@ -85,6 +86,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               _SubscriptionsHeader(
                 savedCount: items.length,
                 activeCount: activeCount,
+                cancelledCount: cancelledCount,
                 isCalendarView: _isCalendarView,
                 onToggleView: () =>
                     setState(() => _isCalendarView = !_isCalendarView),
@@ -98,17 +100,22 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 const SizedBox(height: AppSpacing.md),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton(
+                  child: OutlinedButton.icon(
                     key: const ValueKey<String>('subscriptions-add-calendar'),
                     onPressed: () => AppRoutes.openAddSubscription(context),
+                    icon: const Icon(Icons.add_rounded, size: 20),
+                    label: Text(l10n.addSubscription),
                     style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(AppSpacing.minTapTarget, 45),
-                      side: const BorderSide(color: Color(0xFFA9AFC2)),
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      minimumSize: const Size(AppSpacing.minTapTarget, 48),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                        width: 1.2,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Text(l10n.addSubscription),
                   ),
                 ),
                 SizedBox(
@@ -137,6 +144,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     totals: totals,
                     activeCount: activeCount,
                     attentionCount: attention,
+                    cancelledCount: cancelledCount,
                   ),
                 ],
                 const SizedBox(height: AppSpacing.md),
@@ -224,12 +232,14 @@ class _SubscriptionsHeader extends StatelessWidget {
   const _SubscriptionsHeader({
     required this.savedCount,
     required this.activeCount,
+    this.cancelledCount = 0,
     this.isCalendarView = false,
     this.onToggleView,
   });
 
   final int savedCount;
   final int activeCount;
+  final int cancelledCount;
   final bool isCalendarView;
   final VoidCallback? onToggleView;
 
@@ -281,6 +291,49 @@ class _SubscriptionsHeader extends StatelessWidget {
                       color: isCalendarView
                           ? colorScheme.onPrimaryContainer
                           : colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Semantics(
+              button: true,
+              label: l10n.cancelledSubscriptionsTitle,
+              child: Material(
+                color: colorScheme.surfaceContainerLowest,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(color: colorScheme.outlineVariant),
+                ),
+                child: InkWell(
+                  key: const ValueKey<String>('subscriptions-cancelled-button'),
+                  onTap: () => AppRoutes.openCancelledSubscriptions(context),
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    width: AppSpacing.minTapTarget,
+                    height: AppSpacing.minTapTarget,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          Icons.event_busy_outlined,
+                          color: colorScheme.onSurface,
+                        ),
+                        if (cancelledCount > 0)
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: colorScheme.error,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
@@ -358,6 +411,41 @@ class _SubscriptionsHeader extends StatelessWidget {
             l10n.subscriptionsActiveSummary(activeCount),
             style: theme.textTheme.bodySmall,
           ),
+          if (cancelledCount > 0) ...[
+            const SizedBox(height: AppSpacing.xs),
+            InkWell(
+              key: const ValueKey<String>('subscriptions-cancelled-link'),
+              onTap: () => AppRoutes.openCancelledSubscriptions(context),
+              borderRadius: BorderRadius.circular(10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.event_busy_outlined,
+                      size: 14,
+                      color: colorScheme.error,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      l10n.cancelledSubscriptionsCount(cancelledCount),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 3),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 10,
+                      color: colorScheme.error,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ],
     );
@@ -432,11 +520,13 @@ class _MonthlyCostCard extends StatelessWidget {
     required this.totals,
     required this.activeCount,
     required this.attentionCount,
+    this.cancelledCount = 0,
   });
 
   final List<Money> totals;
   final int activeCount;
   final int attentionCount;
+  final int cancelledCount;
 
   @override
   Widget build(BuildContext context) {
@@ -501,6 +591,19 @@ class _MonthlyCostCard extends StatelessWidget {
             l10n.subscriptionsAttentionSummary(attentionCount),
             style: theme.textTheme.bodySmall,
           ),
+          if (cancelledCount > 0) ...[
+            const SizedBox(height: AppSpacing.xs),
+            InkWell(
+              onTap: () => AppRoutes.openCancelledSubscriptions(context),
+              child: Text(
+                '${l10n.cancelledSubscriptionsCount(cancelledCount)} · ${l10n.viewCancelledAction}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

@@ -1501,6 +1501,34 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le registre suit cet abonnement mais ne l’annule pas et ne le facture pas automatiquement.';
 
   @override
+  String get cancelledSubscriptionsTitle => 'Abonnements annulés';
+
+  @override
+  String get cancelledSubscriptionsEmptyTitle => 'Aucun abonnement annulé';
+
+  @override
+  String get cancelledSubscriptionsEmptyMessage =>
+      'Les abonnements que vous annulez apparaîtront ici pour que vous puissiez les consulter ou les réactiver à tout moment.';
+
+  @override
+  String get cancelledSubscriptionsSearchPlaceholder =>
+      'Rechercher des abonnements annulés';
+
+  @override
+  String cancelledSubscriptionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count abonnements annulés',
+      one: '1 abonnement annulé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewCancelledAction => 'Voir';
+
+  @override
   String homeHeroReview(String title) {
     return 'Examiner $title';
   }
@@ -2424,7 +2452,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notASubscription => 'Pas un abonnement';
 
   @override
-  String get addToResiday => 'Ajouter à ResiDay';
+  String get addToResiday => 'Ajouter à Regiday';
 
   @override
   String get connectGmailTitle => 'Détection d\'abonnements Gmail';
@@ -2458,12 +2486,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gmailPrivacyNotice =>
-      'ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
+      'Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
 
   @override
   String get candidateAddedSuccess => 'Abonnement ajouté avec succès.';
 
   @override
   String get candidateIgnored =>
-      'Marchand ignoré. ResiDay ne détectera plus ce marchand.';
+      'Marchand ignoré. Regiday ne détectera plus ce marchand.';
 }

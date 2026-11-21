@@ -564,6 +564,7 @@ class _BillingStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final estimate = _estimate(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -644,6 +645,41 @@ class _BillingStep extends StatelessWidget {
           helperText: l10n.nextPaymentHelper,
           onTap: () => onPickDate('next-payment'),
         ),
+        if (controller.isNextPaymentInPast) ...[
+          const SizedBox(height: AppSpacing.xs),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: colorScheme.errorContainer.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(AppRadius.input),
+              border: Border.all(color: colorScheme.error.withValues(alpha: 0.3)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.history_toggle_off,
+                    size: 16,
+                    color: colorScheme.error,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      'Past payment date: This subscription will be tracked as overdue.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.error,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
         if (estimate != null) ...[
           const SizedBox(height: AppSpacing.md),
           DecoratedBox(

@@ -481,6 +481,19 @@
   "deleteSubscriptionTitle": "حذف هذه الخطة؟",
   "deleteSubscriptionMessage": "ستُزال {name} من هذا الجهاز.",
   "subscriptionTrackingDisclaimer": "يتتبع السجل هذه الخطة لكنه لا يلغيها ولا يحصّلها تلقائيًا.",
+  "cancelledSubscriptionsTitle": "الاشتراكات الملغاة",
+  "cancelledSubscriptionsEmptyTitle": "لا توجد اشتراكات ملغاة",
+  "cancelledSubscriptionsEmptyMessage": "الاشتراكات التي تلغيها ستظهر هنا لتتمكن من مراجعتها أو إعادة تفعيلها في أي وقت.",
+  "cancelledSubscriptionsSearchPlaceholder": "البحث في الاشتراكات الملغاة",
+  "cancelledSubscriptionsCount": "{count, plural, zero{لا توجد اشتراكات ملغاة} one{اشتراك ملغى واحد} two{اشتراكان ملغيان} few{{count} اشتراكات ملغاة} many{{count} اشتراكًا ملغى} other{{count} اشتراك ملغى}}",
+  "@cancelledSubscriptionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewCancelledAction": "عرض",
   "homeHeroReview": "راجع {title}",
   "homeHeroRenewalToday": "يبدأ التجديد اليوم",
   "homeHeroRenewalOn": "يبدأ التجديد في {date}",
@@ -754,7 +767,7 @@
     }
   },
   "notASubscription": "ليس اشتراكاً",
-  "addToResiday": "إضافة إلى ResiDay",
+  "addToResiday": "إضافة إلى Regiday",
   "connectGmailTitle": "اكتشاف اشتراكات Gmail",
   "connectGmailButton": "ربط Gmail",
   "disconnectGmailButton": "إلغاء الربط",
@@ -784,7 +797,7 @@
       }
     }
   },
-  "gmailPrivacyNotice": "يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
+  "gmailPrivacyNotice": "يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
   "candidateAddedSuccess": "تمت إضافة الاشتراك بنجاح.",
-  "candidateIgnored": "تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى."
+  "candidateIgnored": "تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى."
 }

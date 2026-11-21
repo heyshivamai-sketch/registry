@@ -2716,6 +2716,42 @@ abstract class AppLocalizations {
   /// **'Regiday tracks this plan but does not cancel or charge it automatically.'**
   String get subscriptionTrackingDisclaimer;
 
+  /// No description provided for @cancelledSubscriptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled subscriptions'**
+  String get cancelledSubscriptionsTitle;
+
+  /// No description provided for @cancelledSubscriptionsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No cancelled subscriptions'**
+  String get cancelledSubscriptionsEmptyTitle;
+
+  /// No description provided for @cancelledSubscriptionsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions you cancel will appear here so you can review or reactivate them anytime.'**
+  String get cancelledSubscriptionsEmptyMessage;
+
+  /// No description provided for @cancelledSubscriptionsSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search cancelled subscriptions'**
+  String get cancelledSubscriptionsSearchPlaceholder;
+
+  /// No description provided for @cancelledSubscriptionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 cancelled plan} other{{count} cancelled plans}}'**
+  String cancelledSubscriptionsCount(int count);
+
+  /// No description provided for @viewCancelledAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get viewCancelledAction;
+
   /// No description provided for @homeHeroReview.
   ///
   /// In en, this message translates to:
@@ -3199,7 +3235,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Export an encrypted backup file, or replace the registry on this device from a backup. The file is encrypted with a password you choose. Regiday does not store that password, and this does not encrypt the registry database already on this device.'**
+  /// **'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.'**
   String get backupSectionBody;
 
   /// No description provided for @backupExportAction.
@@ -3223,13 +3259,13 @@ abstract class AppLocalizations {
   /// No description provided for @backupIncluded.
   ///
   /// In en, this message translates to:
-  /// **'The file includes documents, subscriptions, custom fields, renewal history, reminder choices, dates, amounts, and document images.'**
+  /// **'Includes documents, subscriptions, custom fields, renewal history, reminders, and photos.'**
   String get backupIncluded;
 
   /// No description provided for @backupPasswordWarning.
   ///
   /// In en, this message translates to:
-  /// **'Choose a password for this file. If you lose it, this backup cannot be restored. Regiday does not save the password.'**
+  /// **'Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.'**
   String get backupPasswordWarning;
 
   /// No description provided for @backupPasswordLabel.
@@ -3283,7 +3319,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupImportIntro.
   ///
   /// In en, this message translates to:
-  /// **'Choose a Regiday backup file and enter its password. Importing replaces every document and subscription on this device.'**
+  /// **'Restore your documents and subscriptions from an encrypted Regiday backup file.'**
   String get backupImportIntro;
 
   /// No description provided for @backupChooseFile.
@@ -3331,7 +3367,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupReplaceBody.
   ///
   /// In en, this message translates to:
-  /// **'Documents, subscriptions, and images on this device will be replaced by this backup.'**
+  /// **'Existing documents, subscriptions, and images on this device will be replaced.'**
   String get backupReplaceBody;
 
   /// No description provided for @backupCancel.
@@ -4183,7 +4219,7 @@ abstract class AppLocalizations {
   /// No description provided for @addToResiday.
   ///
   /// In en, this message translates to:
-  /// **'Add to ResiDay'**
+  /// **'Add to Regiday'**
   String get addToResiday;
 
   /// No description provided for @connectGmailTitle.
@@ -4237,7 +4273,7 @@ abstract class AppLocalizations {
   /// No description provided for @gmailPrivacyNotice.
   ///
   /// In en, this message translates to:
-  /// **'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
+  /// **'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
   String get gmailPrivacyNotice;
 
   /// No description provided for @candidateAddedSuccess.
@@ -4249,7 +4285,7 @@ abstract class AppLocalizations {
   /// No description provided for @candidateIgnored.
   ///
   /// In en, this message translates to:
-  /// **'Merchant ignored. ResiDay will not detect this merchant again.'**
+  /// **'Merchant ignored. Regiday will not detect this merchant again.'**
   String get candidateIgnored;
 }
 

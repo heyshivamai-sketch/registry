@@ -55,6 +55,12 @@ class AddSubscriptionController extends ChangeNotifier {
 
   bool get isEditing => mode == SubscriptionFormMode.edit;
 
+  bool get isNextPaymentInPast {
+    if (nextPaymentDate == null) return false;
+    final today = RegistryDateFormatter.dateOnly(_clock.now());
+    return RegistryDateFormatter.dateOnly(nextPaymentDate!).isBefore(today);
+  }
+
   int get stepIndex => AddSubscriptionStep.values.indexOf(step);
 
   int get stepCount => AddSubscriptionStep.values.length;

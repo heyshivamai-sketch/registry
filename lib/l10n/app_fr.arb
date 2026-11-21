@@ -481,6 +481,19 @@
   "deleteSubscriptionTitle": "Supprimer cet abonnement ?",
   "deleteSubscriptionMessage": "{name} sera retiré de cet appareil.",
   "subscriptionTrackingDisclaimer": "Le registre suit cet abonnement mais ne l’annule pas et ne le facture pas automatiquement.",
+  "cancelledSubscriptionsTitle": "Abonnements annulés",
+  "cancelledSubscriptionsEmptyTitle": "Aucun abonnement annulé",
+  "cancelledSubscriptionsEmptyMessage": "Les abonnements que vous annulez apparaîtront ici pour que vous puissiez les consulter ou les réactiver à tout moment.",
+  "cancelledSubscriptionsSearchPlaceholder": "Rechercher des abonnements annulés",
+  "cancelledSubscriptionsCount": "{count, plural, one{1 abonnement annulé} other{{count} abonnements annulés}}",
+  "@cancelledSubscriptionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewCancelledAction": "Voir",
   "homeHeroReview": "Examiner {title}",
   "homeHeroRenewalToday": "Le renouvellement commence aujourd’hui",
   "homeHeroRenewalOn": "Le renouvellement commence le {date}",
@@ -753,7 +766,7 @@
     }
   },
   "notASubscription": "Pas un abonnement",
-  "addToResiday": "Ajouter à ResiDay",
+  "addToResiday": "Ajouter à Regiday",
   "connectGmailTitle": "Détection d'abonnements Gmail",
   "connectGmailButton": "Connecter Gmail",
   "disconnectGmailButton": "Déconnecter",
@@ -783,7 +796,7 @@
       }
     }
   },
-  "gmailPrivacyNotice": "ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
+  "gmailPrivacyNotice": "Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
   "candidateAddedSuccess": "Abonnement ajouté avec succès.",
-  "candidateIgnored": "Marchand ignoré. ResiDay ne détectera plus ce marchand."
+  "candidateIgnored": "Marchand ignoré. Regiday ne détectera plus ce marchand."
 }

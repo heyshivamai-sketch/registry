@@ -155,10 +155,16 @@ class RegistryCallout extends StatelessWidget {
 }
 
 class RegistryInfoRow extends StatelessWidget {
-  const RegistryInfoRow({super.key, required this.label, required this.value});
+  const RegistryInfoRow({
+    super.key,
+    required this.label,
+    required this.value,
+    this.icon,
+  });
 
   final String label;
   final String value;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +174,8 @@ class RegistryInfoRow extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
-    final stacked = scale >= 1.4;
+    final isLong = value.length > 28 || value.contains('\n');
+    final stacked = scale >= 1.4 || isLong;
     final labelStyle = theme.textTheme.bodySmall?.copyWith(
       color: colorScheme.onSurfaceVariant,
       fontWeight: FontWeight.w500,
@@ -176,7 +183,7 @@ class RegistryInfoRow extends StatelessWidget {
     final valueStyle = theme.textTheme.bodyLarge?.copyWith(
       fontWeight: FontWeight.w600,
       fontSize: 14,
-      height: 1.3,
+      height: 1.35,
       color: colorScheme.onSurface,
     );
     return DecoratedBox(
@@ -189,14 +196,30 @@ class RegistryInfoRow extends StatelessWidget {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: labelStyle),
-                  const SizedBox(height: 4),
-                  Text(value, style: valueStyle),
+                  Row(
+                    children: [
+                      if (icon != null) ...[
+                        Icon(icon, size: 15, color: colorScheme.onSurfaceVariant),
+                        const SizedBox(width: 6),
+                      ],
+                      Expanded(child: Text(label, style: labelStyle)),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    value,
+                    textAlign: TextAlign.start,
+                    style: valueStyle,
+                  ),
                 ],
               )
             : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 15, color: colorScheme.onSurfaceVariant),
+                    const SizedBox(width: 6),
+                  ],
                   Expanded(child: Text(label, style: labelStyle)),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
