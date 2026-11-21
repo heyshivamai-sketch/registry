@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:the_registry/features/app_lock/device_authenticator.dart';
+import 'device_authenticator.dart';
 
 /// The slice of `local_auth` 2.3.0 this app uses.
 ///

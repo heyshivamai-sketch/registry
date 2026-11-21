@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../core/time/clock.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/registry_document.dart';
+import '../../entitlements/entitlement_policy.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../domain/detected_subscription.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
 
 enum SubscriptionFormMode { create, edit }
 

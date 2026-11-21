@@ -1,6 +1,6 @@
-import 'package:the_registry/features/backup/backup_models.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/features/reminders/domain/reminder_plan.dart';
+import '../backup/backup_models.dart';
+import '../reminders/domain/reminder_plan.dart';
+import 'registry_plan.dart';
 
 /// Why a new record was refused.
 ///

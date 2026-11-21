@@ -1,20 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_selector_field.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/csv_import/csv_charge_import.dart';
-import 'package:the_registry/features/csv_import/csv_import_limits.dart';
-import 'package:the_registry/features/entitlements/entitlement_copy.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_selector_field.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../entitlements/entitlement_copy.dart';
+import '../../entitlements/entitlement_policy.dart';
+import '../../entitlements/presentation/local_pro_screen.dart';
+import '../../subscriptions/domain/money.dart';
+import '../../subscriptions/domain/registry_subscription.dart';
+import '../../subscriptions/presentation/subscription_copy.dart';
+import '../csv_charge_import.dart';
+import '../csv_import_limits.dart';
 
 class ImportChargesScreen extends StatefulWidget {
   const ImportChargesScreen({super.key});
@@ -49,7 +50,10 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
     setState(() => _working = true);
     final session = _requireSession();
     try {
-      final bytes = await RegistryDependencies.of(context).csvFiles.pickCsv();
+      final bytes = await RegistryDependencies
+          .of(context)
+          .csvFiles
+          .pickCsv();
       if (!mounted) {
         return;
       }
@@ -169,7 +173,10 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
                         child: Text(
                           l10n.csvInvalidCandidate,
                           style: TextStyle(
-                            color: Theme.of(dialogContext).colorScheme.error,
+                            color: Theme
+                                .of(dialogContext)
+                                .colorScheme
+                                .error,
                           ),
                         ),
                       ),
@@ -247,18 +254,22 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
                       Text(
                         key: const ValueKey<String>('csv-notice'),
                         _notice(l10n, session.notice),
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyLarge,
                       ),
                       if (session.notice == CsvImportNotice.subscriptionLimit)
                         TextButton(
                           key: const ValueKey<String>('local-pro-from-limit'),
-                          onPressed: () => unawaited(
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const LocalProScreen(),
+                          onPressed: () =>
+                              unawaited(
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => const LocalProScreen(),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
                           child: Text(l10n.localProAction),
                         ),
                     ],
@@ -310,9 +321,15 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
   List<Widget> _mapping(AppLocalizations l10n, CsvChargeImportSession session) {
     final headers = session.table?.headers ?? const <String>[];
     return [
-      Text(l10n.csvMapTitle, style: Theme.of(context).textTheme.titleMedium),
+      Text(l10n.csvMapTitle, style: Theme
+          .of(context)
+          .textTheme
+          .titleMedium),
       const SizedBox(height: AppSpacing.sm),
-      Text(l10n.csvMapHelp, style: Theme.of(context).textTheme.bodyMedium),
+      Text(l10n.csvMapHelp, style: Theme
+          .of(context)
+          .textTheme
+          .bodyMedium),
       const SizedBox(height: AppSpacing.md),
       _columnField(
         fieldKey: 'csv-date-column',
@@ -421,12 +438,15 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
                 value: candidate.selected,
                 onChanged: (value) {
                   setState(
-                    () => session.setSelected(candidate.id, value ?? false),
+                        () => session.setSelected(candidate.id, value ?? false),
                   );
                 },
                 title: Text(candidate.merchant),
                 subtitle: Text(
-                  '${MoneyFormat.format(Money(minorUnits: candidate.minorUnits, currencyCode: candidate.currencyCode), locale)} · ${SubscriptionCopy.cycle(l10n, candidate.cycle)}',
+                  '${MoneyFormat.format(Money(minorUnits: candidate.minorUnits,
+                      currencyCode: candidate.currencyCode),
+                      locale)} · ${SubscriptionCopy.cycle(
+                      l10n, candidate.cycle)}',
                 ),
               ),
               Text(
@@ -473,21 +493,25 @@ class _ImportChargesScreenState extends State<ImportChargesScreen> {
       CsvImportNotice.none => '',
       CsvImportNotice.cancelled => l10n.csvCancelled,
       CsvImportNotice.tooLarge => l10n.csvFileTooLarge,
-      CsvImportNotice.tooManyRows => l10n.csvTooManyRows(
-        CsvImportLimits.maxDataRows,
-      ),
-      CsvImportNotice.tooManyColumns => l10n.csvTooManyColumns(
-        CsvImportLimits.maxColumns,
-      ),
+      CsvImportNotice.tooManyRows =>
+          l10n.csvTooManyRows(
+            CsvImportLimits.maxDataRows,
+          ),
+      CsvImportNotice.tooManyColumns =>
+          l10n.csvTooManyColumns(
+            CsvImportLimits.maxColumns,
+          ),
       CsvImportNotice.invalidFile => l10n.csvInvalidFile,
       CsvImportNotice.columnsRequired => l10n.csvMapRequired,
       CsvImportNotice.noCharges => l10n.csvNoCharges,
       CsvImportNotice.noSuggestions => l10n.csvNoSuggestions,
       CsvImportNotice.nothingSelected => l10n.csvNothingSelected,
-      CsvImportNotice.subscriptionLimit => entitlementDenialMessage(
-        l10n,
-        const EntitlementDecision.deny(EntitlementDenialKind.subscriptionLimit),
-      ),
+      CsvImportNotice.subscriptionLimit =>
+          entitlementDenialMessage(
+            l10n,
+            const EntitlementDecision.deny(
+                EntitlementDenialKind.subscriptionLimit),
+          ),
       CsvImportNotice.duplicateId => l10n.recordAlreadyExists,
     };
   }

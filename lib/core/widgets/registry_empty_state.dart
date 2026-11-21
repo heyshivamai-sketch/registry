@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
+import '../../app/theme/app_radius.dart';
+import '../../app/theme/app_spacing.dart';
+import 'registry_surface.dart';
 
 class RegistryEmptyState extends StatelessWidget {
   const RegistryEmptyState({

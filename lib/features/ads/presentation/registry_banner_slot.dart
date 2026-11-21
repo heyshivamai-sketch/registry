@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/ads/ads_controller.dart';
-import 'package:the_registry/features/ads/ads_platform.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/time/clock.dart';
+import '../ads_controller.dart';
+import '../ads_platform.dart';
 
 /// An inline adaptive banner inside a scrolling list.
 ///

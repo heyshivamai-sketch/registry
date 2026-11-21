@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/backup/backup_crypto.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
-import 'package:the_registry/features/backup/backup_payload.dart';
-import 'package:the_registry/features/backup/registry_archive.dart';
+import '../../core/time/clock.dart';
+import 'backup_crypto.dart';
+import 'backup_models.dart';
+import 'backup_payload.dart';
+import 'registry_archive.dart';
 
 abstract class BackupFileGateway {
   Future<Uint8List?> pickBackup();

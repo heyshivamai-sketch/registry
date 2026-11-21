@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/features/backup/presentation/export_backup_screen.dart';
-import 'package:the_registry/features/backup/presentation/import_backup_screen.dart';
-import 'package:the_registry/features/backup/presentation/profile_screen.dart';
-import 'package:the_registry/features/csv_import/presentation/import_charges_screen.dart';
-import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
-import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
-import 'package:the_registry/features/documents/presentation/document_detail_screen.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/features/home/presentation/attention_list_screen.dart';
-import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
-import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
-import 'package:the_registry/features/notifications/presentation/notifications_screen.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/gmail_connect_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_detail_screen.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../features/backup/presentation/export_backup_screen.dart';
+import '../../features/backup/presentation/import_backup_screen.dart';
+import '../../features/backup/presentation/profile_screen.dart';
+import '../../features/csv_import/presentation/import_charges_screen.dart';
+import '../../features/documents/presentation/add_document_screen.dart';
+import '../../features/documents/presentation/document_detail_screen.dart';
+import '../../features/entitlements/presentation/local_pro_screen.dart';
+import '../../features/home/data/registry_item.dart';
+import '../../features/home/presentation/attention_list_screen.dart';
+import '../../features/home/presentation/catalog_item_detail_screen.dart';
+import '../../features/home/presentation/horizon_90_day_screen.dart';
+import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/subscriptions/domain/detected_subscription.dart';
+import '../../features/subscriptions/presentation/add_subscription_screen.dart';
+import '../../features/subscriptions/presentation/detected_subscriptions_screen.dart';
+import '../../features/subscriptions/presentation/gmail_connect_screen.dart';
+import '../../features/subscriptions/presentation/subscription_calendar_screen.dart';
+import '../../features/subscriptions/presentation/subscription_detail_screen.dart';
+import '../../l10n/app_localizations.dart';
 
 abstract final class AppRoutes {
   static Future<void> openProfile(BuildContext context) {
@@ -99,14 +100,14 @@ abstract final class AppRoutes {
     return didSave;
   }
 
-  static Future<bool> openAddSubscription(
-    BuildContext context, {
+  static Future<bool> openAddSubscription(BuildContext context, {
     DetectedSubscriptionCandidate? initialCandidate,
   }) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => AddSubscriptionScreen(initialCandidate: initialCandidate),
+        builder: (_) =>
+            AddSubscriptionScreen(initialCandidate: initialCandidate),
       ),
     );
     final didSave = saved ?? false;
@@ -151,10 +152,8 @@ abstract final class AppRoutes {
     );
   }
 
-  static Future<bool> openEditSubscription(
-    BuildContext context,
-    String id,
-  ) async {
+  static Future<bool> openEditSubscription(BuildContext context,
+      String id,) async {
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
         builder: (_) => AddSubscriptionScreen(subscriptionId: id),
@@ -170,10 +169,8 @@ abstract final class AppRoutes {
     return didSave;
   }
 
-  static Future<void> openRegistryItem(
-    BuildContext context,
-    RegistryItem item,
-  ) {
+  static Future<void> openRegistryItem(BuildContext context,
+      RegistryItem item,) {
     if (item.type == RegistryItemType.document) {
       return openDocumentDetail(context, item.sourceId ?? item.id);
     }
@@ -183,10 +180,8 @@ abstract final class AppRoutes {
     return openCatalogItemReview(context, item.id);
   }
 
-  static Future<void> openCatalogItemReview(
-    BuildContext context,
-    String itemId,
-  ) {
+  static Future<void> openCatalogItemReview(BuildContext context,
+      String itemId,) {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => CatalogItemDetailScreen(itemId: itemId),

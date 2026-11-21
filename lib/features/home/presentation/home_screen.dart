@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/features/ads/presentation/registry_banner_slot.dart';
-import 'package:the_registry/features/home/data/coming_up_grouping.dart';
-import 'package:the_registry/features/home/data/mock_registry_catalog.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/features/home/data/registry_read_model.dart';
-import 'package:the_registry/features/home/widgets/home_attention_card.dart';
-import 'package:the_registry/features/home/widgets/home_first_visit.dart';
-import 'package:the_registry/features/home/widgets/home_header.dart';
-import 'package:the_registry/features/home/widgets/home_metrics_row.dart';
-import 'package:the_registry/features/home/widgets/home_search_field.dart';
-import 'package:the_registry/features/home/widgets/home_upcoming_item.dart';
-import 'package:the_registry/features/home/widgets/priority_hero_card.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../ads/presentation/registry_banner_slot.dart';
+import '../../subscriptions/domain/subscription_estimate.dart';
+import '../data/coming_up_grouping.dart';
+import '../data/mock_registry_catalog.dart';
+import '../data/registry_item.dart';
+import '../data/registry_read_model.dart';
+import '../widgets/home_attention_card.dart';
+import '../widgets/home_first_visit.dart';
+import '../widgets/home_header.dart';
+import '../widgets/home_metrics_row.dart';
+import '../widgets/home_search_field.dart';
+import '../widgets/home_upcoming_item.dart';
+import '../widgets/priority_hero_card.dart';
 
 enum ComingUpFilter { all, documents, subscriptions }
 
@@ -71,13 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             now: now,
           );
           final visible = MockRegistryCatalog.byImpact(
-            allItems.where(
-              (item) => MockRegistryCatalog.matches(
-                item,
-                _searchController.text,
-                l10n,
-              ),
-            ),
+            allItems.where((item) => MockRegistryCatalog.matches(item, _searchController.text, l10n)),
           );
           final searching = _searchController.text.trim().isNotEmpty;
           final hero = RegistryReadModel.pulseItem(visible);
@@ -85,22 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
           final comingUp = RegistryReadModel.horizonItems(visible, now: now);
           final filteredComingUp = switch (_comingUpFilter) {
             ComingUpFilter.all => comingUp,
-            ComingUpFilter.documents =>
-              comingUp
-                  .where((item) => item.type == RegistryItemType.document)
-                  .toList(),
+            ComingUpFilter.documents => comingUp.where((item) => item.type == RegistryItemType.document).toList(),
             ComingUpFilter.subscriptions =>
-              comingUp
-                  .where((item) => item.type == RegistryItemType.subscription)
-                  .toList(),
+              comingUp.where((item) => item.type == RegistryItemType.subscription).toList(),
           };
           final homeComingUp = filteredComingUp.take(4).toList();
-          final groups = ComingUpGrouping.group(
-            items: homeComingUp,
-            now: now,
-            locale: l10n.localeName,
-            l10n: l10n,
-          );
+          final groups = ComingUpGrouping.group(items: homeComingUp, now: now, locale: l10n.localeName, l10n: l10n);
           final totals = SubscriptionEstimate.monthlyTotals(subscriptions);
 
           return ListView(
@@ -141,22 +126,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   locale: l10n.localeName,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                _AttentionSection(
-                  items: attention.take(3).toList(),
-                  totalCount: attention.length,
-                  now: now,
-                ),
+                _AttentionSection(items: attention.take(3).toList(), totalCount: attention.length, now: now),
                 const SizedBox(height: AppSpacing.xs),
                 _ComingUpSection(
                   filter: _comingUpFilter,
-                  onFilter: (filter) =>
-                      setState(() => _comingUpFilter = filter),
+                  onFilter: (filter) => setState(() => _comingUpFilter = filter),
                   groups: groups,
                   empty: homeComingUp.isEmpty,
                 ),
-                const RegistryBannerSlot(
-                  key: ValueKey<String>('home-banner-slot'),
-                ),
+                const RegistryBannerSlot(key: ValueKey<String>('home-banner-slot')),
               ],
             ],
           );
@@ -167,11 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _AttentionSection extends StatelessWidget {
-  const _AttentionSection({
-    required this.items,
-    required this.totalCount,
-    required this.now,
-  });
+  const _AttentionSection({required this.items, required this.totalCount, required this.now});
 
   final List<RegistryItem> items;
   final int totalCount;
@@ -195,15 +169,10 @@ class _AttentionSection extends StatelessWidget {
                 children: [
                   Text(
                     l10n.sectionNeedsAttention,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: status.urgent,
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: status.urgent, shape: BoxShape.circle),
                     child: Padding(
                       padding: const EdgeInsets.all(6),
                       child: Text(
@@ -242,8 +211,7 @@ class _AttentionSection extends StatelessWidget {
               now: now,
               onTap: () => AppRoutes.openRegistryItem(context, items[index]),
             ),
-            if (index != items.length - 1)
-              const SizedBox(height: AppSpacing.sm),
+            if (index != items.length - 1) const SizedBox(height: AppSpacing.sm),
           ],
       ],
     );
@@ -251,12 +219,7 @@ class _AttentionSection extends StatelessWidget {
 }
 
 class _ComingUpSection extends StatelessWidget {
-  const _ComingUpSection({
-    required this.filter,
-    required this.onFilter,
-    required this.groups,
-    required this.empty,
-  });
+  const _ComingUpSection({required this.filter, required this.onFilter, required this.groups, required this.empty});
 
   final ComingUpFilter filter;
   final ValueChanged<ComingUpFilter> onFilter;
@@ -280,14 +243,10 @@ class _ComingUpSection extends StatelessWidget {
         visualDensity: VisualDensity.compact,
         selectedColor: brand.dockSelected,
         labelStyle: theme.textTheme.labelSmall?.copyWith(
-          color: selected
-              ? theme.colorScheme.onPrimary
-              : theme.colorScheme.onSurface,
+          color: selected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface,
           letterSpacing: 0,
         ),
-        side: BorderSide(
-          color: selected ? brand.dockSelected : theme.colorScheme.outline,
-        ),
+        side: BorderSide(color: selected ? brand.dockSelected : theme.colorScheme.outline),
         backgroundColor: theme.colorScheme.surfaceContainerLowest,
       );
     }
@@ -300,9 +259,7 @@ class _ComingUpSection extends StatelessWidget {
             Expanded(
               child: Text(
                 l10n.sectionComingUp,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             TextButton(
@@ -310,9 +267,7 @@ class _ComingUpSection extends StatelessWidget {
               onPressed: () => AppRoutes.openHorizon90Day(context),
               style: TextButton.styleFrom(
                 visualDensity: VisualDensity.compact,
-                textStyle: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                textStyle: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
               ),
               child: Text(l10n.homeViewAll),
             ),
@@ -322,11 +277,7 @@ class _ComingUpSection extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            chip(
-              ComingUpFilter.all,
-              l10n.comingUpFilterAll,
-              const ValueKey<String>('coming-up-filter-all'),
-            ),
+            chip(ComingUpFilter.all, l10n.comingUpFilterAll, const ValueKey<String>('coming-up-filter-all')),
             chip(
               ComingUpFilter.documents,
               l10n.comingUpFilterDocuments,
@@ -367,8 +318,7 @@ class _ComingUpSection extends StatelessWidget {
                 key: ValueKey<String>('upcoming-${group.items[index].id}'),
                 item: group.items[index],
                 isLast: index == group.items.length - 1,
-                onTap: () =>
-                    AppRoutes.openRegistryItem(context, group.items[index]),
+                onTap: () => AppRoutes.openRegistryItem(context, group.items[index]),
               ),
           ],
       ],

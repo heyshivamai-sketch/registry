@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
+import 'document_field_value.dart';
+import 'document_schema.dart';
+import 'renewal_history_entry.dart';
 
 enum DocumentCategory {
   passport,

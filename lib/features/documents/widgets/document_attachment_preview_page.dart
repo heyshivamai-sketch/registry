@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DocumentAttachmentPreviewPage extends StatefulWidget {
   const DocumentAttachmentPreviewPage({

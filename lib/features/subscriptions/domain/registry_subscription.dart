@@ -1,6 +1,6 @@
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
+import '../../documents/domain/registry_document.dart';
+import '../../home/data/registry_date_formatter.dart';
+import 'money.dart';
 
 enum BillingCycle { weekly, monthly, quarterly, yearly }
 

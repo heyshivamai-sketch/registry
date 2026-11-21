@@ -8,7 +8,7 @@ import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_2_wrappers.dart';
-import 'package:the_registry/features/entitlements/local_pro_store.dart';
+import 'local_pro_store.dart';
 
 /// Play Billing on Android and StoreKit 2 on iOS through `in_app_purchase`.
 ///

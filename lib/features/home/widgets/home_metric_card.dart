@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/core/widgets/registry_metric.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../core/widgets/registry_metric.dart';
 
 enum HomeMetricTone { documents, subscriptions, attention }
 

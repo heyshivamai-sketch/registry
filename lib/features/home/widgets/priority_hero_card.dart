@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/attention_entrance.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/features/home/widgets/registry_hero_pass_stack.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/attention_entrance.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/registry_date_formatter.dart';
+import '../data/registry_item.dart';
+import 'registry_hero_pass_stack.dart';
 
 class PriorityHeroCard extends StatelessWidget {
   const PriorityHeroCard({super.key, this.item, this.upcomingItem, this.now});
@@ -30,12 +31,7 @@ class PriorityHeroCard extends StatelessWidget {
     final highlighted = item;
 
     final content = highlighted == null
-        ? _CalmContent(
-            l10n: l10n,
-            theme: theme,
-            onHero: onHero,
-            upcomingItem: upcomingItem,
-          )
+        ? _CalmContent(l10n: l10n, theme: theme, onHero: onHero, upcomingItem: upcomingItem)
         : _AttentionContent(
             item: highlighted,
             l10n: l10n,
@@ -49,11 +45,7 @@ class PriorityHeroCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
         boxShadow: AppShadows.pulse(context),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [brand.heroStart, brand.heroEnd],
-        ),
+        gradient: LinearGradient(colors: [brand.heroStart, brand.heroEnd]),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(22),
@@ -67,10 +59,7 @@ class PriorityHeroCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
-                      colors: [
-                        brand.heroHighlight.withValues(alpha: 0.45),
-                        brand.heroHighlight.withValues(alpha: 0),
-                      ],
+                      colors: [brand.heroHighlight.withValues(alpha: 0.45), brand.heroHighlight.withValues(alpha: 0)],
                     ),
                   ),
                   child: const SizedBox(width: 150, height: 150),
@@ -87,11 +76,7 @@ class PriorityHeroCard extends StatelessWidget {
                         const SizedBox(height: AppSpacing.sm),
                         Align(
                           alignment: AlignmentDirectional.centerEnd,
-                          child: AttentionEntrance(
-                            child: RegistryHeroPassStack(
-                              icon: highlighted?.icon,
-                            ),
-                          ),
+                          child: AttentionEntrance(child: RegistryHeroPassStack(icon: highlighted?.icon)),
                         ),
                       ],
                     )
@@ -100,9 +85,7 @@ class PriorityHeroCard extends StatelessWidget {
                       children: [
                         Expanded(child: content),
                         const SizedBox(width: 4),
-                        AttentionEntrance(
-                          child: RegistryHeroPassStack(icon: highlighted?.icon),
-                        ),
+                        AttentionEntrance(child: RegistryHeroPassStack(icon: highlighted?.icon)),
                       ],
                     ),
             ),
@@ -158,9 +141,7 @@ class _AttentionContent extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           item.heroExplanation(l10n, now: now),
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: const Color(0xFFD5DBF2),
-          ),
+          style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFD5DBF2)),
         ),
         const SizedBox(height: 8),
         Row(
@@ -168,10 +149,7 @@ class _AttentionContent extends StatelessWidget {
             Icon(Icons.calendar_today_outlined, size: 14, color: onHero),
             const SizedBox(width: 6),
             Flexible(
-              child: Text(
-                date,
-                style: theme.textTheme.bodySmall?.copyWith(color: onHero),
-              ),
+              child: Text(date, style: theme.textTheme.bodySmall?.copyWith(color: onHero)),
             ),
           ],
         ),
@@ -186,9 +164,7 @@ class _AttentionContent extends StatelessWidget {
               foregroundColor: theme.colorScheme.primary,
               minimumSize: const Size(0, 40),
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              textStyle: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              textStyle: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
               shape: const StadiumBorder(),
             ),
             child: FittedBox(
@@ -215,12 +191,7 @@ class _AttentionContent extends StatelessWidget {
 }
 
 class _CalmContent extends StatelessWidget {
-  const _CalmContent({
-    required this.l10n,
-    required this.theme,
-    required this.onHero,
-    required this.upcomingItem,
-  });
+  const _CalmContent({required this.l10n, required this.theme, required this.onHero, required this.upcomingItem});
 
   final AppLocalizations l10n;
   final ThemeData theme;
@@ -242,12 +213,7 @@ class _CalmContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          l10n.homeCalmMessage,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: const Color(0xFFD5DBF2),
-          ),
-        ),
+        Text(l10n.homeCalmMessage, style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFD5DBF2))),
         if (upcomingItem != null) ...[
           const SizedBox(height: 12),
           FilledButton(
@@ -258,9 +224,7 @@ class _CalmContent extends StatelessWidget {
               foregroundColor: theme.colorScheme.primary,
               minimumSize: const Size(0, 40),
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              textStyle: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              textStyle: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
               shape: const StadiumBorder(),
             ),
             child: Text(l10n.homeCalmUpcomingCta),

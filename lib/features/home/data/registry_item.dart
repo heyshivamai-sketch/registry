@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/document_status.dart';
+import '../../subscriptions/domain/money.dart';
+import 'registry_date_formatter.dart';
 
 enum RegistryItemType { document, subscription }
 
@@ -75,10 +76,7 @@ class RegistryItem {
       'streaming' => l10n.actionDecideBeforeCharge,
       'driving_licence' => l10n.actionPrepareRenewal,
       'gym' => l10n.actionReviewMembership,
-      _ =>
-        type == RegistryItemType.subscription
-            ? l10n.homeDecideBeforeRenewal
-            : l10n.homeStartRenewal,
+      _ => type == RegistryItemType.subscription ? l10n.homeDecideBeforeRenewal : l10n.homeStartRenewal,
     };
   }
 
@@ -91,10 +89,7 @@ class RegistryItem {
 
   String heroExplanation(AppLocalizations l10n, {DateTime? now}) {
     final days = remainingDays(now: now);
-    final date = RegistryDateFormatter.dayMonthYear(
-      actionDate,
-      l10n.localeName,
-    );
+    final date = RegistryDateFormatter.dayMonthYear(actionDate, l10n.localeName);
     if (type == RegistryItemType.subscription) {
       if (days == 0) {
         return l10n.homeHeroDecideToday;
@@ -108,9 +103,7 @@ class RegistryItem {
   }
 
   String typeLabel(AppLocalizations l10n) {
-    return type == RegistryItemType.document
-        ? l10n.typeDocument
-        : l10n.typeSubscription;
+    return type == RegistryItemType.document ? l10n.typeDocument : l10n.typeSubscription;
   }
 
   String statusLabel(AppLocalizations l10n) {
@@ -126,15 +119,11 @@ class RegistryItem {
   }
 
   String actionDateLabel(AppLocalizations l10n, String formattedDate) {
-    return type == RegistryItemType.subscription
-        ? l10n.decideByDate(formattedDate)
-        : l10n.startByDate(formattedDate);
+    return type == RegistryItemType.subscription ? l10n.decideByDate(formattedDate) : l10n.startByDate(formattedDate);
   }
 
   String dueDateLabel(AppLocalizations l10n, String formattedDate) {
-    return type == RegistryItemType.subscription
-        ? l10n.nextChargeDate(formattedDate)
-        : l10n.expiresDate(formattedDate);
+    return type == RegistryItemType.subscription ? l10n.nextChargeDate(formattedDate) : l10n.expiresDate(formattedDate);
   }
 
   String remainingLabel(AppLocalizations l10n, {DateTime? now}) {
@@ -190,10 +179,7 @@ class RegistryItem {
       'streaming' => Icons.subscriptions_outlined,
       'driving_licence' => Icons.credit_card_outlined,
       'gym' => Icons.fitness_center_outlined,
-      _ =>
-        type == RegistryItemType.document
-            ? Icons.description_outlined
-            : Icons.subscriptions_outlined,
+      _ => type == RegistryItemType.document ? Icons.description_outlined : Icons.subscriptions_outlined,
     };
   }
 

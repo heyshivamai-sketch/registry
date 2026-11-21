@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'document_schema.dart';
+import 'registry_document.dart';
 
 enum OcrConfidence { high, review, notDetected }
 

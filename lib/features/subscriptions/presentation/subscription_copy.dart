@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/registry_document.dart';
+import '../domain/registry_subscription.dart';
 
 abstract final class SubscriptionCopy {
   static String category(AppLocalizations l10n, SubscriptionCategory category) {

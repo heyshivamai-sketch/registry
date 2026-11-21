@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_shadows.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscription_copy.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_shadows.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
+import '../domain/subscription_status.dart';
+import '../presentation/subscription_copy.dart';
 
 class SubscriptionListCard extends StatelessWidget {
   const SubscriptionListCard({

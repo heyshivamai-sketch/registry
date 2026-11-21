@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/add_item_sheet.dart';
-import 'package:the_registry/app/theme/app_motion.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_navigation_dock.dart';
-import 'package:the_registry/features/documents/presentation/documents_screen.dart';
-import 'package:the_registry/features/home/presentation/home_screen.dart';
-import 'package:the_registry/features/backup/presentation/profile_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/subscriptions_screen.dart';
+
+import '../../core/widgets/registry_navigation_dock.dart';
+import '../../features/backup/presentation/profile_screen.dart';
+import '../../features/documents/presentation/documents_screen.dart';
+import '../../features/home/presentation/home_screen.dart';
+import '../../features/subscriptions/presentation/subscriptions_screen.dart';
+import '../theme/app_motion.dart';
+import '../theme/app_spacing.dart';
+import 'add_item_sheet.dart';
 
 class RegistryTabScope extends InheritedWidget {
   const RegistryTabScope({
@@ -60,7 +61,9 @@ class AppShellState extends State<AppShell> {
         child: Builder(
           builder: (context) {
             final theme = Theme.of(context);
-            final toastInset = ((MediaQuery.sizeOf(context).width - 520) / 2)
+            final toastInset = ((MediaQuery
+                .sizeOf(context)
+                .width - 520) / 2)
                 .clamp(AppSpacing.md, double.infinity);
             return Theme(
               data: theme.copyWith(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:the_registry/features/csv_import/csv_import_limits.dart';
+import 'csv_import_limits.dart';
 
 enum CsvFileFailure {
   tooLarge,

@@ -11,7 +11,6 @@ abstract final class RegistryDatabase {
     return openDatabase(
       path,
       version: schemaVersion,
-      singleInstance: true,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
@@ -24,11 +23,9 @@ abstract final class RegistryDatabase {
     );
   }
 
-  static Future<void> applyMigrations(
-    DatabaseExecutor db,
-    int from,
-    int to,
-  ) async {
+  static Future<void> applyMigrations(DatabaseExecutor db,
+      int from,
+      int to,) async {
     if (from < 1 && to >= 1) {
       await _createVersion1(db);
     }
@@ -39,7 +36,7 @@ abstract final class RegistryDatabase {
       await db.execute(
         "ALTER TABLE documents ADD COLUMN additional_images TEXT NOT NULL DEFAULT '[]'",
       );
-      await db.execute("ALTER TABLE documents ADD COLUMN category_label TEXT");
+      await db.execute('ALTER TABLE documents ADD COLUMN category_label TEXT');
     }
     if (from < 4 && to >= 4) {
       await _upgradeToVersion4(db);

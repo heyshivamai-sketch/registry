@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/features/home/widgets/home_attention_card.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/registry_date_formatter.dart';
+import '../data/registry_item.dart';
+import 'home_attention_card.dart';
 
 class RegistryItemCard extends StatelessWidget {
   const RegistryItemCard({super.key, required this.item, this.onTap});

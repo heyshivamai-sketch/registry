@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+import '../domain/registry_subscription.dart';
+import '../domain/subscription_repository.dart';
 
 class InMemorySubscriptionRepository extends ChangeNotifier
     implements SubscriptionRepository {

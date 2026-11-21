@@ -1,8 +1,8 @@
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/document_field_value.dart';
+import '../domain/document_schema.dart';
+import '../domain/registry_document.dart';
+import 'add_document_controller.dart';
 
 abstract final class DocumentCopy {
   static String category(AppLocalizations l10n, DocumentCategory category) {

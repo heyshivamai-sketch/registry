@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/app_lock/app_lock_policy.dart';
-import 'package:the_registry/features/app_lock/app_lock_store.dart';
-import 'package:the_registry/features/app_lock/device_authenticator.dart';
-import 'package:the_registry/features/app_lock/privacy_flag.dart';
+import '../../core/time/clock.dart';
+import 'app_lock_policy.dart';
+import 'app_lock_store.dart';
+import 'device_authenticator.dart';
+import 'privacy_flag.dart';
 
 enum AppLockEnableResult {
   enabled,

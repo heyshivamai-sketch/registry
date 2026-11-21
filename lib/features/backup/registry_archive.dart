@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:the_registry/core/persistence/registry_store.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
-import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import '../../core/persistence/registry_store.dart';
+import 'backup_models.dart';
+import '../documents/data/in_memory_document_repository.dart';
+import '../documents/domain/registry_document.dart';
+import '../subscriptions/data/in_memory_subscription_repository.dart';
+import '../subscriptions/domain/registry_subscription.dart';
 
 abstract class RegistryArchive {
   List<RegistryDocument> get documents;

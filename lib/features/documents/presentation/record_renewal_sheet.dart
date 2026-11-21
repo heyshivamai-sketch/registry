@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/features/documents/domain/document_renewal.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/widgets/document_date_field.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_form_field.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/document_renewal.dart';
+import '../domain/registry_document.dart';
+import '../widgets/document_date_field.dart';
 
 abstract final class RecordRenewalSheet {
   static Future<void> show(BuildContext context, RegistryDocument document) {
@@ -16,9 +17,7 @@ abstract final class RecordRenewalSheet {
       showDragHandle: true,
       builder: (sheetContext) {
         return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
-          ),
+          padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
           child: _RecordRenewalForm(document: document),
         );
       },
@@ -64,11 +63,7 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
       'new-action' => _newActionDate,
       _ => null,
     };
-    final picked = await deps.datePicker.pickDate(
-      context,
-      fieldId: fieldId,
-      initialDate: initial,
-    );
+    final picked = await deps.datePicker.pickDate(context, fieldId: fieldId, initialDate: initial);
     if (picked == null) {
       return;
     }
@@ -90,17 +85,11 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
       _expiryError = _newExpiry == null ? l10n.errorNewExpiryRequired : null;
       _actionError = null;
       if (_newExpiry != null &&
-          !DocumentRenewal.isNewExpiryValid(
-            previousExpiry: widget.document.expiryDate,
-            newExpiry: _newExpiry!,
-          )) {
+          !DocumentRenewal.isNewExpiryValid(previousExpiry: widget.document.expiryDate, newExpiry: _newExpiry!)) {
         _expiryError = l10n.errorNewExpiryNotAfterPrevious;
       }
       if (_newExpiry != null &&
-          !DocumentRenewal.isActionDateValid(
-            newExpiry: _newExpiry!,
-            actionDate: _newActionDate,
-          )) {
+          !DocumentRenewal.isActionDateValid(newExpiry: _newExpiry!, actionDate: _newActionDate)) {
         _actionError = l10n.errorActionAfterNewExpiry;
       }
     });
@@ -114,9 +103,7 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
       newActionDate: _newActionDate,
       note: _note.text,
     );
-    final saved = await RegistryDependencies.of(
-      context,
-    ).documents.update(updated);
+    final saved = await RegistryDependencies.of(context).documents.update(updated);
     if (!mounted) {
       return;
     }
@@ -142,15 +129,9 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              l10n.recordRenewal,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text(l10n.recordRenewal, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              l10n.recordRenewalSubtitle,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(l10n.recordRenewalSubtitle, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: AppSpacing.md),
             DocumentDateField(
               fieldId: 'renewal',

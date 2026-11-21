@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DocumentAttachmentCard extends StatelessWidget {
   const DocumentAttachmentCard({
@@ -289,7 +289,7 @@ class DocumentAttachmentCard extends StatelessWidget {
                             Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF42D8B7)),
                             SizedBox(width: 4),
                             Text(
-                              "Captured",
+                              'Captured',
                               style: TextStyle(
                                 color: Color(0xFFE0FAF3),
                                 fontSize: 10,

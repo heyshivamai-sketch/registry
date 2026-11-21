@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_shell.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/home/widgets/registry_document_stack.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_shell.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../subscriptions/domain/money.dart';
+import 'registry_document_stack.dart';
 
 class HomeMetricsRow extends StatelessWidget {
   const HomeMetricsRow({
@@ -50,26 +51,13 @@ class HomeMetricsRow extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.description_outlined,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  Icon(Icons.description_outlined, color: Theme.of(context).colorScheme.primary),
                   const Spacer(),
-                  const ExcludeSemantics(
-                    child: RegistryDocumentStack(
-                      size: RegistryDocumentStackSize.tile,
-                    ),
-                  ),
+                  const ExcludeSemantics(child: RegistryDocumentStack(size: RegistryDocumentStackSize.tile)),
                 ],
               ),
-              Text(
-                '$documentCount',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              Text(
-                l10n.homeDocumentsTile,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+              Text('$documentCount', style: Theme.of(context).textTheme.headlineMedium),
+              Text(l10n.homeDocumentsTile, style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
         );
@@ -110,12 +98,7 @@ class HomeMetricsRow extends StatelessWidget {
 }
 
 class _OverviewTile extends StatelessWidget {
-  const _OverviewTile({
-    super.key,
-    required this.background,
-    required this.child,
-    this.onTap,
-  });
+  const _OverviewTile({super.key, required this.background, required this.child, this.onTap});
 
   final Color background;
   final Widget child;
@@ -125,9 +108,7 @@ class _OverviewTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.metric),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.metric)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.metric),
@@ -135,10 +116,7 @@ class _OverviewTile extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 96),
-            child: Align(
-              alignment: AlignmentDirectional.topStart,
-              child: child,
-            ),
+            child: Align(alignment: AlignmentDirectional.topStart, child: child),
           ),
         ),
       ),
@@ -170,10 +148,7 @@ class _SubscriptionTotals extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
-              Icons.account_balance_wallet_outlined,
-              color: theme.colorScheme.primary,
-            ),
+            Icon(Icons.account_balance_wallet_outlined, color: theme.colorScheme.primary),
             const Spacer(),
             Icon(
               Directionality.of(context) == TextDirection.rtl
@@ -185,20 +160,11 @@ class _SubscriptionTotals extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         if (totals.isEmpty)
-          Text(
-            l10n.homeNoActivePlans,
-            style: theme.textTheme.titleMedium?.copyWith(fontSize: 16),
-          )
+          Text(l10n.homeNoActivePlans, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16))
         else ...[
-          Text(
-            MoneyFormat.format(visible.first, locale),
-            style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
-          ),
+          Text(MoneyFormat.format(visible.first, locale), style: theme.textTheme.titleMedium?.copyWith(fontSize: 18)),
           for (final extra in visible.skip(1))
-            Text(
-              MoneyFormat.format(extra, locale),
-              style: theme.textTheme.bodySmall,
-            ),
+            Text(MoneyFormat.format(extra, locale), style: theme.textTheme.bodySmall),
           if (overflow)
             Semantics(
               button: true,
@@ -210,10 +176,7 @@ class _SubscriptionTotals extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     l10n.homeSeeAllCurrencies,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.tertiary,
-                      letterSpacing: 0,
-                    ),
+                    style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.tertiary, letterSpacing: 0),
                   ),
                 ),
               ),
@@ -221,10 +184,7 @@ class _SubscriptionTotals extends StatelessWidget {
         ],
         const SizedBox(height: 6),
         Text(l10n.homeEstimatedMonthlyCost, style: theme.textTheme.bodySmall),
-        Text(
-          l10n.homeSubscriptionCount(subscriptionCount),
-          style: theme.textTheme.bodySmall,
-        ),
+        Text(l10n.homeSubscriptionCount(subscriptionCount), style: theme.textTheme.bodySmall),
       ],
     );
   }
@@ -240,10 +200,7 @@ class _SubscriptionTotals extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n.homeCurrencyBreakdownTitle,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(l10n.homeCurrencyBreakdownTitle, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: AppSpacing.sm),
                 for (final total in totals)
                   Padding(

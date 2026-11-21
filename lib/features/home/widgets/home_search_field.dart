@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/widgets/registry_search_field.dart';
+import '../../../core/widgets/registry_search_field.dart';
 
 class HomeSearchField extends StatelessWidget {
   const HomeSearchField({super.key, required this.controller});

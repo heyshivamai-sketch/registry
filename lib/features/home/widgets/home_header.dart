@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/app/theme/app_typography.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_typography.dart';
+import '../../../l10n/app_localizations.dart';
+import '../data/registry_date_formatter.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -15,13 +16,9 @@ class HomeHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final now = RegistryDependencies.of(context).clock.now();
-    final dateLine = RegistryDateFormatter.weekdayDateLine(
-      now,
-      l10n.localeName,
-    );
+    final dateLine = RegistryDateFormatter.weekdayDateLine(now, l10n.localeName);
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Column(
@@ -70,9 +67,7 @@ class HomeHeader extends StatelessWidget {
                 child: Center(
                   child: Text(
                     l10n.profileMonogram,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: colorScheme.primary,
-                    ),
+                    style: theme.textTheme.titleSmall?.copyWith(color: colorScheme.primary),
                   ),
                 ),
               ),

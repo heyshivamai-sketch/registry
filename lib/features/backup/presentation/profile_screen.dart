@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/app_lock/app_lock_controller.dart';
-import 'package:the_registry/features/entitlements/registry_plan.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../app_lock/app_lock_controller.dart';
+import '../../entitlements/registry_plan.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({

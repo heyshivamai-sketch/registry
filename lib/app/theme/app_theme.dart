@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/app/theme/app_typography.dart';
+import 'app_colors.dart';
+import 'app_radius.dart';
+import 'app_spacing.dart';
+import 'app_typography.dart';
 
 /// Central Material 3 theme. Light is the shipping theme; [dark] is structured
 /// so dark mode can be enabled later without restyling screens.

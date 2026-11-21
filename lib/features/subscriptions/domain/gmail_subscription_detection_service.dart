@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:the_registry/features/subscriptions/domain/bank_subscription_detection_service.dart';
-import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+import 'bank_subscription_detection_service.dart';
+import 'detected_subscription.dart';
+import 'money.dart';
+import 'registry_subscription.dart';
 
 enum GmailEventType {
   subscriptionStarted,
@@ -20,8 +20,8 @@ enum GmailEventType {
 class GmailRawMessage {
   const GmailRawMessage({
     required this.id,
-    this.threadId = '',
     required this.headers,
+    this.threadId = '',
     this.snippet = '',
     this.plainTextBody,
     this.htmlBody,
@@ -35,7 +35,9 @@ class GmailRawMessage {
   final String? htmlBody;
 
   String? get subject => headers['Subject'] ?? headers['subject'];
+
   String? get from => headers['From'] ?? headers['from'];
+
   String? get dateHeader => headers['Date'] ?? headers['date'];
 }
 
@@ -43,17 +45,17 @@ class ExtractedEmailSubscription {
   const ExtractedEmailSubscription({
     required this.messageId,
     required this.merchantName,
-    this.planName,
     required this.eventType,
-    this.amount,
-    this.billingCycle,
     required this.paymentDate,
-    this.nextRenewalDate,
-    this.renewalDateIsEstimated = true,
     required this.sender,
     required this.subject,
     required this.snippet,
     required this.confidenceScore,
+    this.planName,
+    this.amount,
+    this.billingCycle,
+    this.nextRenewalDate,
+    this.renewalDateIsEstimated = true,
   });
 
   final String messageId;
@@ -72,9 +74,8 @@ class ExtractedEmailSubscription {
 }
 
 class GmailSubscriptionDetectionService {
-  GmailSubscriptionDetectionService({
-    BankSubscriptionDetectionService? bankService,
-  }) : _bankService = bankService ?? const BankSubscriptionDetectionService();
+  GmailSubscriptionDetectionService({BankSubscriptionDetectionService? bankService})
+    : _bankService = bankService ?? const BankSubscriptionDetectionService();
 
   final BankSubscriptionDetectionService _bankService;
 
@@ -82,23 +83,34 @@ class GmailSubscriptionDetectionService {
       '(subject:(subscription OR renewal OR "payment successful" OR receipt OR invoice OR "membership renewal" OR "free trial" OR "upcoming payment" OR "Google Play order" OR "order receipt" OR "order confirmation" OR "Google One" OR "YouTube Premium") OR from:(googleplay-noreply@google.com OR googlepayments-noreply@google.com OR googleone-noreply@google.com OR payments-noreply@google.com)) newer_than:365d';
 
   static final Map<String, int> _monthMap = {
-    'jan': 1, 'january': 1,
-    'feb': 2, 'february': 2,
-    'mar': 3, 'march': 3,
-    'apr': 4, 'april': 4,
+    'jan': 1,
+    'january': 1,
+    'feb': 2,
+    'february': 2,
+    'mar': 3,
+    'march': 3,
+    'apr': 4,
+    'april': 4,
     'may': 5,
-    'jun': 6, 'june': 6,
-    'jul': 7, 'july': 7,
-    'aug': 8, 'august': 8,
-    'sep': 9, 'september': 9,
-    'oct': 10, 'october': 10,
-    'nov': 11, 'november': 11,
-    'dec': 12, 'december': 12,
+    'jun': 6,
+    'june': 6,
+    'jul': 7,
+    'july': 7,
+    'aug': 8,
+    'august': 8,
+    'sep': 9,
+    'september': 9,
+    'oct': 10,
+    'october': 10,
+    'nov': 11,
+    'november': 11,
+    'dec': 12,
+    'december': 12,
   };
 
   /// Parses flexible date formats including ISO-8601, "15 Dec 2026", "Dec 15, 2026", and "DD/MM/YYYY".
   static DateTime? tryParseFlexibleDate(String input) {
-    var raw = input.trim().replaceAll(',', '');
+    final raw = input.trim().replaceAll(',', '');
 
     // 1. ISO format: 2026-12-15 or 2026-12-15T00:00:00Z
     final iso = DateTime.tryParse(raw);
@@ -184,9 +196,12 @@ class GmailSubscriptionDetectionService {
     final hasExplicitRefundBody = RegExp(
       r"\b(?:has been refunded|refund has been|refund of (?:₹|rs|\$|usd|eur|gbp|[0-9])|we(?:’|'|\s)ve issued a refund|we have issued a refund|issued a refund|refund was processed|refund confirmation)\b",
     ).hasMatch(lowerBody);
-    final isOnlyRefundPolicy = !hasRefundSubject &&
+    final isOnlyRefundPolicy =
+        !hasRefundSubject &&
         !hasExplicitRefundBody &&
-        RegExp(r'\b(?:refund policy|request a refund|refund rights|terms of refund|refund rules)\b').hasMatch(lowerBody);
+        RegExp(
+          r'\b(?:refund policy|request a refund|refund rights|terms of refund|refund rules)\b',
+        ).hasMatch(lowerBody);
 
     if ((hasRefundSubject || hasExplicitRefundBody) && !isOnlyRefundPolicy) {
       return GmailEventType.refund;
@@ -196,11 +211,14 @@ class GmailSubscriptionDetectionService {
     // Must be an actual cancellation, not merely mentioning "cancel anytime" or "cancellation policy".
     final hasCancelSubject = RegExp(r'\b(?:cancellation|cancelled|canceled|unsubscribed)\b').hasMatch(lowerSubject);
     final hasExplicitCancelBody = RegExp(
-      r"\b(?:has been cancelled|has been canceled|subscription was cancelled|subscription was canceled|successfully cancelled|successfully canceled|cancellation confirmed|ended your subscription|ending your membership|membership has ended)\b",
+      r'\b(?:has been cancelled|has been canceled|subscription was cancelled|subscription was canceled|successfully cancelled|successfully canceled|cancellation confirmed|ended your subscription|ending your membership|membership has ended)\b',
     ).hasMatch(lowerBody);
-    final isOnlyCancelPolicy = !hasCancelSubject &&
+    final isOnlyCancelPolicy =
+        !hasCancelSubject &&
         !hasExplicitCancelBody &&
-        RegExp(r'\b(?:cancel anytime|cancel at any time|how to cancel|cancel your subscription at any time|cancellation policy)\b').hasMatch(lowerBody);
+        RegExp(
+          r'\b(?:cancel anytime|cancel at any time|how to cancel|cancel your subscription at any time|cancellation policy)\b',
+        ).hasMatch(lowerBody);
 
     if ((hasCancelSubject || hasExplicitCancelBody) && !isOnlyCancelPolicy) {
       return GmailEventType.cancellation;
@@ -217,7 +235,9 @@ class GmailSubscriptionDetectionService {
     }
 
     // 5. Renewal
-    if (RegExp(r'\b(?:renewed|renewal successful|subscription renewed|membership renewed|automatically renews|auto-renewing|auto-renew|renews on)\b').hasMatch(text)) {
+    if (RegExp(
+      r'\b(?:renewed|renewal successful|subscription renewed|membership renewed|automatically renews|auto-renewing|auto-renew|renews on)\b',
+    ).hasMatch(text)) {
       return GmailEventType.subscriptionRenewal;
     }
 
@@ -227,12 +247,16 @@ class GmailSubscriptionDetectionService {
     }
 
     // 7. Payment success
-    if (RegExp(r'\b(?:payment received|payment successful|payment confirmation|receipt for your payment|receipt|invoice|billed|order receipt|order confirmation|google play order)\b').hasMatch(text)) {
+    if (RegExp(
+      r'\b(?:payment received|payment successful|payment confirmation|receipt for your payment|receipt|invoice|billed|order receipt|order confirmation|google play order)\b',
+    ).hasMatch(text)) {
       return GmailEventType.paymentSuccess;
     }
 
     // 8. Subscription started
-    if (RegExp(r"\b(?:subscription|membership|welcome to|plan activated|you(?:’|'|\s)ve subscribed to|subscribed to)\b").hasMatch(text)) {
+    if (RegExp(
+      r"\b(?:subscription|membership|welcome to|plan activated|you(?:’|'|\s)ve subscribed to|subscribed to)\b",
+    ).hasMatch(text)) {
       return GmailEventType.subscriptionStarted;
     }
 
@@ -240,30 +264,27 @@ class GmailSubscriptionDetectionService {
   }
 
   /// Extracts the merchant name from From header, Subject, or Body.
-  String extractMerchantName({
-    required String from,
-    required String subject,
-    String body = '',
-  }) {
+  String extractMerchantName({required String from, required String subject, String body = ''}) {
     final lowerFrom = from.toLowerCase();
     final lowerSubject = subject.toLowerCase();
-    final isGoogleSource = lowerFrom.contains('google') ||
+    final isGoogleSource =
+        lowerFrom.contains('google') ||
         lowerFrom.contains('googleplay') ||
         lowerFrom.contains('googleone') ||
         lowerSubject.contains('google play');
 
     if (isGoogleSource && body.isNotEmpty) {
       // 1. Look for Item: or Product: line in Google Play receipts
-      final itemMatch = RegExp(
-        r'(?:Item|Product|Description)[:\s]+([^\r\n<]+)',
-        caseSensitive: false,
-      ).firstMatch(body);
+      final itemMatch = RegExp(r'(?:Item|Product|Description)[:\s]+([^\r\n<]+)', caseSensitive: false).firstMatch(body);
 
       if (itemMatch != null) {
         var item = itemMatch.group(1)!.trim();
         // Remove trailing cycle descriptors like (Monthly), (Yearly), (1 Month), (100 GB)
         item = item.replaceAll(
-          RegExp(r'\s*\((?:monthly|yearly|annual|1\s*month|3\s*months|1\s*year|quarterly|auto-renewing|tier\s*\d+)[^)]*\)', caseSensitive: false),
+          RegExp(
+            r'\s*\((?:monthly|yearly|annual|1\s*month|3\s*months|1\s*year|quarterly|auto-renewing|tier\s*\d+)[^)]*\)',
+            caseSensitive: false,
+          ),
           '',
         );
         item = item.replaceAll(
@@ -298,7 +319,7 @@ class GmailSubscriptionDetectionService {
       if (combined.contains('google play pass')) return 'Google Play Pass';
     }
 
-    var raw = from.trim();
+    final raw = from.trim();
     // Format: "Netflix <info@mailer.netflix.com>"
     final displayMatch = RegExp(r'^"?([^"<]+)"?\s*<.*>$').firstMatch(raw);
     if (displayMatch != null) {
@@ -341,7 +362,10 @@ class GmailSubscriptionDetectionService {
     }
 
     // Match $15.99 or USD 15.99
-    final usdMatch = RegExp(r'(?:\$|USD)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)', caseSensitive: false).firstMatch(text);
+    final usdMatch = RegExp(
+      r'(?:\$|USD)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)',
+      caseSensitive: false,
+    ).firstMatch(text);
     if (usdMatch != null) {
       final rawNum = usdMatch.group(1)!.replaceAll(',', '');
       final val = double.tryParse(rawNum);
@@ -351,7 +375,10 @@ class GmailSubscriptionDetectionService {
     }
 
     // Match €9.99 or EUR 9.99
-    final eurMatch = RegExp(r'(?:€|EUR)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)', caseSensitive: false).firstMatch(text);
+    final eurMatch = RegExp(
+      r'(?:€|EUR)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)',
+      caseSensitive: false,
+    ).firstMatch(text);
     if (eurMatch != null) {
       final rawNum = eurMatch.group(1)!.replaceAll(',', '');
       final val = double.tryParse(rawNum);
@@ -361,7 +388,10 @@ class GmailSubscriptionDetectionService {
     }
 
     // Match £8.99 or GBP 8.99
-    final gbpMatch = RegExp(r'(?:£|GBP)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)', caseSensitive: false).firstMatch(text);
+    final gbpMatch = RegExp(
+      r'(?:£|GBP)\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)',
+      caseSensitive: false,
+    ).firstMatch(text);
     if (gbpMatch != null) {
       final rawNum = gbpMatch.group(1)!.replaceAll(',', '');
       final val = double.tryParse(rawNum);
@@ -479,8 +509,12 @@ class GmailSubscriptionDetectionService {
     // Calculate confidence score
     var confidence = 0.50;
     if (amount != null) confidence += 0.20;
-    if (eventType == GmailEventType.subscriptionRenewal || eventType == GmailEventType.subscriptionStarted) confidence += 0.15;
-    if (fullText.toLowerCase().contains('subscription') || fullText.toLowerCase().contains('membership')) confidence += 0.10;
+    if (eventType == GmailEventType.subscriptionRenewal || eventType == GmailEventType.subscriptionStarted) {
+      confidence += 0.15;
+    }
+    if (fullText.toLowerCase().contains('subscription') || fullText.toLowerCase().contains('membership')) {
+      confidence += 0.10;
+    }
 
     return ExtractedEmailSubscription(
       messageId: message.id,
@@ -502,8 +536,8 @@ class GmailSubscriptionDetectionService {
   List<DetectedSubscriptionCandidate> processMessages({
     required List<GmailRawMessage> messages,
     required List<RegistrySubscription> existingSubscriptions,
-    Set<String> ignoredMerchants = const {},
     required DateTime Function() now,
+    Set<String> ignoredMerchants = const {},
     String Function(int index)? idGenerator,
   }) {
     final groups = <String, List<ExtractedEmailSubscription>>{};
@@ -516,9 +550,9 @@ class GmailSubscriptionDetectionService {
 
       final lowerMerchant = extracted.merchantName.toLowerCase();
       // Suppression check
-      if (ignoredMerchants.any((ignored) =>
-          lowerMerchant == ignored.toLowerCase() ||
-          lowerMerchant.contains(ignored.toLowerCase()))) {
+      if (ignoredMerchants.any(
+        (ignored) => lowerMerchant == ignored.toLowerCase() || lowerMerchant.contains(ignored.toLowerCase()),
+      )) {
         continue;
       }
 
@@ -541,18 +575,23 @@ class GmailSubscriptionDetectionService {
         continue;
       }
 
-      final duplicate = existingSubscriptions.any((sub) =>
-          _bankService.normalizeMerchant(sub.serviceName).toLowerCase() ==
-              latest.merchantName.toLowerCase() &&
-          sub.amount.code == latest.amount!.code);
+      final duplicate = existingSubscriptions.any(
+        (sub) =>
+            _bankService.normalizeMerchant(sub.serviceName).toLowerCase() == latest.merchantName.toLowerCase() &&
+            sub.amount.code == latest.amount!.code,
+      );
 
-      final emailEvidenceList = group.map((e) => EmailEvidence(
-            messageId: e.messageId,
-            subject: e.subject,
-            sender: e.sender,
-            date: e.paymentDate,
-            snippet: e.snippet,
-          )).toList();
+      final emailEvidenceList = group
+          .map(
+            (e) => EmailEvidence(
+              messageId: e.messageId,
+              subject: e.subject,
+              sender: e.sender,
+              date: e.paymentDate,
+              snippet: e.snippet,
+            ),
+          )
+          .toList();
 
       final candidateId = idGenerator != null
           ? idGenerator(candidateIndex++)

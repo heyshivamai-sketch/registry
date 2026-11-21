@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'registry_document.dart';
 
 abstract final class DocumentIcons {
   static IconData forCategory(DocumentCategory category) {

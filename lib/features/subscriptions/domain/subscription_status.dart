@@ -1,9 +1,9 @@
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../documents/domain/document_status.dart';
+import '../../home/data/registry_date_formatter.dart';
+import 'registry_subscription.dart';
 
 abstract final class SubscriptionStatus {
   static RegistryStatus resolve(

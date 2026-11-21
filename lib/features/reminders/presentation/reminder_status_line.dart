@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/reminders/reminder_coordinator.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import '../reminder_coordinator.dart';
 
 class ReminderStatusLine extends StatelessWidget {
   const ReminderStatusLine({super.key, required this.status});

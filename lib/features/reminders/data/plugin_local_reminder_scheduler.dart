@@ -3,8 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
-import 'package:the_registry/features/reminders/domain/reminder_plan.dart';
+import '../domain/local_reminder_scheduler.dart';
+import '../domain/reminder_plan.dart';
 
 /// Local notifications through [FlutterLocalNotificationsPlugin].
 ///
@@ -39,18 +39,12 @@ class PluginLocalReminderScheduler implements LocalReminderScheduler {
         requestSoundPermission: false,
       );
       final initialized = await _plugin.initialize(
-        settings: const InitializationSettings(
-          android: android,
-          iOS: darwin,
-          macOS: darwin,
-        ),
+        settings: const InitializationSettings(android: android, iOS: darwin, macOS: darwin),
       );
       // Android returns true when the plugin is ready. iOS returns false when
       // init is told not to present the system prompt; the plugin is still
       // ready, and requestPermission() shows that dialog later.
-      _available = defaultTargetPlatform == TargetPlatform.iOS
-          ? initialized != null
-          : initialized != false;
+      _available = defaultTargetPlatform == TargetPlatform.iOS ? initialized != null : initialized != false;
     } catch (error, stack) {
       _available = false;
       FlutterError.reportError(
@@ -70,25 +64,15 @@ class PluginLocalReminderScheduler implements LocalReminderScheduler {
     if (!_available) {
       return ReminderPermission.unavailable;
     }
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     if (android != null) {
       final enabled = await android.areNotificationsEnabled();
-      return enabled == true
-          ? ReminderPermission.granted
-          : ReminderPermission.denied;
+      return enabled == true ? ReminderPermission.granted : ReminderPermission.denied;
     }
-    final ios = _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >();
+    final ios = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
     if (ios != null) {
       final options = await ios.checkPermissions();
-      return options?.isEnabled == true
-          ? ReminderPermission.granted
-          : ReminderPermission.denied;
+      return options?.isEnabled == true ? ReminderPermission.granted : ReminderPermission.denied;
     }
     return ReminderPermission.unavailable;
   }
@@ -99,29 +83,15 @@ class PluginLocalReminderScheduler implements LocalReminderScheduler {
     if (!_available) {
       return ReminderPermission.unavailable;
     }
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     if (android != null) {
       final granted = await android.requestNotificationsPermission();
-      return granted == true
-          ? ReminderPermission.granted
-          : ReminderPermission.denied;
+      return granted == true ? ReminderPermission.granted : ReminderPermission.denied;
     }
-    final ios = _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >();
+    final ios = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
     if (ios != null) {
-      final granted = await ios.requestPermissions(
-        alert: true,
-        badge: false,
-        sound: true,
-      );
-      return granted == true
-          ? ReminderPermission.granted
-          : ReminderPermission.denied;
+      final granted = await ios.requestPermissions(alert: true, sound: true);
+      return granted == true ? ReminderPermission.granted : ReminderPermission.denied;
     }
     return ReminderPermission.unavailable;
   }
@@ -173,18 +143,12 @@ class PluginLocalReminderScheduler implements LocalReminderScheduler {
               'registry_reminders',
               reminder.channelName,
               channelDescription: reminder.channelDescription,
-              importance: Importance.defaultImportance,
-              priority: Priority.defaultPriority,
               // Secure lock screens redact a private notification. The title
               // and body are also neutral, so a preview cannot show a record
               // name, number, or attachment.
               visibility: NotificationVisibility.private,
             ),
-            iOS: const DarwinNotificationDetails(
-              presentAlert: true,
-              presentBadge: false,
-              presentSound: true,
-            ),
+            iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: false, presentSound: true),
           ),
           androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
           payload: reminder.payload,
@@ -213,8 +177,7 @@ class PluginLocalReminderScheduler implements LocalReminderScheduler {
   Future<void> _cancelRegistryPending({required Set<int> keep}) async {
     final pending = await _plugin.pendingNotificationRequests();
     for (final request in pending) {
-      if (!isRegistryReminderPayload(request.payload) ||
-          keep.contains(request.id)) {
+      if (!isRegistryReminderPayload(request.payload) || keep.contains(request.id)) {
         continue;
       }
       await _plugin.cancel(id: request.id);

@@ -5,8 +5,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
-import 'package:the_registry/features/backup/backup_service.dart';
+import 'backup_models.dart';
+import 'backup_service.dart';
 
 /// Android document-picker operations that do not trust a plugin success flag.
 abstract class AndroidBackupBridge {

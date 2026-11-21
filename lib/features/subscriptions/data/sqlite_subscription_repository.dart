@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:the_registry/core/persistence/persisted_values.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/subscriptions/domain/money.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+import '../../../core/persistence/persisted_values.dart';
+import '../../documents/domain/registry_document.dart';
+import '../domain/money.dart';
+import '../domain/registry_subscription.dart';
+import '../domain/subscription_repository.dart';
 
 class SqliteSubscriptionRepository extends ChangeNotifier
     implements SubscriptionRepository {

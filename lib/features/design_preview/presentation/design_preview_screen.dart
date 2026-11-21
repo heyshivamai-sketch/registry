@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_status_chip.dart';
-import 'package:the_registry/core/widgets/registry_summary_card.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_status_chip.dart';
+import '../../../core/widgets/registry_summary_card.dart';
 
 /// Temporary visual catalogue for the foundation design system.
 /// This is not the product Home screen.

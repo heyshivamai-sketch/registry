@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/core/time/clock.dart';
-import 'package:the_registry/features/ads/ads_controller.dart';
-import 'package:the_registry/features/app_lock/app_lock_controller.dart';
-import 'package:the_registry/features/backup/backup_service.dart';
-import 'package:the_registry/features/csv_import/csv_file_gateway.dart';
-import 'package:the_registry/features/documents/data/image_picker_image_service.dart';
-import 'package:the_registry/features/entitlements/entitlement_service.dart';
-import 'package:the_registry/features/entitlements/local_pro_entitlement.dart';
-import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
-import 'package:the_registry/features/documents/domain/date_picker_service.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_repository.dart';
-import 'package:the_registry/features/documents/domain/image_picker_service.dart';
-import 'package:the_registry/features/reminders/reminder_coordinator.dart';
-import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/data/gmail_client_gateway.dart';
-import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_discovery_service.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
+
+import '../core/time/clock.dart';
+import '../features/ads/ads_controller.dart';
+import '../features/app_lock/app_lock_controller.dart';
+import '../features/backup/backup_service.dart';
+import '../features/csv_import/csv_file_gateway.dart';
+import '../features/documents/data/image_picker_image_service.dart';
+import '../features/documents/data/in_memory_document_repository.dart';
+import '../features/documents/domain/date_picker_service.dart';
+import '../features/documents/domain/document_ocr.dart';
+import '../features/documents/domain/document_repository.dart';
+import '../features/documents/domain/image_picker_service.dart';
+import '../features/entitlements/entitlement_service.dart';
+import '../features/entitlements/local_pro_entitlement.dart';
+import '../features/reminders/reminder_coordinator.dart';
+import '../features/subscriptions/data/detected_subscription_repository.dart';
+import '../features/subscriptions/data/gmail_client_gateway.dart';
+import '../features/subscriptions/data/in_memory_subscription_repository.dart';
+import '../features/subscriptions/domain/subscription_discovery_service.dart';
+import '../features/subscriptions/domain/subscription_repository.dart';
 
 class RegistryDependencies extends InheritedWidget {
   const RegistryDependencies({
@@ -101,9 +102,8 @@ GmailClientGateway createDefaultGmailClient() {
 }
 
 SubscriptionDiscoveryService createDefaultDiscoveryService(
-  DetectedSubscriptionRepository detected,
-  SubscriptionRepository subscriptions,
-) {
+    DetectedSubscriptionRepository detected,
+    SubscriptionRepository subscriptions,) {
   return SubscriptionDiscoveryService(
     detectedRepository: detected,
     subscriptionRepository: subscriptions,

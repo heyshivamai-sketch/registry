@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_shell.dart';
-import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
-import 'package:the_registry/features/onboarding/presentation/onboarding_screen.dart';
+import '../../../app/navigation/app_shell.dart';
+import '../data/onboarding_repository.dart';
+import 'onboarding_screen.dart';
 
 class OnboardingGate extends StatefulWidget {
   const OnboardingGate({super.key, required this.repository});

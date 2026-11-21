@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/local_reminder_scheduler.dart';
 
 /// Shown when reminder choices are selected but notifications are not allowed.
 /// Saving stays available.
@@ -21,8 +22,7 @@ class ReminderPermissionNote extends StatelessWidget {
       listenable: reminders,
       builder: (context, _) {
         final permission = reminders.permission;
-        if (permission != ReminderPermission.denied &&
-            permission != ReminderPermission.unavailable) {
+        if (permission != ReminderPermission.denied && permission != ReminderPermission.unavailable) {
           return const SizedBox.shrink();
         }
         final l10n = AppLocalizations.of(context);
@@ -34,9 +34,7 @@ class ReminderPermissionNote extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                unavailable
-                    ? l10n.reminderStatusUnavailable
-                    : l10n.reminderPermissionDenied,
+                unavailable ? l10n.reminderStatusUnavailable : l10n.reminderPermissionDenied,
                 key: const ValueKey<String>('reminder-permission-note'),
                 style: theme.textTheme.bodySmall,
               ),

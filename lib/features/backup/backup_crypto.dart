@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:the_registry/features/backup/backup_models.dart';
+import 'backup_models.dart';
 
 /// Portable backup container, version 1.
 ///
@@ -158,7 +158,7 @@ abstract final class RegistryBackupCrypto {
     if (payloadCipherLength > BackupLimits.maxPlaintextBytes) {
       throw const BackupOversized();
     }
-    final payloadStart = headerLength;
+    const payloadStart = headerLength;
     final payloadEnd = payloadStart + payloadCipherLength;
     if (payloadEnd + tagLength != file.length) {
       throw const BackupInvalid('length');

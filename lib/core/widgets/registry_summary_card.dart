@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import '../../app/theme/app_radius.dart';
+import '../../app/theme/app_spacing.dart';
 
 class RegistrySummaryCard extends StatelessWidget {
   const RegistrySummaryCard({

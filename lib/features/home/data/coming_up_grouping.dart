@@ -1,7 +1,8 @@
 import 'package:intl/intl.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/home/data/registry_item.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../l10n/app_localizations.dart';
+import 'registry_date_formatter.dart';
+import 'registry_item.dart';
 
 class ComingUpGroup {
   const ComingUpGroup({
@@ -60,7 +61,8 @@ abstract final class ComingUpGrouping {
         ),
     ];
 
-    final laterKeys = later.keys.toList()..sort();
+    final laterKeys = later.keys.toList()
+      ..sort();
     for (final key in laterKeys) {
       final bucket = later[key]!;
       final sample = RegistryDateFormatter.dateOnly(bucket.first.actionDate);

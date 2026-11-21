@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_bottom_sheet_action.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../core/widgets/registry_bottom_sheet_action.dart';
+import '../../l10n/app_localizations.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_spacing.dart';
+import 'app_routes.dart';
 
 abstract final class AddItemSheet {
   static Future<void> show(

@@ -1,7 +1,8 @@
 import 'package:timezone/timezone.dart' as tz;
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
+
+import '../../documents/domain/registry_document.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../../subscriptions/domain/registry_subscription.dart';
 
 /// Requested local wall-clock time. Android may deliver later than this.
 const int reminderLocalHour = 9;
@@ -77,18 +78,12 @@ List<ReminderIntent> planDocumentReminders({
       ReminderPreference.thirtyDaysBefore => 30,
     };
     final messageKind = switch ((usesExpiry, preference)) {
-      (true, ReminderPreference.onActionDate) =>
-        ReminderMessageKind.documentExpiryToday,
-      (true, ReminderPreference.sevenDaysBefore) =>
-        ReminderMessageKind.documentExpiryIn7,
-      (true, ReminderPreference.thirtyDaysBefore) =>
-        ReminderMessageKind.documentExpiryIn30,
-      (false, ReminderPreference.onActionDate) =>
-        ReminderMessageKind.documentActionToday,
-      (false, ReminderPreference.sevenDaysBefore) =>
-        ReminderMessageKind.documentActionIn7,
-      (false, ReminderPreference.thirtyDaysBefore) =>
-        ReminderMessageKind.documentActionIn30,
+      (true, ReminderPreference.onActionDate) => ReminderMessageKind.documentExpiryToday,
+      (true, ReminderPreference.sevenDaysBefore) => ReminderMessageKind.documentExpiryIn7,
+      (true, ReminderPreference.thirtyDaysBefore) => ReminderMessageKind.documentExpiryIn30,
+      (false, ReminderPreference.onActionDate) => ReminderMessageKind.documentActionToday,
+      (false, ReminderPreference.sevenDaysBefore) => ReminderMessageKind.documentActionIn7,
+      (false, ReminderPreference.thirtyDaysBefore) => ReminderMessageKind.documentActionIn30,
     };
     final intent = _intent(
       subject: ReminderSubject.document,
@@ -133,22 +128,14 @@ List<ReminderIntent> planSubscriptionReminders({
       SubscriptionReminder.sevenDaysBefore => (
         decideBy,
         7,
-        beforePayment
-            ? ReminderMessageKind.subscriptionPaymentIn7
-            : ReminderMessageKind.subscriptionDecideIn7,
+        beforePayment ? ReminderMessageKind.subscriptionPaymentIn7 : ReminderMessageKind.subscriptionDecideIn7,
       ),
       SubscriptionReminder.oneDayBefore => (
         decideBy,
         1,
-        beforePayment
-            ? ReminderMessageKind.subscriptionPaymentIn1
-            : ReminderMessageKind.subscriptionDecideIn1,
+        beforePayment ? ReminderMessageKind.subscriptionPaymentIn1 : ReminderMessageKind.subscriptionDecideIn1,
       ),
-      SubscriptionReminder.onChargeDay => (
-        payment,
-        0,
-        ReminderMessageKind.subscriptionChargeToday,
-      ),
+      SubscriptionReminder.onChargeDay => (payment, 0, ReminderMessageKind.subscriptionChargeToday),
     };
     final intent = _intent(
       subject: ReminderSubject.subscription,
@@ -199,22 +186,12 @@ ReminderIntent? _intent({
 }) {
   final day = RegistryDateFormatter.dateOnly(anchor);
   final event = DateTime(day.year, day.month, day.day - daysBefore);
-  final when = tz.TZDateTime(
-    location,
-    event.year,
-    event.month,
-    event.day,
-    reminderLocalHour,
-  );
+  final when = tz.TZDateTime(location, event.year, event.month, event.day, reminderLocalHour);
   if (!when.isAfter(now)) {
     return null;
   }
   return ReminderIntent(
-    id: reminderNotificationId(
-      subject: subject,
-      recordId: recordId,
-      kind: kind,
-    ),
+    id: reminderNotificationId(subject: subject, recordId: recordId, kind: kind),
     payload: reminderPayload(subject: subject, recordId: recordId, kind: kind),
     when: when,
     recordId: recordId,
@@ -231,21 +208,13 @@ ReminderIntent? _intent({
 /// The same record and reminder kind always map to the same id, so a later
 /// schedule replaces the previous one. Dart's [String.hashCode] is not stable
 /// across runs, so this uses FNV-1a.
-int reminderNotificationId({
-  required ReminderSubject subject,
-  required String recordId,
-  required String kind,
-}) {
+int reminderNotificationId({required ReminderSubject subject, required String recordId, required String kind}) {
   final hash = _fnv1a32('registry|${subject.name}|$recordId|$kind');
   final id = hash & 0x7fffffff;
   return id == 0 ? 1 : id;
 }
 
-String reminderPayload({
-  required ReminderSubject subject,
-  required String recordId,
-  required String kind,
-}) {
+String reminderPayload({required ReminderSubject subject, required String recordId, required String kind}) {
   return 'registry:${subject.name}:$recordId:$kind';
 }
 

@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
+import '../../../app/theme/app_spacing.dart';
 
 /// Shared document/home date presentation. Always includes day, month and year.
 abstract final class RegistryDateFormatter {

@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
+import 'onboarding_repository.dart';
 
 class SharedPreferencesOnboardingRepository implements OnboardingRepository {
   SharedPreferencesOnboardingRepository(this._preferences);

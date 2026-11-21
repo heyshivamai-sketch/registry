@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/documents/domain/document_repository.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import '../domain/document_repository.dart';
+import '../domain/registry_document.dart';
 
 class InMemoryDocumentRepository extends ChangeNotifier
     implements DocumentRepository {
