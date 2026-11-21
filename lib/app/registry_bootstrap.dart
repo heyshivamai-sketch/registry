@@ -167,6 +167,7 @@ class _RegistryBootstrapState extends State<RegistryBootstrap> {
         onboardingRepository: onboarding,
         documentRepository: store.documents,
         subscriptionRepository: store.subscriptions,
+        detectedSubscriptionRepository: store.detectedSubscriptions,
         backupArchive: SqliteRegistryArchive(store),
         locale: widget.locale,
         reminderScheduler: widget.reminderScheduler,

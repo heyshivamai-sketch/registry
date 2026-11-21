@@ -115,7 +115,7 @@ class DocumentDigitalPass extends StatelessWidget {
               ),
             ),
           ],
-          if (showExpiry) ...[
+          if (showExpiry && document.expiryDate.year < 2099) ...[
             SizedBox(height: compact ? 16 : 26),
             Wrap(
               spacing: AppSpacing.md,

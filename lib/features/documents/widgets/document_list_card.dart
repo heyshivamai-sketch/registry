@@ -84,13 +84,15 @@ class DocumentListCard extends StatelessWidget {
                               fontSize: 13,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            document.hasDistinctActionDate
-                                ? l10n.startByDate(actionDate)
-                                : l10n.expiresDate(expiryDate),
-                            style: theme.textTheme.bodySmall,
-                          ),
+                          if (document.hasDistinctActionDate || document.expiryDate.year < 2099) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              document.hasDistinctActionDate
+                                  ? l10n.startByDate(actionDate)
+                                  : l10n.expiresDate(expiryDate),
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
                           const SizedBox(height: 4),
                           Wrap(
                             spacing: AppSpacing.xs,

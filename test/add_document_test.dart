@@ -556,6 +556,126 @@ void main() {
     expect(find.byKey(const ValueKey<String>('attach-remove')), findsNothing);
   });
 
+  testWidgets(
+    'Taking photo from camera automatically scans and fills fields in document',
+    (tester) async {
+      images.cameraResult = ImagePickResult.success(kTinyPngBytes);
+      ocr.result = sampleAadhaarOcrResult(
+        name: 'PRIYA SHARMA',
+        number: '9876 5432 1098',
+        dateOfBirth: '1992-05-18',
+        address: '42 MG ROAD, BENGALURU',
+        category: 'Identity card',
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      await tester.tap(find.byKey(const ValueKey<String>('attach-camera')));
+      await tester.pumpAndSettle();
+      expect(ocr.recognizeCount, 0);
+
+      await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+      await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
+      await tester.pumpAndSettle();
+
+      expect(ocr.recognizeCount, 1);
+      expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
+      expect(find.text('Aadhaar'), findsWidgets);
+      expect(find.text('PRIYA SHARMA'), findsOneWidget);
+      expect(find.text('Identity card'), findsOneWidget);
+
+      final nameField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-name')),
+      );
+      expect(nameField.controller?.text, 'Aadhaar');
+
+      final ownerField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-owner')),
+      );
+      expect(ownerField.controller?.text, 'PRIYA SHARMA');
+
+      final categoryField = tester.widget<TextFormField>(
+        find.byKey(const ValueKey<String>('field-category')),
+      );
+      expect(categoryField.controller?.text, 'Identity card');
+
+      final numberField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-number')),
+      );
+      expect(numberField.controller?.text, '9876 5432 1098');
+    },
+  );
+
+  testWidgets(
+    'On document update, adding other image and tapping scan all images scans and fills fields',
+    (tester) async {
+      await documents.save(
+        sampleDocument(
+          attachmentBytes: kTinyPngBytes,
+        ),
+      );
+      images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+      ocr.result = sampleAadhaarOcrResult(
+        name: 'PRIYA SHARMA',
+        number: '9876 5432 1098',
+        dateOfBirth: '1992-05-18',
+        address: '42 MG ROAD, BENGALURU',
+        category: 'Identity card',
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await tester.tap(_navLabel('Documents'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('featured-document-pass')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('document-actions')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('action-edit')));
+      await tester.pumpAndSettle();
+
+      final addImage = find.byIcon(Icons.add_photo_alternate_outlined);
+      await reveal(tester, addImage);
+      await tester.tap(addImage);
+      await tester.pumpAndSettle();
+      expect(find.byType(Image), findsNWidgets(2));
+
+      final scanAgain = find.byKey(const ValueKey<String>('scan-again'));
+      await reveal(tester, scanAgain);
+      await tester.tap(scanAgain);
+      await tester.pumpAndSettle();
+
+      expect(ocr.recognizeCount, 1);
+      expect(ocr.receivedImages, hasLength(2));
+      expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
+      expect(find.text('Aadhaar'), findsWidgets);
+      expect(find.text('PRIYA SHARMA'), findsOneWidget);
+      expect(find.text('Identity card'), findsOneWidget);
+
+      final nameField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-name')),
+      );
+      expect(nameField.controller?.text, 'Aadhaar');
+
+      final ownerField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-owner')),
+      );
+      expect(ownerField.controller?.text, 'PRIYA SHARMA');
+
+      final categoryField = tester.widget<TextFormField>(
+        find.byKey(const ValueKey<String>('field-category')),
+      );
+      expect(categoryField.controller?.text, 'Identity card');
+
+      final numberField = tester.widget<TextField>(
+        find.byKey(const ValueKey<String>('field-number')),
+      );
+      expect(numberField.controller?.text, '9876 5432 1098');
+    },
+  );
+
   testWidgets('Capture front and back before scanning both images', (
     tester,
   ) async {
@@ -1527,4 +1647,60 @@ void main() {
     expect(icon.icon!.matchTextDirection, isTrue);
     expect(find.byKey(const ValueKey<String>('save-document')), findsNothing);
   });
+
+  testWidgets(
+    'Scanned document without issue or expiry date hides those fields in the form',
+    (tester) async {
+      images.cameraResult = ImagePickResult.success(kTinyPngBytes);
+      ocr.result = sampleAadhaarOcrResult(
+        name: 'PRIYA SHARMA',
+        number: '9876 5432 1098',
+        dateOfBirth: '1992-05-18',
+        address: '42 MG ROAD, BENGALURU',
+        category: 'Identity card',
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      await tester.tap(find.byKey(const ValueKey<String>('attach-camera')));
+      await tester.pumpAndSettle();
+      await reveal(tester, find.byKey(const ValueKey<String>('scan-again')));
+      await tester.tap(find.byKey(const ValueKey<String>('scan-again')));
+      await tester.pumpAndSettle();
+
+      // On identity step: name and details are filled
+      expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
+
+      // Continue to dates step
+      await reveal(
+        tester,
+        find.byKey(const ValueKey<String>('wizard-continue')),
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
+      await tester.pumpAndSettle();
+
+      // Expiry and issue date fields are not shown because they were not on the document
+      expect(find.byKey(const ValueKey<String>('date-expiry')), findsNothing);
+      expect(find.byKey(const ValueKey<String>('date-issue')), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('add-expiry-date-btn')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('add-issue-date-btn')),
+        findsOneWidget,
+      );
+
+      // Advancing past dates step succeeds without requiring expiry date
+      await reveal(
+        tester,
+        find.byKey(const ValueKey<String>('wizard-continue')),
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Impact on you'), findsOneWidget);
+    },
+  );
 }

@@ -10,6 +10,7 @@ class RegistryPrimaryButton extends StatelessWidget {
     this.expanded = true,
     this.backgroundColor,
     this.foregroundColor,
+    this.textAlign,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class RegistryPrimaryButton extends StatelessWidget {
   final bool expanded;
   final Color? backgroundColor;
   final Color? foregroundColor;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +27,25 @@ class RegistryPrimaryButton extends StatelessWidget {
       label,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      textAlign: trailing == null ? TextAlign.center : TextAlign.start,
+      textAlign: textAlign ?? TextAlign.center,
     );
-    final child = trailing == null
+    final double? trailingWidth;
+    final trailingWidget = trailing;
+    if (trailingWidget is Icon) {
+      trailingWidth = trailingWidget.size ?? 24.0;
+    } else if (trailingWidget != null) {
+      trailingWidth = 18.0;
+    } else {
+      trailingWidth = null;
+    }
+    final child = trailingWidget == null
         ? labelText
         : Row(
             children: [
+              SizedBox(width: trailingWidth! + AppSpacing.xs),
               Expanded(child: labelText),
               const SizedBox(width: AppSpacing.xs),
-              trailing!,
+              trailingWidget,
             ],
           );
     final button = FilledButton(

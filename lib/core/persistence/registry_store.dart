@@ -7,6 +7,7 @@ import 'package:the_registry/core/persistence/document_attachment_store.dart';
 import 'package:the_registry/core/persistence/registry_database.dart';
 import 'package:the_registry/features/documents/data/sqlite_document_repository.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
+import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/data/sqlite_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 
@@ -18,11 +19,13 @@ class RegistryStore {
   RegistryStore._({
     required this.documents,
     required this.subscriptions,
+    required this.detectedSubscriptions,
     required this._database,
   });
 
   final SqliteDocumentRepository documents;
   final SqliteSubscriptionRepository subscriptions;
+  final SqliteDetectedSubscriptionRepository detectedSubscriptions;
   final Database _database;
 
   static Future<RegistryStore> open({
@@ -40,6 +43,7 @@ class RegistryStore {
         attachments,
       );
       final subscriptions = await SqliteSubscriptionRepository.load(database);
+      final detected = await SqliteDetectedSubscriptionRepository.load(database);
       try {
         await attachments.deleteUnreferenced(documents.attachmentFileNames);
       } on IOException {
@@ -48,6 +52,7 @@ class RegistryStore {
       return RegistryStore._(
         documents: documents,
         subscriptions: subscriptions,
+        detectedSubscriptions: detected,
         database: database,
       );
     } on Object {

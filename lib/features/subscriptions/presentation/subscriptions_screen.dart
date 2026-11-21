@@ -12,6 +12,7 @@ import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_status.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_wallet.dart';
+import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_view.dart';
 import 'package:the_registry/features/subscriptions/widgets/subscription_list_card.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -25,6 +26,7 @@ class SubscriptionsScreen extends StatefulWidget {
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   final TextEditingController _searchController = TextEditingController();
   SubscriptionWalletFilter _filter = SubscriptionWalletFilter.all;
+  bool _isCalendarView = false;
 
   @override
   void initState() {
@@ -82,81 +84,21 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               _SubscriptionsHeader(
                 savedCount: items.length,
                 activeCount: activeCount,
+                isCalendarView: _isCalendarView,
+                onToggleView: () =>
+                    setState(() => _isCalendarView = !_isCalendarView),
               ),
               const SizedBox(height: AppSpacing.sm),
-              RegistryAuraSearchField(
-                controller: _searchController,
-                hintText: l10n.subscriptionsSearchPlaceholder,
-                fieldKey: const ValueKey<String>('subscriptions-search'),
-                clearKey: const ValueKey<String>('subscriptions-search-clear'),
-              ),
-              if (items.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                _SubscriptionFilters(
-                  selected: _filter,
-                  totalCount: items.length,
-                  onSelected: (filter) => setState(() => _filter = filter),
+              if (_isCalendarView) ...[
+                SubscriptionCalendarView(
+                  subscriptions: items.where((item) => item.isActive).toList(),
+                  now: now,
                 ),
-                const SizedBox(height: AppSpacing.md),
-                _MonthlyCostCard(
-                  totals: totals,
-                  activeCount: activeCount,
-                  attentionCount: attention,
-                ),
-              ],
-              const SizedBox(height: AppSpacing.md),
-              if (items.isEmpty)
-                RegistryEmptyState(
-                  key: const ValueKey<String>('subscriptions-empty'),
-                  title: l10n.subscriptionsEmptyTitle,
-                  message: l10n.subscriptionsEmptyMessage,
-                  illustration: const RegistrySubscriptionIllustration(),
-                  action: SizedBox(
-                    width: double.infinity,
-                    child: RegistryPrimaryButton(
-                      key: const ValueKey<String>('subscriptions-add'),
-                      label: l10n.addSubscription,
-                      onPressed: () => AppRoutes.openAddSubscription(context),
-                    ),
-                  ),
-                )
-              else if (visible.isEmpty)
-                RegistryEmptyState(
-                  key: const ValueKey<String>('subscriptions-filter-empty'),
-                  title: query.trim().isEmpty
-                      ? l10n.subscriptionsFilterEmptyTitle
-                      : l10n.subscriptionsSearchEmptyTitle,
-                  message: query.trim().isEmpty
-                      ? l10n.subscriptionsFilterEmptyMessage
-                      : l10n.subscriptionsSearchEmptyMessage,
-                  icon: Icons.search_off_rounded,
-                )
-              else ...[
-                RegistryAuraSectionHeader(
-                  title: l10n.subscriptionsListHeader,
-                  actionLabel: l10n.addSubscriptionShort,
-                  actionKey: const ValueKey<String>('subscriptions-add-header'),
-                  onAction: () => AppRoutes.openAddSubscription(context),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                for (final subscription in visible) ...[
-                  SubscriptionListCard(
-                    key: ValueKey<String>(subscription.id),
-                    subscription: subscription,
-                    onTap: () => AppRoutes.openSubscriptionDetail(
-                      context,
-                      subscription.id,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
-              ],
-              if (items.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.md),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    key: const ValueKey<String>('subscriptions-add'),
+                    key: const ValueKey<String>('subscriptions-add-calendar'),
                     onPressed: () => AppRoutes.openAddSubscription(context),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(AppSpacing.minTapTarget, 45),
@@ -173,6 +115,97 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       AppSpacing.minTapTarget *
                       MediaQuery.textScalerOf(context).scale(1),
                 ),
+              ] else ...[
+                RegistryAuraSearchField(
+                  controller: _searchController,
+                  hintText: l10n.subscriptionsSearchPlaceholder,
+                  fieldKey: const ValueKey<String>('subscriptions-search'),
+                  clearKey: const ValueKey<String>('subscriptions-search-clear'),
+                ),
+                if (items.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  _SubscriptionFilters(
+                    selected: _filter,
+                    totalCount: items.length,
+                    onSelected: (filter) => setState(() => _filter = filter),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _MonthlyCostCard(
+                    totals: totals,
+                    activeCount: activeCount,
+                    attentionCount: attention,
+                  ),
+                ],
+                const SizedBox(height: AppSpacing.md),
+                if (items.isEmpty)
+                  RegistryEmptyState(
+                    key: const ValueKey<String>('subscriptions-empty'),
+                    title: l10n.subscriptionsEmptyTitle,
+                    message: l10n.subscriptionsEmptyMessage,
+                    illustration: const RegistrySubscriptionIllustration(),
+                    action: SizedBox(
+                      width: double.infinity,
+                      child: RegistryPrimaryButton(
+                        key: const ValueKey<String>('subscriptions-add'),
+                        label: l10n.addSubscription,
+                        onPressed: () => AppRoutes.openAddSubscription(context),
+                      ),
+                    ),
+                  )
+                else if (visible.isEmpty)
+                  RegistryEmptyState(
+                    key: const ValueKey<String>('subscriptions-filter-empty'),
+                    title: query.trim().isEmpty
+                        ? l10n.subscriptionsFilterEmptyTitle
+                        : l10n.subscriptionsSearchEmptyTitle,
+                    message: query.trim().isEmpty
+                        ? l10n.subscriptionsFilterEmptyMessage
+                        : l10n.subscriptionsSearchEmptyMessage,
+                    icon: Icons.search_off_rounded,
+                  )
+                else ...[
+                  RegistryAuraSectionHeader(
+                    title: l10n.subscriptionsListHeader,
+                    actionLabel: l10n.addSubscriptionShort,
+                    actionKey: const ValueKey<String>('subscriptions-add-header'),
+                    onAction: () => AppRoutes.openAddSubscription(context),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  for (final subscription in visible) ...[
+                    SubscriptionListCard(
+                      key: ValueKey<String>(subscription.id),
+                      subscription: subscription,
+                      onTap: () => AppRoutes.openSubscriptionDetail(
+                        context,
+                        subscription.id,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                  ],
+                ],
+                if (items.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      key: const ValueKey<String>('subscriptions-add'),
+                      onPressed: () => AppRoutes.openAddSubscription(context),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(AppSpacing.minTapTarget, 45),
+                        side: const BorderSide(color: Color(0xFFA9AFC2)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(l10n.addSubscription),
+                    ),
+                  ),
+                  SizedBox(
+                    height:
+                        AppSpacing.minTapTarget *
+                        MediaQuery.textScalerOf(context).scale(1),
+                  ),
+                ],
               ],
             ],
           );
@@ -186,10 +219,14 @@ class _SubscriptionsHeader extends StatelessWidget {
   const _SubscriptionsHeader({
     required this.savedCount,
     required this.activeCount,
+    this.isCalendarView = false,
+    this.onToggleView,
   });
 
   final int savedCount;
   final int activeCount;
+  final bool isCalendarView;
+  final VoidCallback? onToggleView;
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +247,66 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
+            Semantics(
+              button: true,
+              label: isCalendarView ? 'List view' : 'Calendar view',
+              child: Material(
+                color: isCalendarView
+                    ? colorScheme.primaryContainer
+                    : colorScheme.surfaceContainerLowest,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(
+                    color: isCalendarView
+                        ? colorScheme.primary
+                        : colorScheme.outlineVariant,
+                  ),
+                ),
+                child: InkWell(
+                  key: const ValueKey<String>('subscriptions-calendar-toggle'),
+                  onTap: onToggleView,
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    width: AppSpacing.minTapTarget,
+                    height: AppSpacing.minTapTarget,
+                    child: Icon(
+                      isCalendarView
+                          ? Icons.view_list_rounded
+                          : Icons.calendar_month_outlined,
+                      color: isCalendarView
+                          ? colorScheme.onPrimaryContainer
+                          : colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Semantics(
+              button: true,
+              label: l10n.discoverSubscriptions,
+              child: Material(
+                color: colorScheme.surfaceContainerLowest,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(color: colorScheme.outlineVariant),
+                ),
+                child: InkWell(
+                  key: const ValueKey<String>('subscriptions-discover'),
+                  onTap: () => AppRoutes.openDetectedSubscriptions(context),
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    width: AppSpacing.minTapTarget,
+                    height: AppSpacing.minTapTarget,
+                    child: Icon(
+                      Icons.auto_awesome_outlined,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
               label: l10n.notificationsButton,

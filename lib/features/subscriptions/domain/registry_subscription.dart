@@ -7,12 +7,30 @@ enum BillingCycle { weekly, monthly, quarterly, yearly }
 enum SubscriptionLifecycle { active, cancelled }
 
 enum SubscriptionCategory {
+  aiServices,
+  business,
+  cloudStorage,
+  communication,
+  development,
+  donations,
+  education,
   entertainment,
+  fashionBeauty,
+  finance,
+  fitness,
+  food,
   healthFitness,
   productivity,
+  security,
+  shopping,
+  socialMedia,
+  software,
+  sport,
+  tools,
+  transportation,
+  travel,
   utilities,
-  finance,
-  education,
+  videoTv,
   other,
 }
 

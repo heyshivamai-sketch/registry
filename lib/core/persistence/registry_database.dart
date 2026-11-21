@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 /// Version 1 stores document and subscription rows. Version 2 adds attachment
 /// metadata plus ordered dynamic fields and renewal history.
 abstract final class RegistryDatabase {
-  static const int schemaVersion = 3;
+  static const int schemaVersion = 4;
 
   static Future<Database> open(String path) {
     return openDatabase(
@@ -41,6 +41,46 @@ abstract final class RegistryDatabase {
       );
       await db.execute("ALTER TABLE documents ADD COLUMN category_label TEXT");
     }
+    if (from < 4 && to >= 4) {
+      await _upgradeToVersion4(db);
+    }
+  }
+
+  static Future<void> _upgradeToVersion4(DatabaseExecutor db) async {
+    await db.execute('''
+      CREATE TABLE detected_subscriptions (
+        id TEXT PRIMARY KEY,
+        merchant_name TEXT NOT NULL,
+        minor_units INTEGER NOT NULL,
+        currency_code TEXT NOT NULL,
+        billing_cycle TEXT NOT NULL,
+        last_payment_date TEXT NOT NULL,
+        next_payment_date TEXT,
+        next_payment_is_estimated INTEGER NOT NULL,
+        source_types TEXT NOT NULL,
+        confidence_score REAL NOT NULL,
+        review_status TEXT NOT NULL,
+        bank_evidence TEXT,
+        email_evidence TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE ignored_merchants (
+        merchant_name TEXT PRIMARY KEY,
+        suppressed_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE gmail_sync_metadata (
+        key TEXT PRIMARY KEY,
+        email_address TEXT,
+        last_successful_scan TEXT,
+        last_scanned_message_id TEXT,
+        connected_at TEXT
+      )
+    ''');
   }
 
   static Future<void> _createVersion1(DatabaseExecutor db) async {

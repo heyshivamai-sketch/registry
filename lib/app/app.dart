@@ -33,7 +33,10 @@ import 'package:the_registry/features/documents/domain/document_repository.dart'
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/onboarding/data/onboarding_repository.dart';
 import 'package:the_registry/features/onboarding/presentation/onboarding_gate.dart';
+import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
+import 'package:the_registry/features/subscriptions/data/gmail_client_gateway.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
+import 'package:the_registry/features/subscriptions/domain/subscription_discovery_service.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -62,11 +65,15 @@ class RegistryApp extends StatefulWidget {
     this.adsConfig,
     this.adsPlatform,
     this.csvFiles,
+    this.detectedSubscriptionRepository,
+    this.gmailClientGateway,
   });
 
   final OnboardingRepository onboardingRepository;
   final DocumentRepository? documentRepository;
   final SubscriptionRepository? subscriptionRepository;
+  final DetectedSubscriptionRepository? detectedSubscriptionRepository;
+  final GmailClientGateway? gmailClientGateway;
   final ImagePickerService? imagePickerService;
   final DatePickerService? datePickerService;
   final DocumentOcrService? documentOcrService;
@@ -151,6 +158,13 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
   );
   late final CsvFileGateway _csvFiles =
       widget.csvFiles ?? const PlatformCsvFileGateway();
+  late final DetectedSubscriptionRepository _detectedSubscriptions =
+      widget.detectedSubscriptionRepository ??
+          createDefaultDetectedSubscriptionRepository();
+  late final GmailClientGateway _gmailClient =
+      widget.gmailClientGateway ?? createDefaultGmailClient();
+  late final SubscriptionDiscoveryService _discovery =
+      createDefaultDiscoveryService(_detectedSubscriptions, _subscriptions);
   late final EntitlementService _entitlements = EntitlementService(
     documents: _documents,
     subscriptions: _subscriptions,
@@ -266,6 +280,8 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       localPro: _localPro,
       ads: _ads,
       csvFiles: _csvFiles,
+      discovery: _discovery,
+      gmailClient: _gmailClient,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Regiday',
         debugShowCheckedModeBanner: false,

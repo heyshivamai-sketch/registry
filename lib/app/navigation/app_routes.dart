@@ -11,7 +11,11 @@ import 'package:the_registry/features/home/presentation/attention_list_screen.da
 import 'package:the_registry/features/home/presentation/catalog_item_detail_screen.dart';
 import 'package:the_registry/features/home/presentation/horizon_90_day_screen.dart';
 import 'package:the_registry/features/notifications/presentation/notifications_screen.dart';
+import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
+import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
+import 'package:the_registry/features/subscriptions/presentation/gmail_connect_screen.dart';
+import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_detail_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
@@ -95,10 +99,15 @@ abstract final class AppRoutes {
     return didSave;
   }
 
-  static Future<bool> openAddSubscription(BuildContext context) async {
+  static Future<bool> openAddSubscription(
+    BuildContext context, {
+    DetectedSubscriptionCandidate? initialCandidate,
+  }) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final saved = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(builder: (_) => const AddSubscriptionScreen()),
+      MaterialPageRoute<bool>(
+        builder: (_) => AddSubscriptionScreen(initialCandidate: initialCandidate),
+      ),
     );
     final didSave = saved ?? false;
     if (didSave && context.mounted) {
@@ -108,6 +117,30 @@ abstract final class AppRoutes {
         ..showSnackBar(SnackBar(content: Text(l10n.subscriptionSaved)));
     }
     return didSave;
+  }
+
+  static Future<void> openDetectedSubscriptions(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const DetectedSubscriptionsScreen(),
+      ),
+    );
+  }
+
+  static Future<void> openGmailConnect(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const GmailConnectScreen(),
+      ),
+    );
+  }
+
+  static Future<void> openSubscriptionCalendar(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const SubscriptionCalendarScreen(),
+      ),
+    );
   }
 
   static Future<void> openSubscriptionDetail(BuildContext context, String id) {

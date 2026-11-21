@@ -76,15 +76,21 @@ class AddDocumentController extends ChangeNotifier {
         optionalDynamicFields.any((field) => !field.isEmpty);
   }
 
-  List<DocumentFieldValue> get requiredDynamicFields => [
-    for (final field in dynamicFields)
-      if (_isRequiredDynamic(field)) field,
-  ];
+  List<DocumentFieldValue> get requiredDynamicFields {
+    final seen = <String>{};
+    return [
+      for (final field in dynamicFields)
+        if (_isRequiredDynamic(field) && seen.add(field.id)) field,
+    ];
+  }
 
-  List<DocumentFieldValue> get optionalDynamicFields => [
-    for (final field in dynamicFields)
-      if (!_isRequiredDynamic(field)) field,
-  ];
+  List<DocumentFieldValue> get optionalDynamicFields {
+    final seen = <String>{};
+    return [
+      for (final field in dynamicFields)
+        if (!_isRequiredDynamic(field) && seen.add(field.id)) field,
+    ];
+  }
 
   bool _isRequiredDynamic(DocumentFieldValue field) {
     if (field.isCustom) {
@@ -151,6 +157,8 @@ class AddDocumentController extends ChangeNotifier {
     documentNumber = document.documentNumber ?? '';
     issueDate = document.issueDate;
     expiryDate = document.expiryDate;
+    expiryDate =
+        (document.expiryDate.year >= 2099) ? null : document.expiryDate;
     actionDate = document.actionDate;
     actionDateUserSet = document.actionDate != null;
     impact = document.impact;
@@ -288,10 +296,6 @@ class AddDocumentController extends ChangeNotifier {
     if (next.countryCode != DocumentCountryCodes.other) {
       countryCode = next.countryCode;
     }
-    dynamicFields = [
-      for (final field in dynamicFields)
-        if (field.isCustom || next.fieldIds.contains(field.fieldKey)) field,
-    ];
     if (discardIncompatible) {
       dynamicFields = [
         for (final field in dynamicFields)
@@ -641,14 +645,30 @@ class AddDocumentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setOcrDocumentTypeLabel(String label) {
+    final current = ocrResult;
+    if (current != null) {
+      ocrResult = current.copyWith(documentTypeLabel: label);
+      notifyListeners();
+    }
+  }
+
   void changeOcrSchema(String nextSchemaId) {
     final schema = schemaRegistry.byId(nextSchemaId);
     final current = ocrResult;
     if (current == null) {
       return;
     }
+    final nextName = (current.documentTypeLabel != null &&
+            current.documentTypeLabel!.trim().isNotEmpty &&
+            current.documentTypeLabel !=
+                _fallbackNameForSchema(
+                  schemaRegistry.byId(current.classification.schemaId),
+                ))
+        ? current.documentTypeLabel
+        : _fallbackNameForSchema(schema);
     ocrResult = current.copyWith(
-      clearDocumentTypeLabel: true,
+      documentTypeLabel: nextName,
       classification: current.classification.copyWith(
         schemaId: schema.id,
         countryCode: schema.countryCode,
@@ -669,8 +689,11 @@ class AddDocumentController extends ChangeNotifier {
     countryCode = result.classification.countryCode;
     category = schema.category;
     categoryLabel = result.categoryLabel ?? '';
-    if (result.documentTypeLabel?.trim().isNotEmpty == true) {
-      name = result.documentTypeLabel!.trim();
+    final docTitle = result.documentTypeLabel?.trim();
+    if (docTitle != null && docTitle.isNotEmpty) {
+      name = docTitle;
+    } else {
+      name = _fallbackNameForSchema(schema);
     }
     final nextDynamic = <DocumentFieldValue>[];
     for (final field in ocrFields) {
@@ -700,28 +723,45 @@ class AddDocumentController extends ChangeNotifier {
         case DocumentBaseBinding.expiryDate:
           expiryDate = _tryParseDate(value) ?? expiryDate;
         case DocumentBaseBinding.none:
-          nextDynamic.add(
-            DocumentFieldValue(
-              id: field.id,
-              fieldKey: field.fieldKey,
-              customLabel: field.customLabel,
-              value: field.value,
-              sensitive: field.sensitive,
-              isDate: field.isDate,
-              isCustom: field.isCustom,
-            ),
-          );
+          if (!nextDynamic.any((existing) => existing.id == field.id)) {
+            nextDynamic.add(
+              DocumentFieldValue(
+                id: field.id,
+                fieldKey: field.fieldKey,
+                customLabel: field.customLabel,
+                value: field.value,
+                sensitive: field.sensitive,
+                isDate: field.isDate,
+                isCustom: field.isCustom,
+              ),
+            );
+          }
       }
     }
     dynamicFields = nextDynamic;
-    if (name.trim().isEmpty && ownerName.trim().isNotEmpty) {
-      name = ownerName;
+    if (name.trim().isEmpty) {
+      name = _fallbackNameForSchema(schema);
     }
+    upsertUnboundSchemaValues();
     ocrConfirmed = true;
     ocrStatus = OcrUiStatus.idle;
     step = AddDocumentStep.identity;
     identityExtrasOpen = hasIdentityExtras;
     notifyListeners();
+  }
+
+  String _fallbackNameForSchema(DocumentSchema schema) {
+    return switch (schema.id) {
+      DocumentSchemaIds.indiaAadhaar => 'Aadhaar',
+      DocumentSchemaIds.genericPassport => 'Passport',
+      DocumentSchemaIds.franceNationalId => 'Carte Nationale d\'Identité',
+      DocumentSchemaIds.uaeEmiratesId => 'Emirates ID',
+      _ => categoryLabel.trim().isNotEmpty
+          ? categoryLabel.trim()
+          : (schema.category != DocumentCategory.other
+              ? schema.category.name
+              : 'Document'),
+    };
   }
 
   DocumentBaseBinding _fallbackBindingFor(String fieldKey) {
@@ -751,11 +791,46 @@ class AddDocumentController extends ChangeNotifier {
     if (iso != null) {
       return DateTime(iso.year, iso.month, iso.day);
     }
+    final ymdMatch = RegExp(
+      r'^(\d{4})[./\-\s]+(\d{1,2}|\p{L}{2,})[./\-\s]+(\d{1,2})$',
+      unicode: true,
+    ).firstMatch(value);
+    if (ymdMatch != null) {
+      final year = int.tryParse(ymdMatch.group(1)!);
+      final monthToken = ymdMatch.group(2)!;
+      final day = int.tryParse(ymdMatch.group(3)!);
+      final month = int.tryParse(monthToken) ?? _monthFromName(monthToken);
+      if (year != null &&
+          month != null &&
+          day != null &&
+          day >= 1 &&
+          day <= 31 &&
+          month >= 1 &&
+          month <= 12) {
+        return DateTime(year, month, day);
+      }
+    }
     final match = RegExp(
-      r'^(\d{1,2})[./\-\s](\d{1,2}|\p{L}{2,})[./\-\s](\d{2,4})$',
+      r'^(\d{1,2})[./\-\s,]+(\d{1,2}|\p{L}{2,})[./\-\s,]+(\d{2,4})$',
       unicode: true,
     ).firstMatch(value);
     if (match == null) {
+      final mdyMatch = RegExp(
+        r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})$',
+        unicode: true,
+      ).firstMatch(value);
+      if (mdyMatch != null) {
+        final monthToken = mdyMatch.group(1)!;
+        final day = int.tryParse(mdyMatch.group(2)!);
+        final yearRaw = int.tryParse(mdyMatch.group(3)!);
+        final month = _monthFromName(monthToken);
+        if (day != null && yearRaw != null && month != null) {
+          final year = yearRaw < 100 ? 2000 + yearRaw : yearRaw;
+          if (day >= 1 && day <= 31) {
+            return DateTime(year, month, day);
+          }
+        }
+      }
       if (RegExp(r'^(19|20)\d{2}$').hasMatch(value)) {
         return DateTime(int.parse(value), 1, 1);
       }
@@ -769,7 +844,7 @@ class AddDocumentController extends ChangeNotifier {
     final year = yearRaw < 100 ? 2000 + yearRaw : yearRaw;
     final monthToken = match.group(2)!;
     final month = int.tryParse(monthToken) ?? _monthFromName(monthToken);
-    if (month == null || day < 1 || day > 31) {
+    if (month == null || day < 1 || day > 31 || month < 1 || month > 12) {
       return null;
     }
     return DateTime(year, month, day);
@@ -859,6 +934,9 @@ class AddDocumentController extends ChangeNotifier {
 
   bool _validateDates(AppLocalizations l10n) {
     expiryError = expiryDate == null ? l10n.errorRequired : null;
+    final isScanned = hasAttachment || ocrConfirmed;
+    expiryError =
+        (!isScanned && expiryDate == null) ? l10n.errorRequired : null;
     issueDateError = null;
     actionDateError = null;
     if (issueDate != null &&
@@ -901,18 +979,22 @@ class AddDocumentController extends ChangeNotifier {
       for (final field in dynamicFields)
         if (!field.isEmpty) field,
     ];
+    final resolvedExpiry = expiryDate ?? DateTime.utc(2099, 12, 31);
+    final resolvedCategory = category ?? DocumentCategory.other;
+    final resolvedImpact = impact ?? DocumentImpact.medium;
+
     if (isEditing) {
       return RegistryDocument(
         id: existingId!,
         name: name.trim(),
-        category: category!,
+        category: resolvedCategory,
         ownerName: _optional(ownerName),
         issuingAuthority: _optional(issuingAuthority),
         documentNumber: _optional(documentNumber),
         issueDate: issueDate,
-        expiryDate: expiryDate!,
+        expiryDate: resolvedExpiry,
         actionDate: actionDate,
-        impact: impact!,
+        impact: resolvedImpact,
         renewalEffort: renewalEffort,
         costOfLapsing: _optional(costOfLapsing),
         dependency: _optional(dependency),
@@ -933,14 +1015,14 @@ class AddDocumentController extends ChangeNotifier {
     return RegistryDocument(
       id: 'doc_${now.microsecondsSinceEpoch}',
       name: name.trim(),
-      category: category!,
+      category: resolvedCategory,
       ownerName: _optional(ownerName),
       issuingAuthority: _optional(issuingAuthority),
       documentNumber: _optional(documentNumber),
       issueDate: issueDate,
-      expiryDate: expiryDate!,
+      expiryDate: resolvedExpiry,
       actionDate: actionDate,
-      impact: impact!,
+      impact: resolvedImpact,
       renewalEffort: renewalEffort,
       costOfLapsing: _optional(costOfLapsing),
       dependency: _optional(dependency),

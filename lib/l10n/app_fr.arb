@@ -110,7 +110,7 @@
   "attachmentSectionTitle": "Pièce jointe",
   "attachmentEmptyLabel": "Ajoutez une photo de ce document",
   "attachmentTakePhoto": "Prendre une photo",
-  "attachmentChooseGallery": "Choisir depuis la galerie",
+  "attachmentChooseGallery": "Galerie",
   "attachmentReplace": "Remplacer",
   "attachmentRemove": "Retirer",
   "attachmentPrivacy": "Stockée sur cet appareil. Envoyée à Gemini via Firebase AI Logic uniquement lorsque vous lancez l’analyse.",
@@ -725,5 +725,65 @@
   "scanAllImages": "Scanner toutes les images",
   "firebaseAiScanPrivacy": "En appuyant sur Scanner toutes les images, vos images sont envoyées à Gemini via Firebase AI Logic. Vérifiez chaque champ avant d’enregistrer.",
   "firebaseAiScanProcessing": "Gemini lit toutes les images via Firebase AI Logic. Vous pouvez annuler et saisir les détails manuellement.",
-  "firebaseAiScanUnavailable": "Le scan par IA est indisponible car Firebase n’est pas configuré. Vous pouvez ajouter des images et saisir tous les détails manuellement."
+  "firebaseAiScanUnavailable": "Le scan par IA est indisponible car Firebase n’est pas configuré. Vous pouvez ajouter des images et saisir tous les détails manuellement.",
+  "discoverSubscriptions": "Découvrir des abonnements",
+  "detectedSubscriptionsTitle": "Abonnements détectés",
+  "detectedSubscriptionsEmpty": "Aucun nouvel abonnement détecté.",
+  "detectedSubscriptionsSubtitle": "Examinez les paiements récurrents découverts dans vos relevés bancaires et e-mails.",
+  "sourceBankStatement": "Relevé bancaire",
+  "sourceGmail": "Gmail",
+  "sourceBoth": "Banque et Gmail",
+  "confidenceHigh": "Confiance élevée",
+  "confidenceMedium": "Confiance moyenne",
+  "confidenceLow": "Faible confiance",
+  "estimatedRenewalDate": "Prochain paiement estimé : {date}",
+  "@estimatedRenewalDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmedRenewalDate": "Prochain paiement : {date}",
+  "@confirmedRenewalDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "notASubscription": "Pas un abonnement",
+  "addToResiday": "Ajouter à ResiDay",
+  "connectGmailTitle": "Détection d'abonnements Gmail",
+  "connectGmailButton": "Connecter Gmail",
+  "disconnectGmailButton": "Déconnecter",
+  "scanNewEmails": "Rechercher de nouveaux e-mails",
+  "gmailConnectedAs": "Connecté en tant que : {email}",
+  "@gmailConnectedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "lastScan": "Dernière analyse : {time}",
+  "@lastScan": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "scanningEmails": "Recherche des e-mails de facturation...",
+  "gmailScanSuccess": "Analyse terminée. {count} abonnements détectés trouvés.",
+  "@gmailScanSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gmailPrivacyNotice": "ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
+  "candidateAddedSuccess": "Abonnement ajouté avec succès.",
+  "candidateIgnored": "Marchand ignoré. ResiDay ne détectera plus ce marchand."
 }

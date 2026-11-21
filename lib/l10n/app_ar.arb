@@ -725,5 +725,66 @@
   "scanAllImages": "مسح جميع الصور",
   "firebaseAiScanPrivacy": "عند الضغط على مسح جميع الصور، تُرسل صور المستند إلى Gemini عبر Firebase AI Logic. راجع كل حقل قبل الحفظ.",
   "firebaseAiScanProcessing": "يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.",
-  "firebaseAiScanUnavailable": "المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا."
+  "firebaseAiScanUnavailable": "المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا.",
+  "firebaseAiScanUnavailable": "المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا.",
+  "discoverSubscriptions": "اكتشاف الاشتراكات",
+  "detectedSubscriptionsTitle": "الاشتراكات المكتشفة",
+  "detectedSubscriptionsEmpty": "لم يتم اكتشاف أي اشتراكات جديدة.",
+  "detectedSubscriptionsSubtitle": "راجع المدفوعات المتكررة المكتشفة من كشوف حسابك المصرفي ورسائل البريد الإلكتروني.",
+  "sourceBankStatement": "كشف حساب مصرفي",
+  "sourceGmail": "Gmail",
+  "sourceBoth": "البنك و Gmail",
+  "confidenceHigh": "ثقة عالية",
+  "confidenceMedium": "ثقة متوسطة",
+  "confidenceLow": "ثقة منخفضة",
+  "estimatedRenewalDate": "الدفعة القادمة المقدرة: {date}",
+  "@estimatedRenewalDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmedRenewalDate": "الدفعة القادمة: {date}",
+  "@confirmedRenewalDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "notASubscription": "ليس اشتراكاً",
+  "addToResiday": "إضافة إلى ResiDay",
+  "connectGmailTitle": "اكتشاف اشتراكات Gmail",
+  "connectGmailButton": "ربط Gmail",
+  "disconnectGmailButton": "إلغاء الربط",
+  "scanNewEmails": "فحص الرسائل الجديدة",
+  "gmailConnectedAs": "متصل كـ: {email}",
+  "@gmailConnectedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "lastScan": "آخر فحص: {time}",
+  "@lastScan": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "scanningEmails": "جاري البحث في رسائل الفواتير...",
+  "gmailScanSuccess": "اكتمل الفحص. تم العثور على {count} اشتراكات مكتشفة.",
+  "@gmailScanSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gmailPrivacyNotice": "يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
+  "candidateAddedSuccess": "تمت إضافة الاشتراك بنجاح.",
+  "candidateIgnored": "تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى."
 }

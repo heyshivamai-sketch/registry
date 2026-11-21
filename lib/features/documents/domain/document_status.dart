@@ -6,6 +6,21 @@ import 'package:the_registry/l10n/app_localizations.dart';
 
 abstract final class DocumentStatus {
   static RegistryStatus resolve(RegistryDocument document, {DateTime? now}) {
+    if (document.expiryDate.year >= 2099) {
+      if (document.actionDate != null) {
+        final actionDays = RegistryDateFormatter.daysUntil(
+          document.actionDate!,
+          now: now,
+        );
+        if (actionDays <= 0) {
+          return RegistryStatus.urgent;
+        }
+        if (actionDays <= AppSpacing.horizonDays) {
+          return RegistryStatus.upcoming;
+        }
+      }
+      return RegistryStatus.active;
+    }
     final expiryDays = RegistryDateFormatter.daysUntil(
       document.expiryDate,
       now: now,

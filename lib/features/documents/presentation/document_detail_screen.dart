@@ -641,10 +641,11 @@ class _DeadlineGrid extends StatelessWidget {
             locale,
           ),
         ),
-      (
-        l10n.pulseExpiresEyebrow,
-        RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),
-      ),
+      if (document.expiryDate.year < 2099)
+        (
+          l10n.pulseExpiresEyebrow,
+          RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),
+        ),
     ];
 
     return Column(

@@ -2327,4 +2327,92 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get firebaseAiScanUnavailable =>
       'المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا.';
+
+  @override
+  String get discoverSubscriptions => 'اكتشاف الاشتراكات';
+
+  @override
+  String get detectedSubscriptionsTitle => 'الاشتراكات المكتشفة';
+
+  @override
+  String get detectedSubscriptionsEmpty => 'لم يتم اكتشاف أي اشتراكات جديدة.';
+
+  @override
+  String get detectedSubscriptionsSubtitle =>
+      'راجع المدفوعات المتكررة المكتشفة من كشوف حسابك المصرفي ورسائل البريد الإلكتروني.';
+
+  @override
+  String get sourceBankStatement => 'كشف حساب مصرفي';
+
+  @override
+  String get sourceGmail => 'Gmail';
+
+  @override
+  String get sourceBoth => 'البنك و Gmail';
+
+  @override
+  String get confidenceHigh => 'ثقة عالية';
+
+  @override
+  String get confidenceMedium => 'ثقة متوسطة';
+
+  @override
+  String get confidenceLow => 'ثقة منخفضة';
+
+  @override
+  String estimatedRenewalDate(String date) {
+    return 'الدفعة القادمة المقدرة: $date';
+  }
+
+  @override
+  String confirmedRenewalDate(String date) {
+    return 'الدفعة القادمة: $date';
+  }
+
+  @override
+  String get notASubscription => 'ليس اشتراكاً';
+
+  @override
+  String get addToResiday => 'إضافة إلى ResiDay';
+
+  @override
+  String get connectGmailTitle => 'اكتشاف اشتراكات Gmail';
+
+  @override
+  String get connectGmailButton => 'ربط Gmail';
+
+  @override
+  String get disconnectGmailButton => 'إلغاء الربط';
+
+  @override
+  String get scanNewEmails => 'فحص الرسائل الجديدة';
+
+  @override
+  String gmailConnectedAs(String email) {
+    return 'متصل كـ: $email';
+  }
+
+  @override
+  String lastScan(String time) {
+    return 'آخر فحص: $time';
+  }
+
+  @override
+  String get scanningEmails => 'جاري البحث في رسائل الفواتير...';
+
+  @override
+  String gmailScanSuccess(int count) {
+    return 'اكتمل الفحص. تم العثور على $count اشتراكات مكتشفة.';
+  }
+
+  @override
+  String get gmailPrivacyNotice =>
+      'يتطلب ResiDay إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
+
+  @override
+  String get candidateAddedSuccess => 'تمت إضافة الاشتراك بنجاح.';
+
+  @override
+  String get candidateIgnored =>
+      'تم تجاهل التاجر. لن يكتشف ResiDay هذا التاجر مرة أخرى.';
 }

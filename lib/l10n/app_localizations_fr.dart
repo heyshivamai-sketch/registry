@@ -403,7 +403,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get attachmentTakePhoto => 'Prendre une photo';
 
   @override
-  String get attachmentChooseGallery => 'Choisir depuis la galerie';
+  String get attachmentChooseGallery => 'Galerie';
 
   @override
   String get attachmentReplace => 'Remplacer';
@@ -2378,4 +2378,92 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get firebaseAiScanUnavailable =>
       'Le scan par IA est indisponible car Firebase n’est pas configuré. Vous pouvez ajouter des images et saisir tous les détails manuellement.';
+
+  @override
+  String get discoverSubscriptions => 'Découvrir des abonnements';
+
+  @override
+  String get detectedSubscriptionsTitle => 'Abonnements détectés';
+
+  @override
+  String get detectedSubscriptionsEmpty => 'Aucun nouvel abonnement détecté.';
+
+  @override
+  String get detectedSubscriptionsSubtitle =>
+      'Examinez les paiements récurrents découverts dans vos relevés bancaires et e-mails.';
+
+  @override
+  String get sourceBankStatement => 'Relevé bancaire';
+
+  @override
+  String get sourceGmail => 'Gmail';
+
+  @override
+  String get sourceBoth => 'Banque et Gmail';
+
+  @override
+  String get confidenceHigh => 'Confiance élevée';
+
+  @override
+  String get confidenceMedium => 'Confiance moyenne';
+
+  @override
+  String get confidenceLow => 'Faible confiance';
+
+  @override
+  String estimatedRenewalDate(String date) {
+    return 'Prochain paiement estimé : $date';
+  }
+
+  @override
+  String confirmedRenewalDate(String date) {
+    return 'Prochain paiement : $date';
+  }
+
+  @override
+  String get notASubscription => 'Pas un abonnement';
+
+  @override
+  String get addToResiday => 'Ajouter à ResiDay';
+
+  @override
+  String get connectGmailTitle => 'Détection d\'abonnements Gmail';
+
+  @override
+  String get connectGmailButton => 'Connecter Gmail';
+
+  @override
+  String get disconnectGmailButton => 'Déconnecter';
+
+  @override
+  String get scanNewEmails => 'Rechercher de nouveaux e-mails';
+
+  @override
+  String gmailConnectedAs(String email) {
+    return 'Connecté en tant que : $email';
+  }
+
+  @override
+  String lastScan(String time) {
+    return 'Dernière analyse : $time';
+  }
+
+  @override
+  String get scanningEmails => 'Recherche des e-mails de facturation...';
+
+  @override
+  String gmailScanSuccess(int count) {
+    return 'Analyse terminée. $count abonnements détectés trouvés.';
+  }
+
+  @override
+  String get gmailPrivacyNotice =>
+      'ResiDay nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
+
+  @override
+  String get candidateAddedSuccess => 'Abonnement ajouté avec succès.';
+
+  @override
+  String get candidateIgnored =>
+      'Marchand ignoré. ResiDay ne détectera plus ce marchand.';
 }

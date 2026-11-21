@@ -108,4 +108,112 @@ void main() {
     expect(result.status, OcrRecognitionStatus.failed);
     expect(result.fields, isEmpty);
   });
+
+  test(
+    'extracts documentName, gender, nationality and normalizes dates from varied formats',
+    () async {
+      final client = _FakeFirebaseAiClient()
+        ..response = jsonEncode({
+          'documentName': 'Aadhaar Card',
+          'documentType': 'ID Card',
+          'countryCode': 'IN',
+          'name': 'PRIYA SHARMA',
+          'documentNumber': '9876 5432 1098',
+          'dateOfBirth': '18/05/1992',
+          'issueDate': '10-04-2015',
+          'expiryDate': '2035/12/31',
+          'gender': 'Female',
+          'nationality': 'Indian',
+          'address': '42 MG ROAD, BENGALURU, 560001',
+          'issuingAuthority': 'Unique Identification Authority of India',
+          'category': 'Identity card',
+        });
+      final result = await FirebaseAiDocumentOcrService(
+        client,
+      ).recognize(kTinyPngBytes);
+
+      expect(result.status, OcrRecognitionStatus.success);
+      expect(result.documentTypeLabel, 'Aadhaar Card');
+      expect(result.classification.schemaId, DocumentSchemaIds.indiaAadhaar);
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.fullName)
+            .value,
+        'PRIYA SHARMA',
+      );
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.dateOfBirth)
+            .value,
+        '1992-05-18',
+      );
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.issueDate)
+            .value,
+        '2015-04-10',
+      );
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.expiryDate)
+            .value,
+        '2035-12-31',
+      );
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.gender)
+            .value,
+        'Female',
+      );
+      expect(
+        result.fields
+            .singleWhere((f) => f.fieldKey == DocumentFieldKeys.nationality)
+            .value,
+        'Indian',
+      );
+    },
+  );
+
+  test('classifies driving licence and insurance documents properly', () async {
+    final client = _FakeFirebaseAiClient()
+      ..response = jsonEncode({
+        'documentName': 'Indian Driving Licence',
+        'documentType': 'Driving Licence',
+        'countryCode': 'IN',
+        'name': 'RAHUL VERMA',
+        'documentNumber': 'DL-1420110012345',
+        'dateOfBirth': '15 Aug 1988',
+        'issueDate': '12 Jan 2018',
+        'expiryDate': '11 Jan 2038',
+        'gender': 'Male',
+        'address': 'NEW DELHI',
+        'issuingAuthority': 'Transport Department Delhi',
+        'category': 'Driving licence',
+      });
+    final result = await FirebaseAiDocumentOcrService(
+      client,
+    ).recognize(kTinyPngBytes);
+
+    expect(result.status, OcrRecognitionStatus.success);
+    expect(result.documentTypeLabel, 'Indian Driving Licence');
+    expect(result.categoryLabel, 'Driving licence');
+    expect(
+      result.fields
+          .singleWhere((f) => f.fieldKey == DocumentFieldKeys.dateOfBirth)
+          .value,
+      '1988-08-15',
+    );
+    expect(
+      result.fields
+          .singleWhere((f) => f.fieldKey == DocumentFieldKeys.issueDate)
+          .value,
+      '2018-01-12',
+    );
+    expect(
+      result.fields
+          .singleWhere((f) => f.fieldKey == DocumentFieldKeys.expiryDate)
+          .value,
+      '2038-01-11',
+    );
+  });
 }

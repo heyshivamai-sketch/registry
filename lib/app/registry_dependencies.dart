@@ -13,7 +13,10 @@ import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_repository.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/reminders/reminder_coordinator.dart';
+import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
+import 'package:the_registry/features/subscriptions/data/gmail_client_gateway.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
+import 'package:the_registry/features/subscriptions/domain/subscription_discovery_service.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
 
 class RegistryDependencies extends InheritedWidget {
@@ -34,6 +37,8 @@ class RegistryDependencies extends InheritedWidget {
     required this.localPro,
     required this.ads,
     required this.csvFiles,
+    required this.discovery,
+    required this.gmailClient,
     required super.child,
   });
 
@@ -52,6 +57,8 @@ class RegistryDependencies extends InheritedWidget {
   final LocalProEntitlement localPro;
   final AdsController ads;
   final CsvFileGateway csvFiles;
+  final SubscriptionDiscoveryService discovery;
+  final GmailClientGateway gmailClient;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -79,8 +86,28 @@ class RegistryDependencies extends InheritedWidget {
         appLock != oldWidget.appLock ||
         localPro != oldWidget.localPro ||
         ads != oldWidget.ads ||
-        csvFiles != oldWidget.csvFiles;
+        csvFiles != oldWidget.csvFiles ||
+        discovery != oldWidget.discovery ||
+        gmailClient != oldWidget.gmailClient;
   }
+}
+
+DetectedSubscriptionRepository createDefaultDetectedSubscriptionRepository() {
+  return InMemoryDetectedSubscriptionRepository();
+}
+
+GmailClientGateway createDefaultGmailClient() {
+  return GoogleApiGmailGateway();
+}
+
+SubscriptionDiscoveryService createDefaultDiscoveryService(
+  DetectedSubscriptionRepository detected,
+  SubscriptionRepository subscriptions,
+) {
+  return SubscriptionDiscoveryService(
+    detectedRepository: detected,
+    subscriptionRepository: subscriptions,
+  );
 }
 
 /// In-memory default used when a test or preview constructs RegistryApp

@@ -763,7 +763,7 @@ abstract class AppLocalizations {
   /// No description provided for @attachmentChooseGallery.
   ///
   /// In en, this message translates to:
-  /// **'Choose from gallery'**
+  /// **'Gallery'**
   String get attachmentChooseGallery;
 
   /// No description provided for @attachmentReplace.
@@ -4101,6 +4101,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.'**
   String get firebaseAiScanUnavailable;
+
+  /// No description provided for @discoverSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Subscriptions'**
+  String get discoverSubscriptions;
+
+  /// No description provided for @detectedSubscriptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Subscriptions'**
+  String get detectedSubscriptionsTitle;
+
+  /// No description provided for @detectedSubscriptionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No new subscriptions detected.'**
+  String get detectedSubscriptionsEmpty;
+
+  /// No description provided for @detectedSubscriptionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review recurring payments discovered from your bank statements and emails.'**
+  String get detectedSubscriptionsSubtitle;
+
+  /// No description provided for @sourceBankStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Statement'**
+  String get sourceBankStatement;
+
+  /// No description provided for @sourceGmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Gmail'**
+  String get sourceGmail;
+
+  /// No description provided for @sourceBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank & Gmail'**
+  String get sourceBoth;
+
+  /// No description provided for @confidenceHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High confidence'**
+  String get confidenceHigh;
+
+  /// No description provided for @confidenceMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium confidence'**
+  String get confidenceMedium;
+
+  /// No description provided for @confidenceLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low confidence'**
+  String get confidenceLow;
+
+  /// No description provided for @estimatedRenewalDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated next payment: {date}'**
+  String estimatedRenewalDate(String date);
+
+  /// No description provided for @confirmedRenewalDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Next payment: {date}'**
+  String confirmedRenewalDate(String date);
+
+  /// No description provided for @notASubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a Subscription'**
+  String get notASubscription;
+
+  /// No description provided for @addToResiday.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to ResiDay'**
+  String get addToResiday;
+
+  /// No description provided for @connectGmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gmail Subscription Detection'**
+  String get connectGmailTitle;
+
+  /// No description provided for @connectGmailButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Gmail'**
+  String get connectGmailButton;
+
+  /// No description provided for @disconnectGmailButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnectGmailButton;
+
+  /// No description provided for @scanNewEmails.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan New Emails'**
+  String get scanNewEmails;
+
+  /// No description provided for @gmailConnectedAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected as: {email}'**
+  String gmailConnectedAs(String email);
+
+  /// No description provided for @lastScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Last scan: {time}'**
+  String lastScan(String time);
+
+  /// No description provided for @scanningEmails.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching billing emails...'**
+  String get scanningEmails;
+
+  /// No description provided for @gmailScanSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan complete. Found {count} detected subscriptions.'**
+  String gmailScanSuccess(int count);
+
+  /// No description provided for @gmailPrivacyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
+  String get gmailPrivacyNotice;
+
+  /// No description provided for @candidateAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription added successfully.'**
+  String get candidateAddedSuccess;
+
+  /// No description provided for @candidateIgnored.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant ignored. ResiDay will not detect this merchant again.'**
+  String get candidateIgnored;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,7 @@ import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
+import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -88,6 +89,25 @@ class AddSubscriptionController extends ChangeNotifier {
     step = AddSubscriptionStep.service;
     saveError = null;
     _baseline = _snapshot();
+    notifyListeners();
+  }
+
+  void prefillCandidate(DetectedSubscriptionCandidate candidate) {
+    mode = SubscriptionFormMode.create;
+    existingId = null;
+    serviceName = candidate.merchantName;
+    planName = '';
+    category = SubscriptionCategory.other;
+    amountText = _amountInput(candidate.amount);
+    currencyCode = candidate.amount.code;
+    billingCycle = candidate.billingCycle;
+    nextPaymentDate = candidate.nextPaymentDate ?? candidate.lastPaymentDate;
+    autoRenew = true;
+    impact = DocumentImpact.medium;
+    reminders = const {SubscriptionReminder.oneDayBefore};
+    notes = '';
+    step = AddSubscriptionStep.service;
+    saveError = null;
     notifyListeners();
   }
 

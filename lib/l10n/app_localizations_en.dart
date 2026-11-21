@@ -398,7 +398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachmentTakePhoto => 'Take photo';
 
   @override
-  String get attachmentChooseGallery => 'Choose from gallery';
+  String get attachmentChooseGallery => 'Gallery';
 
   @override
   String get attachmentReplace => 'Replace';
@@ -2344,4 +2344,92 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get firebaseAiScanUnavailable =>
       'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.';
+
+  @override
+  String get discoverSubscriptions => 'Discover Subscriptions';
+
+  @override
+  String get detectedSubscriptionsTitle => 'Detected Subscriptions';
+
+  @override
+  String get detectedSubscriptionsEmpty => 'No new subscriptions detected.';
+
+  @override
+  String get detectedSubscriptionsSubtitle =>
+      'Review recurring payments discovered from your bank statements and emails.';
+
+  @override
+  String get sourceBankStatement => 'Bank Statement';
+
+  @override
+  String get sourceGmail => 'Gmail';
+
+  @override
+  String get sourceBoth => 'Bank & Gmail';
+
+  @override
+  String get confidenceHigh => 'High confidence';
+
+  @override
+  String get confidenceMedium => 'Medium confidence';
+
+  @override
+  String get confidenceLow => 'Low confidence';
+
+  @override
+  String estimatedRenewalDate(String date) {
+    return 'Estimated next payment: $date';
+  }
+
+  @override
+  String confirmedRenewalDate(String date) {
+    return 'Next payment: $date';
+  }
+
+  @override
+  String get notASubscription => 'Not a Subscription';
+
+  @override
+  String get addToResiday => 'Add to ResiDay';
+
+  @override
+  String get connectGmailTitle => 'Gmail Subscription Detection';
+
+  @override
+  String get connectGmailButton => 'Connect Gmail';
+
+  @override
+  String get disconnectGmailButton => 'Disconnect';
+
+  @override
+  String get scanNewEmails => 'Scan New Emails';
+
+  @override
+  String gmailConnectedAs(String email) {
+    return 'Connected as: $email';
+  }
+
+  @override
+  String lastScan(String time) {
+    return 'Last scan: $time';
+  }
+
+  @override
+  String get scanningEmails => 'Searching billing emails...';
+
+  @override
+  String gmailScanSuccess(int count) {
+    return 'Scan complete. Found $count detected subscriptions.';
+  }
+
+  @override
+  String get gmailPrivacyNotice =>
+      'ResiDay requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.';
+
+  @override
+  String get candidateAddedSuccess => 'Subscription added successfully.';
+
+  @override
+  String get candidateIgnored =>
+      'Merchant ignored. ResiDay will not detect this merchant again.';
 }

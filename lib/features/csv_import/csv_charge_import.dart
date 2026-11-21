@@ -6,6 +6,7 @@ import 'package:the_registry/features/csv_import/csv_table.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/features/entitlements/entitlement_service.dart';
+import 'package:the_registry/features/subscriptions/domain/bank_subscription_detection_service.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_repository.dart';
@@ -437,21 +438,57 @@ CsvChargeRow? _chargeFromRow(
 }
 
 DateTime? parseCsvDate(String raw) {
-  final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(raw.trim());
-  if (match == null) {
-    return null;
+  final trimmed = raw.trim();
+  final isoMatch =
+      RegExp(r'^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$').firstMatch(trimmed);
+  if (isoMatch != null) {
+    final year = int.parse(isoMatch.group(1)!);
+    final month = int.parse(isoMatch.group(2)!);
+    final day = int.parse(isoMatch.group(3)!);
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      final date = DateTime(year, month, day);
+      if (date.year == year && date.month == month && date.day == day) {
+        return date;
+      }
+    }
   }
-  final year = int.parse(match.group(1)!);
-  final month = int.parse(match.group(2)!);
-  final day = int.parse(match.group(3)!);
-  if (month < 1 || month > 12) {
-    return null;
+
+  // Support dd-MMM-yyyy (e.g. 05-Sep-2026, 05-SEP-2026, 5 Sep 2026)
+  final dMmmYMatch =
+      RegExp(r'^(\d{1,2})[-/ ]([A-Za-z]{3})[-/ ](\d{4})$').firstMatch(trimmed);
+  if (dMmmYMatch != null) {
+    const months = {
+      'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
+      'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
+    };
+    final day = int.parse(dMmmYMatch.group(1)!);
+    final monthStr = dMmmYMatch.group(2)!.toLowerCase();
+    final year = int.parse(dMmmYMatch.group(3)!);
+    final month = months[monthStr];
+    if (month != null && day >= 1 && day <= 31) {
+      final date = DateTime(year, month, day);
+      if (date.year == year && date.month == month && date.day == day) {
+        return date;
+      }
+    }
   }
-  final date = DateTime(year, month, day);
-  if (date.year != year || date.month != month || date.day != day) {
-    return null;
+
+  // Support dd-MM-yyyy or dd/MM/yyyy
+  final dMyMatch =
+      RegExp(r'^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$').firstMatch(trimmed);
+  if (dMyMatch != null) {
+    final part1 = int.parse(dMyMatch.group(1)!);
+    final part2 = int.parse(dMyMatch.group(2)!);
+    final year = int.parse(dMyMatch.group(3)!);
+    if (part2 >= 1 && part2 <= 12 && part1 >= 1 && part1 <= 31) {
+      final date = DateTime(year, part2, part1);
+      if (date.year == year && date.month == part2 && date.day == part1) {
+        return date;
+      }
+    }
   }
-  return date;
+
+  return null;
 }
 
 int? parseMinorUnits(String raw) {
@@ -471,11 +508,22 @@ List<RecurringChargeCandidate> suggestRecurringCharges({
   required List<CsvChargeRow> charges,
   required List<RegistrySubscription> subscriptions,
   required String Function(int index) idFor,
+  Set<String> ignoredMerchants = const {},
 }) {
+  const bankDetector = BankSubscriptionDetectionService();
   final groups = <String, List<CsvChargeRow>>{};
   for (final charge in charges) {
-    final key =
-        '${normalizeMerchant(charge.merchant)}|${charge.currencyCode}|${charge.minorUnits}';
+    if (bankDetector.isFalsePositive(charge.merchant)) {
+      continue;
+    }
+    final normalized = bankDetector.normalizeMerchant(charge.merchant);
+    final lowerNorm = normalized.toLowerCase();
+    if (ignoredMerchants.any((ignored) =>
+        lowerNorm == ignored.toLowerCase() ||
+        lowerNorm.contains(ignored.toLowerCase()))) {
+      continue;
+    }
+    final key = '$lowerNorm|${charge.currencyCode}|${charge.minorUnits}';
     groups.putIfAbsent(key, () => []).add(charge);
   }
   final candidates = <RecurringChargeCandidate>[];
@@ -488,10 +536,13 @@ List<RecurringChargeCandidate> suggestRecurringCharges({
         .map((charge) => charge.date)
         .reduce((a, b) => a.isAfter(b) ? a : b);
     final sample = group.first;
+    final normalizedName = bankDetector.normalizeMerchant(sample.merchant);
     final duplicate = subscriptions.any(
       (subscription) =>
-          normalizeMerchant(subscription.serviceName) ==
-              normalizeMerchant(sample.merchant) &&
+          (normalizeMerchant(subscription.serviceName) ==
+                  normalizeMerchant(sample.merchant) ||
+              bankDetector.normalizeMerchant(subscription.serviceName).toLowerCase() ==
+                  normalizedName.toLowerCase()) &&
           subscription.amount.minorUnits == sample.minorUnits &&
           subscription.amount.code == sample.currencyCode,
     );

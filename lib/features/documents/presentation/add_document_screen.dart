@@ -43,6 +43,7 @@ class AddDocumentScreen extends StatefulWidget {
 class _AddDocumentScreenState extends State<AddDocumentScreen> {
   final AddDocumentController _controller = AddDocumentController();
   final TextEditingController _name = TextEditingController();
+  final TextEditingController _category = TextEditingController();
   final TextEditingController _owner = TextEditingController();
   final TextEditingController _issuer = TextEditingController();
   final TextEditingController _number = TextEditingController();
@@ -77,19 +78,45 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
   }
 
   void _syncTextControllers() {
-    _name.text = _controller.name;
-    _owner.text = _controller.ownerName;
-    _issuer.text = _controller.issuingAuthority;
-    _number.text = _controller.documentNumber;
-    _cost.text = _controller.costOfLapsing;
-    _dependency.text = _controller.dependency;
-    _changes.text = _controller.expectedChanges;
-    _notes.text = _controller.notes;
+    if (_name.text != _controller.name) {
+      _name.text = _controller.name;
+    }
+    final l10n = AppLocalizations.of(context);
+    final catText = _controller.categoryLabel.isNotEmpty
+        ? _controller.categoryLabel
+        : (_controller.category == null
+              ? ''
+              : DocumentCopy.category(l10n, _controller.category!));
+    if (_category.text != catText) {
+      _category.text = catText;
+    }
+    if (_owner.text != _controller.ownerName) {
+      _owner.text = _controller.ownerName;
+    }
+    if (_issuer.text != _controller.issuingAuthority) {
+      _issuer.text = _controller.issuingAuthority;
+    }
+    if (_number.text != _controller.documentNumber) {
+      _number.text = _controller.documentNumber;
+    }
+    if (_cost.text != _controller.costOfLapsing) {
+      _cost.text = _controller.costOfLapsing;
+    }
+    if (_dependency.text != _controller.dependency) {
+      _dependency.text = _controller.dependency;
+    }
+    if (_changes.text != _controller.expectedChanges) {
+      _changes.text = _controller.expectedChanges;
+    }
+    if (_notes.text != _controller.notes) {
+      _notes.text = _controller.notes;
+    }
     _syncDynamicControllers();
   }
 
   void _flushEditors() {
     _controller.setName(_name.text);
+    _controller.setCategoryLabel(_category.text);
     _controller.setOwnerName(_owner.text);
     _controller.setIssuingAuthority(_issuer.text);
     _controller.setDocumentNumber(_number.text);
@@ -123,6 +150,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
   void dispose() {
     _controller.dispose();
     _name.dispose();
+    _category.dispose();
     _owner.dispose();
     _issuer.dispose();
     _number.dispose();
@@ -284,7 +312,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       _controller.assignCategory(category);
     }
     _controller.upsertUnboundSchemaValues();
-    _syncDynamicControllers();
+    _syncTextControllers();
   }
 
   Future<void> _pickDate(String fieldId) async {
@@ -333,8 +361,13 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         } else {
           _controller.setAttachment(result.bytes);
         }
-        if (runOcr) {
+        if (runOcr && deps.documentOcr.isAvailable) {
           await _controller.recognizeAttachment(deps.documentOcr);
+          if (!mounted) return;
+          if (_controller.ocrStatus == OcrUiStatus.review) {
+            _controller.confirmOcr();
+            _syncTextControllers();
+          }
         }
       case ImagePickStatus.cancelled:
         break;
@@ -569,12 +602,12 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                 _controller.backStep();
               },
               onContinue: () {
-                _flushEditors();
                 if (_controller.ocrStatus == OcrUiStatus.review) {
                   _controller.confirmOcr();
                   _syncTextControllers();
                   return;
                 }
+                _flushEditors();
                 if (_controller.step == AddDocumentStep.review) {
                   _save();
                   return;
@@ -599,7 +632,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         onSchema: _pickSchema,
         onCategory: _pickCategory,
         onCountry: _pickCountry,
-        onRetake: () => _replaceAttachment(),
+        onRetake: () => _replaceAttachment(runOcr: false),
       );
     }
     return switch (_controller.step) {
@@ -610,23 +643,43 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
           _controller.upsertUnboundSchemaValues();
           _syncDynamicControllers();
         },
-        onTakePhoto: () => _pickImage(fromCamera: true),
+        onTakePhoto: () => _pickImage(fromCamera: true, runOcr: false),
         onAddPhoto: () => _pickImage(fromCamera: true, additional: true),
         onAddGallery: () => _pickImage(fromCamera: false, additional: true),
         onChooseGallery: () => _pickImage(fromCamera: false),
-        onReplace: () => _replaceAttachment(),
-        onScanAgain: () => _controller.recognizeAttachment(
-          RegistryDependencies.of(context).documentOcr,
-        ),
+        onReplace: () => _replaceAttachment(runOcr: false),
+        onScanAgain: () async {
+          final deps = RegistryDependencies.of(context);
+          if (deps.documentOcr.isAvailable) {
+            await _controller.recognizeAttachment(deps.documentOcr);
+            if (!mounted) return;
+            if (_controller.ocrStatus == OcrUiStatus.review) {
+              if (_isEditing) {
+                _controller.confirmOcr();
+                _syncTextControllers();
+              }
+            }
+          }
+        },
         onRemove: () => _controller.setAttachment(null),
-        onRetry: () {
-          final ocr = RegistryDependencies.of(context).documentOcr;
-          _controller.retryOcr(ocr);
+        onRetry: () async {
+          final deps = RegistryDependencies.of(context);
+          if (deps.documentOcr.isAvailable) {
+            await _controller.recognizeAttachment(deps.documentOcr);
+            if (!mounted) return;
+            if (_controller.ocrStatus == OcrUiStatus.review) {
+              if (_isEditing) {
+                _controller.confirmOcr();
+                _syncTextControllers();
+              }
+            }
+          }
         },
       ),
       AddDocumentStep.identity => _IdentityStep(
         controller: _controller,
         name: _name,
+        category: _category,
         owner: _owner,
         issuer: _issuer,
         number: _number,
@@ -797,7 +850,9 @@ class _SourceStep extends StatelessWidget {
           title: controller.isEditing
               ? l10n.editDocumentHeadline
               : l10n.addDocumentHeadline,
-          body: l10n.howToAddTitle,
+          body: controller.hasAttachment
+              ? "Verify your document photo and extract details with AI, or enter manually."
+              : l10n.howToAddTitle,
         ),
 
         if (controller.ocrStatus == OcrUiStatus.failed) ...[
@@ -825,19 +880,22 @@ class _SourceStep extends StatelessWidget {
             title: l10n.scanDocumentTitle,
             subtitle: l10n.scanDocumentSubtitle,
             badge: l10n.scanDocumentRecommended,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: Row(
               children: [
-                RegistrySecondaryButton(
-                  key: const ValueKey<String>('attach-camera'),
-                  label: l10n.attachmentTakePhoto,
-                  onPressed: onTakePhoto,
+                Expanded(
+                  child: RegistrySecondaryButton(
+                    key: const ValueKey<String>('attach-camera'),
+                    label: l10n.attachmentTakePhoto,
+                    onPressed: onTakePhoto,
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
-                RegistrySecondaryButton(
-                  key: const ValueKey<String>('attach-gallery'),
-                  label: l10n.attachmentChooseGallery,
-                  onPressed: onChooseGallery,
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: RegistrySecondaryButton(
+                    key: const ValueKey<String>('attach-gallery'),
+                    label: l10n.attachmentChooseGallery,
+                    onPressed: onChooseGallery,
+                  ),
                 ),
               ],
             ),
@@ -850,75 +908,343 @@ class _SourceStep extends StatelessWidget {
             subtitle: l10n.enterManuallySubtitle,
             onTap: onManual,
           ),
-        ] else
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF7F5FC),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE8E4F6)),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.shield_outlined,
+                  size: 15,
+                  color: Color(0xFF6558F5),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    aiScanAvailable
+                        ? l10n.firebaseAiScanPrivacy
+                        : l10n.firebaseAiScanUnavailable,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF5B6275),
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ] else ...[
           DocumentAttachmentCard(
             bytes: controller.attachmentBytes,
+            badgeLabel: controller.additionalImages.isEmpty
+                ? l10n.attachmentSectionTitle
+                : 'Front side',
             onTakePhoto: onTakePhoto,
             onChooseGallery: onChooseGallery,
             onReplace: onReplace,
             onRemove: onRemove,
           ),
-        if (controller.hasAttachment) ...[
           for (var i = 0; i < controller.additionalImages.length; i++) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.md),
             DocumentAttachmentCard(
               bytes: controller.additionalImages[i],
+              badgeLabel: i == 0 ? 'Back side' : 'Page ${i + 2}',
+              isSecondary: true,
               onTakePhoto: onAddPhoto,
               onChooseGallery: onAddGallery,
               onReplace: null,
               onRemove: () => controller.removeImage(i),
             ),
           ],
-          const SizedBox(height: AppSpacing.sm),
           if (controller.additionalImages.length < 5) ...[
-            Text(l10n.addOtherImage, style: theme.textTheme.titleSmall),
-            const SizedBox(height: AppSpacing.xs),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            const SizedBox(height: AppSpacing.sm),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF9F8FE),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFDCD6F8), width: 1.2),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFEDE9FE),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.flip_to_back_rounded,
+                          size: 15,
+                          color: Color(0xFF6558F5),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        controller.additionalImages.isEmpty
+                            ? "Add back side (optional)"
+                            : l10n.addOtherImage,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111936),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    "Captures barcode, address & back details",
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _BackSidePill(
+                          icon: Icons.photo_camera_outlined,
+                          label: l10n.attachmentTakePhoto,
+                          onPressed: onAddPhoto,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _BackSidePill(
+                          icon: Icons.add_photo_alternate_outlined,
+                          label: l10n.attachmentChooseGallery,
+                          onPressed: onAddGallery,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.sm),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F0FE),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE0DAF7)),
+            ),
+            child: Row(
               children: [
-                OutlinedButton.icon(
-                  onPressed: onAddPhoto,
-                  icon: const Icon(Icons.add_a_photo_outlined),
-                  label: Text(l10n.attachmentTakePhoto),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF5544DB),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome_rounded,
+                    size: 13,
+                    color: Colors.white,
+                  ),
                 ),
-                OutlinedButton.icon(
-                  onPressed: onAddGallery,
-                  icon: const Icon(Icons.add_photo_alternate_outlined),
-                  label: Text(l10n.attachmentChooseGallery),
+                const SizedBox(width: 9),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "Gemini AI Auto-Extract",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1E1B4B),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEDE9FE),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              "Flash 2.5",
+                              style: TextStyle(
+                                fontSize: 8.5,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF5544DB),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        aiScanAvailable
+                            ? l10n.firebaseAiScanPrivacy
+                            : l10n.firebaseAiScanUnavailable,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          color: Color(0xFF5E6278),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ],
-          const SizedBox(height: AppSpacing.md),
-          RegistryCallout(
-            message: aiScanAvailable
-                ? l10n.firebaseAiScanPrivacy
-                : l10n.firebaseAiScanUnavailable,
           ),
           const SizedBox(height: AppSpacing.sm),
           FilledButton.icon(
             key: const ValueKey<String>('scan-again'),
             onPressed: aiScanAvailable ? onScanAgain : null,
-            icon: const Icon(Icons.auto_awesome_rounded),
-            label: Text(l10n.scanAllImages),
+            icon: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFD566).withValues(alpha: 0.25),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.auto_awesome_rounded,
+                size: 17,
+                color: Color(0xFFFFD566),
+              ),
+            ),
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.scanAllImages,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 16,
+                  color: Color(0xFFCBD5E1),
+                ),
+              ],
+            ),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFF0F172A),
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: const Color(0xFFE2E4EB),
+              disabledForegroundColor: const Color(0xFF9CA3AF),
+              minimumSize: const Size.fromHeight(54),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 3,
+              shadowColor: const Color(0xFF0F172A).withValues(alpha: 0.3),
+            ),
           ),
-          if (!aiScanAvailable)
-            TextButton.icon(
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton.icon(
               key: const ValueKey<String>('scan-enter-manually'),
               onPressed: onManual,
-              icon: const Icon(Icons.edit_outlined),
-              label: Text(l10n.enterManuallyTitle),
+              icon: const Icon(Icons.edit_note_rounded, size: 18, color: Color(0xFF6B7280)),
+              label: Text(
+                l10n.enterManuallyTitle,
+                style: const TextStyle(
+                  color: Color(0xFF4B5563),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+              ),
             ),
-        ],
-        const SizedBox(height: AppSpacing.md),
-        if (!controller.hasAttachment)
-          RegistryCallout(
-            message: aiScanAvailable
-                ? l10n.firebaseAiScanPrivacy
-                : l10n.firebaseAiScanUnavailable,
           ),
+        ],
       ],
+    );
+  }
+}
+
+class _BackSidePill extends StatelessWidget {
+  const _BackSidePill({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 42,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFDDD6FE), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF111936).withValues(alpha: 0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(22),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 16,
+                  color: const Color(0xFF5544DB),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1E1B4B),
+                        letterSpacing: 0.1,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1047,6 +1373,7 @@ class _IdentityStep extends StatelessWidget {
   const _IdentityStep({
     required this.controller,
     required this.name,
+    required this.category,
     required this.owner,
     required this.issuer,
     required this.number,
@@ -1058,6 +1385,7 @@ class _IdentityStep extends StatelessWidget {
 
   final AddDocumentController controller;
   final TextEditingController name;
+  final TextEditingController category;
   final TextEditingController owner;
   final TextEditingController issuer;
   final TextEditingController number;
@@ -1111,19 +1439,18 @@ class _IdentityStep extends StatelessWidget {
           onTap: onPickCountry,
         ),
         const SizedBox(height: AppSpacing.md),
-        TextFormField(
-          key: const ValueKey<String>('field-category'),
-          initialValue: controller.categoryLabel.isNotEmpty
+        RegistrySelectorField(
+          fieldKey: 'field-category',
+          label: l10n.fieldCategory,
+          value: controller.categoryLabel.isNotEmpty
               ? controller.categoryLabel
-              : controller.category == null
-              ? ''
-              : DocumentCopy.category(l10n, controller.category!),
-          decoration: InputDecoration(
-            labelText: '${l10n.fieldCategory} *',
-            errorText: controller.categoryError,
-          ),
-          textCapitalization: TextCapitalization.words,
-          onChanged: controller.setCategoryLabel,
+              : (controller.category == null
+                  ? ''
+                  : DocumentCopy.category(l10n, controller.category!)),
+          empty:
+              controller.category == null && controller.categoryLabel.isEmpty,
+          placeholder: l10n.chooseOption,
+          onTap: onPickCategory,
         ),
         const SizedBox(height: AppSpacing.md),
         RegistryTextField(
@@ -1143,10 +1470,13 @@ class _IdentityStep extends StatelessWidget {
           textCapitalization: TextCapitalization.words,
           onChanged: controller.setOwnerName,
         ),
-        for (final field in controller.requiredDynamicFields) ...[
-          const SizedBox(height: AppSpacing.md),
-          _editorFor(field),
-        ],
+        for (final field in controller.requiredDynamicFields)
+          if (field.value.trim().isNotEmpty ||
+              field.isCustom ||
+              (!controller.hasAttachment && !controller.ocrConfirmed)) ...[
+            const SizedBox(height: AppSpacing.md),
+            _editorFor(field),
+          ],
         const SizedBox(height: AppSpacing.md),
         RegistryExpandableSection(
           toggleKey: const ValueKey<String>('section-identity-extras'),
@@ -1186,10 +1516,13 @@ class _IdentityStep extends StatelessWidget {
                 textCapitalization: TextCapitalization.words,
                 onChanged: controller.setIssuingAuthority,
               ),
-              for (final field in controller.optionalDynamicFields) ...[
-                const SizedBox(height: AppSpacing.md),
-                _editorFor(field),
-              ],
+              for (final field in controller.optionalDynamicFields)
+                if (field.value.trim().isNotEmpty ||
+                    field.isCustom ||
+                    (!controller.hasAttachment && !controller.ocrConfirmed)) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  _editorFor(field),
+                ],
               const SizedBox(height: AppSpacing.md),
               RegistrySecondaryButton(
                 key: const ValueKey<String>('add-custom-field'),
@@ -1375,35 +1708,88 @@ class _DatesStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final locale = l10n.localeName;
+    final isScanned = controller.hasAttachment || controller.ocrConfirmed;
+    final showIssue = controller.issueDate != null || !isScanned;
+    final showExpiry = controller.expiryDate != null || !isScanned;
+    final showAction = controller.actionDate != null || !isScanned;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _WizardIntro(title: l10n.sectionImportantDates, body: l10n.datesIntro),
-        DocumentDateField(
-          fieldId: 'issue',
-          label: l10n.fieldIssueDate,
-          value: controller.issueDate,
-          errorText: controller.issueDateError,
-          onTap: () => onPick('issue'),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        DocumentDateField(
-          fieldId: 'expiry',
-          label: l10n.fieldExpiryDate,
-          value: controller.expiryDate,
-          requiredField: true,
-          errorText: controller.expiryError,
-          onTap: () => onPick('expiry'),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        DocumentDateField(
-          fieldId: 'action',
-          label: l10n.fieldActionDate,
-          value: controller.actionDate,
-          helperText: l10n.actionDateHelper,
-          errorText: controller.actionDateError,
-          onTap: () => onPick('action'),
-        ),
+        if (showIssue) ...[
+          DocumentDateField(
+            fieldId: 'issue',
+            label: l10n.fieldIssueDate,
+            value: controller.issueDate,
+            errorText: controller.issueDateError,
+            onTap: () => onPick('issue'),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        if (showExpiry) ...[
+          DocumentDateField(
+            fieldId: 'expiry',
+            label: l10n.fieldExpiryDate,
+            value: controller.expiryDate,
+            requiredField: !isScanned,
+            errorText: controller.expiryError,
+            onTap: () => onPick('expiry'),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        if (showAction) ...[
+          DocumentDateField(
+            fieldId: 'action',
+            label: l10n.fieldActionDate,
+            value: controller.actionDate,
+            helperText: l10n.actionDateHelper,
+            errorText: controller.actionDateError,
+            onTap: () => onPick('action'),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        if (isScanned) ...[
+          if (!showExpiry)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  key: const ValueKey<String>('add-expiry-date-btn'),
+                  onPressed: () => onPick('expiry'),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.fieldExpiryDate),
+                ),
+              ),
+            ),
+          if (!showIssue)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  key: const ValueKey<String>('add-issue-date-btn'),
+                  onPressed: () => onPick('issue'),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.fieldIssueDate),
+                ),
+              ),
+            ),
+          if (!showAction)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  key: const ValueKey<String>('add-action-date-btn'),
+                  onPressed: () => onPick('action'),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.fieldActionDate),
+                ),
+              ),
+            ),
+        ],
         if (controller.suggestedActionDate != null &&
             !controller.actionDateUserSet) ...[
           const SizedBox(height: AppSpacing.sm),
@@ -1890,12 +2276,12 @@ class _OcrProcessing extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(
-          l10n.firebaseAiScanProcessing,
-          style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppSpacing.md),
+        // Text(
+        //   l10n.firebaseAiScanProcessing,
+        //   style: Theme.of(context).textTheme.bodyMedium,
+        //   textAlign: TextAlign.center,
+        // ),
+        // const SizedBox(height: AppSpacing.md),
         TextButton(
           key: const ValueKey<String>('ocr-cancel'),
           onPressed: onCancel,
@@ -2006,15 +2392,25 @@ class _OcrReview extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         TextFormField(
-          key: const ValueKey<String>('ocr-category'),
-          initialValue:
-              result?.categoryLabel ??
-              DocumentCopy.category(
-                l10n,
-                result?.classification.category ?? DocumentCategory.other,
-              ),
-          decoration: InputDecoration(labelText: l10n.fieldCategory),
-          onChanged: (value) => controller.setOcrCategoryLabel(value),
+          key: const ValueKey<String>('ocr-document-name'),
+          initialValue: controller.ocrResult?.documentTypeLabel ?? typeLabel,
+          decoration: InputDecoration(labelText: '${l10n.fieldDocumentName} *'),
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: (value) => controller.setOcrDocumentTypeLabel(value),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        RegistrySelectorField(
+          fieldKey: 'ocr-category',
+          label: l10n.fieldCategory,
+          value: (result?.categoryLabel?.trim().isNotEmpty == true)
+              ? result!.categoryLabel!
+              : DocumentCopy.category(
+                  l10n,
+                  result?.classification.category ?? DocumentCategory.other,
+                ),
+          empty: (result?.categoryLabel?.trim().isEmpty ?? true) &&
+              result?.classification.category == null,
+          onTap: onCategory,
         ),
         const SizedBox(height: AppSpacing.md),
         for (final field in controller.ocrFields) ...[

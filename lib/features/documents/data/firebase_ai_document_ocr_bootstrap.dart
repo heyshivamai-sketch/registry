@@ -8,7 +8,15 @@ import 'package:the_registry/firebase_options.dart';
 
 const _modelName = String.fromEnvironment(
   'FIREBASE_AI_MODEL',
-  defaultValue: 'gemini-3.8-flash',
+  defaultValue: 'gemini-3.5-flash-lite',
+);
+
+/// App Check is bypassed by default so local development and testing
+/// works seamlessly on any device without registering debug tokens.
+/// Pass `--dart-define=ENABLE_APP_CHECK=true` for production Play Store release.
+const bool _enableAppCheck = bool.fromEnvironment(
+  'ENABLE_APP_CHECK',
+  defaultValue: false,
 );
 
 Future<DocumentOcrService> initializeFirebaseAiDocumentScanner() async {
@@ -16,21 +24,26 @@ Future<DocumentOcrService> initializeFirebaseAiDocumentScanner() async {
     final app = await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseAppCheck.instanceFor(app: app).activate(
-      providerAndroid: kDebugMode
-          ? const AndroidDebugProvider()
-          : const AndroidPlayIntegrityProvider(),
-      providerApple: kDebugMode
-          ? const AppleDebugProvider()
-          : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+    if (_enableAppCheck) {
+      await FirebaseAppCheck.instanceFor(app: app).activate(
+        providerAndroid: kDebugMode
+            ? const AndroidDebugProvider()
+            : const AndroidPlayIntegrityProvider(),
+        providerApple: kDebugMode
+            ? const AppleDebugProvider()
+            : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+      );
+    }
+    final ai = FirebaseAI.googleAI(
+      app: app,
+      useLimitedUseAppCheckTokens: _enableAppCheck,
     );
-    final ai = FirebaseAI.googleAI(app: app, useLimitedUseAppCheckTokens: true);
     return FirebaseAiDocumentOcrService(
       FirebaseAiLogicDocumentClient(ai: ai, model: _modelName),
     );
-  } on Object {
+  } on Object catch (error) {
     debugPrint(
-      'Firebase AI Scan is disabled because Firebase/App Check is not configured.',
+      'Firebase AI Scan is disabled because Firebase is not configured: $error',
     );
     return const DisabledDocumentOcrService();
   }

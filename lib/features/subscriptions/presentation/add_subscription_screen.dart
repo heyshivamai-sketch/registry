@@ -21,6 +21,7 @@ import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/presentation/document_copy.dart';
 import 'package:the_registry/features/documents/widgets/document_date_field.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
+import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/money.dart';
 import 'package:the_registry/features/subscriptions/domain/subscription_estimate.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
@@ -30,9 +31,14 @@ import 'package:the_registry/features/subscriptions/presentation/subscription_co
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class AddSubscriptionScreen extends StatefulWidget {
-  const AddSubscriptionScreen({super.key, this.subscriptionId});
+  const AddSubscriptionScreen({
+    super.key,
+    this.subscriptionId,
+    this.initialCandidate,
+  });
 
   final String? subscriptionId;
+  final DetectedSubscriptionCandidate? initialCandidate;
 
   @override
   State<AddSubscriptionScreen> createState() => _AddSubscriptionScreenState();
@@ -61,6 +67,11 @@ class _AddSubscriptionScreenState extends State<AddSubscriptionScreen> {
     _controller = AddSubscriptionController(clock: deps.clock);
     final id = widget.subscriptionId;
     if (id == null) {
+      final candidate = widget.initialCandidate;
+      if (candidate != null) {
+        _controller.prefillCandidate(candidate);
+        _syncText();
+      }
       return;
     }
     final subscription = deps.subscriptions.findById(id);
