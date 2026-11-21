@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 /// A single gentle entrance, disabled by the system's reduced-motion setting.
 class AttentionEntrance extends StatelessWidget {
   const AttentionEntrance({super.key, required this.child});
+
   final Widget child;
 
   @override
@@ -27,3 +28,4 @@ class AttentionEntrance extends StatelessWidget {
     );
   }
 }
+//
