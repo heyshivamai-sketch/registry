@@ -27,6 +27,7 @@ class SubscriptionsScreen extends StatefulWidget {
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   final TextEditingController _searchController = TextEditingController();
   SubscriptionWalletFilter _filter = SubscriptionWalletFilter.all;
+
   // bool _isCalendarView = false;
 
   @override
@@ -60,7 +61,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
         builder: (context, _) {
           final items = [...deps.subscriptions.subscriptions]
             ..sort(
-              (a, b) => SubscriptionWallet.compareRelevance(a, b, now: now),
+                  (a, b) => SubscriptionWallet.compareRelevance(a, b, now: now),
             );
           final query = _searchController.text;
           final visible = SubscriptionWallet.visible(
@@ -70,8 +71,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             l10n: l10n,
             now: now,
           );
-          final activeCount = items.where((item) => item.isActive).length;
-          final cancelledCount = items.where((item) => item.isCancelled).length;
+          final activeCount = items
+              .where((item) => item.isActive)
+              .length;
+          final cancelledCount = items
+              .where((item) => item.isCancelled)
+              .length;
           final totals = SubscriptionEstimate.monthlyTotals(items);
           final attention = SubscriptionStatus.attentionCount(items, now: now);
 
@@ -162,39 +167,46 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       ),
                     ),
                   )
-                else if (visible.isEmpty)
-                  RegistryEmptyState(
-                    key: const ValueKey<String>('subscriptions-filter-empty'),
-                    title: query.trim().isEmpty
-                        ? l10n.subscriptionsFilterEmptyTitle
-                        : l10n.subscriptionsSearchEmptyTitle,
-                    message: query.trim().isEmpty
-                        ? l10n.subscriptionsFilterEmptyMessage
-                        : l10n.subscriptionsSearchEmptyMessage,
-                    icon: Icons.search_off_rounded,
-                  )
-                else ...[
-                  RegistryAuraSectionHeader(
-                    title: l10n.subscriptionsListHeader,
-                    actionLabel: l10n.addSubscriptionShort,
-                    actionKey: const ValueKey<String>(
-                      'subscriptions-add-header',
-                    ),
-                    onAction: () => AppRoutes.openAddSubscription(context),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  for (final subscription in visible) ...[
-                    SubscriptionListCard(
-                      key: ValueKey<String>(subscription.id),
-                      subscription: subscription,
-                      onTap: () => AppRoutes.openSubscriptionDetail(
-                        context,
-                        subscription.id,
+                else
+                  if (visible.isEmpty)
+                    RegistryEmptyState(
+                      key: const ValueKey<String>('subscriptions-filter-empty'),
+                      title: query
+                          .trim()
+                          .isEmpty
+                          ? l10n.subscriptionsFilterEmptyTitle
+                          : l10n.subscriptionsSearchEmptyTitle,
+                      message: query
+                          .trim()
+                          .isEmpty
+                          ? l10n.subscriptionsFilterEmptyMessage
+                          : l10n.subscriptionsSearchEmptyMessage,
+                      icon: Icons.search_off_rounded,
+                    )
+                  else
+                    ...[
+                      RegistryAuraSectionHeader(
+                        title: l10n.subscriptionsListHeader,
+                        actionLabel: l10n.addSubscriptionShort,
+                        actionKey: const ValueKey<String>(
+                          'subscriptions-add-header',
+                        ),
+                        onAction: () => AppRoutes.openAddSubscription(context),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                  ],
-                ],
+                      const SizedBox(height: AppSpacing.sm),
+                      for (final subscription in visible) ...[
+                        SubscriptionListCard(
+                          key: ValueKey<String>(subscription.id),
+                          subscription: subscription,
+                          onTap: () =>
+                              AppRoutes.openSubscriptionDetail(
+                                context,
+                                subscription.id,
+                              ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                      ],
+                    ],
                 if (items.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.md),
                   SizedBox(
@@ -214,7 +226,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   ),
                   SizedBox(
                     height:
-                        AppSpacing.minTapTarget *
+                    AppSpacing.minTapTarget *
                         MediaQuery.textScalerOf(context).scale(1),
                   ),
                 ],
@@ -239,6 +251,7 @@ class _SubscriptionsHeader extends StatelessWidget {
   final int savedCount;
   final int activeCount;
   final int cancelledCount;
+
   // final bool isCalendarView;
   // final VoidCallback? onToggleView;
 
@@ -342,7 +355,6 @@ class _SubscriptionsHeader extends StatelessWidget {
               ),
             ),
             // Detect subscription (commented out)
-            /*
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
@@ -368,7 +380,6 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
-            */
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
@@ -473,34 +484,34 @@ class _SubscriptionFilters extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final filters = <(SubscriptionWalletFilter, String, Key)>[
       (
-        SubscriptionWalletFilter.all,
-        '${l10n.documentsFilterAll} $totalCount',
-        const ValueKey<String>('sub-filter-all'),
+      SubscriptionWalletFilter.all,
+      '${l10n.documentsFilterAll} $totalCount',
+      const ValueKey<String>('sub-filter-all'),
       ),
       (
-        SubscriptionWalletFilter.actionNeeded,
-        l10n.actionNeeded,
-        const ValueKey<String>('sub-filter-action'),
+      SubscriptionWalletFilter.actionNeeded,
+      l10n.actionNeeded,
+      const ValueKey<String>('sub-filter-action'),
       ),
       (
-        SubscriptionWalletFilter.upcoming,
-        l10n.statusUpcoming,
-        const ValueKey<String>('sub-filter-upcoming'),
+      SubscriptionWalletFilter.upcoming,
+      l10n.statusUpcoming,
+      const ValueKey<String>('sub-filter-upcoming'),
       ),
       (
-        SubscriptionWalletFilter.active,
-        l10n.statusActive,
-        const ValueKey<String>('sub-filter-active'),
+      SubscriptionWalletFilter.active,
+      l10n.statusActive,
+      const ValueKey<String>('sub-filter-active'),
       ),
       (
-        SubscriptionWalletFilter.overdue,
-        l10n.statusOverdue,
-        const ValueKey<String>('sub-filter-overdue'),
+      SubscriptionWalletFilter.overdue,
+      l10n.statusOverdue,
+      const ValueKey<String>('sub-filter-overdue'),
       ),
       (
-        SubscriptionWalletFilter.cancelled,
-        l10n.subscriptionCancelled,
-        const ValueKey<String>('sub-filter-cancelled'),
+      SubscriptionWalletFilter.cancelled,
+      l10n.subscriptionCancelled,
+      const ValueKey<String>('sub-filter-cancelled'),
       ),
     ];
 
@@ -540,9 +551,9 @@ class _MonthlyCostCard extends StatelessWidget {
     final locale = l10n.localeName;
     final headline = totals.isEmpty
         ? MoneyFormat.format(
-            const Money(minorUnits: 0, currencyCode: 'USD'),
-            locale,
-          )
+      const Money(minorUnits: 0, currencyCode: 'USD'),
+      locale,
+    )
         : totals.length == 1
         ? MoneyFormat.format(totals.first, locale)
         : l10n.estimatedMonthlyMultiple(totals.length);

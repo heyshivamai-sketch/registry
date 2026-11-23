@@ -221,7 +221,13 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                 ),
               ),
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(l10n.backupReplaceAction),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  l10n.backupReplaceAction,
+                  maxLines: 1,
+                ),
+              ),
             ),
           ],
         );
