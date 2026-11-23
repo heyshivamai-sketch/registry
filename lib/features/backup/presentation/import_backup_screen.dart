@@ -197,31 +197,55 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
             l10n.backupReplaceBody,
             textAlign: TextAlign.center,
           ),
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actionsPadding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            0,
+            AppSpacing.md,
+            AppSpacing.md,
+          ),
           actions: [
-            TextButton(
-              key: const ValueKey<String>('import-replace-cancel'),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(
-                  AppSpacing.minTapTarget,
-                  AppSpacing.minTapTarget,
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    key: const ValueKey<String>('import-replace-cancel'),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(
+                        0,
+                        AppSpacing.minTapTarget,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(dialogContext).pop(false),
+                    child: Text(l10n.backupCancel),
+                  ),
                 ),
-              ),
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(l10n.backupCancel),
-            ),
-            FilledButton(
-              key: const ValueKey<String>('import-replace-confirm'),
-              style: FilledButton.styleFrom(
-                backgroundColor: theme.colorScheme.error,
-                foregroundColor: theme.colorScheme.onError,
-                minimumSize: const Size(
-                  AppSpacing.minTapTarget,
-                  AppSpacing.minTapTarget,
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: FilledButton(
+                    key: const ValueKey<String>('import-replace-confirm'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: theme.colorScheme.error,
+                      foregroundColor: theme.colorScheme.onError,
+                      minimumSize: const Size(
+                        0,
+                        AppSpacing.minTapTarget,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xs,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        l10n.backupReplaceAction,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(l10n.backupReplaceAction),
+              ],
             ),
           ],
         );

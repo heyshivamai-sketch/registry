@@ -342,7 +342,6 @@ class _SubscriptionsHeader extends StatelessWidget {
               ),
             ),
             // Detect subscription (commented out)
-            /*
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
@@ -368,7 +367,6 @@ class _SubscriptionsHeader extends StatelessWidget {
                 ),
               ),
             ),
-            */
             const SizedBox(width: AppSpacing.xs),
             Semantics(
               button: true,
