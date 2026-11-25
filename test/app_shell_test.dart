@@ -58,7 +58,7 @@ void main() {
     expect(find.byType(ProfileScreen), findsWidgets);
     expect(
       find.text(
-        'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.',
+        'Your records stay private on this device. Registry Pro is a one-time upgrade and does not sync documents or subscriptions.',
       ),
       findsOneWidget,
     );

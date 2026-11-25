@@ -691,7 +691,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileMessage.
   ///
   /// In en, this message translates to:
-  /// **'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.'**
+  /// **'Your records stay private on this device. Registry Pro is a one-time upgrade and does not sync documents or subscriptions.'**
   String get profileMessage;
 
   /// No description provided for @profileButton.
@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @remindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
+  /// **'Saved with this document. Registry asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
   String get remindersHelper;
 
   /// No description provided for @reminderOnActionDate.
@@ -2815,7 +2815,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionTrackingDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Regiday tracks this plan but does not cancel or charge it automatically.'**
+  /// **'Registry tracks this plan but does not cancel or charge it automatically.'**
   String get subscriptionTrackingDisclaimer;
 
   /// No description provided for @cancelledSubscriptionsTitle.
@@ -3151,7 +3151,7 @@ abstract class AppLocalizations {
   /// No description provided for @storageErrorMessage.
   ///
   /// In en, this message translates to:
-  /// **'Regiday could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.'**
+  /// **'Registry could not open the records already stored on this device. Those records were left in place. Try again without resetting the app.'**
   String get storageErrorMessage;
 
   /// No description provided for @storageErrorRetry.
@@ -3217,7 +3217,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsLimits.
   ///
   /// In en, this message translates to:
-  /// **'Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.'**
+  /// **'Reminders stay on this device. There is no server or cloud messaging. Registry asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Registry again. iOS can keep pending local reminders across a restart, up to 64. Registry schedules at most 64, soonest first.'**
   String get notificationsLimits;
 
   /// No description provided for @notificationsOmittedCount.
@@ -3247,7 +3247,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationChannelName.
   ///
   /// In en, this message translates to:
-  /// **'Regiday reminders'**
+  /// **'Registry reminders'**
   String get notificationChannelName;
 
   /// No description provided for @notificationChannelDescription.
@@ -3259,7 +3259,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationTitle.
   ///
   /// In en, this message translates to:
-  /// **'Regiday reminder'**
+  /// **'Registry reminder'**
   String get notificationTitle;
 
   /// No description provided for @reminderDocumentActionToday.
@@ -3337,7 +3337,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.'**
+  /// **'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Registry does not store this password, and this does not encrypt the registry database already on this device.'**
   String get backupSectionBody;
 
   /// No description provided for @backupExportAction.
@@ -3367,7 +3367,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupPasswordWarning.
   ///
   /// In en, this message translates to:
-  /// **'Choose a password to encrypt this file. If lost, the backup cannot be restored. Regiday does not store it.'**
+  /// **'Choose a password to encrypt this file. If lost, the backup cannot be restored. Registry does not store it.'**
   String get backupPasswordWarning;
 
   /// No description provided for @backupPasswordLabel.
@@ -3421,7 +3421,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupImportIntro.
   ///
   /// In en, this message translates to:
-  /// **'Restore your documents and subscriptions from an encrypted Regiday backup file.'**
+  /// **'Restore your documents and subscriptions from an encrypted Registry backup file.'**
   String get backupImportIntro;
 
   /// No description provided for @backupChooseFile.
@@ -3511,7 +3511,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupExportSuccessHint.
   ///
   /// In en, this message translates to:
-  /// **'This .rgry backup file is encrypted for your security and cannot be opened directly in PDF or document viewers. To view or restore your records, use Import backup inside Regiday.'**
+  /// **'This .rgry backup file is encrypted for your security and cannot be opened directly in PDF or document viewers. To view or restore your records, use Import backup inside Registry.'**
   String get backupExportSuccessHint;
 
   /// No description provided for @backupOpenImportAction.
@@ -3523,7 +3523,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupFormatNotice.
   ///
   /// In en, this message translates to:
-  /// **'Backup files (.rgry) are encrypted archives and can only be opened or restored inside Regiday.'**
+  /// **'Backup files (.rgry) are encrypted archives and can only be opened or restored inside Registry.'**
   String get backupFormatNotice;
 
   /// No description provided for @backupExportCancelled.
@@ -3577,13 +3577,13 @@ abstract class AppLocalizations {
   /// No description provided for @backupUnsupportedVersion.
   ///
   /// In en, this message translates to:
-  /// **'This backup was made by a newer version of Regiday.'**
+  /// **'This backup was made by a newer version of Registry.'**
   String get backupUnsupportedVersion;
 
   /// No description provided for @backupInvalidFile.
   ///
   /// In en, this message translates to:
-  /// **'This file is not a valid Regiday backup.'**
+  /// **'This file is not a valid Registry backup.'**
   String get backupInvalidFile;
 
   /// No description provided for @backupTampered.
@@ -3625,7 +3625,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Ask for this device\'s biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
+  /// **'Ask for this device\'s biometrics or passcode before Registry shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
   String get appLockSectionBody;
 
   /// No description provided for @appLockEnabled.
@@ -3643,7 +3643,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockReason.
   ///
   /// In en, this message translates to:
-  /// **'Unlock Regiday to view records on this device.'**
+  /// **'Unlock Registry to view records on this device.'**
   String get appLockReason;
 
   /// No description provided for @appLockEnableReason.
@@ -3655,7 +3655,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'This device has no biometrics or passcode Regiday can use. App lock was not turned on.'**
+  /// **'This device has no biometrics or passcode Registry can use. App lock was not turned on.'**
   String get appLockUnavailable;
 
   /// No description provided for @appLockCancelled.
@@ -3673,7 +3673,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockPlatformError.
   ///
   /// In en, this message translates to:
-  /// **'Regiday could not use this device\'s authentication. App lock was not changed.'**
+  /// **'Registry could not use this device\'s authentication. App lock was not changed.'**
   String get appLockPlatformError;
 
   /// No description provided for @appLockDisableReason.
@@ -3709,7 +3709,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockLockedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Regiday is locked'**
+  /// **'Registry is locked'**
   String get appLockLockedTitle;
 
   /// No description provided for @appLockLockedBody.
@@ -3739,25 +3739,25 @@ abstract class AppLocalizations {
   /// No description provided for @appLockUnlockPlatformError.
   ///
   /// In en, this message translates to:
-  /// **'Regiday could not use this device\'s authentication. Your records stay hidden.'**
+  /// **'Registry could not use this device\'s authentication. Your records stay hidden.'**
   String get appLockUnlockPlatformError;
 
   /// No description provided for @appLockPrivacyCover.
   ///
   /// In en, this message translates to:
-  /// **'Regiday'**
+  /// **'Registry'**
   String get appLockPrivacyCover;
 
   /// No description provided for @localProTitle.
   ///
   /// In en, this message translates to:
-  /// **'Regiday Pro'**
+  /// **'Registry Pro'**
   String get localProTitle;
 
   /// No description provided for @localProAction.
   ///
   /// In en, this message translates to:
-  /// **'View Regiday Pro'**
+  /// **'View Registry Pro'**
   String get localProAction;
 
   /// No description provided for @localProEyebrow.
@@ -3775,7 +3775,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProIntro.
   ///
   /// In en, this message translates to:
-  /// **'Regiday Pro is a one-time upgrade, not a subscription. Keep more records on this device.'**
+  /// **'Registry Pro is a one-time upgrade, not a subscription. Keep more records on this device.'**
   String get localProIntro;
 
   /// No description provided for @localProIncludedTitle.
@@ -3835,13 +3835,13 @@ abstract class AppLocalizations {
   /// No description provided for @localProCurrentPro.
   ///
   /// In en, this message translates to:
-  /// **'Current plan: Regiday Pro'**
+  /// **'Current plan: Registry Pro'**
   String get localProCurrentPro;
 
   /// No description provided for @localProBuy.
   ///
   /// In en, this message translates to:
-  /// **'Buy Regiday Pro'**
+  /// **'Buy Registry Pro'**
   String get localProBuy;
 
   /// No description provided for @localProRestore.
@@ -3853,25 +3853,25 @@ abstract class AppLocalizations {
   /// No description provided for @localProPurchaseCancelled.
   ///
   /// In en, this message translates to:
-  /// **'The purchase was cancelled. Regiday Pro stays off.'**
+  /// **'The purchase was cancelled. Registry Pro stays off.'**
   String get localProPurchaseCancelled;
 
   /// No description provided for @localProPurchaseFailed.
   ///
   /// In en, this message translates to:
-  /// **'The purchase could not be completed. Regiday Pro stays off.'**
+  /// **'The purchase could not be completed. Registry Pro stays off.'**
   String get localProPurchaseFailed;
 
   /// No description provided for @localProPendingStore.
   ///
   /// In en, this message translates to:
-  /// **'The store is waiting for payment. Regiday Pro turns on after the store confirms the purchase. Nothing is unlocked yet.'**
+  /// **'The store is waiting for payment. Registry Pro turns on after the store confirms the purchase. Nothing is unlocked yet.'**
   String get localProPendingStore;
 
   /// No description provided for @localProRevoked.
   ///
   /// In en, this message translates to:
-  /// **'The store no longer reports a Regiday Pro purchase for this account, for example after a refund. Regiday Pro is off. Records you already have can still be viewed, edited, and exported. New records stop at the Free limits.'**
+  /// **'The store no longer reports a Registry Pro purchase for this account, for example after a refund. Registry Pro is off. Records you already have can still be viewed, edited, and exported. New records stop at the Free limits.'**
   String get localProRevoked;
 
   /// No description provided for @localProNotIncludedTransfer.
@@ -3889,13 +3889,13 @@ abstract class AppLocalizations {
   /// No description provided for @localProIncludedAdsOn.
   ///
   /// In en, this message translates to:
-  /// **'No ads. Free users see one small banner on Home in this version. Regiday Pro removes it.'**
+  /// **'No ads. Free users see one small banner on Home in this version. Registry Pro removes it.'**
   String get localProIncludedAdsOn;
 
   /// No description provided for @localProRestoreRequirements.
   ///
   /// In en, this message translates to:
-  /// **'Restore purchases asks the store for Regiday Pro bought with the same Google Play or Apple account for this app. Android and iOS purchases stay separate.'**
+  /// **'Restore purchases asks the store for Registry Pro bought with the same Google Play or Apple account for this app. Android and iOS purchases stay separate.'**
   String get localProRestoreRequirements;
 
   /// No description provided for @localProStatusDisabled.
@@ -3913,13 +3913,13 @@ abstract class AppLocalizations {
   /// No description provided for @localProStatusActive.
   ///
   /// In en, this message translates to:
-  /// **'Regiday Pro is active. The store confirmed your purchase.'**
+  /// **'Registry Pro is active. The store confirmed your purchase.'**
   String get localProStatusActive;
 
   /// No description provided for @localProStatusActiveUnconfirmed.
   ///
   /// In en, this message translates to:
-  /// **'Regiday Pro stays on from the store\'s last confirmation. The store cannot be reached right now, so a refund made since then is not detected until it can be.'**
+  /// **'Registry Pro stays on from the store\'s last confirmation. The store cannot be reached right now, so a refund made since then is not detected until it can be.'**
   String get localProStatusActiveUnconfirmed;
 
   /// No description provided for @localProStatusUnknown.
@@ -3931,7 +3931,7 @@ abstract class AppLocalizations {
   /// No description provided for @localProProductMissing.
   ///
   /// In en, this message translates to:
-  /// **'The store did not return Regiday Pro. It may not be available for this store account or country yet.'**
+  /// **'The store did not return Registry Pro. It may not be available for this store account or country yet.'**
   String get localProProductMissing;
 
   /// No description provided for @localProStoreUnavailable.
@@ -3955,13 +3955,13 @@ abstract class AppLocalizations {
   /// No description provided for @localProResultActive.
   ///
   /// In en, this message translates to:
-  /// **'Regiday Pro is active.'**
+  /// **'Registry Pro is active.'**
   String get localProResultActive;
 
   /// No description provided for @localProRestoreNotFound.
   ///
   /// In en, this message translates to:
-  /// **'The store found no Regiday Pro purchase for this account. Check that you are signed in with the account that bought it.'**
+  /// **'The store found no Registry Pro purchase for this account. Check that you are signed in with the account that bought it.'**
   String get localProRestoreNotFound;
 
   /// No description provided for @adsPrivacyTitle.
@@ -3991,13 +3991,13 @@ abstract class AppLocalizations {
   /// No description provided for @freeLimitDocuments.
   ///
   /// In en, this message translates to:
-  /// **'The free plan includes {count} documents. Regiday Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.'**
+  /// **'The free plan includes {count} documents. Registry Pro removes that limit for new documents. Records you already have can still be viewed, edited, renewed, and deleted.'**
   String freeLimitDocuments(int count);
 
   /// No description provided for @freeLimitSubscriptions.
   ///
   /// In en, this message translates to:
-  /// **'The free plan includes {count} subscription records. Regiday Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.'**
+  /// **'The free plan includes {count} subscription records. Registry Pro removes that limit for new subscriptions. Records you already have can still be viewed, edited, and deleted.'**
   String freeLimitSubscriptions(int count);
 
   /// No description provided for @recordAlreadyExists.
@@ -4339,7 +4339,7 @@ abstract class AppLocalizations {
   /// No description provided for @addToResiday.
   ///
   /// In en, this message translates to:
-  /// **'Add to Regiday'**
+  /// **'Add to Registry'**
   String get addToResiday;
 
   /// No description provided for @connectGmailTitle.
@@ -4399,7 +4399,7 @@ abstract class AppLocalizations {
   /// No description provided for @gmailPrivacyNotice.
   ///
   /// In en, this message translates to:
-  /// **'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
+  /// **'Registry requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
   String get gmailPrivacyNotice;
 
   /// No description provided for @candidateAddedSuccess.
@@ -4411,7 +4411,7 @@ abstract class AppLocalizations {
   /// No description provided for @candidateIgnored.
   ///
   /// In en, this message translates to:
-  /// **'Merchant ignored. Regiday will not detect this merchant again.'**
+  /// **'Merchant ignored. Registry will not detect this merchant again.'**
   String get candidateIgnored;
 }
 

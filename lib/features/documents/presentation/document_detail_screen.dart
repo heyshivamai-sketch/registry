@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/document_status.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
-import 'package:the_registry/features/documents/presentation/document_copy.dart';
-import 'package:the_registry/features/documents/presentation/record_renewal_sheet.dart';
-import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
-import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/features/reminders/presentation/reminder_status_line.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../domain/document_status.dart';
+import '../domain/registry_document.dart';
+import '../domain/renewal_history_entry.dart';
+import 'document_copy.dart';
+import 'record_renewal_sheet.dart';
+import '../widgets/document_attachment_preview_page.dart';
+import '../widgets/document_digital_pass.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../../reminders/presentation/reminder_status_line.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DocumentDetailScreen extends StatelessWidget {
   const DocumentDetailScreen({super.key, required this.documentId});

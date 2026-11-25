@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
+import '../domain/document_ocr.dart';
+import '../domain/document_schema.dart';
+import '../domain/registry_document.dart';
 
 const _documentPrompt = '''
 These images are the front, back, or additional pages of one document.
@@ -279,7 +279,7 @@ class FirebaseAiDocumentOcrService extends DocumentOcrService
       case DocumentSchemaIds.genericPassport:
         return 'Passport';
       case DocumentSchemaIds.franceNationalId:
-        return 'Carte Nationale d\'Identité';
+        return "Carte Nationale d'Identité";
       case DocumentSchemaIds.uaeEmiratesId:
         return 'Emirates ID';
       default:

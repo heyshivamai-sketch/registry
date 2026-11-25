@@ -4,9 +4,9 @@ import '../../../app/theme/app_spacing.dart';
 
 class OnboardingPageIndicator extends StatelessWidget {
   const OnboardingPageIndicator({
-    super.key,
     required this.count,
     required this.index,
+    super.key,
   });
 
   final int count;

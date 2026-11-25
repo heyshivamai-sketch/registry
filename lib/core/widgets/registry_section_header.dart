@@ -4,8 +4,7 @@ import '../../l10n/app_localizations.dart';
 
 class RegistrySectionHeader extends StatelessWidget {
   const RegistrySectionHeader({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.subtitle,
     this.icon,
     this.count,

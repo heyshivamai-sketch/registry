@@ -10,7 +10,7 @@ import '../widgets/onboarding_page_content.dart';
 import '../widgets/onboarding_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key, required this.repository});
+  const OnboardingScreen({required this.repository, super.key});
 
   final OnboardingRepository repository;
 

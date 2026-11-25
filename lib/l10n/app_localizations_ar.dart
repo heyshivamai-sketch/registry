@@ -361,7 +361,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'تبقى سجلاتك خاصة على هذا الجهاز. Regiday Pro ترقية لمرة واحدة ولا يزامن المستندات أو الاشتراكات.';
+      'تبقى سجلاتك خاصة على هذا الجهاز. Registry Pro ترقية لمرة واحدة ولا يزامن المستندات أو الاشتراكات.';
 
   @override
   String get profileButton => 'فتح الملف الشخصي';
@@ -535,7 +535,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'يُحفظ مع هذا المستند. يطلب Regiday من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
+      'يُحفظ مع هذا المستند. يطلب Registry من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
 
   @override
   String get reminderOnActionDate => 'في تاريخ الإجراء';
@@ -1751,7 +1751,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get storageErrorMessage =>
-      'تعذر على Regiday فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.';
+      'تعذر على Registry فتح السجلات المخزنة بالفعل على هذا الجهاز. تُركت هذه السجلات كما هي. أعد المحاولة دون إعادة ضبط التطبيق.';
 
   @override
   String get storageErrorRetry => 'إعادة المحاولة';
@@ -1826,14 +1826,14 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا يمكن لهذا الجهاز جدولة تذكيرات محلية الآن. خيارات التذكير المحفوظة لم تتغير.';
 
   @override
-  String get notificationChannelName => 'تذكيرات Regiday';
+  String get notificationChannelName => 'تذكيرات Registry';
 
   @override
   String get notificationChannelDescription =>
       'تذكيرات محلية لتواريخ المستندات ومدفوعات الاشتراكات. وقت التسليم ليس دقيقًا.';
 
   @override
-  String get notificationTitle => 'تذكير Regiday';
+  String get notificationTitle => 'تذكير Registry';
 
   @override
   String get reminderDocumentActionToday => 'تاريخ إجراء مستند هو اليوم.';
@@ -1889,7 +1889,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Regiday كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
+      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Registry كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
 
   @override
   String get backupExportAction => 'تصدير نسخة احتياطية';
@@ -1906,7 +1906,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupPasswordWarning =>
-      'اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Regiday كلمة المرور.';
+      'اختر كلمة مرور لهذا الملف. إذا فقدتها، لا يمكن استعادة هذه النسخة. لا يحفظ Registry كلمة المرور.';
 
   @override
   String get backupPasswordLabel => 'كلمة مرور النسخة الاحتياطية';
@@ -1983,14 +1983,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupExportSuccessHint =>
-      'ملف النسخة الاحتياطية (.rgry) مشفر لحمايتك ولا يمكن فتحه مباشرة في عوارض المستندات أو PDF. لعرض بياناتك أو استعادتها، استخدم استيراد النسخة الاحتياطية داخل Regiday.';
+      'ملف النسخة الاحتياطية (.rgry) مشفر لحمايتك ولا يمكن فتحه مباشرة في عوارض المستندات أو PDF. لعرض بياناتك أو استعادتها، استخدم استيراد النسخة الاحتياطية داخل Registry.';
 
   @override
   String get backupOpenImportAction => 'الانتقال إلى استيراد النسخة الاحتياطية';
 
   @override
   String get backupFormatNotice =>
-      'ملفات النسخ الاحتياطي (.rgry) مشفرة ولا يمكن فتحها أو استعادتها إلا من داخل Regiday.';
+      'ملفات النسخ الاحتياطي (.rgry) مشفرة ولا يمكن فتحها أو استعادتها إلا من داخل Registry.';
 
   @override
   String get backupExportCancelled =>
@@ -2024,11 +2024,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupUnsupportedVersion =>
-      'أُنشئت هذه النسخة بإصدار أحدث من Regiday.';
+      'أُنشئت هذه النسخة بإصدار أحدث من Registry.';
 
   @override
   String get backupInvalidFile =>
-      'هذا الملف ليس نسخة احتياطية صالحة من Regiday.';
+      'هذا الملف ليس نسخة احتياطية صالحة من Registry.';
 
   @override
   String get backupTampered => 'ملف النسخة الاحتياطية تالف أو تم تغييره.';
@@ -2050,7 +2050,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Regiday سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
+      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Registry سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
 
   @override
   String get appLockEnabled => 'قفل التطبيق مفعّل';
@@ -2059,14 +2059,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appLockDisabled => 'قفل التطبيق متوقف';
 
   @override
-  String get appLockReason => 'افتح قفل Regiday لعرض السجلات على هذا الجهاز.';
+  String get appLockReason => 'افتح قفل Registry لعرض السجلات على هذا الجهاز.';
 
   @override
   String get appLockEnableReason => 'أكّد أنك أنت قبل تشغيل قفل التطبيق.';
 
   @override
   String get appLockUnavailable =>
-      'لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Regiday استخدامه. لم يُفعَّل القفل.';
+      'لا تتوفر في هذا الجهاز بصمة أو رمز يمكن لـ Registry استخدامه. لم يُفعَّل القفل.';
 
   @override
   String get appLockCancelled => 'أُلغي التحقق. لم يُفعَّل قفل التطبيق.';
@@ -2076,7 +2076,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockPlatformError =>
-      'تعذّر على Regiday استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.';
+      'تعذّر على Registry استخدام تحقق هذا الجهاز. لم يتغيّر قفل التطبيق.';
 
   @override
   String get appLockDisableReason => 'أكّد أنك أنت قبل إيقاف قفل التطبيق.';
@@ -2096,7 +2096,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appLockUnlock => 'فتح القفل';
 
   @override
-  String get appLockLockedTitle => 'Regiday مقفل';
+  String get appLockLockedTitle => 'Registry مقفل';
 
   @override
   String get appLockLockedBody =>
@@ -2114,16 +2114,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockUnlockPlatformError =>
-      'تعذّر على Regiday استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.';
+      'تعذّر على Registry استخدام تحقق هذا الجهاز. تبقى سجلاتك مخفية.';
 
   @override
-  String get appLockPrivacyCover => 'Regiday';
+  String get appLockPrivacyCover => 'Registry';
 
   @override
-  String get localProTitle => 'Regiday Pro';
+  String get localProTitle => 'Registry Pro';
 
   @override
-  String get localProAction => 'عرض Regiday Pro';
+  String get localProAction => 'عرض Registry Pro';
 
   @override
   String get localProEyebrow => 'شراء لمرة واحدة';
@@ -2133,7 +2133,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProIntro =>
-      'Regiday Pro ترقية تُشترى مرة واحدة دون اشتراك، للاحتفاظ بالمزيد من السجلات على هذا الجهاز.';
+      'Registry Pro ترقية تُشترى مرة واحدة دون اشتراك، للاحتفاظ بالمزيد من السجلات على هذا الجهاز.';
 
   @override
   String get localProIncludedTitle => 'المشمول';
@@ -2157,7 +2157,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'لا مزامنة سحابية ولا نسخ احتياطي سحابي ولا حساب. لنقل السجلات إلى جهاز آخر استخدم ملف النسخة الاحتياطية المشفّر في الملف الشخصي. ملف النسخة الاحتياطية لا ينقل Regiday Pro.';
+      'لا مزامنة سحابية ولا نسخ احتياطي سحابي ولا حساب. لنقل السجلات إلى جهاز آخر استخدم ملف النسخة الاحتياطية المشفّر في الملف الشخصي. ملف النسخة الاحتياطية لا ينقل Registry Pro.';
 
   @override
   String get localProFreeTitle => 'يبقى مجانيًا';
@@ -2170,29 +2170,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get localProCurrentFree => 'الخطة الحالية: مجاني';
 
   @override
-  String get localProCurrentPro => 'الخطة الحالية: Regiday Pro';
+  String get localProCurrentPro => 'الخطة الحالية: Registry Pro';
 
   @override
-  String get localProBuy => 'شراء Regiday Pro';
+  String get localProBuy => 'شراء Registry Pro';
 
   @override
   String get localProRestore => 'استعادة المشتريات';
 
   @override
   String get localProPurchaseCancelled =>
-      'أُلغي الشراء. يبقى Regiday Pro متوقفًا.';
+      'أُلغي الشراء. يبقى Registry Pro متوقفًا.';
 
   @override
   String get localProPurchaseFailed =>
-      'تعذّر إتمام الشراء. يبقى Regiday Pro متوقفًا.';
+      'تعذّر إتمام الشراء. يبقى Registry Pro متوقفًا.';
 
   @override
   String get localProPendingStore =>
-      'ينتظر المتجر الدفع. يعمل Regiday Pro بعد أن يؤكد المتجر الشراء. لم يُفتح شيء بعد.';
+      'ينتظر المتجر الدفع. يعمل Registry Pro بعد أن يؤكد المتجر الشراء. لم يُفتح شيء بعد.';
 
   @override
   String get localProRevoked =>
-      'لم يعد المتجر يُظهر شراء Regiday Pro لهذا الحساب، مثلًا بعد استرداد المبلغ. Regiday Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير. تتوقف السجلات الجديدة عند الحدود المجانية.';
+      'لم يعد المتجر يُظهر شراء Registry Pro لهذا الحساب، مثلًا بعد استرداد المبلغ. Registry Pro متوقف. تبقى السجلات الموجودة قابلة للعرض والتعديل والتصدير. تتوقف السجلات الجديدة عند الحدود المجانية.';
 
   @override
   String get localProNotIncludedTransfer =>
@@ -2200,15 +2200,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProIncludedAds =>
-      'بلا إعلانات. الإعلانات متوقفة في هذا الإصدار. إذا عرض إصدار لاحق إعلانات لمستخدمي الخطة المجانية، يبقيها Regiday Pro متوقفة.';
+      'بلا إعلانات. الإعلانات متوقفة في هذا الإصدار. إذا عرض إصدار لاحق إعلانات لمستخدمي الخطة المجانية، يبقيها Registry Pro متوقفة.';
 
   @override
   String get localProIncludedAdsOn =>
-      'بلا إعلانات. في هذا الإصدار يرى مستخدمو الخطة المجانية شريطًا إعلانيًا صغيرًا في الصفحة الرئيسية. يزيله Regiday Pro.';
+      'بلا إعلانات. في هذا الإصدار يرى مستخدمو الخطة المجانية شريطًا إعلانيًا صغيرًا في الصفحة الرئيسية. يزيله Registry Pro.';
 
   @override
   String get localProRestoreRequirements =>
-      'تطلب استعادة المشتريات من المتجر Regiday Pro الذي اشتُري بحساب Google Play أو Apple نفسه لهذا التطبيق. تبقى مشتريات Android وiOS منفصلة.';
+      'تطلب استعادة المشتريات من المتجر Registry Pro الذي اشتُري بحساب Google Play أو Apple نفسه لهذا التطبيق. تبقى مشتريات Android وiOS منفصلة.';
 
   @override
   String get localProStatusDisabled =>
@@ -2218,11 +2218,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get localProStatusChecking => 'جارٍ التحقق من شرائك لدى المتجر…';
 
   @override
-  String get localProStatusActive => 'Regiday Pro مفعّل. أكّد المتجر شراءك.';
+  String get localProStatusActive => 'Registry Pro مفعّل. أكّد المتجر شراءك.';
 
   @override
   String get localProStatusActiveUnconfirmed =>
-      'يبقى Regiday Pro مفعّلًا وفق آخر تأكيد من المتجر. تعذّر الوصول إلى المتجر الآن، لذا لن يُكتشف استرداد تم منذ ذلك الحين إلا عند الوصول إليه.';
+      'يبقى Registry Pro مفعّلًا وفق آخر تأكيد من المتجر. تعذّر الوصول إلى المتجر الآن، لذا لن يُكتشف استرداد تم منذ ذلك الحين إلا عند الوصول إليه.';
 
   @override
   String get localProStatusUnknown =>
@@ -2230,7 +2230,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get localProProductMissing =>
-      'لم يُرجع المتجر Regiday Pro. قد لا يكون متاحًا بعد لهذا الحساب أو هذا البلد.';
+      'لم يُرجع المتجر Registry Pro. قد لا يكون متاحًا بعد لهذا الحساب أو هذا البلد.';
 
   @override
   String get localProStoreUnavailable =>
@@ -2244,11 +2244,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get localProRetry => 'إعادة المحاولة';
 
   @override
-  String get localProResultActive => 'Regiday Pro مفعّل.';
+  String get localProResultActive => 'Registry Pro مفعّل.';
 
   @override
   String get localProRestoreNotFound =>
-      'لم يجد المتجر أي شراء Regiday Pro لهذا الحساب. تأكد من تسجيل الدخول بالحساب الذي اشتراه.';
+      'لم يجد المتجر أي شراء Registry Pro لهذا الحساب. تأكد من تسجيل الدخول بالحساب الذي اشتراه.';
 
   @override
   String get adsPrivacyTitle => 'خصوصية الإعلانات';
@@ -2266,12 +2266,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String freeLimitDocuments(int count) {
-    return 'تشمل الخطة المجانية $count مستندات. يلغي Regiday Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.';
+    return 'تشمل الخطة المجانية $count مستندات. يلغي Registry Pro هذا الحد للمستندات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وتجديدها وحذفها.';
   }
 
   @override
   String freeLimitSubscriptions(int count) {
-    return 'تشمل الخطة المجانية $count اشتراكات. يلغي Regiday Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.';
+    return 'تشمل الخطة المجانية $count اشتراكات. يلغي Registry Pro هذا الحد للاشتراكات الجديدة. يمكن ما زال عرض السجلات الموجودة وتعديلها وحذفها.';
   }
 
   @override
@@ -2479,7 +2479,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notASubscription => 'تجاهل';
 
   @override
-  String get addToResiday => 'إضافة إلى Regiday';
+  String get addToResiday => 'إضافة إلى Registry';
 
   @override
   String get connectGmailTitle => 'اكتشاف اشتراكات Gmail';
@@ -2516,12 +2516,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get gmailPrivacyNotice =>
-      'يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
+      'يتطلب Registry إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
 
   @override
   String get candidateAddedSuccess => 'تمت إضافة الاشتراك بنجاح.';
 
   @override
   String get candidateIgnored =>
-      'تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى.';
+      'تم تجاهل التاجر. لن يكتشف Registry هذا التاجر مرة أخرى.';
 }

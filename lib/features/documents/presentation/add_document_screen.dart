@@ -8,37 +8,38 @@ import 'package:flutter/cupertino.dart'
         CupertinoTheme,
         CupertinoThemeData;
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
-import 'package:the_registry/features/entitlements/entitlement_copy.dart';
-import 'package:the_registry/features/entitlements/entitlement_policy.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_radius.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_form_field.dart';
-import 'package:the_registry/core/widgets/registry_primary_button.dart';
-import 'package:the_registry/core/widgets/registry_searchable_sheet.dart';
-import 'package:the_registry/core/widgets/registry_secondary_button.dart';
-import 'package:the_registry/core/widgets/registry_section_header.dart';
-import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
-import 'package:the_registry/core/widgets/registry_selector_field.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/document_icons.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/image_picker_service.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
-import 'package:the_registry/features/documents/presentation/document_copy.dart';
-import 'package:the_registry/features/documents/widgets/document_attachment_card.dart';
-import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
-import 'package:the_registry/features/documents/widgets/document_date_field.dart';
-import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
-import 'package:the_registry/features/reminders/presentation/reminder_permission_note.dart';
-import 'package:the_registry/features/home/data/registry_date_formatter.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_form_field.dart';
+import '../../../core/widgets/registry_primary_button.dart';
+import '../../../core/widgets/registry_searchable_sheet.dart';
+import '../../../core/widgets/registry_secondary_button.dart';
+import '../../../core/widgets/registry_section_header.dart';
+import '../../../core/widgets/registry_selectable_chip.dart';
+import '../../../core/widgets/registry_selector_field.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../entitlements/entitlement_copy.dart';
+import '../../entitlements/entitlement_policy.dart';
+import '../../entitlements/presentation/local_pro_screen.dart';
+import '../../home/data/registry_date_formatter.dart';
+import '../../reminders/presentation/reminder_permission_note.dart';
+import '../domain/document_field_value.dart';
+import '../domain/document_icons.dart';
+import '../domain/document_ocr.dart';
+import '../domain/document_schema.dart';
+import '../domain/image_picker_service.dart';
+import '../domain/registry_document.dart';
+import '../widgets/document_attachment_card.dart';
+import '../widgets/document_attachment_preview_page.dart';
+import '../widgets/document_date_field.dart';
+import '../widgets/document_digital_pass.dart';
+import 'add_document_controller.dart';
+import 'document_copy.dart';
 
 enum _AttachmentSourceChoice { cameraBack, cameraFront, gallery }
 
@@ -1009,7 +1010,7 @@ class _SourceStep extends StatelessWidget {
               ? l10n.editDocumentHeadline
               : l10n.addDocumentHeadline,
           body: controller.hasAttachment
-              ? "Verify your document photo and extract details with AI, or enter manually."
+              ? 'Verify your document photo and extract details with AI, or enter manually.'
               : l10n.howToAddTitle,
         ),
 
@@ -1171,7 +1172,7 @@ class _SourceStep extends StatelessWidget {
                       Flexible(
                         child: Text(
                           controller.additionalImages.isEmpty
-                              ? "Add back side (optional)"
+                              ? 'Add back side (optional)'
                               : l10n.addOtherImage,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -1185,7 +1186,7 @@ class _SourceStep extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    "Captures barcode, address & back details",
+                    'Captures barcode, address & back details',
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade600,
@@ -1260,7 +1261,7 @@ class _SourceStep extends StatelessWidget {
                         children: [
                           const Flexible(
                             child: Text(
-                              "Gemini AI Auto-Extract",
+                              'Gemini AI Auto-Extract',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 12,
@@ -1280,7 +1281,7 @@ class _SourceStep extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: const Text(
-                              "Flash 2.5",
+                              'Flash 2.5',
                               style: TextStyle(
                                 fontSize: 8.5,
                                 fontWeight: FontWeight.w700,
@@ -1752,7 +1753,7 @@ class _IdentityStep extends StatelessWidget {
                 RegistrySecondaryButton(
                   key: const ValueKey<String>('add-custom-field'),
                   label: l10n.addCustomField,
-                  onPressed: () => controller.addCustomField(),
+                  onPressed: controller.addCustomField,
                 ),
               ],
             ],
@@ -2066,9 +2067,7 @@ class _DynamicFieldEditorState extends State<_DynamicFieldEditor> {
 
 class _CustomFieldBlock extends StatefulWidget {
   const _CustomFieldBlock({
-    super.key,
-    required this.controller,
-    required this.dynamicInputs,
+    required this.controller, required this.dynamicInputs, super.key,
   });
 
   final AddDocumentController controller;
@@ -2935,7 +2934,7 @@ class _OcrReview extends StatelessWidget {
           initialValue: controller.ocrResult?.documentTypeLabel ?? typeLabel,
           decoration: InputDecoration(labelText: '${l10n.fieldDocumentName} *'),
           textCapitalization: TextCapitalization.sentences,
-          onChanged: (value) => controller.setOcrDocumentTypeLabel(value),
+          onChanged: controller.setOcrDocumentTypeLabel,
         ),
         const SizedBox(height: AppSpacing.md),
         RegistrySelectorField(
@@ -2966,11 +2965,10 @@ class _OcrReview extends StatelessWidget {
         RegistrySecondaryButton(
           key: const ValueKey<String>('ocr-add-field'),
           label: l10n.ocrAddMissingField,
-          onPressed: () => controller.addOcrCustomField(),
+          onPressed: controller.addOcrCustomField,
         ),
         const SizedBox(height: AppSpacing.sm),
         Align(
-          alignment: Alignment.center,
           child: TextButton(
             key: const ValueKey<String>('ocr-retake'),
             style: TextButton.styleFrom(

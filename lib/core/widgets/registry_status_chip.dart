@@ -36,9 +36,7 @@ extension RegistryStatusVisuals on RegistryStatus {
 
 class RegistryStatusChip extends StatelessWidget {
   const RegistryStatusChip({
-    super.key,
-    required this.status,
-    required this.label,
+    required this.status, required this.label, super.key,
     this.onDark = false,
     this.compact = false,
   });

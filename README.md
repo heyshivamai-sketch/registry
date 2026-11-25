@@ -1,11 +1,11 @@
-# Regiday (The Registry)
+# Registry
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
 [![License](https://img.shields.io/badge/License-Private-grey.svg)](#)
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local--First-brightgreen)](#)
 
-A modern, privacy-first personal registry and smart wallet for documents, subscriptions, and renewals. Built with Flutter, **Regiday** operates with a local-first philosophy—keeping sensitive documents, financial subscriptions, attachments, and reminders securely on your device.
+A modern, privacy-first personal registry and smart wallet for documents, subscriptions, and renewals. Built with Flutter, **Registry** operates with a local-first philosophy—keeping sensitive documents, financial subscriptions, attachments, and reminders securely on your device.
 
 ---
 
@@ -117,7 +117,7 @@ lib/
 
 ## ⚙️ Build Configuration & Flags
 
-Regiday uses compile-time `--dart-define` switches in [`lib/app/launch_config.dart`](file:///Users/shahbazkhan/StudioProjects/registry/lib/app/launch_config.dart) to govern features cleanly:
+Registry uses compile-time `--dart-define` switches in [`lib/app/launch_config.dart`](file:///Users/shahbazkhan/StudioProjects/registry/lib/app/launch_config.dart) to govern features cleanly:
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |

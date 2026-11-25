@@ -22,25 +22,7 @@ import '../features/subscriptions/domain/subscription_repository.dart';
 
 class RegistryDependencies extends InheritedWidget {
   const RegistryDependencies({
-    super.key,
-    required this.documents,
-    required this.subscriptions,
-    required this.imagePicker,
-    required this.datePicker,
-    required this.documentOcr,
-    required this.clock,
-    required this.reminders,
-    required this.backups,
-    required this.backupFiles,
-    required this.entitlements,
-    required this.writes,
-    required this.appLock,
-    required this.localPro,
-    required this.ads,
-    required this.csvFiles,
-    required this.discovery,
-    required this.gmailClient,
-    required super.child,
+    required this.documents, required this.subscriptions, required this.imagePicker, required this.datePicker, required this.documentOcr, required this.clock, required this.reminders, required this.backups, required this.backupFiles, required this.entitlements, required this.writes, required this.appLock, required this.localPro, required this.ads, required this.csvFiles, required this.discovery, required this.gmailClient, required super.child, super.key,
   });
 
   final DocumentRepository documents;

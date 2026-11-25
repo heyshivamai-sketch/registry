@@ -4,7 +4,7 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 
 class DatesIllustration extends StatelessWidget {
-  const DatesIllustration({super.key, required this.l10n});
+  const DatesIllustration({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -82,7 +82,7 @@ class DatesIllustration extends StatelessWidget {
 }
 
 class SubscriptionsIllustration extends StatelessWidget {
-  const SubscriptionsIllustration({super.key, required this.l10n});
+  const SubscriptionsIllustration({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -134,7 +134,7 @@ class SubscriptionsIllustration extends StatelessWidget {
 }
 
 class PrivacyIllustration extends StatelessWidget {
-  const PrivacyIllustration({super.key, required this.l10n});
+  const PrivacyIllustration({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 

@@ -1,42 +1,49 @@
 {
   "project_info": {
-    "project_number": "359772476439",
-    "project_id": "regiday-b1f5b",
-    "storage_bucket": "regiday-b1f5b.firebasestorage.app"
+    "project_number": "949213015794",
+    "project_id": "registry-b943d",
+    "storage_bucket": "registry-b943d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:359772476439:android:65d093975f351d49bf3852",
+        "mobilesdk_app_id": "1:949213015794:android:c05bb356f3f781e15b2a6b",
         "android_client_info": {
-          "package_name": "com.ventrovatech.residay"
+          "package_name": "com.registry.vault"
         }
       },
       "oauth_client": [
         {
-          "client_id": "359772476439-eigkjg03jer0thsg5t2ja5kmsciimtav.apps.googleusercontent.com",
+          "client_id": "949213015794-onrhoa1o0ksdddchdugg5pdfn56915t5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ventrovatech.residay",
-            "certificate_hash": "8e14e824b535c1f7b77749bd0dba2cbacff64419"
+            "package_name": "com.registry.vault",
+            "certificate_hash": "8ceec2da03d01535678c45fc408a42e5b88a86bc"
           }
         },
         {
-          "client_id": "359772476439-an2bapu95jap4mqnmrd3s1ad0rdl1nhm.apps.googleusercontent.com",
+          "client_id": "949213015794-hiuatbuauae2ncht6euhku50gl76a3p4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyANAanI_6m-FQRejcgUYgT5OcelYUI4D4g"
+          "current_key": "AIzaSyDtRgaqeJVagb7s2VrP0WSERc-Z5iULiQo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "359772476439-an2bapu95jap4mqnmrd3s1ad0rdl1nhm.apps.googleusercontent.com",
+              "client_id": "949213015794-hiuatbuauae2ncht6euhku50gl76a3p4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "949213015794-6qs00btcrprkdrm13amka4vfs334p6nv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.registry.vault"
+              }
             }
           ]
         }

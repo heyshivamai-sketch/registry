@@ -10,10 +10,7 @@ import '../../l10n/app_localizations.dart';
 
 class RegistryAuraNavigationDock extends StatelessWidget {
   const RegistryAuraNavigationDock({
-    super.key,
-    required this.selectedIndex,
-    required this.onDestinationSelected,
-    required this.onAddPressed,
+    required this.selectedIndex, required this.onDestinationSelected, required this.onAddPressed, super.key,
   });
 
   /// 0 Home, 1 Documents, 2 Subscriptions, 3 Profile.
@@ -124,7 +121,6 @@ class RegistryAuraNavigationDock extends StatelessWidget {
             child: Material(
               type: MaterialType.circle,
               color: Colors.transparent,
-              elevation: 0,
               child: InkWell(
                 key: const ValueKey<String>('home-fab'),
                 customBorder: const CircleBorder(),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:the_registry/app/navigation/app_routes.dart';
-import 'package:the_registry/app/registry_dependencies.dart';
-import 'package:the_registry/app/theme/app_colors.dart';
-import 'package:the_registry/app/theme/app_spacing.dart';
-import 'package:the_registry/core/widgets/registry_empty_state.dart';
-import 'package:the_registry/core/widgets/registry_search_field.dart';
-import 'package:the_registry/core/widgets/registry_surface.dart';
-import 'package:the_registry/features/subscriptions/domain/subscription_wallet.dart';
-import 'package:the_registry/features/subscriptions/widgets/subscription_list_card.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+
+import '../../../app/navigation/app_routes.dart';
+import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_spacing.dart';
+import '../../../core/widgets/registry_empty_state.dart';
+import '../../../core/widgets/registry_search_field.dart';
+import '../../../core/widgets/registry_surface.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/subscription_wallet.dart';
+import '../widgets/subscription_list_card.dart';
 
 class CancelledSubscriptionsScreen extends StatefulWidget {
   const CancelledSubscriptionsScreen({super.key});

@@ -4,9 +4,7 @@ import '../../app/theme/app_spacing.dart';
 
 class RegistrySummaryCard extends StatelessWidget {
   const RegistrySummaryCard({
-    super.key,
-    required this.title,
-    required this.value,
+    required this.title, required this.value, super.key,
     this.subtitle,
     this.icon = Icons.upcoming_outlined,
   });

@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:the_registry/features/documents/domain/document_field_value.dart';
-import 'package:the_registry/features/documents/domain/document_ocr.dart';
-import 'package:the_registry/features/documents/domain/document_schema.dart';
-import 'package:the_registry/features/documents/domain/registry_document.dart';
-import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
-import 'package:the_registry/l10n/app_localizations.dart';
+import '../domain/document_field_value.dart';
+import '../domain/document_ocr.dart';
+import '../domain/document_schema.dart';
+import '../domain/registry_document.dart';
+import '../domain/renewal_history_entry.dart';
+import '../../../l10n/app_localizations.dart';
 
 enum DocumentFormMode { create, edit }
 

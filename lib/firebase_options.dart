@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyANAanI_6m-FQRejcgUYgT5OcelYUI4D4g',
-    appId: '1:359772476439:android:65d093975f351d49bf3852',
-    messagingSenderId: '359772476439',
-    projectId: 'regiday-b1f5b',
-    storageBucket: 'regiday-b1f5b.firebasestorage.app',
+    apiKey: 'AIzaSyDtRgaqeJVagb7s2VrP0WSERc-Z5iULiQo',
+    appId: '1:949213015794:android:c05bb356f3f781e15b2a6b',
+    messagingSenderId: '949213015794',
+    projectId: 'registry-b943d',
+    storageBucket: 'registry-b943d.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCn-OojMf-MAswAw3FLDeZUciOMjbCb0oc',
-    appId: '1:595673119514:ios:c165cc3ac19862beac4aa3',
-    messagingSenderId: '595673119514',
-    projectId: 'residay-app',
-    storageBucket: 'residay-app.firebasestorage.app',
-    iosBundleId: 'com.residay.app',
+    apiKey: 'AIzaSyCb-4sO6c5USqVTtCWFJdtj_3XVMsP99As',
+    appId: '1:949213015794:ios:c176f115c5fa532c5b2a6b',
+    messagingSenderId: '949213015794',
+    projectId: 'registry-b943d',
+    storageBucket: 'registry-b943d.firebasestorage.app',
+    iosClientId: '949213015794-6qs00btcrprkdrm13amka4vfs334p6nv.apps.googleusercontent.com',
+    iosBundleId: 'com.registry.vault',
   );
 }

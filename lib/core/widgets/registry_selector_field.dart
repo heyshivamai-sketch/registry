@@ -4,12 +4,12 @@ import 'registry_form_field.dart';
 /// Filled selector with a persistent label above the value, never overlaid.
 class RegistrySelectorField extends StatelessWidget {
   const RegistrySelectorField({
-    super.key,
     required this.fieldKey,
     required this.label,
     required this.value,
     required this.empty,
     required this.onTap,
+    super.key,
     this.errorText,
     this.requiredField = false,
     this.enabled = true,

@@ -5,8 +5,7 @@ import '../../l10n/app_localizations.dart';
 
 class RegistrySearchField extends StatelessWidget {
   const RegistrySearchField({
-    super.key,
-    required this.controller,
+    required this.controller, super.key,
     this.hintText,
     this.fieldKey,
     this.clearKey,
@@ -66,7 +65,6 @@ class RegistrySearchField extends StatelessWidget {
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: 0,
           ),
         ),
       ),

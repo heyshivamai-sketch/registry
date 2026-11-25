@@ -17,7 +17,7 @@ import '../domain/subscription_status.dart';
 import 'subscription_copy.dart';
 
 class SubscriptionDetailScreen extends StatelessWidget {
-  const SubscriptionDetailScreen({super.key, required this.subscriptionId});
+  const SubscriptionDetailScreen({required this.subscriptionId, super.key});
 
   final String subscriptionId;
 
@@ -399,10 +399,7 @@ class _PlanActions extends StatelessWidget {
 
 class _PlanAction extends StatelessWidget {
   const _PlanAction({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onPressed,
+    required this.icon, required this.label, required this.onPressed, super.key,
   });
 
   final IconData icon;

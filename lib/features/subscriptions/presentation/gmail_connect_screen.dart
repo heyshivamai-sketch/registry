@@ -157,7 +157,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
       return 'Gmail API is disabled in Google Cloud project 359772476439.\n\nEnable the Gmail API in Google Cloud Console, wait 1-2 minutes for propagation, then tap "Scan New Emails".';
     }
     if (str.contains('access_denied')) {
-      return 'Permission was denied. Regiday requires read-only Gmail access to detect billing receipts.';
+      return 'Permission was denied. Registry requires read-only Gmail access to detect billing receipts.';
     }
     if (error is PlatformException &&
         error.message != null &&
@@ -423,4 +423,3 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
     );
   }
 }
-

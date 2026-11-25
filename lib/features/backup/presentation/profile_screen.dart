@@ -10,7 +10,7 @@ import '../../../core/widgets/registry_section_header.dart';
 import '../../../core/widgets/registry_surface.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../app_lock/app_lock_controller.dart';
-// import '../../entitlements/registry_plan.dart';
+import '../../entitlements/registry_plan.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
@@ -36,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
       ..showSnackBar(SnackBar(content: Text(l10n.backupImportReplaced)));
   }
 
-  /*
+
   Future<void> _openCharges(BuildContext context) async {
     final created = await AppRoutes.openImportCharges(context);
     if (created <= 0 || !context.mounted) {
@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(l10n.csvCreated(created))));
   }
-  */
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +104,8 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           const _AppLockSection(),
-          // Regiday Pro section (commented out)
-          /*
+          // Registry Pro section (commented out)
+
           const SizedBox(height: AppSpacing.md),
           RegistrySurface(
             key: const ValueKey<String>('local-pro-section'),
@@ -141,10 +141,10 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          */
+
           const _AdsPrivacySection(),
           // Import charges from CSV section (commented out)
-          /*
+
           const SizedBox(height: AppSpacing.md),
           RegistrySurface(
             key: const ValueKey<String>('csv-import-section'),
@@ -170,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          */
+
         ],
       ),
     );

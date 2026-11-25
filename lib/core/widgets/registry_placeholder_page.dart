@@ -5,9 +5,7 @@ import 'registry_primary_button.dart';
 
 class RegistryPlaceholderPage extends StatelessWidget {
   const RegistryPlaceholderPage({
-    super.key,
-    required this.title,
-    required this.message,
+    required this.title, required this.message, super.key,
     this.icon = Icons.hourglass_empty_outlined,
     this.embedded = false,
   });

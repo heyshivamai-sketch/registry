@@ -105,7 +105,7 @@ class PlatformBackupFileGateway extends BackupFileGateway {
   final AndroidBackupBridge? _androidBridge;
 
   static const _typeGroup = XTypeGroup(
-    label: 'Regiday backup',
+    label: 'Registry backup',
     extensions: <String>['rgry'],
     mimeTypes: <String>['application/octet-stream'],
     uniformTypeIdentifiers: <String>['public.data'],

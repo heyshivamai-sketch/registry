@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/app_spacing.dart';
 
 class OnboardingPageContent extends StatelessWidget {
-  const OnboardingPageContent({super.key, required this.illustration, required this.title, required this.subtitle});
+  const OnboardingPageContent({required this.illustration, required this.title, required this.subtitle, super.key});
 
   final Widget illustration;
   final String title;

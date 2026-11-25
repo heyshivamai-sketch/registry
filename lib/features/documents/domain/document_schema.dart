@@ -229,7 +229,7 @@ class DocumentSchemaRegistry {
           'date of expiry',
           'expiry',
           'expiration',
-          'date d\'expiration',
+          "date d'expiration",
         ],
       ),
       DynamicDocumentField(
@@ -348,7 +348,7 @@ class DocumentSchemaRegistry {
         inputType: DocumentFieldInputType.date,
         isDate: true,
         binding: DocumentBaseBinding.expiryDate,
-        ocrAliases: ['date d\'expiration', 'expiration', 'expiry'],
+        ocrAliases: ["date d'expiration", 'expiration', 'expiry'],
       ),
     ],
   );

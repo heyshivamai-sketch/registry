@@ -123,9 +123,7 @@ class RegistryFieldLabel extends StatelessWidget {
 
 class RegistryLabeledField extends StatelessWidget {
   const RegistryLabeledField({
-    super.key,
-    required this.label,
-    required this.child,
+    required this.label, required this.child, super.key,
     this.requiredField = false,
     this.errorText,
     this.helperText,
@@ -168,8 +166,7 @@ class RegistryLabeledField extends StatelessWidget {
 
 class RegistryTextField extends StatelessWidget {
   const RegistryTextField({
-    super.key,
-    required this.label,
+    required this.label, super.key,
     this.controller,
     this.fieldKey,
     this.onChanged,
@@ -339,9 +336,7 @@ class RegistryFieldSurface extends StatelessWidget {
 
 class RegistryWizardProgress extends StatelessWidget {
   const RegistryWizardProgress({
-    super.key,
-    required this.current,
-    required this.total,
+    required this.current, required this.total, super.key,
     this.label,
     this.labelKey,
   });
@@ -419,11 +414,7 @@ class RegistryWizardProgress extends StatelessWidget {
 
 class RegistryExpandableSection extends StatelessWidget {
   const RegistryExpandableSection({
-    super.key,
-    required this.title,
-    required this.expanded,
-    required this.onToggle,
-    required this.child,
+    required this.title, required this.expanded, required this.onToggle, required this.child, super.key,
     this.subtitle,
     this.icon,
     this.toggleKey,

@@ -12,34 +12,26 @@ import 'package:the_registry/features/backup/platform_backup_file_gateway.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 void main() {
-  group('Regiday copy', () {
+  group('Registry copy', () {
     for (final code in ['en', 'fr', 'ar']) {
-      test('$code names the app Regiday and the upgrade Regiday Pro', () {
+      test('$code names the app Registry and the upgrade Registry Pro', () {
         final l10n = lookupAppLocalizations(Locale(code));
-        expect(l10n.localProTitle, 'Regiday Pro');
-        expect(l10n.appLockPrivacyCover, 'Regiday');
-        expect(l10n.notificationTitle, contains('Regiday'));
-        expect(l10n.notificationChannelName, contains('Regiday'));
-        expect(l10n.localProIntro, contains('Regiday'));
-        expect(l10n.profileMessage, contains('Regiday Pro'));
+        expect(l10n.localProTitle, 'Registry Pro');
+        expect(l10n.appLockPrivacyCover, 'Registry');
+        expect(l10n.notificationTitle, contains('Registry'));
+        expect(l10n.notificationChannelName, contains('Registry'));
+        expect(l10n.localProIntro, contains('Registry'));
+        expect(l10n.profileMessage, contains('Registry Pro'));
       });
 
       test('$code has no old brand names in user-facing strings', () {
         final arb =
             jsonDecode(File('lib/l10n/app_$code.arb').readAsStringSync())
                 as Map<String, dynamic>;
-        // Generic "your registry" wording is kept on purpose.
-        const generic = {
-          'homeTitle',
-          'sectionRegistrySnapshot',
-          'subscriptionReviewIntro',
-        };
         for (final MapEntry(:key, :value) in arb.entries) {
           if (key.startsWith('@') || value is! String) continue;
           expect(value, isNot(contains('Local Pro')), reason: key);
-          if (!generic.contains(key)) {
-            expect(value, isNot(matches(RegExp(r'\bRegistry\b'))), reason: key);
-          }
+          expect(value, isNot(contains('Regiday')), reason: key);
           expect(value, isNot(contains('verified email')), reason: key);
         }
       });

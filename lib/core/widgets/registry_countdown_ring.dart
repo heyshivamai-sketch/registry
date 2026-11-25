@@ -5,12 +5,7 @@ import 'registry_status_chip.dart';
 
 class RegistryCountdownRing extends StatelessWidget {
   const RegistryCountdownRing({
-    super.key,
-    required this.daysUntil,
-    required this.valueLabel,
-    required this.unitLabel,
-    required this.semanticLabel,
-    required this.status,
+    required this.daysUntil, required this.valueLabel, required this.unitLabel, required this.semanticLabel, required this.status, super.key,
   });
 
   final int daysUntil;

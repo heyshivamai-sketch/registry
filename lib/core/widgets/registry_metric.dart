@@ -3,9 +3,7 @@ import '../../app/theme/app_spacing.dart';
 
 class RegistryMetric extends StatelessWidget {
   const RegistryMetric({
-    super.key,
-    required this.label,
-    required this.value,
+    required this.label, required this.value, super.key,
     this.icon,
     this.color,
     this.supportingText,

@@ -3,8 +3,7 @@ import '../../app/theme/app_spacing.dart';
 
 class RegistryPrimaryButton extends StatelessWidget {
   const RegistryPrimaryButton({
-    super.key,
-    required this.label,
+    required this.label, super.key,
     this.onPressed,
     this.trailing,
     this.expanded = true,

@@ -5,9 +5,7 @@ import 'registry_surface.dart';
 
 class RegistryEmptyState extends StatelessWidget {
   const RegistryEmptyState({
-    super.key,
-    required this.title,
-    required this.message,
+    required this.title, required this.message, super.key,
     this.icon = Icons.inbox_outlined,
     this.illustration,
     this.action,

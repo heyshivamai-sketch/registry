@@ -363,7 +363,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'Vos dossiers restent privés sur cet appareil. Regiday Pro est une mise à niveau unique et ne synchronise ni les documents ni les abonnements.';
+      'Vos dossiers restent privés sur cet appareil. Registry Pro est une mise à niveau unique et ne synchronise ni les documents ni les abonnements.';
 
   @override
   String get profileButton => 'Ouvrir le profil';
@@ -538,7 +538,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'Enregistré avec ce document. Regiday demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.';
+      'Enregistré avec ce document. Registry demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.';
 
   @override
   String get reminderOnActionDate => 'Le jour de l’action';
@@ -1771,7 +1771,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get storageErrorMessage =>
-      'Regiday n’a pas pu ouvrir les enregistrements déjà stockés sur cet appareil. Ils ont été laissés en place. Réessayez sans réinitialiser l’application.';
+      'Registry n’a pas pu ouvrir les enregistrements déjà stockés sur cet appareil. Ils ont été laissés en place. Réessayez sans réinitialiser l’application.';
 
   @override
   String get storageErrorRetry => 'Réessayer';
@@ -1822,7 +1822,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notificationsLimits =>
-      'Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Regiday demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Regiday. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Regiday en planifie au plus 64, les plus proches d’abord.';
+      'Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Registry demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Registry. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Registry en planifie au plus 64, les plus proches d’abord.';
 
   @override
   String notificationsOmittedCount(int count) {
@@ -1847,14 +1847,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cet appareil ne peut pas planifier de rappels locaux pour le moment. Les choix enregistrés ne sont pas modifiés.';
 
   @override
-  String get notificationChannelName => 'Rappels Regiday';
+  String get notificationChannelName => 'Rappels Registry';
 
   @override
   String get notificationChannelDescription =>
       'Rappels locaux pour les dates de documents et les paiements d’abonnements. L’heure de remise n’est pas exacte.';
 
   @override
-  String get notificationTitle => 'Rappel Regiday';
+  String get notificationTitle => 'Rappel Registry';
 
   @override
   String get reminderDocumentActionToday =>
@@ -1913,7 +1913,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Regiday ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.';
+      'Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Registry ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.';
 
   @override
   String get backupExportAction => 'Exporter une sauvegarde';
@@ -1930,7 +1930,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupPasswordWarning =>
-      'Choisissez un mot de passe pour ce fichier. Si vous le perdez, cette sauvegarde ne pourra pas être restaurée. Regiday n’enregistre pas le mot de passe.';
+      'Choisissez un mot de passe pour ce fichier. Si vous le perdez, cette sauvegarde ne pourra pas être restaurée. Registry n’enregistre pas le mot de passe.';
 
   @override
   String get backupPasswordLabel => 'Mot de passe de la sauvegarde';
@@ -1959,7 +1959,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupImportIntro =>
-      'Choisissez un fichier de sauvegarde Regiday et saisissez son mot de passe. L’importation remplace chaque document et chaque abonnement de cet appareil.';
+      'Choisissez un fichier de sauvegarde Registry et saisissez son mot de passe. L’importation remplace chaque document et chaque abonnement de cet appareil.';
 
   @override
   String get backupChooseFile => 'Choisir un fichier de sauvegarde';
@@ -2009,14 +2009,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupExportSuccessHint =>
-      'Ce fichier de sauvegarde (.rgry) est chiffré pour votre sécurité et ne peut pas être ouvert directement dans des lecteurs de PDF ou de documents. Pour afficher ou restaurer vos données, utilisez Importer une sauvegarde dans Regiday.';
+      'Ce fichier de sauvegarde (.rgry) est chiffré pour votre sécurité et ne peut pas être ouvert directement dans des lecteurs de PDF ou de documents. Pour afficher ou restaurer vos données, utilisez Importer une sauvegarde dans Registry.';
 
   @override
   String get backupOpenImportAction => 'Aller à Importer une sauvegarde';
 
   @override
   String get backupFormatNotice =>
-      'Les fichiers de sauvegarde (.rgry) sont chiffrés et ne peuvent être ouverts ou restaurés que dans Regiday.';
+      'Les fichiers de sauvegarde (.rgry) sont chiffrés et ne peuvent être ouverts ou restaurés que dans Registry.';
 
   @override
   String get backupExportCancelled =>
@@ -2051,11 +2051,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupUnsupportedVersion =>
-      'Cette sauvegarde a été créée par une version plus récente de Regiday.';
+      'Cette sauvegarde a été créée par une version plus récente de Registry.';
 
   @override
   String get backupInvalidFile =>
-      'Ce fichier n’est pas une sauvegarde Regiday valide.';
+      'Ce fichier n’est pas une sauvegarde Registry valide.';
 
   @override
   String get backupTampered =>
@@ -2080,7 +2080,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'Demandez la biométrie ou le code de cet appareil avant que Regiday n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.';
+      'Demandez la biométrie ou le code de cet appareil avant que Registry n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.';
 
   @override
   String get appLockEnabled => 'Le verrouillage est activé';
@@ -2090,7 +2090,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockReason =>
-      'Déverrouillez Regiday pour voir les enregistrements de cet appareil.';
+      'Déverrouillez Registry pour voir les enregistrements de cet appareil.';
 
   @override
   String get appLockEnableReason =>
@@ -2098,7 +2098,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockUnavailable =>
-      'Cet appareil n’a pas de biométrie ni de code que Regiday peut utiliser. Le verrouillage n’a pas été activé.';
+      'Cet appareil n’a pas de biométrie ni de code que Registry peut utiliser. Le verrouillage n’a pas été activé.';
 
   @override
   String get appLockCancelled =>
@@ -2110,7 +2110,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockPlatformError =>
-      'Regiday n’a pas pu utiliser l’authentification de cet appareil. Le verrouillage n’a pas été modifié.';
+      'Registry n’a pas pu utiliser l’authentification de cet appareil. Le verrouillage n’a pas été modifié.';
 
   @override
   String get appLockDisableReason =>
@@ -2132,7 +2132,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appLockUnlock => 'Déverrouiller';
 
   @override
-  String get appLockLockedTitle => 'Regiday est verrouillé';
+  String get appLockLockedTitle => 'Registry est verrouillé';
 
   @override
   String get appLockLockedBody =>
@@ -2152,16 +2152,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockUnlockPlatformError =>
-      'Regiday n’a pas pu utiliser l’authentification de cet appareil. Vos enregistrements restent masqués.';
+      'Registry n’a pas pu utiliser l’authentification de cet appareil. Vos enregistrements restent masqués.';
 
   @override
-  String get appLockPrivacyCover => 'Regiday';
+  String get appLockPrivacyCover => 'Registry';
 
   @override
-  String get localProTitle => 'Regiday Pro';
+  String get localProTitle => 'Registry Pro';
 
   @override
-  String get localProAction => 'Voir Regiday Pro';
+  String get localProAction => 'Voir Registry Pro';
 
   @override
   String get localProEyebrow => 'Achat unique';
@@ -2171,7 +2171,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProIntro =>
-      'Regiday Pro : un seul achat, sans abonnement, pour conserver plus de dossiers sur cet appareil.';
+      'Registry Pro : un seul achat, sans abonnement, pour conserver plus de dossiers sur cet appareil.';
 
   @override
   String get localProIncludedTitle => 'Inclus';
@@ -2195,7 +2195,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProNotIncludedCloud =>
-      'Pas de synchronisation, de sauvegarde dans le nuage ni de compte. Pour déplacer vos enregistrements vers un autre appareil, utilisez le fichier de sauvegarde chiffré dans Profil. Un fichier de sauvegarde ne transporte pas Regiday Pro.';
+      'Pas de synchronisation, de sauvegarde dans le nuage ni de compte. Pour déplacer vos enregistrements vers un autre appareil, utilisez le fichier de sauvegarde chiffré dans Profil. Un fichier de sauvegarde ne transporte pas Registry Pro.';
 
   @override
   String get localProFreeTitle => 'Reste gratuit';
@@ -2208,29 +2208,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get localProCurrentFree => 'Offre actuelle : Gratuit';
 
   @override
-  String get localProCurrentPro => 'Offre actuelle : Regiday Pro';
+  String get localProCurrentPro => 'Offre actuelle : Registry Pro';
 
   @override
-  String get localProBuy => 'Acheter Regiday Pro';
+  String get localProBuy => 'Acheter Registry Pro';
 
   @override
   String get localProRestore => 'Restaurer les achats';
 
   @override
   String get localProPurchaseCancelled =>
-      'L’achat a été annulé. Regiday Pro reste inactif.';
+      'L’achat a été annulé. Registry Pro reste inactif.';
 
   @override
   String get localProPurchaseFailed =>
-      'L’achat n’a pas pu être terminé. Regiday Pro reste inactif.';
+      'L’achat n’a pas pu être terminé. Registry Pro reste inactif.';
 
   @override
   String get localProPendingStore =>
-      'La boutique attend le paiement. Regiday Pro s’active une fois l’achat confirmé par la boutique. Rien n’est encore débloqué.';
+      'La boutique attend le paiement. Registry Pro s’active une fois l’achat confirmé par la boutique. Rien n’est encore débloqué.';
 
   @override
   String get localProRevoked =>
-      'La boutique ne signale plus d’achat Regiday Pro pour ce compte, par exemple après un remboursement. Regiday Pro est inactif. Les enregistrements déjà présents peuvent encore être consultés, modifiés et exportés. Les nouveaux enregistrements s’arrêtent aux limites gratuites.';
+      'La boutique ne signale plus d’achat Registry Pro pour ce compte, par exemple après un remboursement. Registry Pro est inactif. Les enregistrements déjà présents peuvent encore être consultés, modifiés et exportés. Les nouveaux enregistrements s’arrêtent aux limites gratuites.';
 
   @override
   String get localProNotIncludedTransfer =>
@@ -2238,15 +2238,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProIncludedAds =>
-      'Pas de publicité. Les publicités sont désactivées dans cette version. Si une version ultérieure en affiche aux utilisateurs de l’offre gratuite, Regiday Pro les garde désactivées.';
+      'Pas de publicité. Les publicités sont désactivées dans cette version. Si une version ultérieure en affiche aux utilisateurs de l’offre gratuite, Registry Pro les garde désactivées.';
 
   @override
   String get localProIncludedAdsOn =>
-      'Pas de publicité. Dans cette version, l’offre gratuite affiche une petite bannière sur l’accueil. Regiday Pro la retire.';
+      'Pas de publicité. Dans cette version, l’offre gratuite affiche une petite bannière sur l’accueil. Registry Pro la retire.';
 
   @override
   String get localProRestoreRequirements =>
-      'Restaurer les achats demande à la boutique le Regiday Pro acheté avec le même compte Google Play ou Apple pour cette application. Les achats Android et iOS restent séparés.';
+      'Restaurer les achats demande à la boutique le Registry Pro acheté avec le même compte Google Play ou Apple pour cette application. Les achats Android et iOS restent séparés.';
 
   @override
   String get localProStatusDisabled =>
@@ -2258,11 +2258,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProStatusActive =>
-      'Regiday Pro est actif. La boutique a confirmé votre achat.';
+      'Registry Pro est actif. La boutique a confirmé votre achat.';
 
   @override
   String get localProStatusActiveUnconfirmed =>
-      'Regiday Pro reste actif d’après la dernière confirmation de la boutique. La boutique est injoignable pour le moment : un remboursement fait depuis ne sera détecté que lorsqu’elle sera joignable.';
+      'Registry Pro reste actif d’après la dernière confirmation de la boutique. La boutique est injoignable pour le moment : un remboursement fait depuis ne sera détecté que lorsqu’elle sera joignable.';
 
   @override
   String get localProStatusUnknown =>
@@ -2270,7 +2270,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get localProProductMissing =>
-      'La boutique n’a pas renvoyé Regiday Pro. Il n’est peut-être pas encore disponible pour ce compte ou ce pays.';
+      'La boutique n’a pas renvoyé Registry Pro. Il n’est peut-être pas encore disponible pour ce compte ou ce pays.';
 
   @override
   String get localProStoreUnavailable =>
@@ -2284,11 +2284,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get localProRetry => 'Réessayer';
 
   @override
-  String get localProResultActive => 'Regiday Pro est actif.';
+  String get localProResultActive => 'Registry Pro est actif.';
 
   @override
   String get localProRestoreNotFound =>
-      'La boutique n’a trouvé aucun achat Regiday Pro pour ce compte. Vérifiez que vous êtes connecté avec le compte qui l’a acheté.';
+      'La boutique n’a trouvé aucun achat Registry Pro pour ce compte. Vérifiez que vous êtes connecté avec le compte qui l’a acheté.';
 
   @override
   String get adsPrivacyTitle => 'Confidentialité des publicités';
@@ -2306,12 +2306,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String freeLimitDocuments(int count) {
-    return 'L’offre gratuite comprend $count documents. Regiday Pro retire cette limite pour les nouveaux documents. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés et supprimés.';
+    return 'L’offre gratuite comprend $count documents. Registry Pro retire cette limite pour les nouveaux documents. Les enregistrements déjà présents peuvent encore être consultés, modifiés, renouvelés et supprimés.';
   }
 
   @override
   String freeLimitSubscriptions(int count) {
-    return 'L’offre gratuite comprend $count abonnements. Regiday Pro retire cette limite pour les nouveaux abonnements. Les enregistrements déjà présents peuvent encore être consultés, modifiés et supprimés.';
+    return 'L’offre gratuite comprend $count abonnements. Registry Pro retire cette limite pour les nouveaux abonnements. Les enregistrements déjà présents peuvent encore être consultés, modifiés et supprimés.';
   }
 
   @override
@@ -2525,7 +2525,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notASubscription => 'Ignorer';
 
   @override
-  String get addToResiday => 'Ajouter à Regiday';
+  String get addToResiday => 'Ajouter à Registry';
 
   @override
   String get connectGmailTitle => 'Détection d\'abonnements Gmail';
@@ -2562,12 +2562,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gmailPrivacyNotice =>
-      'Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
+      'Registry nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
 
   @override
   String get candidateAddedSuccess => 'Abonnement ajouté avec succès.';
 
   @override
   String get candidateIgnored =>
-      'Marchand ignoré. Regiday ne détectera plus ce marchand.';
+      'Marchand ignoré. Registry ne détectera plus ce marchand.';
 }

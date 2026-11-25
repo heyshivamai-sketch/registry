@@ -16,10 +16,7 @@ import 'add_item_sheet.dart';
 
 class RegistryTabScope extends InheritedWidget {
   const RegistryTabScope({
-    super.key,
-    required this.selectedIndex,
-    required this.onSelect,
-    required super.child,
+    required this.selectedIndex, required this.onSelect, required super.child, super.key,
   });
 
   final int selectedIndex;

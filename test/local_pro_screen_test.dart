@@ -112,7 +112,7 @@ void main() {
     expect(store.buyCalls, 1);
     expect(planOf(tester), RegistryPlan.localPro);
     expect(store.completed, hasLength(1));
-    expect(find.text('Regiday Pro is active.'), findsOneWidget);
+    expect(find.text('Registry Pro is active.'), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('local-pro-buy')), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('local-pro-status-active')),
@@ -151,7 +151,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(store.syncCalls, 1);
     expect(planOf(tester), RegistryPlan.localPro);
-    expect(find.text('Regiday Pro is active.'), findsOneWidget);
+    expect(find.text('Registry Pro is active.'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
     await store.close();
   });

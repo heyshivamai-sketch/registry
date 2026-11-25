@@ -5,8 +5,7 @@ import '../../app/theme/app_spacing.dart';
 
 class RegistrySurface extends StatelessWidget {
   const RegistrySurface({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.color,
     this.borderColor,
@@ -47,8 +46,7 @@ typedef RegistryAuraSurface = RegistrySurface;
 
 class RegistryIconBadge extends StatelessWidget {
   const RegistryIconBadge({
-    super.key,
-    required this.icon,
+    required this.icon, super.key,
     this.foreground,
     this.background,
     this.size = AppSpacing.iconTile,
@@ -90,8 +88,7 @@ enum RegistryCalloutTone { privacy, tip, warning }
 
 class RegistryCallout extends StatelessWidget {
   const RegistryCallout({
-    super.key,
-    required this.message,
+    required this.message, super.key,
     this.title,
     this.tone = RegistryCalloutTone.privacy,
   });
@@ -156,9 +153,7 @@ class RegistryCallout extends StatelessWidget {
 
 class RegistryInfoRow extends StatelessWidget {
   const RegistryInfoRow({
-    super.key,
-    required this.label,
-    required this.value,
+    required this.label, required this.value, super.key,
     this.icon,
   });
 
@@ -238,8 +233,7 @@ class RegistryInfoRow extends StatelessWidget {
 
 class RegistryElevatedSurface extends StatelessWidget {
   const RegistryElevatedSurface({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.color,
     this.borderRadius,

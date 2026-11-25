@@ -16,8 +16,7 @@ import '../presentation/subscription_copy.dart';
 
 class SubscriptionListCard extends StatelessWidget {
   const SubscriptionListCard({
-    super.key,
-    required this.subscription,
+    required this.subscription, super.key,
     this.onTap,
   });
 

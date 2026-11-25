@@ -7,7 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../app_lock_controller.dart';
 
 class AppLockGate extends StatelessWidget {
-  const AppLockGate({super.key, required this.child});
+  const AppLockGate({required this.child, super.key});
 
   final Widget child;
 
