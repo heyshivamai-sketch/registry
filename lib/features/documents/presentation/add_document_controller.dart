@@ -70,6 +70,12 @@ class AddDocumentController extends ChangeNotifier {
   bool get hasAttachment =>
       attachmentBytes != null && attachmentBytes!.isNotEmpty;
 
+  int get attachmentCount {
+    var count = hasAttachment ? 1 : 0;
+    count += additionalImages.where((image) => image.isNotEmpty).length;
+    return count;
+  }
+
   bool get hasIdentityExtras {
     return issuingAuthority.trim().isNotEmpty ||
         documentNumber.trim().isNotEmpty ||
@@ -120,7 +126,12 @@ class AddDocumentController extends ChangeNotifier {
     if (expiryDate == null) {
       return null;
     }
-    return expiryDate!.subtract(const Duration(days: 30));
+    final suggested = expiryDate!.subtract(const Duration(days: 30));
+    if (issueDate != null &&
+        _dateOnly(suggested).isBefore(_dateOnly(issueDate!))) {
+      return null;
+    }
+    return suggested;
   }
 
   List<DynamicDocumentField> get unboundSchemaFields => [
@@ -232,11 +243,15 @@ class AddDocumentController extends ChangeNotifier {
 
   void setName(String value) {
     name = value;
+    if (nameError != null && value.trim().isNotEmpty) {
+      nameError = null;
+    }
     notifyListeners();
   }
 
   void setCategory(DocumentCategory? value) {
     category = value;
+    categoryError = null;
     final mapped = schemaIdFor(category, countryCode);
     if (mapped != schemaId) {
       setSchemaId(mapped);
@@ -289,9 +304,17 @@ class AddDocumentController extends ChangeNotifier {
     }
     final next = schemaRegistry.byId(value);
     schemaId = next.id;
-    category = next.id == DocumentSchemaIds.genericOther
-        ? (category ?? DocumentCategory.other)
-        : next.category;
+    if (next.id == DocumentSchemaIds.genericOther) {
+      if (category == DocumentCategory.passport ||
+          category == DocumentCategory.idCard) {
+        category = DocumentCategory.other;
+      } else {
+        category ??= DocumentCategory.other;
+      }
+    } else {
+      category = next.category;
+    }
+    categoryError = null;
     countryCode ??= next.countryCode;
     if (next.countryCode != DocumentCountryCodes.other) {
       countryCode = next.countryCode;
@@ -307,6 +330,7 @@ class AddDocumentController extends ChangeNotifier {
 
   void assignCategory(DocumentCategory value) {
     category = value;
+    categoryError = null;
     notifyListeners();
   }
 
@@ -351,6 +375,7 @@ class AddDocumentController extends ChangeNotifier {
   void applySuggestedActionDate() {
     actionDate = suggestedActionDate;
     actionDateUserSet = true;
+    actionDateError = null;
     notifyListeners();
   }
 
@@ -429,6 +454,15 @@ class AddDocumentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void replaceImage(int index, Uint8List bytes) {
+    if (index < 0 || index >= additionalImages.length) return;
+    cancelOcr();
+    final updated = List<Uint8List>.from(additionalImages);
+    updated[index] = bytes;
+    additionalImages = updated;
+    notifyListeners();
+  }
+
   void removeImage(int index) {
     cancelOcr();
     additionalImages = [...additionalImages]..removeAt(index);
@@ -459,9 +493,13 @@ class AddDocumentController extends ChangeNotifier {
   }
 
   void setDynamicFieldLabel(String id, String label) {
+    final isCustomTarget = dynamicFields.any((f) => f.id == id && f.isCustom);
     dynamicFields = [
       for (final field in dynamicFields)
-        if (field.id == id) field.copyWith(customLabel: label) else field,
+        if (field.id == id || (isCustomTarget && field.isCustom))
+          field.copyWith(customLabel: label)
+        else
+          field,
     ];
     notifyListeners();
   }
@@ -469,7 +507,7 @@ class AddDocumentController extends ChangeNotifier {
   void toggleDynamicFieldSensitive(String id) {
     dynamicFields = [
       for (final field in dynamicFields)
-        if (field.id == id)
+        if (field.id == id && field.canBeSensitive)
           field.copyWith(sensitive: !field.sensitive)
         else
           field,
@@ -477,7 +515,17 @@ class AddDocumentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<DocumentFieldValue> get customFields => [
+    for (final field in dynamicFields)
+      if (field.isCustom) field,
+  ];
+
+  bool get hasCustomField => customFields.isNotEmpty;
+
   void addCustomField({String label = '', String value = ''}) {
+    if (hasCustomField) {
+      return;
+    }
     final field = DocumentFieldValue(
       id: 'custom_${DateTime.now().microsecondsSinceEpoch}',
       fieldKey: 'custom',
@@ -490,7 +538,64 @@ class AddDocumentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addCustomValue({String value = ''}) {
+    if (!hasCustomField || customFields.length >= 5) {
+      return;
+    }
+    final currentLabel = customFields.first.customLabel;
+    final field = DocumentFieldValue(
+      id: 'custom_${DateTime.now().microsecondsSinceEpoch}_${customFields.length}',
+      fieldKey: 'custom',
+      customLabel: currentLabel,
+      value: value,
+      isCustom: true,
+    );
+    dynamicFields = [...dynamicFields, field];
+    notifyListeners();
+  }
+
+  void removeCustomValue(int index) {
+    final customs = customFields;
+    if (index < 0 || index >= customs.length) {
+      return;
+    }
+    if (customs.length == 1) {
+      removeCustomField();
+      return;
+    }
+    final targetId = customs[index].id;
+    dynamicFields = [
+      for (final field in dynamicFields)
+        if (field.id != targetId) field,
+    ];
+    notifyListeners();
+  }
+
+  void removeCustomField() {
+    dynamicFields = [
+      for (final field in dynamicFields)
+        if (!field.isCustom) field,
+    ];
+    notifyListeners();
+  }
+
+  void setCustomFieldLabel(String label) {
+    dynamicFields = [
+      for (final field in dynamicFields)
+        if (field.isCustom) field.copyWith(customLabel: label) else field,
+    ];
+    notifyListeners();
+  }
+
   void removeDynamicField(String id) {
+    final target = dynamicFields.firstWhere(
+      (f) => f.id == id,
+      orElse: () => const DocumentFieldValue(id: '', fieldKey: '', value: ''),
+    );
+    if (target.isCustom) {
+      removeCustomField();
+      return;
+    }
     dynamicFields = [
       for (final field in dynamicFields)
         if (field.id != id) field,
@@ -932,6 +1037,11 @@ class AddDocumentController extends ChangeNotifier {
     return nameError == null && categoryError == null;
   }
 
+  bool get hasDateErrors =>
+      expiryError != null || issueDateError != null || actionDateError != null;
+
+  bool validateDates(AppLocalizations l10n) => _validateDates(l10n);
+
   bool _validateDates(AppLocalizations l10n) {
     expiryError = expiryDate == null ? l10n.errorRequired : null;
     final isScanned = hasAttachment || ocrConfirmed;
@@ -945,6 +1055,10 @@ class AddDocumentController extends ChangeNotifier {
       issueDateError = l10n.errorIssueAfterExpiry;
     }
     if (actionDate != null &&
+        issueDate != null &&
+        _dateOnly(actionDate!).isBefore(_dateOnly(issueDate!))) {
+      actionDateError = l10n.errorActionBeforeIssue;
+    } else if (actionDate != null &&
         expiryDate != null &&
         _dateOnly(actionDate!).isAfter(_dateOnly(expiryDate!))) {
       actionDateError = l10n.errorActionAfterExpiry;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/navigation/app_routes.dart';
 import '../../../app/registry_dependencies.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/registry_form_field.dart';
@@ -144,6 +145,14 @@ class _ExportBackupScreenState extends State<ExportBackupScreen> {
                     key: const ValueKey<String>('backup-password-warning'),
                     style: theme.textTheme.bodyMedium,
                   ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    l10n.backupFormatNotice,
+                    key: const ValueKey<String>('backup-format-notice'),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -187,15 +196,58 @@ class _ExportBackupScreenState extends State<ExportBackupScreen> {
             ),
             if (status != null) ...[
               const SizedBox(height: AppSpacing.md),
-              Text(
-                status,
-                key: const ValueKey<String>('export-status'),
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: _statusIsError
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface,
+              if (!_statusIsError && status == l10n.backupExportSaved)
+                RegistrySurface(
+                  key: const ValueKey<String>('export-success-card'),
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              status,
+                              key: const ValueKey<String>('export-status'),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        l10n.backupExportSuccessHint,
+                        key: const ValueKey<String>('export-success-hint'),
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      OutlinedButton.icon(
+                        key: const ValueKey<String>('export-open-import'),
+                        icon: const Icon(Icons.restore_outlined),
+                        label: Text(l10n.backupOpenImportAction),
+                        onPressed: () => AppRoutes.openImportBackup(context),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Text(
+                  status,
+                  key: const ValueKey<String>('export-status'),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: _statusIsError
+                        ? theme.colorScheme.error
+                        : theme.colorScheme.onSurface,
+                  ),
                 ),
-              ),
             ],
           ],
         ),

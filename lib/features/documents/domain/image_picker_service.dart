@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 enum ImagePickStatus { success, cancelled, failed }
 
+enum AppCameraLens { back, front }
+
 class ImagePickResult {
   const ImagePickResult._(this.status, [this.bytes]);
 
@@ -19,7 +21,9 @@ class ImagePickResult {
 }
 
 abstract class ImagePickerService {
-  Future<ImagePickResult> pickFromCamera();
+  Future<ImagePickResult> pickFromCamera({
+    AppCameraLens lens = AppCameraLens.back,
+  });
 
   Future<ImagePickResult> pickFromGallery();
 }

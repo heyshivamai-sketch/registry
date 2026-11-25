@@ -526,6 +526,12 @@ abstract class AppLocalizations {
   /// **'Action needed'**
   String get statusUrgent;
 
+  /// No description provided for @statusExpiringSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring soon'**
+  String get statusExpiringSoon;
+
   /// No description provided for @statusUpcoming.
   ///
   /// In en, this message translates to:
@@ -748,6 +754,12 @@ abstract class AppLocalizations {
   /// **'Attachment'**
   String get attachmentSectionTitle;
 
+  /// Number of attached documents/images for a record
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 document} other{{count} documents}}'**
+  String attachmentCount(int count);
+
   /// No description provided for @attachmentEmptyLabel.
   ///
   /// In en, this message translates to:
@@ -759,6 +771,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Take photo'**
   String get attachmentTakePhoto;
+
+  /// No description provided for @cameraBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Back camera'**
+  String get cameraBackLabel;
+
+  /// No description provided for @cameraBackSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for documents'**
+  String get cameraBackSubtitle;
+
+  /// No description provided for @cameraFrontLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Front camera'**
+  String get cameraFrontLabel;
+
+  /// No description provided for @cameraFrontSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For self-held documents'**
+  String get cameraFrontSubtitle;
+
+  /// No description provided for @attachmentRetake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get attachmentRetake;
+
+  /// No description provided for @attachmentPreviewTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview image'**
+  String get attachmentPreviewTooltip;
 
   /// No description provided for @attachmentChooseGallery.
   ///
@@ -937,8 +985,20 @@ abstract class AppLocalizations {
   /// No description provided for @sectionReminders.
   ///
   /// In en, this message translates to:
-  /// **'Reminder preference'**
+  /// **'Reminder preferences'**
   String get sectionReminders;
+
+  /// No description provided for @remindersMultiSelectBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-select'**
+  String get remindersMultiSelectBadge;
+
+  /// No description provided for @remindersSelectAllThatApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply:'**
+  String get remindersSelectAllThatApply;
 
   /// No description provided for @remindersHelper.
   ///
@@ -1011,6 +1071,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Issue date cannot be after the expiry date.'**
   String get errorIssueAfterExpiry;
+
+  /// No description provided for @errorActionBeforeIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal start date cannot be before the issue date.'**
+  String get errorActionBeforeIssue;
 
   /// No description provided for @errorActionAfterExpiry.
   ///
@@ -1756,10 +1822,16 @@ abstract class AppLocalizations {
   /// **'Value'**
   String get customFieldValue;
 
+  /// No description provided for @addCustomValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Add value'**
+  String get addCustomValue;
+
   /// No description provided for @removeCustomField.
   ///
   /// In en, this message translates to:
-  /// **'Remove field'**
+  /// **'Remove'**
   String get removeCustomField;
 
   /// No description provided for @markFieldSensitive.
@@ -1791,6 +1863,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit scan'**
   String get reviewJumpScan;
+
+  /// No description provided for @rescanDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-scan document'**
+  String get rescanDocument;
+
+  /// No description provided for @rescanConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-scan document?'**
+  String get rescanConfirmTitle;
+
+  /// No description provided for @rescanConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting a new scan will replace the details you have entered. Are you sure you want to re-scan from the start?'**
+  String get rescanConfirmMessage;
+
+  /// No description provided for @rescanConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-scan'**
+  String get rescanConfirmAction;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
 
   /// No description provided for @reviewAttachmentYes.
   ///
@@ -3406,6 +3508,24 @@ abstract class AppLocalizations {
   /// **'Backup saved.'**
   String get backupExportSaved;
 
+  /// No description provided for @backupExportSuccessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This .rgry backup file is encrypted for your security and cannot be opened directly in PDF or document viewers. To view or restore your records, use Import backup inside Regiday.'**
+  String get backupExportSuccessHint;
+
+  /// No description provided for @backupOpenImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Import backup'**
+  String get backupOpenImportAction;
+
+  /// No description provided for @backupFormatNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup files (.rgry) are encrypted archives and can only be opened or restored inside Regiday.'**
+  String get backupFormatNotice;
+
   /// No description provided for @backupExportCancelled.
   ///
   /// In en, this message translates to:
@@ -4233,6 +4353,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect Gmail'**
   String get connectGmailButton;
+
+  /// No description provided for @connectFromGmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect from Gmail'**
+  String get connectFromGmail;
 
   /// No description provided for @disconnectGmailButton.
   ///

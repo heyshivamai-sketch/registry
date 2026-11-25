@@ -7,21 +7,25 @@ import '../../../l10n/app_localizations.dart';
 
 class DocumentAttachmentCard extends StatelessWidget {
   const DocumentAttachmentCard({
-    super.key,
     required this.bytes,
     required this.onTakePhoto,
     required this.onChooseGallery,
     required this.onReplace,
     required this.onRemove,
+    super.key,
+    this.onTakePhotoFront,
+    this.onPreview,
     this.badgeLabel,
     this.isSecondary = false,
   });
 
   final Uint8List? bytes;
   final VoidCallback onTakePhoto;
+  final VoidCallback? onTakePhotoFront;
   final VoidCallback onChooseGallery;
   final VoidCallback? onReplace;
   final VoidCallback onRemove;
+  final VoidCallback? onPreview;
   final String? badgeLabel;
   final bool isSecondary;
 
@@ -94,25 +98,58 @@ class DocumentAttachmentCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: RegistrySecondaryButton(
-                    key: const ValueKey<String>('attach-camera'),
-                    label: l10n.attachmentTakePhoto,
-                    onPressed: onTakePhoto,
+            if (onTakePhotoFront != null) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: RegistrySecondaryButton(
+                      key: const ValueKey<String>('attach-camera'),
+                      label: l10n.cameraBackLabel,
+                      icon: Icons.camera_rear_outlined,
+                      onPressed: onTakePhoto,
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: RegistrySecondaryButton(
-                    key: const ValueKey<String>('attach-gallery'),
-                    label: l10n.attachmentChooseGallery,
-                    onPressed: onChooseGallery,
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: RegistrySecondaryButton(
+                      key: const ValueKey<String>('attach-camera-front'),
+                      label: l10n.cameraFrontLabel,
+                      icon: Icons.camera_front_outlined,
+                      onPressed: onTakePhotoFront,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              SizedBox(
+                width: double.infinity,
+                child: RegistrySecondaryButton(
+                  key: const ValueKey<String>('attach-gallery'),
+                  label: l10n.attachmentChooseGallery,
+                  onPressed: onChooseGallery,
                 ),
-              ],
-            ),
+              ),
+            ] else ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: RegistrySecondaryButton(
+                      key: const ValueKey<String>('attach-camera'),
+                      label: l10n.attachmentTakePhoto,
+                      onPressed: onTakePhoto,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: RegistrySecondaryButton(
+                      key: const ValueKey<String>('attach-gallery'),
+                      label: l10n.attachmentChooseGallery,
+                      onPressed: onChooseGallery,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       );
@@ -187,13 +224,27 @@ class DocumentAttachmentCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (onPreview != null)
+                      IconButton(
+                        key: ValueKey<String>(isSecondary ? 'attach-preview-${badgeLabel ?? "page"}' : 'attach-preview'),
+                        tooltip: l10n.attachmentPreviewTooltip,
+                        onPressed: onPreview,
+                        icon: const Icon(
+                          Icons.fullscreen_rounded,
+                          size: 20,
+                          color: Color(0xFF23366C),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(),
+                      ),
                     if (onReplace != null)
                       TextButton.icon(
-                        key: const ValueKey<String>('attach-replace'),
+                        key: ValueKey<String>(isSecondary ? 'attach-replace-${badgeLabel ?? "page"}' : 'attach-replace'),
                         onPressed: onReplace,
                         icon: const Icon(Icons.refresh_rounded, size: 15),
                         label: Text(
-                          l10n.attachmentReplace,
+                          l10n.attachmentRetake,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -206,7 +257,7 @@ class DocumentAttachmentCard extends StatelessWidget {
                         ),
                       ),
                     IconButton(
-                      key: const ValueKey<String>('attach-remove'),
+                      key: ValueKey<String>(isSecondary ? 'attach-remove-${badgeLabel ?? "page"}' : 'attach-remove'),
                       tooltip: l10n.attachmentRemove,
                       onPressed: onRemove,
                       icon: const Icon(
@@ -225,83 +276,95 @@ class DocumentAttachmentCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Container(
-              height: 205,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0F1523),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+              child: InkWell(
+                onTap: onPreview,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFF232C42)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x33000000),
-                    blurRadius: 10,
-                    offset: Offset(0, 3),
+                child: Container(
+                  height: 205,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F1523),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFF232C42)),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x33000000),
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.memory(
-                      bytes!,
-                      fit: BoxFit.contain,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                    const Positioned(
-                      top: 10,
-                      left: 10,
-                      child: _ViewfinderCorner(corner: _Corner.topLeft),
-                    ),
-                    const Positioned(
-                      top: 10,
-                      right: 10,
-                      child: _ViewfinderCorner(corner: _Corner.topRight),
-                    ),
-                    const Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: _ViewfinderCorner(corner: _Corner.bottomLeft),
-                    ),
-                    const Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: _ViewfinderCorner(corner: _Corner.bottomRight),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xDD0D1424),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: const Color(0xFF42D8B7).withValues(alpha: 0.5),
-                          ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.memory(
+                          bytes!,
+                          fit: BoxFit.contain,
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF42D8B7)),
-                            SizedBox(width: 4),
-                            Text(
-                              'Captured',
-                              style: TextStyle(
-                                color: Color(0xFFE0FAF3),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.3,
+                        const Positioned(
+                          top: 10,
+                          left: 10,
+                          child: _ViewfinderCorner(corner: _Corner.topLeft),
+                        ),
+                        const Positioned(
+                          top: 10,
+                          right: 10,
+                          child: _ViewfinderCorner(corner: _Corner.topRight),
+                        ),
+                        const Positioned(
+                          bottom: 10,
+                          left: 10,
+                          child: _ViewfinderCorner(corner: _Corner.bottomLeft),
+                        ),
+                        const Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: _ViewfinderCorner(corner: _Corner.bottomRight),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xDD0D1424),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: const Color(0xFF42D8B7).withValues(alpha: 0.5),
                               ),
                             ),
-                          ],
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF42D8B7)),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  'Captured',
+                                  style: TextStyle(
+                                    color: Color(0xFFE0FAF3),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                if (onPreview != null) ...[
+                                  const SizedBox(width: 6),
+                                  const Icon(Icons.zoom_in_rounded, size: 13, color: Color(0xFFE0FAF3)),
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -397,12 +460,11 @@ class _CornerPainter extends CustomPainter {
   bool shouldRepaint(covariant _CornerPainter oldDelegate) => oldDelegate.corner != corner;
 }
 
-
 class RegistrySectionTitleRow extends StatelessWidget {
   const RegistrySectionTitleRow({
-    super.key,
     required this.icon,
     required this.title,
+    super.key,
   });
 
   final IconData icon;

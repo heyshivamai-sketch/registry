@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoDatePicker;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
@@ -993,10 +994,46 @@ void main() {
     expect(find.text('••••••5678'), findsWidgets);
     expect(find.text('AB12345678'), findsNothing);
     await reveal(tester, find.byKey(const ValueKey<String>('open-attachment')));
+    expect(
+      find.byKey(const ValueKey<String>('attachment-count-badge')),
+      findsOneWidget,
+    );
+    expect(find.text('1 document'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey<String>('open-attachment')));
     await tester.pumpAndSettle();
     expect(find.byType(DocumentAttachmentPreviewPage), findsOneWidget);
   });
+
+  testWidgets(
+    'Detail page shows attachment count and multi-attachment badge',
+    (tester) async {
+      tester.view.physicalSize = const Size(400, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await documents.save(
+        sampleDocument(
+          attachmentBytes: kTinyPngBytes,
+          additionalImages: [kTinyPngBytes, kTinyPngBytes],
+        ),
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openDetail(tester);
+
+      await reveal(
+        tester,
+        find.byKey(const ValueKey<String>('open-attachment')),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('attachment-count-badge')),
+        findsOneWidget,
+      );
+      expect(find.text('3 documents'), findsOneWidget);
+      expect(find.text('View scan (3)'), findsOneWidget);
+    },
+  );
 
   testWidgets('Renewal history is newest first', (tester) async {
     tester.view.physicalSize = const Size(400, 1800);
@@ -1173,4 +1210,108 @@ void main() {
       'Sampleland',
     );
   });
+
+  testWidgets(
+    'Date of birth field shows calendar button and opens Cupertino date picker',
+    (tester) async {
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await documents.save(
+        sampleDocument(
+          schemaId: DocumentSchemaIds.genericPassport,
+          countryCode: DocumentCountryCodes.generic,
+          dynamicFields: const [
+            DocumentFieldValue(
+              id: DocumentFieldKeys.dateOfBirth,
+              fieldKey: DocumentFieldKeys.dateOfBirth,
+              isDate: true,
+              value: '14-12-1996',
+            ),
+          ],
+        ),
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openEdit(tester);
+      await continueWizard(tester);
+
+      final dobFinder =
+          find.byKey(const ValueKey<String>('dynamic-date_of_birth'));
+      await reveal(tester, dobFinder);
+      expect(dobFinder, findsOneWidget);
+
+      final pickerBtnFinder =
+          find.byKey(const ValueKey<String>('date-picker-date_of_birth'));
+      expect(pickerBtnFinder, findsOneWidget);
+
+      await tester.tap(pickerBtnFinder);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CupertinoDatePicker), findsOneWidget);
+
+      await tester.tap(find.text('Choose'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CupertinoDatePicker), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Document detail hides Important dates card when document has no expiry or renewal date',
+    (tester) async {
+      await documents.save(
+        sampleDocument(
+          id: 'no_expiry_doc',
+          name: 'Indefinite ID',
+          expiryDate: DateTime.utc(2099, 12, 31),
+          actionDate: null,
+          issueDate: DateTime(2020, 5, 10),
+        ),
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+
+      final navigator = Navigator.of(tester.element(find.byType(AppShell)));
+      navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => const DocumentDetailScreen(documentId: 'no_expiry_doc'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Important dates'), findsNothing);
+      expect(find.text('Issue date'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Document detail shows Important dates card when document has expiry or renewal date',
+    (tester) async {
+      await documents.save(
+        sampleDocument(
+          id: 'with_dates_doc',
+          name: 'Expiring Passport',
+          expiryDate: DateTime(2027, 10, 5),
+          actionDate: DateTime(2027, 9, 1),
+        ),
+      );
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+
+      final navigator = Navigator.of(tester.element(find.byType(AppShell)));
+      navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => const DocumentDetailScreen(documentId: 'with_dates_doc'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Important dates'), findsOneWidget);
+      expect(find.text('Start renewal'), findsOneWidget);
+      expect(find.text('Expires'), findsWidgets);
+    },
+  );
 }

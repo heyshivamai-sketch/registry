@@ -133,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onFilter: (filter) => setState(() => _comingUpFilter = filter),
                   groups: groups,
                   empty: homeComingUp.isEmpty,
+                  now: now,
                 ),
                 const RegistryBannerSlot(key: ValueKey<String>('home-banner-slot')),
               ],
@@ -219,12 +220,19 @@ class _AttentionSection extends StatelessWidget {
 }
 
 class _ComingUpSection extends StatelessWidget {
-  const _ComingUpSection({required this.filter, required this.onFilter, required this.groups, required this.empty});
+  const _ComingUpSection({
+    required this.filter,
+    required this.onFilter,
+    required this.groups,
+    required this.empty,
+    this.now,
+  });
 
   final ComingUpFilter filter;
   final ValueChanged<ComingUpFilter> onFilter;
   final List<ComingUpGroup> groups;
   final bool empty;
+  final DateTime? now;
 
   @override
   Widget build(BuildContext context) {
@@ -318,6 +326,7 @@ class _ComingUpSection extends StatelessWidget {
                 key: ValueKey<String>('upcoming-${group.items[index].id}'),
                 item: group.items[index],
                 isLast: index == group.items.length - 1,
+                now: now,
                 onTap: () => AppRoutes.openRegistryItem(context, group.items[index]),
               ),
           ],

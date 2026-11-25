@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import '../../../core/widgets/registry_status_chip.dart';
 import '../../../l10n/app_localizations.dart';
 import 'registry_date_formatter.dart';
 import 'registry_item.dart';
@@ -26,6 +27,7 @@ abstract final class ComingUpGrouping {
     final weekStart = RegistryDateFormatter.startOfWeek(now, locale);
     final weekEnd = RegistryDateFormatter.endOfWeek(now, locale);
     final month = RegistryDateFormatter.dateOnly(now);
+    final overdue = <RegistryItem>[];
     final thisWeek = <RegistryItem>[];
     final laterThisMonth = <RegistryItem>[];
     final later = <String, List<RegistryItem>>{};
@@ -42,11 +44,21 @@ abstract final class ComingUpGrouping {
         laterThisMonth.add(item);
         continue;
       }
+      if (day.isBefore(weekStart) || item.status == RegistryStatus.expired) {
+        overdue.add(item);
+        continue;
+      }
       final key = '${day.year}-${day.month.toString().padLeft(2, '0')}';
       later.putIfAbsent(key, () => []).add(item);
     }
 
     final groups = <ComingUpGroup>[
+      if (overdue.isNotEmpty)
+        ComingUpGroup(
+          id: 'overdue',
+          label: l10n.statusOverdue.toUpperCase(),
+          items: overdue,
+        ),
       if (thisWeek.isNotEmpty)
         ComingUpGroup(
           id: 'this-week',

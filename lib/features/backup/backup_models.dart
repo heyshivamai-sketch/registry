@@ -92,12 +92,7 @@ class BackupSnapshot {
   int get attachmentCount {
     var count = 0;
     for (final document in documents) {
-      count += document.additionalImages
-          .where((image) => image.isNotEmpty)
-          .length;
-      if (document.hasAttachment) {
-        count += 1;
-      }
+      count += document.attachmentCount;
     }
     return count;
   }

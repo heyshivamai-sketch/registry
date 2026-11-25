@@ -412,52 +412,125 @@ class _ActionBar extends StatelessWidget {
     final continueLabel = onReview ? (isEditing ? l10n.saveChanges : l10n.saveSubscription) : l10n.wizardContinue;
     final scheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: scheme.surface,
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          AppSpacing.screenPadding,
-          AppSpacing.sm,
-          AppSpacing.screenPadding,
-          AppSpacing.sm,
+    return Container(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: 0.6),
+            width: 1.1,
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (controller.saveError != null) ...[
-              Text(
-                controller.saveError!,
-                key: const ValueKey<String>('subscription-save-error'),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.error),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-            ],
-            Row(
-              children: [
-                if (controller.canGoBack || controller.stepIndex > 0)
+        boxShadow: [
+          BoxShadow(
+            color: scheme.shadow.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            AppSpacing.screenPadding,
+            AppSpacing.sm,
+            AppSpacing.screenPadding,
+            AppSpacing.sm,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (controller.saveError != null) ...[
+                Text(
+                  controller.saveError!,
+                  key: const ValueKey<String>('subscription-save-error'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.error),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+              ],
+              Row(
+                children: [
+                  if (controller.canGoBack || controller.stepIndex > 0)
+                    Expanded(
+                      child: RegistrySecondaryButton(
+                        key: const ValueKey<String>('sub-wizard-back'),
+                        label: l10n.wizardBack,
+                        onPressed: controller.saving ? null : onBack,
+                      ),
+                    ),
+                  if (controller.canGoBack || controller.stepIndex > 0) const SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: RegistrySecondaryButton(
-                      key: const ValueKey<String>('sub-wizard-back'),
-                      label: l10n.wizardBack,
-                      onPressed: controller.saving ? null : onBack,
+                    flex: 2,
+                    child: RegistryPrimaryButton(
+                      key: ValueKey<String>(onReview ? 'save-subscription' : 'sub-wizard-continue'),
+                      label: continueLabel,
+                      backgroundColor: scheme.tertiary,
+                      foregroundColor: scheme.onTertiary,
+                      trailing: onReview ? null : const Icon(Icons.arrow_forward_rounded, size: 18),
+                      onPressed: controller.saving ? null : onContinue,
                     ),
                   ),
-                if (controller.canGoBack || controller.stepIndex > 0) const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  flex: 2,
-                  child: RegistryPrimaryButton(
-                    key: ValueKey<String>(onReview ? 'save-subscription' : 'sub-wizard-continue'),
-                    label: continueLabel,
-                    backgroundColor: scheme.tertiary,
-                    foregroundColor: scheme.onTertiary,
-                    trailing: onReview ? null : const Icon(Icons.arrow_forward_rounded, size: 18),
-                    onPressed: controller.saving ? null : onContinue,
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _SubscriptionStepIntro extends StatelessWidget {
+  const _SubscriptionStepIntro({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
+
+  final IconData icon;
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFFECE8FB),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.violet.withValues(alpha: 0.15),
+              ),
+            ),
+            child: Icon(icon, color: AppColors.violet, size: 22),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.4,
+              color: AppColors.midnight,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            body,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.45,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -479,14 +552,14 @@ class _ServiceStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.subscriptionServiceIntroTitle, style: theme.textTheme.titleLarge?.copyWith(fontSize: 22)),
-        const SizedBox(height: AppSpacing.xs),
-        Text(l10n.subscriptionServiceIntro, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.md),
+        _SubscriptionStepIntro(
+          icon: Icons.credit_card_rounded,
+          title: l10n.subscriptionServiceIntroTitle,
+          body: l10n.subscriptionServiceIntro,
+        ),
         RegistryTextField(
           label: l10n.fieldServiceName,
           controller: service,
@@ -569,9 +642,11 @@ class _BillingStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.subscriptionBillingIntroTitle, style: theme.textTheme.titleLarge?.copyWith(fontSize: 22)),
-        const SizedBox(height: AppSpacing.xs),
-        Text(l10n.subscriptionBillingIntro, style: theme.textTheme.bodyMedium),
+        _SubscriptionStepIntro(
+          icon: Icons.payments_rounded,
+          title: l10n.subscriptionBillingIntroTitle,
+          body: l10n.subscriptionBillingIntro,
+        ),
         if (controller.serviceName.trim().isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),
           RegistrySurface(
@@ -781,9 +856,28 @@ class _PreferencesStep extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(l10n.remindersTitle, style: theme.textTheme.titleSmall),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.remindersTitle, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.remindersMultiSelectBadge,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.tertiary,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: AppSpacing.xxs),
         Text(l10n.subscriptionRemindersHelper, style: theme.textTheme.bodySmall),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l10n.remindersSelectAllThatApply,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
@@ -793,6 +887,7 @@ class _PreferencesStep extends StatelessWidget {
               RegistrySelectableChip(
                 key: ValueKey<String>('sub-reminder-${reminder.name}'),
                 label: SubscriptionCopy.reminder(l10n, reminder),
+                isMultiSelect: true,
                 selected: controller.reminders.contains(reminder),
                 onSelected: (_) => onToggleReminder(reminder),
               ),

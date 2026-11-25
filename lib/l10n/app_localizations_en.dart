@@ -275,6 +275,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusUrgent => 'Action needed';
 
   @override
+  String get statusExpiringSoon => 'Expiring soon';
+
+  @override
   String get statusUpcoming => 'Upcoming';
 
   @override
@@ -392,10 +395,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachmentSectionTitle => 'Attachment';
 
   @override
+  String attachmentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count documents',
+      one: '1 document',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get attachmentEmptyLabel => 'Add a photo of this document';
 
   @override
   String get attachmentTakePhoto => 'Take photo';
+
+  @override
+  String get cameraBackLabel => 'Back camera';
+
+  @override
+  String get cameraBackSubtitle => 'Recommended for documents';
+
+  @override
+  String get cameraFrontLabel => 'Front camera';
+
+  @override
+  String get cameraFrontSubtitle => 'For self-held documents';
+
+  @override
+  String get attachmentRetake => 'Retake';
+
+  @override
+  String get attachmentPreviewTooltip => 'Preview image';
 
   @override
   String get attachmentChooseGallery => 'Gallery';
@@ -490,7 +522,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldNotes => 'Notes';
 
   @override
-  String get sectionReminders => 'Reminder preference';
+  String get sectionReminders => 'Reminder preferences';
+
+  @override
+  String get remindersMultiSelectBadge => 'Multi-select';
+
+  @override
+  String get remindersSelectAllThatApply => 'Select all that apply:';
 
   @override
   String get remindersHelper =>
@@ -530,6 +568,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorIssueAfterExpiry =>
       'Issue date cannot be after the expiry date.';
+
+  @override
+  String get errorActionBeforeIssue =>
+      'Renewal start date cannot be before the issue date.';
 
   @override
   String get errorActionAfterExpiry =>
@@ -933,7 +975,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customFieldValue => 'Value';
 
   @override
-  String get removeCustomField => 'Remove field';
+  String get addCustomValue => 'Add value';
+
+  @override
+  String get removeCustomField => 'Remove';
 
   @override
   String get markFieldSensitive => 'Hide this value outside review';
@@ -949,6 +994,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewJumpScan => 'Edit scan';
+
+  @override
+  String get rescanDocument => 'Re-scan document';
+
+  @override
+  String get rescanConfirmTitle => 'Re-scan document?';
+
+  @override
+  String get rescanConfirmMessage =>
+      'Starting a new scan will replace the details you have entered. Are you sure you want to re-scan from the start?';
+
+  @override
+  String get rescanConfirmAction => 'Re-scan';
+
+  @override
+  String get cancel => 'Cancel';
 
   @override
   String get reviewAttachmentYes => 'Photo attached';
@@ -1921,6 +1982,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backupExportSaved => 'Backup saved.';
 
   @override
+  String get backupExportSuccessHint =>
+      'This .rgry backup file is encrypted for your security and cannot be opened directly in PDF or document viewers. To view or restore your records, use Import backup inside Regiday.';
+
+  @override
+  String get backupOpenImportAction => 'Go to Import backup';
+
+  @override
+  String get backupFormatNotice =>
+      'Backup files (.rgry) are encrypted archives and can only be opened or restored inside Regiday.';
+
+  @override
   String get backupExportCancelled =>
       'Export cancelled. No backup file was saved.';
 
@@ -2425,6 +2497,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connectGmailButton => 'Connect Gmail';
+
+  @override
+  String get connectFromGmail => 'Connect from Gmail';
 
   @override
   String get disconnectGmailButton => 'Disconnect';

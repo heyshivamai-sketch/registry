@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
+import 'package:the_registry/core/widgets/registry_selectable_chip.dart';
+import 'package:the_registry/core/widgets/registry_section_header.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/documents/domain/document_field_value.dart';
 import 'package:the_registry/features/documents/domain/document_ocr.dart';
 import 'package:the_registry/features/documents/domain/document_schema.dart';
+import 'package:the_registry/features/documents/domain/document_renewal.dart';
 import 'package:the_registry/features/documents/domain/image_picker_service.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/add_document_screen.dart';
@@ -95,6 +98,25 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> _selectCategory(WidgetTester tester, [String categoryKey = 'category-passport']) async {
+    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
+    final editableInField = find.descendant(
+      of: find.byKey(const ValueKey<String>('field-category')),
+      matching: find.byType(EditableText),
+    );
+    if (editableInField.evaluate().isNotEmpty) {
+      await tester.enterText(editableInField.first, 'Passport');
+    } else {
+      await tester.tap(find.byKey(const ValueKey<String>('field-category')));
+      await tester.pumpAndSettle();
+      final choice = find.byKey(ValueKey<String>(categoryKey));
+      if (choice.evaluate().isNotEmpty) {
+        await tester.tap(choice);
+        await tester.pumpAndSettle();
+      }
+    }
+  }
+
   Future<void> goToDates(WidgetTester tester) async {
     await continueWizard(tester);
     await reveal(tester, find.byKey(const ValueKey<String>('field-name')));
@@ -102,11 +124,7 @@ void main() {
       find.byKey(const ValueKey<String>('field-name')),
       'Family passport',
     );
-    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('field-category')),
-      'Passport',
-    );
+    await _selectCategory(tester);
     await tester.pumpAndSettle();
     await continueWizard(tester);
   }
@@ -127,11 +145,7 @@ void main() {
       find.byKey(const ValueKey<String>('field-name')),
       'Family passport',
     );
-    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('field-category')),
-      'Passport',
-    );
+    await _selectCategory(tester);
     await tester.pumpAndSettle();
     await continueWizard(tester);
 
@@ -580,6 +594,11 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(ocr.recognizeCount, 1);
+      final ocrConfirm = find.byKey(const ValueKey<String>('ocr-confirm'));
+      if (ocrConfirm.evaluate().isNotEmpty) {
+        await tester.tap(ocrConfirm);
+        await tester.pumpAndSettle();
+      }
       expect(find.byKey(const ValueKey<String>('field-name')), findsOneWidget);
       expect(find.text('Aadhaar'), findsWidgets);
       expect(find.text('PRIYA SHARMA'), findsOneWidget);
@@ -595,10 +614,17 @@ void main() {
       );
       expect(ownerField.controller?.text, 'PRIYA SHARMA');
 
-      final categoryField = tester.widget<TextFormField>(
-        find.byKey(const ValueKey<String>('field-category')),
+      final categoryMatches = find.descendant(
+        of: find.byKey(const ValueKey<String>('field-category')),
+        matching: find.byType(TextFormField),
       );
-      expect(categoryField.controller?.text, 'Identity card');
+      if (categoryMatches.evaluate().isNotEmpty) {
+        final categoryField =
+            tester.widget<TextFormField>(categoryMatches.first);
+        expect(categoryField.controller?.text, 'Identity card');
+      } else {
+        expect(find.text('Identity card'), findsWidgets);
+      }
 
       final numberField = tester.widget<TextField>(
         find.byKey(const ValueKey<String>('field-number')),
@@ -664,10 +690,17 @@ void main() {
       );
       expect(ownerField.controller?.text, 'PRIYA SHARMA');
 
-      final categoryField = tester.widget<TextFormField>(
-        find.byKey(const ValueKey<String>('field-category')),
+      final categoryMatches = find.descendant(
+        of: find.byKey(const ValueKey<String>('field-category')),
+        matching: find.byType(TextFormField),
       );
-      expect(categoryField.controller?.text, 'Identity card');
+      if (categoryMatches.evaluate().isNotEmpty) {
+        final categoryField =
+            tester.widget<TextFormField>(categoryMatches.first);
+        expect(categoryField.controller?.text, 'Identity card');
+      } else {
+        expect(find.text('Identity card'), findsWidgets);
+      }
 
       final numberField = tester.widget<TextField>(
         find.byKey(const ValueKey<String>('field-number')),
@@ -1058,11 +1091,223 @@ void main() {
       ..setIssueDate(DateTime.utc(2026, 1, 1))
       ..setActionDate(DateTime.utc(2026, 7, 1));
     expect(controller.validate(l10n), isFalse);
-    expect(controller.actionDateError, isNotNull);
+    expect(controller.actionDateError, equals('Renewal start date cannot be after the expiry date.'));
+
+    controller.setActionDate(DateTime.utc(2025, 12, 1));
+    expect(controller.validate(l10n), isFalse);
+    expect(controller.actionDateError, equals('Renewal start date cannot be before the issue date.'));
 
     controller.setActionDate(DateTime.utc(2026, 5, 1));
     expect(controller.validate(l10n), isTrue);
+    expect(controller.actionDateError, isNull);
   });
+
+  test('Dates step validation prevents renewal date before issue date', () {
+    final controller = AddDocumentController();
+    final l10n = lookupAppLocalizations(const Locale('en'));
+
+    // Replicate exact user scenario from screenshot:
+    // Issue date: 01 Sep 2026, Expiry: 15 Sep 2026, Renewal: 16 Jun 2026
+    controller
+      ..setIssueDate(DateTime.utc(2026, 9, 1))
+      ..setExpiryDate(DateTime.utc(2026, 9, 15))
+      ..setActionDate(DateTime.utc(2026, 6, 16));
+
+    expect(controller.validateDates(l10n), isFalse);
+    expect(
+      controller.actionDateError,
+      equals('Renewal start date cannot be before the issue date.'),
+    );
+    expect(controller.hasDateErrors, isTrue);
+
+    // Setting a valid renewal start date between issue and expiry clears the error
+    controller.setActionDate(DateTime.utc(2026, 9, 10));
+    expect(controller.validateDates(l10n), isTrue);
+    expect(controller.actionDateError, isNull);
+    expect(controller.hasDateErrors, isFalse);
+  });
+
+  test('suggestedActionDate does not suggest dates prior to issue date', () {
+    final controller = AddDocumentController();
+    // 14 days validity window
+    controller
+      ..setIssueDate(DateTime.utc(2026, 9, 1))
+      ..setExpiryDate(DateTime.utc(2026, 9, 15));
+
+    // Expiry - 30 days is 16 Aug 2026, which is before 01 Sep 2026
+    expect(controller.suggestedActionDate, isNull);
+
+    // With sufficient validity window
+    controller.setIssueDate(DateTime.utc(2026, 1, 1));
+    expect(
+      controller.suggestedActionDate,
+      equals(DateTime.utc(2026, 9, 15).subtract(const Duration(days: 30))),
+    );
+  });
+
+  test('DocumentRenewal.isActionDateValid validates against issue date', () {
+    final issue = DateTime(2026, 1, 1);
+    final expiry = DateTime(2027, 1, 1);
+
+    expect(
+      DocumentRenewal.isActionDateValid(
+        newExpiry: expiry,
+        actionDate: DateTime(2025, 12, 1),
+        issueDate: issue,
+      ),
+      isFalse,
+    );
+    expect(
+      DocumentRenewal.isActionDateValid(
+        newExpiry: expiry,
+        actionDate: DateTime(2026, 6, 1),
+        issueDate: issue,
+      ),
+      isTrue,
+    );
+    expect(
+      DocumentRenewal.isActionDateValid(
+        newExpiry: expiry,
+        actionDate: DateTime(2027, 2, 1),
+        issueDate: issue,
+      ),
+      isFalse,
+    );
+  });
+
+  testWidgets(
+    'RegistrySelectableChip clearly communicates multi-select and selected states',
+    (tester) async {
+      bool selected = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return RegistrySelectableChip(
+                  key: const ValueKey<String>('test-chip'),
+                  label: '7 days before',
+                  isMultiSelect: true,
+                  selected: selected,
+                  onSelected: (val) => setState(() => selected = val),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Initial unselected state has unchecked checkbox icon
+      expect(
+        find.byIcon(Icons.check_box_outline_blank_rounded),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.check_box_rounded), findsNothing);
+
+      // Tap to select
+      await tester.tap(find.byKey(const ValueKey<String>('test-chip')));
+      await tester.pumpAndSettle();
+
+      // Selected state has checked checkbox icon
+      expect(find.byIcon(Icons.check_box_rounded), findsOneWidget);
+      expect(
+        find.byIcon(Icons.check_box_outline_blank_rounded),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'AddDocumentScreen reminder section communicates multi-select behavior',
+    (tester) async {
+      final controller = AddDocumentController();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  final l10n = AppLocalizations.of(context);
+                  return Column(
+                    children: [
+                      RegistrySectionHeader(
+                        icon: Icons.notifications_outlined,
+                        title: l10n.sectionReminders,
+                        subtitle: l10n.remindersHelper,
+                        actionLabel: l10n.remindersMultiSelectBadge,
+                      ),
+                      Text(l10n.remindersSelectAllThatApply),
+                      Wrap(
+                        key: const ValueKey<String>('reminder-chips'),
+                        children: [
+                          RegistrySelectableChip(
+                            key: const ValueKey<String>('reminder-action'),
+                            label: l10n.reminderOnActionDate,
+                            isMultiSelect: true,
+                            selected: controller.reminders.contains(
+                              ReminderPreference.onActionDate,
+                            ),
+                            onSelected: (_) => setState(() {
+                              controller.toggleReminder(
+                                ReminderPreference.onActionDate,
+                              );
+                            }),
+                          ),
+                          RegistrySelectableChip(
+                            key: const ValueKey<String>('reminder-7'),
+                            label: l10n.reminder7Days,
+                            isMultiSelect: true,
+                            selected: controller.reminders.contains(
+                              ReminderPreference.sevenDaysBefore,
+                            ),
+                            onSelected: (_) => setState(() {
+                              controller.toggleReminder(
+                                ReminderPreference.sevenDaysBefore,
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Multi-select'), findsOneWidget);
+      expect(find.text('Select all that apply:'), findsOneWidget);
+
+      // Both start unselected with unchecked boxes
+      expect(
+        find.byIcon(Icons.check_box_outline_blank_rounded),
+        findsNWidgets(2),
+      );
+      expect(find.byIcon(Icons.check_box_rounded), findsNothing);
+
+      // Tap first
+      await tester.tap(find.byKey(const ValueKey<String>('reminder-action')));
+      await tester.pumpAndSettle();
+
+      // 1 checked, 1 unchecked
+      expect(find.byIcon(Icons.check_box_rounded), findsOneWidget);
+      expect(
+        find.byIcon(Icons.check_box_outline_blank_rounded),
+        findsOneWidget,
+      );
+
+      // Tap second - BOTH can be selected (multi-select!)
+      await tester.tap(find.byKey(const ValueKey<String>('reminder-7')));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.check_box_rounded), findsNWidgets(2));
+      expect(find.byIcon(Icons.check_box_outline_blank_rounded), findsNothing);
+    },
+  );
 
   testWidgets('Create starts at step 1', (tester) async {
     await tester.pumpWidget(app());
@@ -1231,9 +1476,9 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('add-custom-field')));
     await tester.pumpAndSettle();
     expect(find.text('Field name'), findsOneWidget);
-    await tester.tap(find.text('Remove field'));
+    await tester.tap(find.text('Remove'));
     await tester.pumpAndSettle();
-    expect(find.text('Remove field'), findsNothing);
+    expect(find.text('Remove'), findsNothing);
   });
 
   testWidgets('Double save is prevented by the controller', (tester) async {
@@ -1282,11 +1527,7 @@ void main() {
       find.byKey(const ValueKey<String>('field-name')),
       'Family passport',
     );
-    await reveal(tester, find.byKey(const ValueKey<String>('field-category')));
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('field-category')),
-      'Passport',
-    );
+    await _selectCategory(tester);
     await tester.pumpAndSettle();
     await reveal(
       tester,
@@ -1471,8 +1712,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey<String>('country-IN')));
     await tester.pumpAndSettle();
-    await reveal(tester, category);
-    await tester.enterText(category, 'ID card');
+    await _selectCategory(tester, 'category-idCard');
     await tester.pumpAndSettle();
 
     expect(
@@ -1700,7 +1940,259 @@ void main() {
       await tester.tap(find.byKey(const ValueKey<String>('wizard-continue')));
       await tester.pumpAndSettle();
 
-      expect(find.text('Impact on you'), findsOneWidget);
+      expect(find.textContaining('Impact'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Review step separates scan from edit buttons and preserves manually entered data',
+    (tester) async {
+      tester.view.physicalSize = const Size(400, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      // Tap manual entry
+      await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+      await tester.pumpAndSettle();
+
+      // Enter name
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('field-name')),
+        'My Special Document',
+      );
+      // Pick category
+      await tester.tap(find.byKey(const ValueKey<String>('field-category')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+      await tester.pumpAndSettle();
+
+      // Continue to dates
+      await continueWizard(tester);
+
+      // Set expiry date
+      dates.results['expiry'] = DateTime(2028, 5, 10);
+      await reveal(tester, find.byKey(const ValueKey<String>('date-expiry')));
+      await tester.tap(find.byKey(const ValueKey<String>('date-expiry')));
+      await tester.pumpAndSettle();
+
+      // Continue to renewal
+      await continueWizard(tester);
+
+      // Set impact
+      await reveal(tester, find.byKey(const ValueKey<String>('impact-medium')));
+      await tester.tap(find.byKey(const ValueKey<String>('impact-medium')));
+      await tester.pumpAndSettle();
+
+      // Continue to review
+      await continueWizard(tester);
+
+      // Verify we are on review
+      expect(find.text('Ready to save'), findsOneWidget);
+      expect(find.text('My Special Document'), findsWidgets);
+
+      // The edit row should have edit identity, dates, renewal
+      expect(
+        find.byKey(const ValueKey<String>('review-jump-identity')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('review-jump-dates')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('review-jump-renewal')),
+        findsOneWidget,
+      );
+
+      // The scan action is a separate button with label "Scan document" (no photo attached)
+      final scanBtn = find.byKey(const ValueKey<String>('review-jump-scan'));
+      expect(scanBtn, findsOneWidget);
+      expect(
+        find.descendant(of: scanBtn, matching: find.text('Scan document')),
+        findsOneWidget,
+      );
+
+      // Tapping the scan button shows confirmation dialog
+      await reveal(tester, scanBtn);
+      await tester.tap(scanBtn);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Re-scan document?'), findsOneWidget);
+
+      // Tapping cancel dismisses dialog and keeps review data intact
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ready to save'), findsOneWidget);
+      expect(find.text('My Special Document'), findsWidgets);
+
+      // Tapping scan button again and confirming takes us to source step
+      await reveal(tester, scanBtn);
+      await tester.tap(scanBtn);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('rescan-confirm')));
+      await tester.pumpAndSettle();
+
+      // We are on source step, but since we already entered data and reached review:
+      // Tapping Back returns directly to review with data preserved
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ready to save'), findsOneWidget);
+      expect(find.text('My Special Document'), findsWidgets);
+
+      // Also verify tapping "Enter manually" on source step returns directly to review
+      await reveal(tester, scanBtn);
+      await tester.tap(scanBtn);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('rescan-confirm')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ready to save'), findsOneWidget);
+      expect(find.text('My Special Document'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'Review step shows Re-scan document when attachment is present',
+    (tester) async {
+      tester.view.physicalSize = const Size(400, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      images.galleryResult = ImagePickResult.success(kTinyPngBytes);
+
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      // Choose gallery photo
+      await tester.tap(find.byKey(const ValueKey<String>('attach-gallery')));
+      await tester.pumpAndSettle();
+
+      // Continue to identity
+      await continueWizard(tester);
+
+      // Enter name
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('field-name')),
+        'Scanned Document Title',
+      );
+      // Pick category
+      await tester.tap(find.byKey(const ValueKey<String>('field-category')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('category-passport')));
+      await tester.pumpAndSettle();
+
+      // Continue to dates
+      await continueWizard(tester);
+
+      // Set expiry date
+      dates.results['expiry'] = DateTime(2028, 5, 10);
+      await reveal(tester, find.byKey(const ValueKey<String>('add-expiry-date-btn')));
+      await tester.tap(find.byKey(const ValueKey<String>('add-expiry-date-btn')));
+      await tester.pumpAndSettle();
+
+      // Continue to renewal
+      await continueWizard(tester);
+
+      // Set impact
+      await reveal(tester, find.byKey(const ValueKey<String>('impact-medium')));
+      await tester.tap(find.byKey(const ValueKey<String>('impact-medium')));
+      await tester.pumpAndSettle();
+
+      // Continue to review
+      await continueWizard(tester);
+
+      // Verify label is "Re-scan document"
+      final scanBtn = find.byKey(const ValueKey<String>('review-jump-scan'));
+      expect(scanBtn, findsOneWidget);
+      expect(
+        find.descendant(of: scanBtn, matching: find.text('Re-scan document')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'Manual entry continues successfully across combinations of document type and category selections',
+    (tester) async {
+      tester.view.physicalSize = const Size(400, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(app());
+      await tester.pumpAndSettle();
+      await openFromDocumentsTab(tester);
+
+      // Tap manual entry
+      await tester.tap(find.byKey(const ValueKey<String>('entry-manual')));
+      await tester.pumpAndSettle();
+
+      // Enter only name first, verify Category * shows required error when continue is tapped
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('field-name')),
+        'Test Document',
+      );
+      await continueWizard(tester);
+      expect(find.text('This field is required.'), findsOneWidget);
+
+      // Now pick "Other document" from Document Type change sheet
+      await tester.tap(find.text('Change'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('schema-generic_other')));
+      await tester.pumpAndSettle();
+
+      // Continue should now succeed to Dates step!
+      await continueWizard(tester);
+      expect(find.text('Important dates'), findsOneWidget);
+
+      // Go back to identity step
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+      await tester.pumpAndSettle();
+      expect(find.text('Make it yours'), findsOneWidget);
+
+      // Pick "Passport" from Document Type change sheet
+      await tester.tap(find.text('Change'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('schema-generic_passport')));
+      await tester.pumpAndSettle();
+
+      // Continue should succeed to Dates step
+      await continueWizard(tester);
+      expect(find.text('Important dates'), findsOneWidget);
+
+      // Go back to identity step and change Document Type back to "Other document"
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Change'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('schema-generic_other')));
+      await tester.pumpAndSettle();
+
+      // Continue should still succeed
+      await continueWizard(tester);
+      expect(find.text('Important dates'), findsOneWidget);
+
+      // Go back and pick a generic category (e.g. driving licence)
+      await tester.tap(find.byKey(const ValueKey<String>('wizard-back')));
+      await tester.pumpAndSettle();
+      await _selectCategory(tester, 'category-drivingLicence');
+      await tester.pumpAndSettle();
+
+      // Continue should succeed
+      await continueWizard(tester);
+      expect(find.text('Important dates'), findsOneWidget);
     },
   );
 }

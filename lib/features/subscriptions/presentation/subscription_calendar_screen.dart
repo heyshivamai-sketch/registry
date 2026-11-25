@@ -12,7 +12,29 @@ class SubscriptionCalendarScreen extends StatelessWidget {
     final now = deps.clock.now();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Subscription Calendar')),
+      appBar: AppBar(
+        titleSpacing: AppSpacing.xs,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Subscriptions',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.tertiary,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const Text(
+              'Subscription Calendar',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(

@@ -101,7 +101,7 @@ class DocumentDigitalPass extends StatelessWidget {
               style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFCCD3EB), fontSize: 12),
             ),
           ],
-          if (showExpiry && document.expiryDate.year < 2099) ...[
+          if (showExpiry && document.hasExpiry) ...[
             SizedBox(height: compact ? 16 : 26),
             Wrap(
               spacing: AppSpacing.md,

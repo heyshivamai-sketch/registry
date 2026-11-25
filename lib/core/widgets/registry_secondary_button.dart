@@ -5,6 +5,7 @@ class RegistrySecondaryButton extends StatelessWidget {
   const RegistrySecondaryButton({
     super.key,
     required this.label,
+    this.icon,
     this.onPressed,
     this.padding,
     this.maxLines = 1,
@@ -12,6 +13,7 @@ class RegistrySecondaryButton extends StatelessWidget {
   });
 
   final String label;
+  final IconData? icon;
   final VoidCallback? onPressed;
   final EdgeInsetsGeometry? padding;
   final int maxLines;
@@ -26,9 +28,21 @@ class RegistrySecondaryButton extends StatelessWidget {
       textAlign: TextAlign.center,
       softWrap: maxLines > 1,
     );
-    final child = fitText
+    final textChild = fitText
         ? FittedBox(fit: BoxFit.scaleDown, child: textWidget)
         : textWidget;
+
+    final child = icon != null
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 16),
+              const SizedBox(width: AppSpacing.xs),
+              Flexible(child: textChild),
+            ],
+          )
+        : textChild;
 
     return OutlinedButton(
       onPressed: onPressed,

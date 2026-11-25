@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
 import 'package:the_registry/app/navigation/app_shell.dart';
+import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/backup/backup_models.dart';
 import 'package:the_registry/features/backup/backup_service.dart';
@@ -76,6 +77,11 @@ void main() {
   testWidgets(
     'export does not say the file is saved before the write finishes',
     (tester) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       final scripted = _ScriptedBackup();
       await tester.pumpWidget(_app(const Locale('en'), scripted));
       await tester.pumpAndSettle();
@@ -118,7 +124,22 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pumpAndSettle();
       expect(find.text('Backup saved.'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('export-success-card')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('export-open-import')),
+        findsOneWidget,
+      );
       expect(find.textContaining('was not saved'), findsNothing);
+
+      await tester.ensureVisible(
+        find.byKey(const ValueKey<String>('export-open-import')),
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('export-open-import')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ImportBackupScreen), findsOneWidget);
     },
   );
 
@@ -181,6 +202,24 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey<String>('import-replace')));
       await tester.pumpAndSettle();
+
+      final cancelRect = tester.getRect(
+        find.byKey(const ValueKey<String>('import-replace-cancel')),
+      );
+      final confirmRect = tester.getRect(
+        find.byKey(const ValueKey<String>('import-replace-confirm')),
+      );
+
+      // Consistent height
+      expect(cancelRect.height, equals(confirmRect.height));
+      // Equal vertical alignment
+      expect(cancelRect.top, equals(confirmRect.top));
+      expect(cancelRect.bottom, equals(confirmRect.bottom));
+      // Proper spacing
+      expect(confirmRect.left - cancelRect.right, closeTo(AppSpacing.sm, 0.001));
+      // Appropriate / equal width within the container
+      expect(cancelRect.width, closeTo(confirmRect.width, 0.001));
+
       await tester.tap(
         find.byKey(const ValueKey<String>('import-replace-cancel')),
       );
@@ -234,7 +273,7 @@ Widget _app(Locale locale, [_ScriptedBackup? backups]) {
   );
 }
 
-class _IdleGateway implements BackupFileGateway {
+class _IdleGateway extends BackupFileGateway {
   @override
   Future<Uint8List?> pickBackup() async => Uint8List.fromList(const [1]);
 

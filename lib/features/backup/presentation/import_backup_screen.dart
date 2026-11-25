@@ -13,7 +13,14 @@ import 'package:the_registry/features/backup/presentation/backup_task.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
 
 class ImportBackupScreen extends StatefulWidget {
-  const ImportBackupScreen({super.key});
+  const ImportBackupScreen({
+    super.key,
+    this.initialBytes,
+    this.initialFileName,
+  });
+
+  final Uint8List? initialBytes;
+  final String? initialFileName;
 
   @override
   State<ImportBackupScreen> createState() => _ImportBackupScreenState();
@@ -30,6 +37,16 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
   String? _status;
   var _statusIsError = false;
   var _secretsReleased = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialBytes;
+    if (initial != null) {
+      _bytes = initial;
+      _fileName = widget.initialFileName ?? 'Backup file';
+    }
+  }
 
   @override
   void dispose() {
@@ -204,48 +221,53 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
             AppSpacing.md,
           ),
           actions: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    key: const ValueKey<String>('import-replace-cancel'),
-                    style: TextButton.styleFrom(
-                      minimumSize: const Size(
-                        0,
-                        AppSpacing.minTapTarget,
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      key: const ValueKey<String>('import-replace-cancel'),
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(
+                          0,
+                          AppSpacing.buttonHeight,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
                       ),
-                    ),
-                    onPressed: () => Navigator.of(dialogContext).pop(false),
-                    child: Text(l10n.backupCancel),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: FilledButton(
-                    key: const ValueKey<String>('import-replace-confirm'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: theme.colorScheme.error,
-                      foregroundColor: theme.colorScheme.onError,
-                      minimumSize: const Size(
-                        0,
-                        AppSpacing.minTapTarget,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.xs,
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(dialogContext).pop(true),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+                      onPressed: () => Navigator.of(dialogContext).pop(false),
                       child: Text(
-                        l10n.backupReplaceAction,
+                        l10n.backupCancel,
                         textAlign: TextAlign.center,
-                        maxLines: 2,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: FilledButton(
+                      key: const ValueKey<String>('import-replace-confirm'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: theme.colorScheme.error,
+                        foregroundColor: theme.colorScheme.onError,
+                        minimumSize: const Size(
+                          0,
+                          AppSpacing.buttonHeight,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
+                      ),
+                      onPressed: () => Navigator.of(dialogContext).pop(true),
+                      child: Text(
+                        'Replace',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );

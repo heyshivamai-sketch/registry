@@ -5,6 +5,7 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/registry_form_field.dart';
 import '../../../core/widgets/registry_primary_button.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../home/data/registry_date_formatter.dart';
 import '../domain/document_renewal.dart';
 import '../domain/registry_document.dart';
 import '../widgets/document_date_field.dart';
@@ -89,8 +90,18 @@ class _RecordRenewalFormState extends State<_RecordRenewalForm> {
         _expiryError = l10n.errorNewExpiryNotAfterPrevious;
       }
       if (_newExpiry != null &&
-          !DocumentRenewal.isActionDateValid(newExpiry: _newExpiry!, actionDate: _newActionDate)) {
-        _actionError = l10n.errorActionAfterNewExpiry;
+          !DocumentRenewal.isActionDateValid(
+            newExpiry: _newExpiry!,
+            actionDate: _newActionDate,
+            issueDate: widget.document.issueDate,
+          )) {
+        _actionError = widget.document.issueDate != null &&
+                _newActionDate != null &&
+                RegistryDateFormatter.dateOnly(_newActionDate!).isBefore(
+                  RegistryDateFormatter.dateOnly(widget.document.issueDate!),
+                )
+            ? l10n.errorActionBeforeIssue
+            : l10n.errorActionAfterNewExpiry;
       }
     });
     if (_expiryError != null || _actionError != null) {

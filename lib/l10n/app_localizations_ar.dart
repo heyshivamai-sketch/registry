@@ -277,6 +277,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get statusUrgent => 'يلزم اتخاذ إجراء';
 
   @override
+  String get statusExpiringSoon => 'ينتهي قريبًا';
+
+  @override
   String get statusUpcoming => 'قادم';
 
   @override
@@ -394,10 +397,41 @@ class AppLocalizationsAr extends AppLocalizations {
   String get attachmentSectionTitle => 'مرفق';
 
   @override
+  String attachmentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مستند',
+      few: '$count مستندات',
+      two: 'مستندان',
+      one: 'مستند واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get attachmentEmptyLabel => 'أضف صورة لهذا المستند';
 
   @override
   String get attachmentTakePhoto => 'التقاط صورة';
+
+  @override
+  String get cameraBackLabel => 'الكاميرا الخلفية';
+
+  @override
+  String get cameraBackSubtitle => 'موصى بها للمستندات';
+
+  @override
+  String get cameraFrontLabel => 'الكاميرا الأمامية';
+
+  @override
+  String get cameraFrontSubtitle => 'للمستندات المحمولة باليد';
+
+  @override
+  String get attachmentRetake => 'إعادة الالتقاط';
+
+  @override
+  String get attachmentPreviewTooltip => 'معاينة الصورة';
 
   @override
   String get attachmentChooseGallery => 'اختيار من المعرض';
@@ -491,7 +525,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fieldNotes => 'ملاحظات';
 
   @override
-  String get sectionReminders => 'تفضيل التذكير';
+  String get sectionReminders => 'تفضيلات التذكير';
+
+  @override
+  String get remindersMultiSelectBadge => 'تحديد متعدد';
+
+  @override
+  String get remindersSelectAllThatApply => 'اختر كل ما ينطبق:';
 
   @override
   String get remindersHelper =>
@@ -531,6 +571,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get errorIssueAfterExpiry =>
       'لا يمكن أن يكون تاريخ الإصدار بعد تاريخ الانتهاء.';
+
+  @override
+  String get errorActionBeforeIssue =>
+      'لا يمكن أن يكون تاريخ بدء التجديد قبل تاريخ الإصدار.';
 
   @override
   String get errorActionAfterExpiry =>
@@ -935,7 +979,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get customFieldValue => 'القيمة';
 
   @override
-  String get removeCustomField => 'إزالة الحقل';
+  String get addCustomValue => 'إضافة قيمة';
+
+  @override
+  String get removeCustomField => 'إزالة';
 
   @override
   String get markFieldSensitive => 'إخفاء هذه القيمة خارج المراجعة';
@@ -951,6 +998,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reviewJumpScan => 'تعديل المسح';
+
+  @override
+  String get rescanDocument => 'إعادة مسح المستند';
+
+  @override
+  String get rescanConfirmTitle => 'إعادة مسح المستند؟';
+
+  @override
+  String get rescanConfirmMessage =>
+      'بدء مسح جديد سيستبدل التفاصيل التي أدخلتها. هل تريد المتابعة من البداية؟';
+
+  @override
+  String get rescanConfirmAction => 'إعادة المسح';
+
+  @override
+  String get cancel => 'إلغاء';
 
   @override
   String get reviewAttachmentYes => 'توجد صورة مرفقة';
@@ -1919,6 +1982,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backupExportSaved => 'تم حفظ النسخة الاحتياطية.';
 
   @override
+  String get backupExportSuccessHint =>
+      'ملف النسخة الاحتياطية (.rgry) مشفر لحمايتك ولا يمكن فتحه مباشرة في عوارض المستندات أو PDF. لعرض بياناتك أو استعادتها، استخدم استيراد النسخة الاحتياطية داخل Regiday.';
+
+  @override
+  String get backupOpenImportAction => 'الانتقال إلى استيراد النسخة الاحتياطية';
+
+  @override
+  String get backupFormatNotice =>
+      'ملفات النسخ الاحتياطي (.rgry) مشفرة ولا يمكن فتحها أو استعادتها إلا من داخل Regiday.';
+
+  @override
   String get backupExportCancelled =>
       'أُلغي التصدير. لم يُحفظ ملف نسخة احتياطية.';
 
@@ -2412,6 +2486,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get connectGmailButton => 'ربط Gmail';
+
+  @override
+  String get connectFromGmail => 'ربط من Gmail';
 
   @override
   String get disconnectGmailButton => 'إلغاء الربط';

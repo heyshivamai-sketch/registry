@@ -173,6 +173,7 @@ class RegistryTextField extends StatelessWidget {
     this.controller,
     this.fieldKey,
     this.onChanged,
+    this.onTap,
     this.errorText,
     this.helperText,
     this.hintText,
@@ -203,6 +204,7 @@ class RegistryTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Key? fieldKey;
   final ValueChanged<String>? onChanged;
+  final VoidCallback? onTap;
   final String? errorText;
   final String? helperText;
   final String? hintText;
@@ -249,6 +251,7 @@ class RegistryTextField extends StatelessWidget {
           focusNode: focusNode,
           enabled: enabled,
           readOnly: readOnly,
+          onTap: onTap,
           obscureText: obscureText,
           maxLines: obscureText ? 1 : maxLines,
           minLines: minLines,
@@ -359,13 +362,29 @@ class RegistryWizardProgress extends StatelessWidget {
           child: Row(
             children: [
               for (var i = 0; i < total; i++) ...[
-                if (i != 0) const SizedBox(width: 4),
+                if (i != 0) const SizedBox(width: 5),
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(99),
                     child: SizedBox(
-                      height: 4,
-                      child: ColoredBox(color: i < current ? accent : track),
+                      height: 5.5,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOutCubic,
+                        decoration: BoxDecoration(
+                          color: i < current ? accent : track,
+                          borderRadius: BorderRadius.circular(99),
+                          boxShadow: i == current - 1
+                              ? [
+                                  BoxShadow(
+                                    color: accent.withValues(alpha: 0.35),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -375,13 +394,21 @@ class RegistryWizardProgress extends StatelessWidget {
         ),
         if (label != null) ...[
           const SizedBox(width: 10),
-          Text(
-            label!,
-            key: labelKey,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              letterSpacing: 0,
-              fontWeight: FontWeight.w500,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              label!,
+              key: labelKey,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: accent,
+                letterSpacing: 0.1,
+                fontWeight: FontWeight.w700,
+                fontSize: 11,
+              ),
             ),
           ),
         ],

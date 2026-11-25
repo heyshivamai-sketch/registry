@@ -34,4 +34,9 @@ class MainActivity : FlutterFragmentActivity() {
             flutterEngine.plugins.add(bridge)
         }
     }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        backupFiles?.onNewIntent(intent)
+    }
 }
