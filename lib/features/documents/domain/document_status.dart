@@ -77,11 +77,14 @@ abstract final class DocumentStatus {
     };
   }
 
-  static String remainingLabel(
+  static String? remainingLabel(
     AppLocalizations l10n,
     RegistryDocument document, {
     DateTime? now,
   }) {
+    if (!document.hasImportantDates) {
+      return null;
+    }
     final status = resolve(document, now: now);
     final target = status == RegistryStatus.expired
         ? document.expiryDate

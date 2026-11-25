@@ -59,6 +59,7 @@ class _DocumentDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final locale = l10n.localeName;
     final history = _sortedHistory(document.renewalHistory);
 
@@ -146,25 +147,27 @@ class _DocumentDetailBody extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               _QuickActions(document: document),
               const SizedBox(height: AppSpacing.md),
-              RegistrySurface(
-                padding: const EdgeInsets.all(14),
-                borderRadius: BorderRadius.circular(19),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RegistrySectionHeader(
-                      title: l10n.sectionImportantDates,
-                      actionLabel: DocumentStatus.remainingLabel(
-                        l10n,
-                        document,
+              if (document.hasImportantDates) ...[
+                RegistrySurface(
+                  padding: const EdgeInsets.all(14),
+                  borderRadius: BorderRadius.circular(19),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RegistrySectionHeader(
+                        title: l10n.sectionImportantDates,
+                        actionLabel: DocumentStatus.remainingLabel(
+                          l10n,
+                          document,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    _DeadlineGrid(document: document),
-                  ],
+                      const SizedBox(height: AppSpacing.sm),
+                      _DeadlineGrid(document: document),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.md),
+              ],
               RegistrySurface(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
@@ -203,6 +206,14 @@ class _DocumentDetailBody extends StatelessWidget {
                         maskedValue: document.maskedDocumentNumber,
                         rawValue: document.documentNumber,
                       ),
+                    if (document.issueDate != null && !document.hasImportantDates)
+                      RegistryInfoRow(
+                        label: l10n.fieldIssueDate,
+                        value: RegistryDateFormatter.dayMonthYear(
+                          document.issueDate!,
+                          locale,
+                        ),
+                      ),
                     RegistryInfoRow(
                       label: l10n.fieldImpact,
                       value: DocumentCopy.impact(l10n, document.impact),
@@ -238,7 +249,7 @@ class _DocumentDetailBody extends StatelessWidget {
                     for (final field in document.visibleDynamicFields)
                       RegistryInfoRow(
                         label: DocumentCopy.fieldLabel(l10n, field),
-                        value: field.sensitive
+                        value: (field.sensitive && field.canBeSensitive)
                             ? field.maskedValue
                             : field.value,
                       ),
@@ -291,6 +302,7 @@ class _DocumentDetailBody extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 4, 8),
                   child: _AttachmentRow(
                     bytes: document.attachmentBytes!,
+                    count: document.attachmentCount,
                     title: l10n.attachmentSectionTitle,
                     subtitle: l10n.attachmentAddedOn(
                       RegistryDateFormatter.dayMonthYear(
@@ -321,20 +333,38 @@ class _DocumentDetailBody extends StatelessWidget {
                             RecordRenewalSheet.show(context, document),
                       )
                     else ...[
-                      for (final entry in history) _HistoryItem(entry: entry),
+                      for (final entry in history) ...[
+                        _HistoryItem(entry: entry),
+                        const SizedBox(height: 6),
+                      ],
+                      const SizedBox(height: AppSpacing.xs),
                       Align(
                         alignment: AlignmentDirectional.centerEnd,
-                        child: TextButton(
+                        child: FilledButton.tonalIcon(
                           key: const ValueKey<String>('record-renewal'),
-                          style: TextButton.styleFrom(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: colorScheme.primaryContainer,
+                            foregroundColor: colorScheme.onPrimaryContainer,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: 10,
+                            ),
                             minimumSize: const Size(
                               AppSpacing.minTapTarget,
-                              AppSpacing.minTapTarget,
+                              40,
                             ),
+                            elevation: 0,
                           ),
                           onPressed: () =>
                               RecordRenewalSheet.show(context, document),
-                          child: Text(l10n.recordRenewal),
+                          icon: const Icon(Icons.autorenew_rounded, size: 18),
+                          label: Text(
+                            l10n.recordRenewal,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                     ],
@@ -504,6 +534,7 @@ class _AttachmentRow extends StatelessWidget {
     required this.subtitle,
     required this.actionLabel,
     required this.onView,
+    this.count = 1,
   });
 
   final Uint8List bytes;
@@ -511,11 +542,13 @@ class _AttachmentRow extends StatelessWidget {
   final String subtitle;
   final String actionLabel;
   final VoidCallback onView;
+  final int count;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
     final preview = Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -528,26 +561,85 @@ class _AttachmentRow extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(11),
-        child: Image.memory(
-          key: const ValueKey<String>('attachment-thumbnail'),
-          bytes,
-          height: 52,
-          width: 44,
-          fit: BoxFit.cover,
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(11),
+            child: Image.memory(
+              key: const ValueKey<String>('attachment-thumbnail'),
+              bytes,
+              height: 52,
+              width: 44,
+              fit: BoxFit.cover,
+            ),
+          ),
+          if (count > 1)
+            PositionedDirectional(
+              bottom: 2,
+              end: 2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.72),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.photo_library_outlined,
+                      size: 9,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      '$count',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
     final copy = Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Container(
+                key: const ValueKey<String>('attachment-count-badge'),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  l10n.attachmentCount(count),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSecondaryContainer,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 2),
           Text(
@@ -574,31 +666,35 @@ class _AttachmentRow extends StatelessWidget {
       icon: const Icon(Icons.visibility_outlined, size: 16),
       label: Text(actionLabel),
     );
-    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
-    if (scale >= 1.4) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        if (scale >= 1.3 || constraints.maxWidth < 360) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              preview,
-              const SizedBox(width: AppSpacing.sm),
-              copy,
+              Row(
+                children: [
+                  preview,
+                  const SizedBox(width: AppSpacing.sm),
+                  copy,
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Align(alignment: AlignmentDirectional.centerEnd, child: action),
             ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Align(alignment: AlignmentDirectional.centerEnd, child: action),
-        ],
-      );
-    }
-    return Row(
-      children: [
-        preview,
-        const SizedBox(width: AppSpacing.sm),
-        copy,
-        const SizedBox(width: AppSpacing.xs),
-        action,
-      ],
+          );
+        }
+        return Row(
+          children: [
+            preview,
+            const SizedBox(width: AppSpacing.sm),
+            copy,
+            const SizedBox(width: AppSpacing.xs),
+            action,
+          ],
+        );
+      },
     );
   }
 }
@@ -621,18 +717,31 @@ class _InlineActionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final action = TextButton.icon(
+    final action = FilledButton.tonalIcon(
       key: actionKey,
-      style: TextButton.styleFrom(
-        foregroundColor: colorScheme.primary,
+      style: FilledButton.styleFrom(
+        backgroundColor: colorScheme.primaryContainer,
+        foregroundColor: colorScheme.onPrimaryContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 8,
+        ),
         minimumSize: const Size(
           AppSpacing.minTapTarget,
-          AppSpacing.minTapTarget,
+          38,
         ),
+        elevation: 0,
       ),
       onPressed: onPressed,
-      icon: const Icon(Icons.add_circle_outline, size: 16),
-      label: Text(actionLabel, textAlign: TextAlign.center),
+      icon: const Icon(Icons.autorenew_rounded, size: 16),
+      label: Text(
+        actionLabel,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+        textAlign: TextAlign.center,
+      ),
     );
     return Wrap(
       alignment: WrapAlignment.spaceBetween,
@@ -671,7 +780,9 @@ class _QuickActions extends StatelessWidget {
         _QuickAction(
           key: const ValueKey<String>('quick-view-scan'),
           icon: Icons.photo_outlined,
-          label: l10n.viewScan,
+          label: document.attachmentCount > 1
+              ? '${l10n.viewScan} (${document.attachmentCount})'
+              : l10n.viewScan,
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -841,7 +952,7 @@ class _DeadlineGrid extends StatelessWidget {
           ),
           Icons.event_repeat_outlined,
         ),
-      if (document.expiryDate.year < 2099)
+      if (document.hasExpiry)
         (
           l10n.pulseExpiresEyebrow,
           RegistryDateFormatter.dayMonthYear(document.expiryDate, locale),

@@ -116,11 +116,13 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
     // Calculate monthly total and upcoming total
     var totalCents = 0;
     var upcomingCents = 0;
+    var activeBillsCount = 0;
     String currencySymbol = '';
 
     for (var day = 1; day <= daysInCurrentMonth; day++) {
       final date = DateTime(year, month, day);
       final daySubs = _getSubscriptionsForDay(date);
+      activeBillsCount += daySubs.length;
       for (final sub in daySubs) {
         if (currencySymbol.isEmpty) {
           currencySymbol = sub.amount.currencyCode;
@@ -154,33 +156,93 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
       currencyCode: effectiveCurrency,
     );
 
+    final isViewingCurrentMonth = _focusedMonth.year == widget.now.year &&
+        _focusedMonth.month == widget.now.month;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // 1. Month Header & Navigation
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
           child: Row(
             children: [
-              Text(
-                monthTitle,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                  color: AppColors.midnight,
+              Expanded(
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        monthTitle,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                          color: AppColors.midnight,
+                          fontSize: 22,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (activeBillsCount > 0) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFECE8FB),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppColors.violet.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Text(
+                          '$activeBillsCount ${activeBillsCount == 1 ? "bill" : "bills"}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.violet,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-              const Spacer(),
+              if (!isViewingCurrentMonth) ...[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _focusedMonth =
+                          DateTime(widget.now.year, widget.now.month);
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    minimumSize: const Size(0, 32),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(
+                    'Today',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.violet,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+              ],
               _RoundIconButton(
                 icon: Icons.calendar_today_outlined,
                 onPressed: _pickMonth,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               _RoundIconButton(
                 icon: Icons.chevron_left_rounded,
                 onPressed: _prevMonth,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               _RoundIconButton(
                 icon: Icons.chevron_right_rounded,
                 onPressed: _nextMonth,
@@ -192,27 +254,35 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
         const SizedBox(height: AppSpacing.xs),
 
         // 2. Weekdays Header
-        Row(
-          children: const ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-              .map(
-                (day) => Expanded(
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F3FB),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              for (final day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'])
+                Expanded(
                   child: Center(
                     child: Text(
                       day,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.4,
-                        color: colorScheme.onSurfaceVariant,
+                        letterSpacing: 0.3,
+                        color: (day == 'Sa' || day == 'Su')
+                            ? AppColors.violet
+                            : colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
                 ),
-              )
-              .toList(),
+            ],
+          ),
         ),
 
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
 
         // 3. Calendar Grid (individual card tiles matching Registry Aura theme)
         GridView.builder(
@@ -284,106 +354,142 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFECE8FB),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: const Icon(
-                            Icons.account_balance_wallet_rounded,
-                            size: 14,
-                            color: AppColors.violet,
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFECE8FB),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                Icons.account_balance_wallet_rounded,
+                                size: 14,
+                                color: AppColors.violet,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Total',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Total',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+                        const SizedBox(height: 6),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            MoneyFormat.format(totalMoney, l10n.localeName),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
+                              color: AppColors.midnight,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        MoneyFormat.format(totalMoney, l10n.localeName),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.4,
-                          color: AppColors.midnight,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 38,
-                color: colorScheme.outlineVariant,
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                  ),
+                  Container(
+                    width: 1,
+                    height: 38,
+                    color: colorScheme.outlineVariant,
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFDFF8F2),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: const Icon(
-                            Icons.upcoming_rounded,
-                            size: 14,
-                            color: Color(0xFF086B59),
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFDFF8F2),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                Icons.upcoming_rounded,
+                                size: 14,
+                                color: Color(0xFF086B59),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Upcoming',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Upcoming',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+                        const SizedBox(height: 6),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            MoneyFormat.format(upcomingMoney, l10n.localeName),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
+                              color: AppColors.midnight,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        MoneyFormat.format(upcomingMoney, l10n.localeName),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.4,
-                          color: AppColors.midnight,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              if (totalCents > 0) ...[
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: SizedBox(
+                    height: 5,
+                    child: Row(
+                      children: [
+                        if (totalCents - upcomingCents > 0)
+                          Expanded(
+                            flex: totalCents - upcomingCents,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF086B59),
+                              ),
+                            ),
+                          ),
+                        if (upcomingCents > 0)
+                          Expanded(
+                            flex: upcomingCents,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: AppColors.violet,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -435,9 +541,10 @@ class _CalendarDayCell extends StatelessWidget {
     final Gradient? gradient;
     final Color textColor;
     Border? border;
+    List<BoxShadow>? shadows;
 
     if (hasSubs) {
-      // Signature Registry Aura dark midnight/navy gradient matching Document cards
+      // Signature Registry Aura dark midnight/navy gradient
       cellColor = null;
       gradient = const LinearGradient(
         begin: Alignment.topLeft,
@@ -447,17 +554,45 @@ class _CalendarDayCell extends StatelessWidget {
       textColor = Colors.white;
       if (isSelected) {
         border = Border.all(color: Colors.white, width: 2);
+        shadows = [
+          BoxShadow(
+            color: AppColors.violet.withValues(alpha: 0.45),
+            blurRadius: 8,
+            spreadRadius: 1,
+          ),
+        ];
+      } else {
+        shadows = [
+          BoxShadow(
+            color: const Color(0xFF141D43).withValues(alpha: 0.22),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ];
       }
     } else if (isCurrentMonth) {
-      cellColor = colorScheme.surface;
+      cellColor = isSelected ? const Color(0xFFF3F0FC) : colorScheme.surface;
       gradient = null;
       textColor = AppColors.midnight;
       if (isSelected) {
         border = Border.all(color: AppColors.violet, width: 1.8);
+        shadows = [
+          BoxShadow(
+            color: AppColors.violet.withValues(alpha: 0.2),
+            blurRadius: 6,
+            spreadRadius: 1,
+          ),
+        ];
       } else if (isToday) {
-        border = Border.all(color: AppColors.violet.withValues(alpha: 0.7), width: 1.4);
+        border = Border.all(
+          color: AppColors.violet.withValues(alpha: 0.75),
+          width: 1.4,
+        );
       } else {
-        border = Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.7), width: 0.9);
+        border = Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.7),
+          width: 0.9,
+        );
       }
     } else {
       cellColor = Colors.transparent;
@@ -467,23 +602,15 @@ class _CalendarDayCell extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(11),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         decoration: BoxDecoration(
           color: cellColor,
           gradient: gradient,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(11),
           border: border,
-          boxShadow: hasSubs
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF141D43).withValues(alpha: 0.22),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
+          boxShadow: shadows,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 3.5),
         child: Column(
@@ -495,15 +622,33 @@ class _CalendarDayCell extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: hasSubs || isToday || isSelected ? FontWeight.w800 : FontWeight.w600,
+                fontWeight: hasSubs || isToday || isSelected
+                    ? FontWeight.w800
+                    : FontWeight.w600,
                 color: isToday && !hasSubs ? AppColors.violet : textColor,
               ),
             ),
+            if (isToday && !hasSubs) ...[
+              const SizedBox(height: 1.5),
+              Center(
+                child: Container(
+                  width: 4,
+                  height: 4,
+                  decoration: const BoxDecoration(
+                    color: AppColors.violet,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ],
             if (hasSubs) ...[
               const Spacer(),
               // Service brand badge (compact, high-contrast, fully theme matched)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 3,
+                  vertical: 2,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
@@ -566,6 +711,8 @@ class _RoundIconButton extends StatelessWidget {
         side: BorderSide(color: colorScheme.outlineVariant, width: 1.1),
       ),
       clipBehavior: Clip.antiAlias,
+      elevation: 0.5,
+      shadowColor: colorScheme.shadow.withValues(alpha: 0.05),
       child: InkWell(
         onTap: onPressed,
         child: SizedBox(
@@ -598,33 +745,65 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
 
     if (subscriptions.isEmpty) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: colorScheme.surface,
+          color: const Color(0xFFF9F8FD),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: colorScheme.outlineVariant, width: 1.1),
         ),
         child: Row(
           children: [
-            const Icon(
-              Icons.check_circle_rounded,
-              size: 18,
-              color: Color(0xFF086B59),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color(0xFFDFF8F2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.check_circle_rounded,
+                size: 18,
+                color: Color(0xFF086B59),
+              ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                'No subscriptions due on $formattedDate',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'No subscriptions due on $formattedDate',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.midnight,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    'No renewals scheduled for this day',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       );
     }
+
+    var dayTotalMinor = 0;
+    final dayCurrency = subscriptions.first.amount.currencyCode;
+    for (final sub in subscriptions) {
+      dayTotalMinor += sub.amount.minorUnits;
+    }
+    final dayTotalMoney = Money(
+      minorUnits: dayTotalMinor,
+      currencyCode: dayCurrency,
+    );
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -645,12 +824,19 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.event_note_rounded,
-                size: 18,
-                color: AppColors.violet,
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFECE8FB),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.event_note_rounded,
+                  size: 16,
+                  color: AppColors.violet,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   'Due on $formattedDate',
@@ -667,10 +853,10 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  '${subscriptions.length} ${subscriptions.length == 1 ? "bill" : "bills"}',
+                  MoneyFormat.format(dayTotalMoney, l10n.localeName),
                   style: const TextStyle(
                     fontSize: 11,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                     color: AppColors.violet,
                   ),
                 ),
@@ -741,7 +927,9 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
                       Icon(
                         Icons.chevron_right_rounded,
                         size: 18,
-                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                        color: colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ],
                   ),

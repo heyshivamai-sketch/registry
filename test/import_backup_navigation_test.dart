@@ -317,7 +317,7 @@ class _Harness {
   }
 }
 
-class _PickGateway implements BackupFileGateway {
+class _PickGateway extends BackupFileGateway {
   _PickGateway(this.pick);
 
   final Uint8List? pick;

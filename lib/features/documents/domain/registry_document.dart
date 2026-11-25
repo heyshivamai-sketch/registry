@@ -85,6 +85,8 @@ class RegistryDocument {
 
   DateTime get displayActionDate => actionDate ?? expiryDate;
 
+  bool get hasExpiry => expiryDate.year < 2099;
+
   bool get hasDistinctActionDate {
     if (actionDate == null) {
       return false;
@@ -98,8 +100,16 @@ class RegistryDocument {
     return action != expiry;
   }
 
+  bool get hasImportantDates => hasDistinctActionDate || hasExpiry;
+
   bool get hasAttachment =>
       attachmentBytes != null && attachmentBytes!.isNotEmpty;
+
+  int get attachmentCount {
+    var count = hasAttachment ? 1 : 0;
+    count += additionalImages.where((image) => image.isNotEmpty).length;
+    return count;
+  }
 
   String get maskedDocumentNumber {
     final value = documentNumber?.trim() ?? '';

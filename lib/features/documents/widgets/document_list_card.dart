@@ -71,7 +71,7 @@ class DocumentListCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleSmall?.copyWith(fontSize: 13),
                           ),
-                          if (document.hasDistinctActionDate || document.expiryDate.year < 2099) ...[
+                          if (document.hasImportantDates) ...[
                             const SizedBox(height: 4),
                             Text(
                               document.hasDistinctActionDate
@@ -93,8 +93,24 @@ class DocumentListCard extends StatelessWidget {
                               ),
                               if (document.hasAttachment)
                                 Semantics(
-                                  label: l10n.hasAttachment,
-                                  child: Icon(Icons.attach_file_rounded, size: 16, color: colorScheme.primary),
+                                  label: l10n.attachmentCount(document.attachmentCount),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.attach_file_rounded, size: 16, color: colorScheme.primary),
+                                      if (document.attachmentCount > 1) ...[
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          '${document.attachmentCount}',
+                                          style: theme.textTheme.labelSmall?.copyWith(
+                                            color: colorScheme.primary,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
                                 ),
                             ],
                           ),

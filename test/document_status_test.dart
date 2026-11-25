@@ -10,14 +10,17 @@ import 'support/sample_document.dart';
 void main() {
   final now = DateTime(2026, 9, 18);
 
+  const unset = Object();
   RegistryDocument doc({
     DateTime? expiryDate,
-    DateTime? actionDate,
+    Object? actionDate = unset,
     DocumentImpact impact = DocumentImpact.high,
   }) {
     return sampleDocument(
       expiryDate: expiryDate ?? DateTime(2027, 11, 12),
-      actionDate: actionDate ?? DateTime(2027, 10, 12),
+      actionDate: identical(actionDate, unset)
+          ? DateTime(2027, 10, 12)
+          : actionDate as DateTime?,
       impact: impact,
     );
   }
@@ -92,7 +95,7 @@ void main() {
 
   test('Document remainingLabel uses localized remaining copy', () {
     final ar = lookupAppLocalizations(const Locale('ar'));
-    String label(int days) {
+    String? label(int days) {
       return DocumentStatus.remainingLabel(
         ar,
         doc(
@@ -107,5 +110,18 @@ void main() {
     expect(label(2), 'متبقي يومين');
     expect(label(5), 'متبقي 5 أيام');
     expect(label(55), 'متبقي 55 يومًا');
+  });
+
+  test('Document remainingLabel returns null when document has no important dates', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    final result = DocumentStatus.remainingLabel(
+      en,
+      doc(
+        expiryDate: DateTime.utc(2099, 12, 31),
+        actionDate: null,
+      ),
+      now: now,
+    );
+    expect(result, isNull);
   });
 }

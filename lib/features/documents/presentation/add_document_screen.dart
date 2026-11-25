@@ -1,11 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart'
+    show
+        CupertinoDatePicker,
+        CupertinoDatePickerMode,
+        CupertinoTextThemeData,
+        CupertinoTheme,
+        CupertinoThemeData;
 import 'package:flutter/material.dart';
 import 'package:the_registry/app/registry_dependencies.dart';
 import 'package:the_registry/features/entitlements/presentation/local_pro_screen.dart';
 import 'package:the_registry/features/entitlements/entitlement_copy.dart';
 import 'package:the_registry/features/entitlements/entitlement_policy.dart';
 import 'package:the_registry/app/theme/app_colors.dart';
+import 'package:the_registry/app/theme/app_radius.dart';
 import 'package:the_registry/app/theme/app_spacing.dart';
 import 'package:the_registry/core/widgets/registry_empty_state.dart';
 import 'package:the_registry/core/widgets/registry_form_field.dart';
@@ -25,11 +33,14 @@ import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/presentation/add_document_controller.dart';
 import 'package:the_registry/features/documents/presentation/document_copy.dart';
 import 'package:the_registry/features/documents/widgets/document_attachment_card.dart';
+import 'package:the_registry/features/documents/widgets/document_attachment_preview_page.dart';
 import 'package:the_registry/features/documents/widgets/document_date_field.dart';
 import 'package:the_registry/features/documents/widgets/document_digital_pass.dart';
 import 'package:the_registry/features/reminders/presentation/reminder_permission_note.dart';
 import 'package:the_registry/features/home/data/registry_date_formatter.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
+
+enum _AttachmentSourceChoice { cameraBack, cameraFront, gallery }
 
 class AddDocumentScreen extends StatefulWidget {
   const AddDocumentScreen({super.key, this.documentId});
@@ -54,6 +65,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
   final Map<String, TextEditingController> _dynamicInputs = {};
   bool _loaded = false;
   bool _missing = false;
+  bool _reachedReview = false;
 
   bool get _isEditing => widget.documentId != null;
 
@@ -116,7 +128,9 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
 
   void _flushEditors() {
     _controller.setName(_name.text);
-    _controller.setCategoryLabel(_category.text);
+    if (_category.text.trim().isNotEmpty) {
+      _controller.setCategoryLabel(_category.text);
+    }
     _controller.setOwnerName(_owner.text);
     _controller.setIssuingAuthority(_issuer.text);
     _controller.setDocumentNumber(_number.text);
@@ -266,7 +280,14 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         _controller.changeOcrSchema(selected);
         return;
       }
-      await _applySchema(selected);
+      final schema = AddDocumentController.schemaRegistry.byId(selected);
+      final targetCategory = selected == DocumentSchemaIds.genericOther
+          ? (_controller.category == DocumentCategory.passport ||
+                  _controller.category == DocumentCategory.idCard
+              ? DocumentCategory.other
+              : (_controller.category ?? DocumentCategory.other))
+          : schema.category;
+      await _applySchema(selected, category: targetCategory);
     }
   }
 
@@ -277,7 +298,11 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     if (schemaId == _controller.schemaId) {
       if (category != null) {
         _controller.setCategory(category);
+      } else if (_controller.category == null) {
+        final schema = AddDocumentController.schemaRegistry.byId(schemaId);
+        _controller.setCategory(schema.category);
       }
+      _syncTextControllers();
       return;
     }
     final l10n = AppLocalizations.of(context);
@@ -339,24 +364,32 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       case 'action':
         _controller.setActionDate(picked);
     }
+    if (_controller.hasDateErrors && mounted) {
+      final l10n = AppLocalizations.of(context);
+      _controller.validateDates(l10n);
+    }
   }
 
   Future<void> _pickImage({
     required bool fromCamera,
+    AppCameraLens lens = AppCameraLens.back,
     bool runOcr = false,
     bool additional = false,
+    int? replaceIndex,
   }) async {
     final deps = RegistryDependencies.of(context);
     final l10n = AppLocalizations.of(context);
     final result = fromCamera
-        ? await deps.imagePicker.pickFromCamera()
+        ? await deps.imagePicker.pickFromCamera(lens: lens)
         : await deps.imagePicker.pickFromGallery();
     if (!mounted) {
       return;
     }
     switch (result.status) {
       case ImagePickStatus.success:
-        if (additional) {
+        if (replaceIndex != null) {
+          _controller.replaceImage(replaceIndex, result.bytes!);
+        } else if (additional) {
           _controller.addImage(result.bytes!);
         } else {
           _controller.setAttachment(result.bytes);
@@ -378,9 +411,12 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     }
   }
 
-  Future<void> _replaceAttachment({bool runOcr = false}) async {
+  Future<void> _replaceAttachment({
+    bool runOcr = false,
+    int? replaceIndex,
+  }) async {
     final l10n = AppLocalizations.of(context);
-    final fromCamera = await showModalBottomSheet<bool>(
+    final choice = await showModalBottomSheet<_AttachmentSourceChoice>(
       context: context,
       showDragHandle: true,
       builder: (sheetContext) {
@@ -406,15 +442,23 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
               ),
               ListTile(
                 key: const ValueKey<String>('replace-source-camera'),
-                leading: const Icon(Icons.photo_camera_outlined),
-                title: Text(l10n.attachmentTakePhoto),
-                onTap: () => Navigator.of(sheetContext).pop(true),
+                leading: const Icon(Icons.camera_rear_outlined),
+                title: Text(l10n.cameraBackLabel),
+                subtitle: Text(l10n.cameraBackSubtitle),
+                onTap: () => Navigator.of(sheetContext).pop(_AttachmentSourceChoice.cameraBack),
+              ),
+              ListTile(
+                key: const ValueKey<String>('replace-source-camera-front'),
+                leading: const Icon(Icons.camera_front_outlined),
+                title: Text(l10n.cameraFrontLabel),
+                subtitle: Text(l10n.cameraFrontSubtitle),
+                onTap: () => Navigator.of(sheetContext).pop(_AttachmentSourceChoice.cameraFront),
               ),
               ListTile(
                 key: const ValueKey<String>('replace-source-gallery'),
                 leading: const Icon(Icons.photo_library_outlined),
                 title: Text(l10n.attachmentChooseGallery),
-                onTap: () => Navigator.of(sheetContext).pop(false),
+                onTap: () => Navigator.of(sheetContext).pop(_AttachmentSourceChoice.gallery),
               ),
               const SizedBox(height: AppSpacing.sm),
             ],
@@ -422,10 +466,30 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
         );
       },
     );
-    if (fromCamera == null || !mounted) {
+    if (choice == null || !mounted) {
       return;
     }
-    await _pickImage(fromCamera: fromCamera, runOcr: runOcr);
+    switch (choice) {
+      case _AttachmentSourceChoice.cameraBack:
+        await _pickImage(fromCamera: true, lens: AppCameraLens.back, runOcr: runOcr, replaceIndex: replaceIndex);
+      case _AttachmentSourceChoice.cameraFront:
+        await _pickImage(fromCamera: true, lens: AppCameraLens.front, runOcr: runOcr, replaceIndex: replaceIndex);
+      case _AttachmentSourceChoice.gallery:
+        await _pickImage(fromCamera: false, runOcr: runOcr, replaceIndex: replaceIndex);
+    }
+  }
+
+  void _openPreview(int pageIndex) {
+    if (_controller.attachmentBytes == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => DocumentAttachmentPreviewPage(
+          bytes: _controller.attachmentBytes!,
+          additionalImages: _controller.additionalImages,
+          initialIndex: pageIndex,
+        ),
+      ),
+    );
   }
 
   void _toggleReminder(ReminderPreference preference) {
@@ -474,6 +538,39 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     }
   }
 
+  Future<void> _handleRescan() async {
+    final l10n = AppLocalizations.of(context);
+    final hasData = _controller.isDirty ||
+        _controller.name.trim().isNotEmpty ||
+        _controller.hasAttachment;
+    if (hasData) {
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Text(l10n.rescanConfirmTitle),
+            content: Text(l10n.rescanConfirmMessage),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(l10n.cancel),
+              ),
+              TextButton(
+                key: const ValueKey<String>('rescan-confirm'),
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(l10n.rescanConfirmAction),
+              ),
+            ],
+          );
+        },
+      );
+      if (confirm != true || !mounted) {
+        return;
+      }
+    }
+    _controller.goToStep(AddDocumentStep.source);
+  }
+
   void _showSaveMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -510,6 +607,9 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
     return ListenableBuilder(
       listenable: _controller,
       builder: (context, _) {
+        if (_controller.step == AddDocumentStep.review) {
+          _reachedReview = true;
+        }
         _syncDynamicControllers();
         final viewInsets = MediaQuery.viewInsetsOf(context).bottom;
         return PopScope(
@@ -519,6 +619,13 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
               return;
             }
             if (_dismissKeyboardIfOpen()) {
+              return;
+            }
+            if (_reachedReview &&
+                _controller.step == AddDocumentStep.source &&
+                _controller.ocrStatus != OcrUiStatus.review) {
+              _controller.goToStep(AddDocumentStep.review);
+              _syncTextControllers();
               return;
             }
             _confirmDiscard();
@@ -533,7 +640,7 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                   Text(
                     (_controller.ocrStatus == OcrUiStatus.review
                         ? l10n.ocrOnDeviceEyebrow
-                        : l10n.guidedSetup),
+                        : ''),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.tertiary,
                       letterSpacing: 0.4,
@@ -586,12 +693,18 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
             bottomNavigationBar: _ActionBar(
               controller: _controller,
               isEditing: _isEditing,
+              reachedReview: _reachedReview,
               onBack: () {
                 if (_dismissKeyboardIfOpen()) {
                   return;
                 }
                 if (_controller.step == AddDocumentStep.source &&
                     _controller.ocrStatus != OcrUiStatus.review) {
+                  if (_reachedReview) {
+                    _controller.goToStep(AddDocumentStep.review);
+                    _syncTextControllers();
+                    return;
+                  }
                   if (_controller.isDirty) {
                     _confirmDiscard();
                   } else {
@@ -610,6 +723,12 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                 _flushEditors();
                 if (_controller.step == AddDocumentStep.review) {
                   _save();
+                  return;
+                }
+                if (_reachedReview &&
+                    _controller.step == AddDocumentStep.source) {
+                  _controller.goToStep(AddDocumentStep.review);
+                  _syncTextControllers();
                   return;
                 }
                 _controller.continueStep(l10n);
@@ -639,15 +758,24 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       AddDocumentStep.source => _SourceStep(
         controller: _controller,
         onManual: () {
+          if (_reachedReview) {
+            _controller.goToStep(AddDocumentStep.review);
+            _syncTextControllers();
+            return;
+          }
           _controller.goToStep(AddDocumentStep.identity);
           _controller.upsertUnboundSchemaValues();
           _syncDynamicControllers();
         },
-        onTakePhoto: () => _pickImage(fromCamera: true, runOcr: false),
-        onAddPhoto: () => _pickImage(fromCamera: true, additional: true),
+        onTakePhoto: () => _pickImage(fromCamera: true, lens: AppCameraLens.back, runOcr: false),
+        onTakePhotoFront: () => _pickImage(fromCamera: true, lens: AppCameraLens.front, runOcr: false),
+        onAddPhoto: () => _pickImage(fromCamera: true, lens: AppCameraLens.back, additional: true),
+        onAddPhotoFront: () => _pickImage(fromCamera: true, lens: AppCameraLens.front, additional: true),
         onAddGallery: () => _pickImage(fromCamera: false, additional: true),
         onChooseGallery: () => _pickImage(fromCamera: false),
         onReplace: () => _replaceAttachment(runOcr: false),
+        onReplaceAdditional: (index) => _replaceAttachment(runOcr: false, replaceIndex: index),
+        onPreview: _openPreview,
         onScanAgain: () async {
           final deps = RegistryDependencies.of(context);
           if (deps.documentOcr.isAvailable) {
@@ -702,7 +830,12 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       ),
       AddDocumentStep.review => _ReviewStep(
         controller: _controller,
-        onJump: _controller.goToStep,
+        onJump: (step) {
+          _flushEditors();
+          _controller.goToStep(step);
+          _syncTextControllers();
+        },
+        onRescan: _handleRescan,
       ),
     };
   }
@@ -734,10 +867,12 @@ class _ActionBar extends StatelessWidget {
     required this.isEditing,
     required this.onBack,
     required this.onContinue,
+    this.reachedReview = false,
   });
 
   final AddDocumentController controller;
   final bool isEditing;
+  final bool reachedReview;
   final VoidCallback onBack;
   final VoidCallback onContinue;
 
@@ -748,7 +883,7 @@ class _ActionBar extends StatelessWidget {
     final reviewing = controller.ocrStatus == OcrUiStatus.review;
     final onReview = controller.step == AddDocumentStep.review && !reviewing;
     final showBack =
-        !reviewing && (controller.canGoBack || controller.stepIndex > 0);
+        !reviewing && (controller.canGoBack || controller.stepIndex > 0 || reachedReview);
     final continueLabel = reviewing
         ? l10n.ocrConfirmContinue
         : onReview
@@ -756,8 +891,23 @@ class _ActionBar extends StatelessWidget {
         : l10n.wizardContinue;
     final scheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: scheme.surface,
+    return Container(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: 0.6),
+            width: 1.1,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: scheme.shadow.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -822,18 +972,26 @@ class _SourceStep extends StatelessWidget {
     required this.onAddGallery,
     required this.onRemove,
     required this.onRetry,
+    this.onTakePhotoFront,
+    this.onAddPhotoFront,
+    this.onReplaceAdditional,
+    this.onPreview,
   });
 
   final AddDocumentController controller;
   final VoidCallback onManual;
   final VoidCallback onTakePhoto;
+  final VoidCallback? onTakePhotoFront;
   final VoidCallback onChooseGallery;
   final VoidCallback onReplace;
+  final ValueChanged<int>? onReplaceAdditional;
   final VoidCallback onScanAgain;
   final VoidCallback onAddPhoto;
+  final VoidCallback? onAddPhotoFront;
   final VoidCallback onAddGallery;
   final VoidCallback onRemove;
   final VoidCallback onRetry;
+  final ValueChanged<int>? onPreview;
 
   @override
   Widget build(BuildContext context) {
@@ -880,22 +1038,37 @@ class _SourceStep extends StatelessWidget {
             title: l10n.scanDocumentTitle,
             subtitle: l10n.scanDocumentSubtitle,
             badge: l10n.scanDocumentRecommended,
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: RegistrySecondaryButton(
-                    key: const ValueKey<String>('attach-camera'),
-                    label: l10n.attachmentTakePhoto,
-                    onPressed: onTakePhoto,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RegistrySecondaryButton(
+                        key: const ValueKey<String>('attach-camera'),
+                        label: l10n.cameraBackLabel,
+                        icon: Icons.camera_rear_outlined,
+                        onPressed: onTakePhoto,
+                      ),
+                    ),
+                    if (onTakePhotoFront != null) ...[
+                      const SizedBox(width: AppSpacing.xs),
+                      Expanded(
+                        child: RegistrySecondaryButton(
+                          key: const ValueKey<String>('attach-camera-front'),
+                          label: l10n.cameraFrontLabel,
+                          icon: Icons.camera_front_outlined,
+                          onPressed: onTakePhotoFront,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: RegistrySecondaryButton(
-                    key: const ValueKey<String>('attach-gallery'),
-                    label: l10n.attachmentChooseGallery,
-                    onPressed: onChooseGallery,
-                  ),
+                const SizedBox(height: AppSpacing.xs),
+                RegistrySecondaryButton(
+                  key: const ValueKey<String>('attach-gallery'),
+                  label: l10n.attachmentChooseGallery,
+                  onPressed: onChooseGallery,
                 ),
               ],
             ),
@@ -946,9 +1119,11 @@ class _SourceStep extends StatelessWidget {
                 ? l10n.attachmentSectionTitle
                 : 'Front side',
             onTakePhoto: onTakePhoto,
+            onTakePhotoFront: onTakePhotoFront,
             onChooseGallery: onChooseGallery,
             onReplace: onReplace,
             onRemove: onRemove,
+            onPreview: onPreview != null ? () => onPreview!(0) : null,
           ),
           for (var i = 0; i < controller.additionalImages.length; i++) ...[
             const SizedBox(height: AppSpacing.md),
@@ -957,9 +1132,13 @@ class _SourceStep extends StatelessWidget {
               badgeLabel: i == 0 ? 'Back side' : 'Page ${i + 2}',
               isSecondary: true,
               onTakePhoto: onAddPhoto,
+              onTakePhotoFront: onAddPhotoFront,
               onChooseGallery: onAddGallery,
-              onReplace: null,
+              onReplace: onReplaceAdditional != null
+                  ? () => onReplaceAdditional!(i)
+                  : null,
               onRemove: () => controller.removeImage(i),
+              onPreview: onPreview != null ? () => onPreview!(i + 1) : null,
             ),
           ],
           if (controller.additionalImages.length < 5) ...[
@@ -1017,20 +1196,34 @@ class _SourceStep extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _BackSidePill(
-                          icon: Icons.photo_camera_outlined,
-                          label: l10n.attachmentTakePhoto,
+                          key: const ValueKey<String>('add-photo-back'),
+                          icon: Icons.camera_rear_outlined,
+                          label: l10n.cameraBackLabel,
                           onPressed: onAddPhoto,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _BackSidePill(
-                          icon: Icons.add_photo_alternate_outlined,
-                          label: l10n.attachmentChooseGallery,
-                          onPressed: onAddGallery,
+                      if (onAddPhotoFront != null) ...[
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _BackSidePill(
+                            key: const ValueKey<String>('add-photo-front'),
+                            icon: Icons.camera_front_outlined,
+                            label: l10n.cameraFrontLabel,
+                            onPressed: onAddPhotoFront!,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: _BackSidePill(
+                      key: const ValueKey<String>('add-photo-gallery'),
+                      icon: Icons.add_photo_alternate_outlined,
+                      label: l10n.attachmentChooseGallery,
+                      onPressed: onAddGallery,
+                    ),
                   ),
                 ],
               ),
@@ -1196,6 +1389,7 @@ class _BackSidePill extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onPressed,
+    super.key,
   });
 
   final IconData icon;
@@ -1268,34 +1462,44 @@ class _WizardIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            DecoratedBox(
+            Container(
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFEDEAFF),
+                color: const Color(0xFFECE8FB),
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: AppColors.violet.withValues(alpha: 0.15),
+                ),
               ),
-              child: SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(icon, color: theme.colorScheme.tertiary, size: 22),
-              ),
+              child: Icon(icon, color: AppColors.violet, size: 22),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
           ],
           Text(
             title,
             style: theme.textTheme.titleLarge?.copyWith(
               fontSize: 22,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.4,
+              color: AppColors.midnight,
             ),
           ),
           const SizedBox(height: 6),
-          Text(body, style: theme.textTheme.bodyMedium),
+          Text(
+            body,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.45,
+            ),
+          ),
         ],
       ),
     );
@@ -1413,7 +1617,9 @@ class _IdentityStep extends StatelessWidget {
       onLabelChanged: field.isCustom
           ? (value) => controller.setDynamicFieldLabel(field.id, value)
           : null,
-      onToggleSensitive: () => controller.toggleDynamicFieldSensitive(field.id),
+      onToggleSensitive: field.canBeSensitive
+          ? () => controller.toggleDynamicFieldSensitive(field.id)
+          : null,
       onRemove: field.isCustom
           ? () => controller.removeDynamicField(field.id)
           : null,
@@ -1458,6 +1664,8 @@ class _IdentityStep extends StatelessWidget {
                   : DocumentCopy.category(l10n, controller.category!)),
           empty:
               controller.category == null && controller.categoryLabel.isEmpty,
+          requiredField: true,
+          errorText: controller.categoryError,
           placeholder: l10n.chooseOption,
           onTap: onPickCategory,
         ),
@@ -1526,18 +1734,27 @@ class _IdentityStep extends StatelessWidget {
                 onChanged: controller.setIssuingAuthority,
               ),
               for (final field in controller.optionalDynamicFields)
-                if (field.value.trim().isNotEmpty ||
-                    field.isCustom ||
-                    (!controller.hasAttachment && !controller.ocrConfirmed)) ...[
+                if (!field.isCustom &&
+                    (field.value.trim().isNotEmpty ||
+                     (!controller.hasAttachment && !controller.ocrConfirmed))) ...[
                   const SizedBox(height: AppSpacing.md),
                   _editorFor(field),
                 ],
-              const SizedBox(height: AppSpacing.md),
-              RegistrySecondaryButton(
-                key: const ValueKey<String>('add-custom-field'),
-                label: l10n.addCustomField,
-                onPressed: () => controller.addCustomField(),
-              ),
+              if (controller.customFields.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.md),
+                _CustomFieldBlock(
+                  controller: controller,
+                  dynamicInputs: dynamicInputs,
+                ),
+              ],
+              if (controller.customFields.isEmpty) ...[
+                const SizedBox(height: AppSpacing.md),
+                RegistrySecondaryButton(
+                  key: const ValueKey<String>('add-custom-field'),
+                  label: l10n.addCustomField,
+                  onPressed: () => controller.addCustomField(),
+                ),
+              ],
             ],
           ),
         ),
@@ -1605,13 +1822,113 @@ class _SelectedTypeTile extends StatelessWidget {
   }
 }
 
+Future<DateTime?> showCupertinoRegistryDatePicker({
+  required BuildContext context,
+  required String label,
+  DateTime? initialDate,
+  bool isDob = false,
+}) async {
+  final l10n = AppLocalizations.of(context);
+  final theme = Theme.of(context);
+  final now = DateTime.now();
+
+  final maxDate = isDob
+      ? DateTime(now.year, now.month, now.day, 23, 59, 59)
+      : DateTime(now.year + 50, 12, 31);
+  final minDate = DateTime(1900, 1, 1);
+
+  DateTime initial = initialDate ??
+      (isDob
+          ? DateTime(now.year - 25, 1, 1)
+          : DateTime(now.year, now.month, now.day));
+
+  if (initial.isAfter(maxDate)) initial = maxDate;
+  if (initial.isBefore(minDate)) initial = minDate;
+
+  DateTime selectedDate = initial;
+
+  return showModalBottomSheet<DateTime>(
+    context: context,
+    backgroundColor: theme.colorScheme.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+    ),
+    builder: (sheetContext) {
+      return SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 320,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(sheetContext).pop(),
+                      child: Text(l10n.backupCancel),
+                    ),
+                    Expanded(
+                      child: Text(
+                        label,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () =>
+                          Navigator.of(sheetContext).pop(selectedDate),
+                      child: Text(l10n.chooseOption),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: CupertinoTheme(
+                  data: CupertinoThemeData(
+                    brightness: theme.brightness,
+                    textTheme: CupertinoTextThemeData(
+                      dateTimePickerTextStyle:
+                          theme.textTheme.titleLarge?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: initial,
+                    minimumDate: minDate,
+                    maximumDate: maxDate,
+                    onDateTimeChanged: (newDate) {
+                      selectedDate = newDate;
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 class _DynamicFieldEditor extends StatefulWidget {
   const _DynamicFieldEditor({
     super.key,
     required this.field,
     required this.controller,
     required this.onChanged,
-    required this.onToggleSensitive,
+    this.onToggleSensitive,
     this.onLabelChanged,
     this.onRemove,
   });
@@ -1619,7 +1936,7 @@ class _DynamicFieldEditor extends StatefulWidget {
   final DocumentFieldValue field;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final VoidCallback onToggleSensitive;
+  final VoidCallback? onToggleSensitive;
   final ValueChanged<String>? onLabelChanged;
   final VoidCallback? onRemove;
 
@@ -1656,10 +1973,39 @@ class _DynamicFieldEditorState extends State<_DynamicFieldEditor> {
     super.dispose();
   }
 
+  Future<void> _pickDate(BuildContext context) async {
+    final field = widget.field;
+    final l10n = AppLocalizations.of(context);
+    final isDob = field.fieldKey == DocumentFieldKeys.dateOfBirth ||
+        field.id == DocumentFieldKeys.dateOfBirth ||
+        field.id == 'dob' ||
+        (field.customLabel?.toLowerCase().contains('birth') == true) ||
+        (field.customLabel?.toLowerCase() == 'dob');
+
+    final parsed =
+        AddDocumentController.tryParseLooseDate(widget.controller.text);
+
+    final picked = await showCupertinoRegistryDatePicker(
+      context: context,
+      label: DocumentCopy.fieldLabel(l10n, field),
+      initialDate: parsed,
+      isDob: isDob,
+    );
+
+    if (picked != null) {
+      final formatted =
+          '${picked.day.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.year.toString().padLeft(4, '0')}';
+      widget.controller.text = formatted;
+      widget.onChanged(formatted);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final field = widget.field;
+    final canToggle = widget.onToggleSensitive != null && field.canBeSensitive && !field.isCustom;
+    final isObscured = canToggle && field.sensitive && !field.isCustom;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -1677,20 +2023,31 @@ class _DynamicFieldEditorState extends State<_DynamicFieldEditor> {
           label: DocumentCopy.fieldLabel(l10n, field),
           fieldKey: ValueKey<String>('dynamic-${field.id}'),
           controller: widget.controller,
-          obscureText: field.sensitive,
+          obscureText: isObscured,
+          readOnly: field.isDate,
+          onTap: field.isDate ? () => _pickDate(context) : null,
           keyboardType: field.isDate
               ? TextInputType.datetime
               : TextInputType.text,
-          maxLines: field.isDate || field.sensitive ? 1 : null,
-          suffixIcon: IconButton(
-            tooltip: l10n.markFieldSensitive,
-            onPressed: widget.onToggleSensitive,
-            icon: Icon(
-              field.sensitive
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-            ),
-          ),
+          maxLines: field.isDate || isObscured ? 1 : null,
+          suffixIcon: field.isDate
+              ? IconButton(
+                  key: ValueKey<String>('date-picker-${field.id}'),
+                  tooltip: l10n.selectDate,
+                  onPressed: () => _pickDate(context),
+                  icon: const Icon(Icons.calendar_month_outlined),
+                )
+              : (canToggle
+                  ? IconButton(
+                      tooltip: l10n.markFieldSensitive,
+                      onPressed: widget.onToggleSensitive,
+                      icon: Icon(
+                        field.sensitive
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                    )
+                  : null),
           onChanged: widget.onChanged,
         ),
         if (widget.onRemove != null)
@@ -1703,6 +2060,132 @@ class _DynamicFieldEditorState extends State<_DynamicFieldEditor> {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _CustomFieldBlock extends StatefulWidget {
+  const _CustomFieldBlock({
+    super.key,
+    required this.controller,
+    required this.dynamicInputs,
+  });
+
+  final AddDocumentController controller;
+  final Map<String, TextEditingController> dynamicInputs;
+
+  @override
+  State<_CustomFieldBlock> createState() => _CustomFieldBlockState();
+}
+
+class _CustomFieldBlockState extends State<_CustomFieldBlock> {
+  TextEditingController? _labelController;
+  final FocusNode _labelFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    final first = widget.controller.customFields.firstOrNull;
+    _labelController = TextEditingController(text: first?.customLabel ?? '');
+  }
+
+  @override
+  void didUpdateWidget(covariant _CustomFieldBlock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final first = widget.controller.customFields.firstOrNull;
+    final next = first?.customLabel ?? '';
+    final controller = _labelController;
+    if (controller != null && !_labelFocus.hasFocus && controller.text != next) {
+      controller.text = next;
+    }
+  }
+
+  @override
+  void dispose() {
+    _labelController?.dispose();
+    _labelFocus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final customFields = widget.controller.customFields;
+    if (customFields.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final firstField = customFields.first;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAF9FD),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.8),
+          width: 1.1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          RegistryTextField(
+            label: l10n.customFieldLabel,
+            fieldKey: ValueKey<String>('custom-label-${firstField.id}'),
+            controller: _labelController,
+            focusNode: _labelFocus,
+            onChanged: widget.controller.setCustomFieldLabel,
+          ),
+          for (var i = 0; i < customFields.length; i++) ...[
+            const SizedBox(height: AppSpacing.sm),
+            RegistryTextField(
+              label: i == 0
+                  ? l10n.customFieldValue
+                  : '${l10n.customFieldValue} ${i + 1}',
+              fieldKey: ValueKey<String>('dynamic-${customFields[i].id}'),
+              controller: widget.dynamicInputs[customFields[i].id] ??
+                  TextEditingController(text: customFields[i].value),
+              obscureText: false,
+              suffixIcon: i > 0
+                  ? IconButton(
+                      key: ValueKey<String>('remove-value-$i'),
+                      tooltip: l10n.removeCustomField,
+                      icon: const Icon(Icons.close_rounded, size: 20),
+                      onPressed: () => widget.controller.removeCustomValue(i),
+                    )
+                  : null,
+              onChanged: (value) =>
+                  widget.controller.setDynamicFieldValue(customFields[i].id, value),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            children: [
+              if (customFields.length < 5) ...[
+                TextButton.icon(
+                  key: const ValueKey<String>('add-custom-value'),
+                  icon: const Icon(Icons.add_rounded, size: 18),
+                  label: Text(l10n.addCustomValue),
+                  onPressed: widget.controller.addCustomValue,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+              ],
+              TextButton(
+                key: ValueKey<String>('remove-custom-${firstField.id}'),
+                onPressed: () {
+                  if (customFields.length > 1) {
+                    widget.controller.removeCustomValue(customFields.length - 1);
+                  } else {
+                    widget.controller.removeCustomField();
+                  }
+                },
+                child: Text(l10n.removeCustomField),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1725,7 +2208,11 @@ class _DatesStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _WizardIntro(title: l10n.sectionImportantDates, body: l10n.datesIntro),
+        _WizardIntro(
+          icon: Icons.calendar_month_rounded,
+          title: l10n.sectionImportantDates,
+          body: l10n.datesIntro,
+        ),
         if (showIssue) ...[
           DocumentDateField(
             fieldId: 'issue',
@@ -1848,7 +2335,11 @@ class _RenewalStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _WizardIntro(title: l10n.stepRenewalTitle, body: l10n.planningIntro),
+        _WizardIntro(
+          icon: Icons.autorenew_rounded,
+          title: l10n.stepRenewalTitle,
+          body: l10n.planningIntro,
+        ),
         RegistrySurface(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
@@ -1993,8 +2484,17 @@ class _RenewalStep extends StatelessWidget {
                 icon: Icons.notifications_outlined,
                 title: l10n.sectionReminders,
                 subtitle: l10n.remindersHelper,
+                actionLabel: l10n.remindersMultiSelectBadge,
               ),
               const SizedBox(height: AppSpacing.sm),
+              Text(
+                l10n.remindersSelectAllThatApply,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
               Wrap(
                 key: const ValueKey<String>('reminder-chips'),
                 spacing: AppSpacing.xs,
@@ -2003,6 +2503,7 @@ class _RenewalStep extends StatelessWidget {
                   RegistrySelectableChip(
                     key: const ValueKey<String>('reminder-action'),
                     label: l10n.reminderOnActionDate,
+                    isMultiSelect: true,
                     selected: controller.reminders.contains(
                       ReminderPreference.onActionDate,
                     ),
@@ -2012,6 +2513,7 @@ class _RenewalStep extends StatelessWidget {
                   RegistrySelectableChip(
                     key: const ValueKey<String>('reminder-7'),
                     label: l10n.reminder7Days,
+                    isMultiSelect: true,
                     selected: controller.reminders.contains(
                       ReminderPreference.sevenDaysBefore,
                     ),
@@ -2021,6 +2523,7 @@ class _RenewalStep extends StatelessWidget {
                   RegistrySelectableChip(
                     key: const ValueKey<String>('reminder-30'),
                     label: l10n.reminder30Days,
+                    isMultiSelect: true,
                     selected: controller.reminders.contains(
                       ReminderPreference.thirtyDaysBefore,
                     ),
@@ -2058,10 +2561,15 @@ class _RenewalStep extends StatelessWidget {
 }
 
 class _ReviewStep extends StatelessWidget {
-  const _ReviewStep({required this.controller, required this.onJump});
+  const _ReviewStep({
+    required this.controller,
+    required this.onJump,
+    required this.onRescan,
+  });
 
   final AddDocumentController controller;
   final ValueChanged<AddDocumentStep> onJump;
+  final VoidCallback onRescan;
 
   @override
   Widget build(BuildContext context) {
@@ -2164,7 +2672,7 @@ class _ReviewStep extends StatelessWidget {
               _ReviewRow(
                 label: l10n.attachmentSectionTitle,
                 value: controller.hasAttachment
-                    ? l10n.reviewAttachmentYes
+                    ? l10n.attachmentCount(controller.attachmentCount)
                     : l10n.reviewAttachmentNo,
               ),
               _ReviewRow(
@@ -2184,11 +2692,6 @@ class _ReviewStep extends StatelessWidget {
           runSpacing: AppSpacing.xs,
           children: [
             TextButton(
-              key: const ValueKey<String>('review-jump-scan'),
-              onPressed: () => onJump(AddDocumentStep.source),
-              child: Text(l10n.reviewJumpScan),
-            ),
-            TextButton(
               key: const ValueKey<String>('review-jump-identity'),
               onPressed: () => onJump(AddDocumentStep.identity),
               child: Text(l10n.reviewJumpIdentity),
@@ -2204,6 +2707,33 @@ class _ReviewStep extends StatelessWidget {
               child: Text(l10n.reviewJumpRenewal),
             ),
           ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: OutlinedButton.icon(
+            key: const ValueKey<String>('review-jump-scan'),
+            onPressed: onRescan,
+            icon: const Icon(Icons.document_scanner_outlined, size: 18),
+            label: Text(
+              controller.hasAttachment
+                  ? l10n.rescanDocument
+                  : l10n.scanDocumentTitle,
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -2540,6 +3070,39 @@ class _OcrFieldCardState extends State<_OcrFieldCard> {
     );
   }
 
+  Future<void> _pickDate(BuildContext context) async {
+    final field = widget.field;
+    final l10n = AppLocalizations.of(context);
+    final isDob = field.fieldKey == DocumentFieldKeys.dateOfBirth ||
+        field.id == DocumentFieldKeys.dateOfBirth ||
+        field.id == 'dob' ||
+        (field.customLabel?.toLowerCase().contains('birth') == true) ||
+        (field.customLabel?.toLowerCase() == 'dob');
+
+    final parsed =
+        AddDocumentController.tryParseLooseDate(_controller.text);
+
+    final label = field.isCustom
+        ? (field.customLabel?.trim().isNotEmpty == true
+            ? field.customLabel!
+            : l10n.customFieldValue)
+        : DocumentCopy.schemaFieldLabel(l10n, field.fieldKey);
+
+    final picked = await showCupertinoRegistryDatePicker(
+      context: context,
+      label: label,
+      initialDate: parsed,
+      isDob: isDob,
+    );
+
+    if (picked != null) {
+      final formatted =
+          '${picked.day.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.year.toString().padLeft(4, '0')}';
+      _controller.text = formatted;
+      widget.onChanged(formatted);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -2561,6 +3124,10 @@ class _OcrFieldCardState extends State<_OcrFieldCard> {
       label: status,
       review: field.confidence == OcrConfidence.review,
     );
+    final canBeSensitive =
+        !DocumentFieldKeys.isNeverSensitive(field.fieldKey, field.customLabel) &&
+        !DocumentFieldKeys.isNeverSensitive(field.id, field.customLabel);
+    final showSensitive = field.sensitive && canBeSensitive;
     return Semantics(
       label: '$label. $status',
       child: RegistryTextField(
@@ -2568,7 +3135,9 @@ class _OcrFieldCardState extends State<_OcrFieldCard> {
         fieldKey: ValueKey<String>('ocr-field-${field.id}'),
         controller: _controller,
         focusNode: _focus,
-        obscureText: field.sensitive && !_revealSensitive,
+        obscureText: showSensitive && !_revealSensitive,
+        readOnly: field.isDate,
+        onTap: field.isDate ? () => _pickDate(context) : null,
         keyboardType: field.isDate
             ? TextInputType.datetime
             : TextInputType.text,
@@ -2576,7 +3145,7 @@ class _OcrFieldCardState extends State<_OcrFieldCard> {
           minWidth: 24,
           minHeight: AppSpacing.minTapTarget,
         ),
-        suffixIcon: inlineChip || field.sensitive
+        suffixIcon: inlineChip || showSensitive || field.isDate
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -2585,7 +3154,14 @@ class _OcrFieldCardState extends State<_OcrFieldCard> {
                       padding: const EdgeInsetsDirectional.only(end: 10),
                       child: chip,
                     ),
-                  if (field.sensitive)
+                  if (field.isDate)
+                    IconButton(
+                      key: ValueKey<String>('ocr-date-picker-${field.id}'),
+                      tooltip: l10n.selectDate,
+                      onPressed: () => _pickDate(context),
+                      icon: const Icon(Icons.calendar_month_outlined),
+                    ),
+                  if (showSensitive)
                     IconButton(
                       tooltip: _revealSensitive
                           ? l10n.hideDocumentNumber

@@ -278,6 +278,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get statusUrgent => 'Action requise';
 
   @override
+  String get statusExpiringSoon => 'Expire bientôt';
+
+  @override
   String get statusUpcoming => 'À venir';
 
   @override
@@ -397,10 +400,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String get attachmentSectionTitle => 'Pièce jointe';
 
   @override
+  String attachmentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count documents',
+      one: '1 document',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get attachmentEmptyLabel => 'Ajoutez une photo de ce document';
 
   @override
   String get attachmentTakePhoto => 'Prendre une photo';
+
+  @override
+  String get cameraBackLabel => 'Caméra arrière';
+
+  @override
+  String get cameraBackSubtitle => 'Recommandé pour les documents';
+
+  @override
+  String get cameraFrontLabel => 'Caméra avant';
+
+  @override
+  String get cameraFrontSubtitle => 'Pour les documents tenus en main';
+
+  @override
+  String get attachmentRetake => 'Reprendre';
+
+  @override
+  String get attachmentPreviewTooltip => 'Aperçu de l\'image';
 
   @override
   String get attachmentChooseGallery => 'Galerie';
@@ -495,7 +527,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fieldNotes => 'Notes';
 
   @override
-  String get sectionReminders => 'Préférence de rappel';
+  String get sectionReminders => 'Préférences de rappel';
+
+  @override
+  String get remindersMultiSelectBadge => 'Choix multiples';
+
+  @override
+  String get remindersSelectAllThatApply =>
+      'Sélectionnez toutes les options applicables :';
 
   @override
   String get remindersHelper =>
@@ -535,6 +574,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorIssueAfterExpiry =>
       'La date d’émission ne peut pas être postérieure à la date d’expiration.';
+
+  @override
+  String get errorActionBeforeIssue =>
+      'La date de début de renouvellement ne peut pas être antérieure à la date d’émission.';
 
   @override
   String get errorActionAfterExpiry =>
@@ -944,7 +987,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get customFieldValue => 'Valeur';
 
   @override
-  String get removeCustomField => 'Supprimer le champ';
+  String get addCustomValue => 'Ajouter une valeur';
+
+  @override
+  String get removeCustomField => 'Supprimer';
 
   @override
   String get markFieldSensitive =>
@@ -961,6 +1007,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reviewJumpScan => 'Modifier le scan';
+
+  @override
+  String get rescanDocument => 'Rescanner le document';
+
+  @override
+  String get rescanConfirmTitle => 'Rescanner le document ?';
+
+  @override
+  String get rescanConfirmMessage =>
+      'Lancer un nouveau scan remplacera les détails saisis. Voulez-vous vraiment recommencer ?';
+
+  @override
+  String get rescanConfirmAction => 'Rescanner';
+
+  @override
+  String get cancel => 'Annuler';
 
   @override
   String get reviewAttachmentYes => 'Photo jointe';
@@ -1946,6 +2008,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backupExportSaved => 'Sauvegarde enregistrée.';
 
   @override
+  String get backupExportSuccessHint =>
+      'Ce fichier de sauvegarde (.rgry) est chiffré pour votre sécurité et ne peut pas être ouvert directement dans des lecteurs de PDF ou de documents. Pour afficher ou restaurer vos données, utilisez Importer une sauvegarde dans Regiday.';
+
+  @override
+  String get backupOpenImportAction => 'Aller à Importer une sauvegarde';
+
+  @override
+  String get backupFormatNotice =>
+      'Les fichiers de sauvegarde (.rgry) sont chiffrés et ne peuvent être ouverts ou restaurés que dans Regiday.';
+
+  @override
   String get backupExportCancelled =>
       'Exportation annulée. Aucun fichier de sauvegarde n’a été enregistré.';
 
@@ -2459,6 +2532,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get connectGmailButton => 'Connecter Gmail';
+
+  @override
+  String get connectFromGmail => 'Connecter depuis Gmail';
 
   @override
   String get disconnectGmailButton => 'Déconnecter';

@@ -33,12 +33,13 @@ import java.util.concurrent.Executors
  * Opening a backup reads at most the caller's limit plus one byte. It does not copy the
  * provider file into cache and does not trust the size the provider reports.
  */
-class BackupFileBridge : FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener {
+class BackupFileBridge : FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener, PluginRegistry.NewIntentListener {
     private var channel: MethodChannel? = null
     private var activityBinding: ActivityPluginBinding? = null
     private var pending: MethodChannel.Result? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private val io: ExecutorService = Executors.newSingleThreadExecutor()
+    private var pendingOpenedBackup: Map<String, Any?>? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, CHANNEL)
@@ -54,28 +55,89 @@ class BackupFileBridge : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRe
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activityBinding = binding
         binding.addActivityResultListener(this)
+        binding.addOnNewIntentListener(this)
+        handleIntent(binding.activity.intent)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
         activityBinding?.removeActivityResultListener(this)
+        activityBinding?.removeOnNewIntentListener(this)
         activityBinding = null
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         activityBinding = binding
         binding.addActivityResultListener(this)
+        binding.addOnNewIntentListener(this)
     }
 
     override fun onDetachedFromActivity() {
         activityBinding?.removeActivityResultListener(this)
+        activityBinding?.removeOnNewIntentListener(this)
         activityBinding = null
         replyError("write_failed", "The file dialog closed before the backup was saved.")
+    }
+
+    override fun onNewIntent(intent: Intent): Boolean {
+        handleIntent(intent)
+        return false
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent == null || intent.action != Intent.ACTION_VIEW) {
+            return
+        }
+        val uri = intent.data ?: return
+        val activity = activityBinding?.activity ?: return
+        io.execute {
+            try {
+                val bytes = activity.contentResolver.openInputStream(uri)?.use { input ->
+                    BackupStreams.readAtMost(input, MAX_ACCEPTED_BYTES)
+                }
+                if (bytes != null && bytes.isNotEmpty()) {
+                    val name = queryFileName(activity.contentResolver, uri) ?: "backup.rgry"
+                    val payload = mapOf<String, Any?>(
+                        "name" to name,
+                        "bytes" to bytes,
+                    )
+                    mainHandler.post {
+                        val ch = channel
+                        if (ch != null) {
+                            ch.invokeMethod("onBackupOpened", payload)
+                        } else {
+                            pendingOpenedBackup = payload
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+    }
+
+    private fun queryFileName(resolver: ContentResolver, uri: Uri): String? {
+        if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            try {
+                resolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val index = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                        if (index >= 0) {
+                            return cursor.getString(index)
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+        return uri.lastPathSegment
     }
 
     private fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "save" -> startSave(call, result)
             "pick" -> startPick(call, result)
+            "getInitialBackup" -> {
+                val backup = pendingOpenedBackup
+                pendingOpenedBackup = null
+                result.success(backup)
+            }
             else -> result.notImplemented()
         }
     }

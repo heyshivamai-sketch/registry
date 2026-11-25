@@ -105,6 +105,25 @@ abstract final class DocumentFieldKeys {
   static const givenNames = 'given_names';
   static const idNumber = 'id_number';
   static const name = 'name';
+
+  static bool isNeverSensitive(String keyOrId, [String? customLabel]) {
+    final normalized = keyOrId.trim().toLowerCase();
+    if (normalized == dateOfBirth ||
+        normalized == gender ||
+        normalized == address ||
+        normalized == 'dob') {
+      return true;
+    }
+    final label = customLabel?.trim().toLowerCase();
+    if (label != null &&
+        (label == 'dob' ||
+            label == 'date of birth' ||
+            label == 'gender' ||
+            label == 'address')) {
+      return true;
+    }
+    return false;
+  }
 }
 
 class DocumentSchemaRegistry {

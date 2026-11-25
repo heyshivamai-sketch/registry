@@ -610,7 +610,7 @@ bool _containsBytes(Uint8List data, List<int> needle) {
   return false;
 }
 
-class _CapturingGateway implements BackupFileGateway {
+class _CapturingGateway extends BackupFileGateway {
   _CapturingGateway({this.fail});
 
   final Object? fail;

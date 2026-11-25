@@ -11,18 +11,26 @@ class ImagePickerImageService implements ImagePickerService {
   final ImagePicker _picker;
 
   @override
-  Future<ImagePickResult> pickFromCamera() => _pick(ImageSource.camera);
+  Future<ImagePickResult> pickFromCamera({
+    AppCameraLens lens = AppCameraLens.back,
+  }) => _pick(ImageSource.camera, lens: lens);
 
   @override
   Future<ImagePickResult> pickFromGallery() => _pick(ImageSource.gallery);
 
-  Future<ImagePickResult> _pick(ImageSource source) async {
+  Future<ImagePickResult> _pick(
+    ImageSource source, {
+    AppCameraLens lens = AppCameraLens.back,
+  }) async {
     try {
       final file = await _picker.pickImage(
         source: source,
         maxWidth: _maxDimension,
         maxHeight: _maxDimension,
         imageQuality: _quality,
+        preferredCameraDevice: lens == AppCameraLens.front
+            ? CameraDevice.front
+            : CameraDevice.rear,
       );
       if (file == null) {
         return const ImagePickResult.cancelled();

@@ -816,4 +816,82 @@ void main() {
       TextDirection.rtl,
     );
   });
+
+  testWidgets(
+    'Coming up visually distinguishes overdue, expiring soon, and upcoming documents',
+    (tester) async {
+      final now = DateTime(2026, 11, 23);
+      final overdueItem = RegistryItem(
+        id: 'doc-overdue',
+        type: RegistryItemType.document,
+        status: RegistryStatus.expired,
+        impact: RegistryImpact.high,
+        impactScore: 3,
+        actionDate: DateTime(2026, 11, 20),
+        dueDate: DateTime(2026, 11, 20),
+        isHero: false,
+        needsAttention: true,
+        titleText: 'Overdue passport',
+      );
+      final expiringSoonItem = RegistryItem(
+        id: 'doc-soon',
+        type: RegistryItemType.document,
+        status: RegistryStatus.upcoming,
+        impact: RegistryImpact.medium,
+        impactScore: 2,
+        actionDate: DateTime(2026, 11, 25),
+        dueDate: DateTime(2026, 11, 26),
+        isHero: false,
+        needsAttention: false,
+        titleText: 'Testggvbb',
+      );
+      final upcomingItem = RegistryItem(
+        id: 'doc-upcoming',
+        type: RegistryItemType.document,
+        status: RegistryStatus.upcoming,
+        impact: RegistryImpact.low,
+        impactScore: 1,
+        actionDate: DateTime(2026, 11, 30),
+        dueDate: DateTime(2026, 11, 30),
+        isHero: false,
+        needsAttention: false,
+        titleText: 'National Id',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Column(
+              children: [
+                HomeUpcomingItem(
+                  item: overdueItem,
+                  isLast: false,
+                  now: now,
+                ),
+                HomeUpcomingItem(
+                  item: expiringSoonItem,
+                  isLast: false,
+                  now: now,
+                ),
+                HomeUpcomingItem(
+                  item: upcomingItem,
+                  isLast: true,
+                  now: now,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Verify status chips have distinct labels
+      expect(find.text('Overdue'), findsNWidgets(2)); // status pill & trailing eyebrow
+      expect(find.text('Expiring soon'), findsOneWidget); // status pill for expiring soon
+      expect(find.text('Upcoming'), findsOneWidget); // status pill for upcoming
+      expect(find.text('Expires'), findsNWidgets(2)); // trailing eyebrow for expiring soon and upcoming
+    },
+  );
 }

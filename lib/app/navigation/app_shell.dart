@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../core/widgets/registry_navigation_dock.dart';
+import '../../features/backup/backup_service.dart';
+import '../../features/backup/presentation/import_backup_screen.dart';
 import '../../features/backup/presentation/profile_screen.dart';
 import '../../features/documents/presentation/documents_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/subscriptions/presentation/subscriptions_screen.dart';
+import '../registry_dependencies.dart';
 import '../theme/app_motion.dart';
 import '../theme/app_spacing.dart';
 import 'add_item_sheet.dart';
@@ -39,11 +44,56 @@ class AppShell extends StatefulWidget {
 
 class AppShellState extends State<AppShell> {
   int _index = 0;
+  StreamSubscription<IncomingBackup>? _backupSubscription;
 
   int get selectedIndex => _index;
 
   void selectTab(int index) {
     setState(() => _index = index);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForInitialBackup();
+      _listenForIncomingBackups();
+    });
+  }
+
+  Future<void> _checkForInitialBackup() async {
+    if (!mounted) return;
+    final files = RegistryDependencies.of(context).backupFiles;
+    final initial = await files.getInitialBackup();
+    if (initial != null && mounted) {
+      _openImportWithBackup(initial);
+    }
+  }
+
+  void _listenForIncomingBackups() {
+    final files = RegistryDependencies.of(context).backupFiles;
+    _backupSubscription = files.onBackupOpened.listen((backup) {
+      if (mounted) {
+        _openImportWithBackup(backup);
+      }
+    });
+  }
+
+  void _openImportWithBackup(IncomingBackup backup) {
+    Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => ImportBackupScreen(
+          initialBytes: backup.bytes,
+          initialFileName: backup.name,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _backupSubscription?.cancel();
+    super.dispose();
   }
 
   @override

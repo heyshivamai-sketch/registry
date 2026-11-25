@@ -1,3 +1,5 @@
+import 'document_schema.dart';
+
 class DocumentFieldValue {
   const DocumentFieldValue({
     required this.id,
@@ -19,9 +21,13 @@ class DocumentFieldValue {
 
   bool get isEmpty => value.trim().isEmpty;
 
+  bool get canBeSensitive =>
+      !DocumentFieldKeys.isNeverSensitive(fieldKey, customLabel) &&
+      !DocumentFieldKeys.isNeverSensitive(id, customLabel);
+
   String get maskedValue {
     final trimmed = value.trim();
-    if (!sensitive || trimmed.isEmpty) {
+    if (!sensitive || !canBeSensitive || trimmed.isEmpty) {
       return trimmed;
     }
     if (trimmed.length <= 4) {
@@ -39,12 +45,18 @@ class DocumentFieldValue {
     bool? isDate,
     bool? isCustom,
   }) {
+    final nextFieldKey = fieldKey ?? this.fieldKey;
+    final nextId = id ?? this.id;
+    final nextLabel = customLabel ?? this.customLabel;
+    final isAllowedSensitive =
+        !DocumentFieldKeys.isNeverSensitive(nextFieldKey, nextLabel) &&
+        !DocumentFieldKeys.isNeverSensitive(nextId, nextLabel);
     return DocumentFieldValue(
-      id: id ?? this.id,
-      fieldKey: fieldKey ?? this.fieldKey,
-      customLabel: customLabel ?? this.customLabel,
+      id: nextId,
+      fieldKey: nextFieldKey,
+      customLabel: nextLabel,
       value: value ?? this.value,
-      sensitive: sensitive ?? this.sensitive,
+      sensitive: isAllowedSensitive && (sensitive ?? this.sensitive),
       isDate: isDate ?? this.isDate,
       isCustom: isCustom ?? this.isCustom,
     );

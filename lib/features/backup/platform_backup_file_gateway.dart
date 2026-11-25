@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -10,6 +11,8 @@ import 'backup_service.dart';
 
 /// Android document-picker operations that do not trust a plugin success flag.
 abstract class AndroidBackupBridge {
+  const AndroidBackupBridge();
+
   /// True only after the chosen document contains [bytes] exactly.
   ///
   /// Null means the user cancelled. A missing stream or a short, partial, or
@@ -21,12 +24,38 @@ abstract class AndroidBackupBridge {
   /// Reads at most [maxBytes] + 1 from the provider. A longer file throws
   /// [PlatformException] with code `oversized` and is not returned.
   Future<Uint8List?> pick({required int maxBytes});
+
+  /// The backup file opened when launching the app, if any.
+  Future<IncomingBackup?> getInitialBackup() => Future.value(null);
+
+  /// Incoming backups opened while the app is running.
+  Stream<IncomingBackup> get onBackupOpened => const Stream.empty();
 }
 
-class MethodChannelAndroidBackupBridge implements AndroidBackupBridge {
+class MethodChannelAndroidBackupBridge extends AndroidBackupBridge {
   const MethodChannelAndroidBackupBridge();
 
   static const channel = MethodChannel('com.residay.app/backup_file');
+  static final _incomingController = StreamController<IncomingBackup>.broadcast();
+  static bool _handlerInitialized = false;
+
+  static void _ensureHandler() {
+    if (!_handlerInitialized) {
+      _handlerInitialized = true;
+      channel.setMethodCallHandler((call) async {
+        if (call.method == 'onBackupOpened') {
+          final args = call.arguments;
+          if (args is Map) {
+            final bytes = args['bytes'] as Uint8List?;
+            final name = args['name'] as String? ?? 'backup.rgry';
+            if (bytes != null && bytes.isNotEmpty) {
+              _incomingController.add(IncomingBackup(bytes: bytes, name: name));
+            }
+          }
+        }
+      });
+    }
+  }
 
   @override
   Future<bool?> save({required Uint8List bytes, required String name}) {
@@ -42,6 +71,25 @@ class MethodChannelAndroidBackupBridge implements AndroidBackupBridge {
       'maxBytes': maxBytes,
     });
   }
+
+  @override
+  Future<IncomingBackup?> getInitialBackup() async {
+    _ensureHandler();
+    final result = await channel.invokeMethod<Map<Object?, Object?>>('getInitialBackup');
+    if (result == null) return null;
+    final bytes = result['bytes'] as Uint8List?;
+    final name = result['name'] as String? ?? 'backup.rgry';
+    if (bytes != null && bytes.isNotEmpty) {
+      return IncomingBackup(bytes: bytes, name: name);
+    }
+    return null;
+  }
+
+  @override
+  Stream<IncomingBackup> get onBackupOpened {
+    _ensureHandler();
+    return _incomingController.stream;
+  }
 }
 
 /// Opens and saves one backup with the dialog that works on this platform.
@@ -50,8 +98,9 @@ class MethodChannelAndroidBackupBridge implements AndroidBackupBridge {
 /// successful when the destination stream is missing, and file_selector copies
 /// a content URI into cache before Dart can reject its size. Desktop save uses
 /// file_selector. iOS save still uses file_picker and checks the written length.
-class PlatformBackupFileGateway implements BackupFileGateway {
-  const PlatformBackupFileGateway({this._androidBridge});
+class PlatformBackupFileGateway extends BackupFileGateway {
+  const PlatformBackupFileGateway({AndroidBackupBridge? androidBridge})
+      : _androidBridge = androidBridge;
 
   final AndroidBackupBridge? _androidBridge;
 
@@ -218,6 +267,24 @@ class PlatformBackupFileGateway implements BackupFileGateway {
       await _deleteQuietly(partial);
       throw _fromFileSystem(error);
     }
+  }
+
+  @override
+  Future<IncomingBackup?> getInitialBackup() async {
+    final android = _android;
+    if (android != null) {
+      return android.getInitialBackup();
+    }
+    return null;
+  }
+
+  @override
+  Stream<IncomingBackup> get onBackupOpened {
+    final android = _android;
+    if (android != null) {
+      return android.onBackupOpened;
+    }
+    return const Stream.empty();
   }
 
   Future<Uint8List> _readCapped(File source, int length) async {

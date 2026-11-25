@@ -104,7 +104,7 @@ void main() {
   );
 }
 
-class _Bridge implements AndroidBackupBridge {
+class _Bridge extends AndroidBackupBridge {
   _Bridge({this.saveResult, this.pickResult});
 
   final Future<bool?> Function()? saveResult;

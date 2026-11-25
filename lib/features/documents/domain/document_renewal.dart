@@ -15,13 +15,20 @@ abstract final class DocumentRenewal {
   static bool isActionDateValid({
     required DateTime newExpiry,
     DateTime? actionDate,
+    DateTime? issueDate,
   }) {
     if (actionDate == null) {
       return true;
     }
-    return !RegistryDateFormatter.dateOnly(
-      actionDate,
-    ).isAfter(RegistryDateFormatter.dateOnly(newExpiry));
+    final action = RegistryDateFormatter.dateOnly(actionDate);
+    if (action.isAfter(RegistryDateFormatter.dateOnly(newExpiry))) {
+      return false;
+    }
+    if (issueDate != null &&
+        action.isBefore(RegistryDateFormatter.dateOnly(issueDate))) {
+      return false;
+    }
+    return true;
   }
 
   static RegistryDocument record({

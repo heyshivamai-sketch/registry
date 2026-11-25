@@ -5,6 +5,8 @@ import 'package:the_registry/features/documents/domain/document_schema.dart';
 import 'package:the_registry/features/documents/domain/registry_document.dart';
 import 'package:the_registry/features/documents/domain/renewal_history_entry.dart';
 
+const Object _unset = Object();
+
 RegistryDocument sampleDocument({
   String id = 'doc_1',
   String name = 'Family passport',
@@ -12,9 +14,9 @@ RegistryDocument sampleDocument({
   String? ownerName = 'Amira',
   String? issuingAuthority = 'Algeria',
   String? documentNumber = 'AB12345678',
-  DateTime? issueDate,
+  Object? issueDate = _unset,
   DateTime? expiryDate,
-  DateTime? actionDate,
+  Object? actionDate = _unset,
   DocumentImpact impact = DocumentImpact.high,
   RenewalEffort? renewalEffort = RenewalEffort.moderate,
   String? costOfLapsing = 'Travel disruption',
@@ -25,6 +27,7 @@ RegistryDocument sampleDocument({
     ReminderPreference.sevenDaysBefore,
   },
   Uint8List? attachmentBytes,
+  List<Uint8List> additionalImages = const [],
   DateTime? createdAt,
   DateTime? updatedAt,
   List<RenewalHistoryEntry> renewalHistory = const [],
@@ -39,9 +42,13 @@ RegistryDocument sampleDocument({
     ownerName: ownerName,
     issuingAuthority: issuingAuthority,
     documentNumber: documentNumber,
-    issueDate: issueDate ?? DateTime(2026, 9, 17),
+    issueDate: identical(issueDate, _unset)
+        ? DateTime(2026, 9, 17)
+        : issueDate as DateTime?,
     expiryDate: expiryDate ?? DateTime(2027, 10, 5),
-    actionDate: actionDate ?? DateTime(2027, 9, 1),
+    actionDate: identical(actionDate, _unset)
+        ? DateTime(2027, 9, 1)
+        : actionDate as DateTime?,
     impact: impact,
     renewalEffort: renewalEffort,
     costOfLapsing: costOfLapsing,
@@ -50,6 +57,7 @@ RegistryDocument sampleDocument({
     notes: notes,
     reminders: reminders,
     attachmentBytes: attachmentBytes,
+    additionalImages: additionalImages,
     createdAt: createdAt ?? DateTime(2026, 1, 2),
     updatedAt: updatedAt,
     renewalHistory: renewalHistory,

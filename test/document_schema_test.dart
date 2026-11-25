@@ -107,6 +107,28 @@ void main() {
     );
   });
 
+  test('date of birth, gender, and address cannot be sensitive', () {
+    for (final key in [
+      DocumentFieldKeys.dateOfBirth,
+      DocumentFieldKeys.gender,
+      DocumentFieldKeys.address,
+      'dob',
+    ]) {
+      expect(DocumentFieldKeys.isNeverSensitive(key), isTrue);
+      final field = DocumentFieldValue(
+        id: key,
+        fieldKey: key,
+        value: 'TestValue',
+        sensitive: true,
+      );
+      expect(field.canBeSensitive, isFalse);
+      expect(field.maskedValue, 'TestValue');
+      final updated = field.copyWith(sensitive: true);
+      expect(updated.sensitive, isFalse);
+      expect(updated.maskedValue, 'TestValue');
+    }
+  });
+
   test('dynamic field immutability and copyWith', () {
     final original = sampleDocument(
       dynamicFields: const [

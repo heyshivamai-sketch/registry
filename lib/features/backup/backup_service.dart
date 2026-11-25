@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -8,7 +9,15 @@ import 'backup_models.dart';
 import 'backup_payload.dart';
 import 'registry_archive.dart';
 
+class IncomingBackup {
+  const IncomingBackup({required this.bytes, required this.name});
+  final Uint8List bytes;
+  final String name;
+}
+
 abstract class BackupFileGateway {
+  const BackupFileGateway();
+
   Future<Uint8List?> pickBackup();
 
   /// Writes [bytes] to a location the user chooses.
@@ -19,6 +28,12 @@ abstract class BackupFileGateway {
     required Uint8List bytes,
     required String suggestedName,
   });
+
+  /// Returns an incoming backup if the app was launched by tapping a backup file.
+  Future<IncomingBackup?> getInitialBackup() => Future.value(null);
+
+  /// Emits incoming backups opened while the app is running.
+  Stream<IncomingBackup> get onBackupOpened => const Stream.empty();
 }
 
 class RegistryBackupService {

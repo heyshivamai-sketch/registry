@@ -4,12 +4,14 @@ import '../../../l10n/app_localizations.dart';
 
 class DocumentAttachmentPreviewPage extends StatefulWidget {
   const DocumentAttachmentPreviewPage({
-    super.key,
     required this.bytes,
+    super.key,
     this.additionalImages = const [],
+    this.initialIndex = 0,
   });
   final Uint8List bytes;
   final List<Uint8List> additionalImages;
+  final int initialIndex;
 
   @override
   State<DocumentAttachmentPreviewPage> createState() =>
@@ -18,8 +20,16 @@ class DocumentAttachmentPreviewPage extends StatefulWidget {
 
 class _DocumentAttachmentPreviewPageState
     extends State<DocumentAttachmentPreviewPage> {
-  final _pages = PageController();
-  int _index = 0;
+  late final PageController _pages;
+  late int _index;
+
+  @override
+  void initState() {
+    super.initState();
+    final totalImages = 1 + widget.additionalImages.length;
+    _index = widget.initialIndex.clamp(0, totalImages - 1);
+    _pages = PageController(initialPage: _index);
+  }
 
   @override
   void dispose() {
