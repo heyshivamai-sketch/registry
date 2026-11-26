@@ -34,10 +34,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
     try {
       final email = await deps.gmailClient.signIn();
       if (email != null && mounted) {
-        final metadata = GmailSyncMetadata(
-          emailAddress: email,
-          connectedAt: deps.clock.now(),
-        );
+        final metadata = GmailSyncMetadata(emailAddress: email, connectedAt: deps.clock.now());
         await deps.discovery.detectedRepository.saveGmailMetadata(metadata);
         // Allow the Google Sign-In activity dismissal and Android UI thread to settle
         // before requesting tokens or starting scans.
@@ -81,18 +78,13 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
         messages: messages,
         existingSubscriptions: deps.subscriptions.subscriptions,
         ignoredMerchants: deps.discovery.ignoredMerchants,
-        now: () => deps.clock.now(),
+        now: deps.clock.now,
       );
 
-      await deps.discovery.mergeAndIngestCandidates(
-        candidates,
-        now: () => deps.clock.now(),
-      );
+      await deps.discovery.mergeAndIngestCandidates(candidates, now: deps.clock.now);
 
       if (currentMeta != null) {
-        final updatedMeta = currentMeta.copyWith(
-          lastSuccessfulScan: deps.clock.now(),
-        );
+        final updatedMeta = currentMeta.copyWith(lastSuccessfulScan: deps.clock.now());
         await deps.discovery.detectedRepository.saveGmailMetadata(updatedMeta);
       }
 
@@ -106,11 +98,9 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                   ? SnackBarAction(
                       label: 'View',
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const DetectedSubscriptionsScreen(),
-                          ),
-                        );
+                        Navigator.of(
+                          context,
+                        ).push(MaterialPageRoute(builder: (_) => const DetectedSubscriptionsScreen()));
                       },
                     )
                   : null,
@@ -136,18 +126,13 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
     if (str.contains('deadlock') || str.contains('main thread')) {
       return 'Google Play Services was busy authenticating. Please tap "Scan New Emails" to retry.';
     }
-    if (str.contains('failed_to_recover_auth') ||
-        str.contains('Failed attempt to recover authentication')) {
+    if (str.contains('failed_to_recover_auth') || str.contains('Failed attempt to recover authentication')) {
       return 'Google authorization could not be completed. Please tap "Connect Gmail", select your account, and grant permission to search billing receipts.';
     }
-    if (str.contains('sign_in_canceled') ||
-        str.contains('sign_in_failed') ||
-        str.contains('CANCELED')) {
+    if (str.contains('sign_in_canceled') || str.contains('sign_in_failed') || str.contains('CANCELED')) {
       return 'Sign-in was canceled. Please tap "Connect Gmail" to try again.';
     }
-    if (str.contains('network_error') ||
-        str.contains('SocketException') ||
-        str.contains('Failed host lookup')) {
+    if (str.contains('network_error') || str.contains('SocketException') || str.contains('Failed host lookup')) {
       return 'Network connection error. Please check your internet connection and try again.';
     }
     if (str.contains('Gmail API has not been used') ||
@@ -159,9 +144,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
     if (str.contains('access_denied')) {
       return 'Permission was denied. Registry requires read-only Gmail access to detect billing receipts.';
     }
-    if (error is PlatformException &&
-        error.message != null &&
-        error.message!.isNotEmpty) {
+    if (error is PlatformException && error.message != null && error.message!.isNotEmpty) {
       return error.message!;
     }
     return str;
@@ -176,9 +159,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
     final metadata = deps.discovery.gmailMetadata;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.connectGmailTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.connectGmailTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.screenPadding),
@@ -199,18 +180,12 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.mark_email_read_outlined,
-                            size: 28,
-                            color: colorScheme.primary,
-                          ),
+                          Icon(Icons.mark_email_read_outlined, size: 28, color: colorScheme.primary),
                           const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: Text(
                               l10n.connectGmailTitle,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
@@ -218,9 +193,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         l10n.gmailPrivacyNotice,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                        style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -230,29 +203,19 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
               if (_errorMessage != null) ...[
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: colorScheme.errorContainer, borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: colorScheme.onErrorContainer,
-                            size: 20,
-                          ),
+                          Icon(Icons.error_outline, color: colorScheme.onErrorContainer, size: 20),
                           const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: TextStyle(
-                                color: colorScheme.onErrorContainer,
-                                fontSize: 13,
-                              ),
+                              style: TextStyle(color: colorScheme.onErrorContainer, fontSize: 13),
                             ),
                           ),
                         ],
@@ -264,26 +227,16 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                           alignment: Alignment.centerLeft,
                           child: OutlinedButton.icon(
                             onPressed: () {
-                              Clipboard.setData(
-                                const ClipboardData(text: _gmailApiEnableUrl),
-                              );
+                              Clipboard.setData(const ClipboardData(text: _gmailApiEnableUrl));
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Copied Gmail API Enable link to clipboard!',
-                                  ),
-                                ),
+                                const SnackBar(content: Text('Copied Gmail API Enable link to clipboard!')),
                               );
                             },
                             icon: const Icon(Icons.copy, size: 16),
                             label: const Text('Copy Enable Link'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: colorScheme.onErrorContainer,
-                              side: BorderSide(
-                                color: colorScheme.onErrorContainer.withValues(
-                                  alpha: 0.5,
-                                ),
-                              ),
+                              side: BorderSide(color: colorScheme.onErrorContainer.withValues(alpha: 0.5)),
                               visualDensity: VisualDensity.compact,
                             ),
                           ),
@@ -303,10 +256,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                       ? const SizedBox(
                           width: 18,
                           height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.2,
-                            color: Colors.white,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                         )
                       : null,
                   onPressed: _connecting ? null : _connect,
@@ -326,20 +276,14 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                       children: [
                         Row(
                           children: [
-                            const Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                              size: 20,
-                            ),
+                            const Icon(Icons.check_circle, color: Colors.green, size: 20),
                             const SizedBox(width: AppSpacing.xs),
                             Expanded(
                               child: Text(
                                 l10n.gmailConnectedAs(metadata.emailAddress),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -348,14 +292,9 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                           const SizedBox(height: AppSpacing.xs),
                           Text(
                             l10n.lastScan(
-                              RegistryDateFormatter.dayMonthYear(
-                                metadata.lastSuccessfulScan!,
-                                l10n.localeName,
-                              ),
+                              RegistryDateFormatter.dayMonthYear(metadata.lastSuccessfulScan!, l10n.localeName),
                             ),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
+                            style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ],
@@ -370,13 +309,10 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                       ? const SizedBox(
                           width: 18,
                           height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.2,
-                            color: Colors.white,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                         )
                       : null,
-                  onPressed: _scanning || _connecting ? null : () => _scanEmails(),
+                  onPressed: _scanning || _connecting ? null : _scanEmails,
                 ),
                 if (_scanning) ...[
                   const SizedBox(height: AppSpacing.sm),
@@ -385,9 +321,7 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                     child: LinearProgressIndicator(
                       minHeight: 4,
                       backgroundColor: colorScheme.surfaceContainerHighest,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        colorScheme.primary,
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                     ),
                   ),
                 ],
@@ -396,15 +330,11 @@ class _GmailConnectScreenState extends State<GmailConnectScreen> {
                     const SizedBox(height: AppSpacing.sm),
                     RegistrySecondaryButton(
                       key: const ValueKey<String>('gmail-view-detected-button'),
-                      label:
-                          'View Detected Subscriptions (${deps.discovery.visibleCandidates.length})',
+                      label: 'View Detected Subscriptions (${deps.discovery.visibleCandidates.length})',
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                const DetectedSubscriptionsScreen(),
-                          ),
-                        );
+                        Navigator.of(
+                          context,
+                        ).push(MaterialPageRoute(builder: (_) => const DetectedSubscriptionsScreen()));
                       },
                     ),
                   ],

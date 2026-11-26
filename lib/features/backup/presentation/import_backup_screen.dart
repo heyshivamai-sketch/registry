@@ -13,11 +13,7 @@ import 'backup_task.dart';
 import '../../../l10n/app_localizations.dart';
 
 class ImportBackupScreen extends StatefulWidget {
-  const ImportBackupScreen({
-    super.key,
-    this.initialBytes,
-    this.initialFileName,
-  });
+  const ImportBackupScreen({super.key, this.initialBytes, this.initialFileName});
 
   final Uint8List? initialBytes;
   final String? initialFileName;
@@ -136,8 +132,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
       return;
     }
     final password = _password.text;
-    if (password.length < BackupLimits.minPasswordLength ||
-        password.length > BackupLimits.maxPasswordLength) {
+    if (password.length < BackupLimits.minPasswordLength || password.length > BackupLimits.maxPasswordLength) {
       setState(() => _passwordError = l10n.backupPasswordTooShort);
       return;
     }
@@ -152,12 +147,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
         context: context,
         label: (phase) => _phaseLabel(l10n, phase),
         task: (cancel, onProgress) {
-          return backups.openBackup(
-            bytes: bytes,
-            password: password,
-            cancel: cancel,
-            onProgress: onProgress,
-          );
+          return backups.openBackup(bytes: bytes, password: password, cancel: cancel, onProgress: onProgress);
         },
       );
       if (!mounted) {
@@ -198,28 +188,11 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: AppRadius.cardBorder,
-          ),
-          icon: Icon(
-            Icons.warning_amber_rounded,
-            color: theme.colorScheme.error,
-            size: 36,
-          ),
-          title: Text(
-            l10n.backupReplaceTitle,
-            textAlign: TextAlign.center,
-          ),
-          content: Text(
-            l10n.backupReplaceBody,
-            textAlign: TextAlign.center,
-          ),
-          actionsPadding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            0,
-            AppSpacing.md,
-            AppSpacing.md,
-          ),
+          shape: const RoundedRectangleBorder(borderRadius: AppRadius.cardBorder),
+          icon: Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error, size: 36),
+          title: Text(l10n.backupReplaceTitle, textAlign: TextAlign.center),
+          content: Text(l10n.backupReplaceBody, textAlign: TextAlign.center),
+          actionsPadding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
           actions: [
             IntrinsicHeight(
               child: Row(
@@ -229,19 +202,11 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                     child: TextButton(
                       key: const ValueKey<String>('import-replace-cancel'),
                       style: TextButton.styleFrom(
-                        minimumSize: const Size(
-                          0,
-                          AppSpacing.buttonHeight,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.xs,
-                        ),
+                        minimumSize: const Size(0, AppSpacing.buttonHeight),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                       ),
                       onPressed: () => Navigator.of(dialogContext).pop(false),
-                      child: Text(
-                        l10n.backupCancel,
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text(l10n.backupCancel, textAlign: TextAlign.center),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
@@ -251,19 +216,11 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                       style: FilledButton.styleFrom(
                         backgroundColor: theme.colorScheme.error,
                         foregroundColor: theme.colorScheme.onError,
-                        minimumSize: const Size(
-                          0,
-                          AppSpacing.buttonHeight,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.xs,
-                        ),
+                        minimumSize: const Size(0, AppSpacing.buttonHeight),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                       ),
                       onPressed: () => Navigator.of(dialogContext).pop(true),
-                      child: Text(
-                        'Replace',
-                        textAlign: TextAlign.center,
-                      ),
+                      child: const Text('Replace', textAlign: TextAlign.center),
                     ),
                   ),
                 ],
@@ -292,11 +249,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
         context: context,
         label: (phase) => _phaseLabel(l10n, phase),
         task: (cancel, onProgress) {
-          return backups.restoreBackup(
-            opened: opened,
-            cancel: cancel,
-            onProgress: onProgress,
-          );
+          return backups.restoreBackup(opened: opened, cancel: cancel, onProgress: onProgress);
         },
       );
       if (!mounted) {
@@ -366,10 +319,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
       body: SafeArea(
         child: ListView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.screenPadding,
-            vertical: AppSpacing.md,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding, vertical: AppSpacing.md),
           children: [
             RegistrySurface(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -386,15 +336,9 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Restore Registry',
-                          style: theme.textTheme.titleSmall,
-                        ),
+                        Text('Restore Registry', style: theme.textTheme.titleSmall),
                         const SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          l10n.backupImportIntro,
-                          style: theme.textTheme.bodyMedium,
-                        ),
+                        Text(l10n.backupImportIntro, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -411,21 +355,13 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color:
-                            colorScheme.primaryContainer.withValues(alpha: 0.6),
+                        color: colorScheme.primaryContainer.withValues(alpha: 0.6),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.folder_open_outlined,
-                        color: colorScheme.primary,
-                        size: 26,
-                      ),
+                      child: Icon(Icons.folder_open_outlined, color: colorScheme.primary, size: 26),
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      'No file selected',
-                      style: theme.textTheme.titleSmall,
-                    ),
+                    Text('No file selected', style: theme.textTheme.titleSmall),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
                       'Choose an encrypted .rgry backup file from this device',
@@ -454,11 +390,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                         color: statusColors.successContainer,
                         borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
-                      child: Icon(
-                        Icons.inventory_2_outlined,
-                        color: statusColors.success,
-                        size: 22,
-                      ),
+                      child: Icon(Icons.inventory_2_outlined, color: statusColors.success, size: 22),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
@@ -475,11 +407,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                           const SizedBox(height: 2),
                           Row(
                             children: [
-                              Icon(
-                                Icons.check_circle_rounded,
-                                size: 13,
-                                color: statusColors.success,
-                              ),
+                              Icon(Icons.check_circle_rounded, size: 13, color: statusColors.success),
                               const SizedBox(width: 4),
                               Text(
                                 'Backup file loaded',
@@ -508,15 +436,9 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Backup password',
-                    style: theme.textTheme.titleSmall,
-                  ),
+                  Text('Backup password', style: theme.textTheme.titleSmall),
                   const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    'Enter the password used when exporting this backup.',
-                    style: theme.textTheme.bodySmall,
-                  ),
+                  Text('Enter the password used when exporting this backup.', style: theme.textTheme.bodySmall),
                   const SizedBox(height: AppSpacing.md),
                   RegistryTextField(
                     fieldKey: const ValueKey<String>('import-password'),
@@ -543,17 +465,9 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                       }
                     },
                     suffixIcon: IconButton(
-                      tooltip: _obscure
-                          ? l10n.backupShowPassword
-                          : l10n.backupHidePassword,
-                      onPressed: _working
-                          ? null
-                          : () => setState(() => _obscure = !_obscure),
-                      icon: Icon(
-                        _obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                      ),
+                      tooltip: _obscure ? l10n.backupShowPassword : l10n.backupHidePassword,
+                      onPressed: _working ? null : () => setState(() => _obscure = !_obscure),
+                      icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
                     ),
                   ),
                 ],
@@ -579,15 +493,8 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: statusColors.successContainer,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.check_rounded,
-                            size: 16,
-                            color: statusColors.success,
-                          ),
+                          decoration: BoxDecoration(color: statusColors.successContainer, shape: BoxShape.circle),
+                          child: Icon(Icons.check_rounded, size: 16, color: statusColors.success),
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         Expanded(
@@ -601,10 +508,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              Text(
-                                'Review contents before restoring',
-                                style: theme.textTheme.bodySmall,
-                              ),
+                              Text('Review contents before restoring', style: theme.textTheme.bodySmall),
                             ],
                           ),
                         ),
@@ -617,9 +521,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                           child: _BackupMetricTile(
                             icon: Icons.description_outlined,
                             count: opened.preview.documents,
-                            label: opened.preview.documents == 1
-                                ? 'Document'
-                                : 'Documents',
+                            label: opened.preview.documents == 1 ? 'Document' : 'Documents',
                           ),
                         ),
                         const SizedBox(width: AppSpacing.xs),
@@ -627,9 +529,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                           child: _BackupMetricTile(
                             icon: Icons.autorenew_rounded,
                             count: opened.preview.subscriptions,
-                            label: opened.preview.subscriptions == 1
-                                ? 'Subscription'
-                                : 'Subscriptions',
+                            label: opened.preview.subscriptions == 1 ? 'Subscription' : 'Subscriptions',
                           ),
                         ),
                         const SizedBox(width: AppSpacing.xs),
@@ -637,9 +537,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                           child: _BackupMetricTile(
                             icon: Icons.photo_library_outlined,
                             count: opened.preview.attachments,
-                            label: opened.preview.attachments == 1
-                                ? 'Image'
-                                : 'Images',
+                            label: opened.preview.attachments == 1 ? 'Image' : 'Images',
                           ),
                         ),
                       ],
@@ -668,9 +566,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
               const SizedBox(height: AppSpacing.md),
               DecoratedBox(
                 decoration: BoxDecoration(
-                  color: _statusIsError
-                      ? statusColors.urgentContainer
-                      : statusColors.warningContainer,
+                  color: _statusIsError ? statusColors.urgentContainer : statusColors.warningContainer,
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Padding(
@@ -679,12 +575,8 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        _statusIsError
-                            ? Icons.error_outline_rounded
-                            : Icons.info_outline_rounded,
-                        color: _statusIsError
-                            ? statusColors.urgent
-                            : statusColors.warning,
+                        _statusIsError ? Icons.error_outline_rounded : Icons.info_outline_rounded,
+                        color: _statusIsError ? statusColors.urgent : statusColors.warning,
                         size: 20,
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -693,9 +585,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
                           status,
                           key: const ValueKey<String>('import-status'),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: _statusIsError
-                                ? statusColors.onUrgentContainer
-                                : statusColors.onWarningContainer,
+                            color: _statusIsError ? statusColors.onUrgentContainer : statusColors.onWarningContainer,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -713,11 +603,7 @@ class _ImportBackupScreenState extends State<ImportBackupScreen> {
 }
 
 class _BackupMetricTile extends StatelessWidget {
-  const _BackupMetricTile({
-    required this.icon,
-    required this.count,
-    required this.label,
-  });
+  const _BackupMetricTile({required this.icon, required this.count, required this.label});
 
   final IconData icon;
   final int count;
@@ -728,24 +614,13 @@ class _BackupMetricTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.sm,
-        horizontal: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: AppSpacing.xs),
+      decoration: BoxDecoration(color: colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(AppRadius.md)),
       child: Column(
         children: [
           Icon(icon, size: 20, color: colorScheme.primary),
           const SizedBox(height: AppSpacing.xxs),
-          Text(
-            '$count',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          Text('$count', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 2),
           Text(
             label,

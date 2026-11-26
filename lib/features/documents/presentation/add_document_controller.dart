@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
+
+import '../../../l10n/app_localizations.dart';
 import '../domain/document_field_value.dart';
 import '../domain/document_ocr.dart';
 import '../domain/document_schema.dart';
 import '../domain/registry_document.dart';
 import '../domain/renewal_history_entry.dart';
-import '../../../l10n/app_localizations.dart';
 
 enum DocumentFormMode { create, edit }
 
@@ -67,8 +68,7 @@ class AddDocumentController extends ChangeNotifier {
 
   bool get isEditing => mode == DocumentFormMode.edit;
 
-  bool get hasAttachment =>
-      attachmentBytes != null && attachmentBytes!.isNotEmpty;
+  bool get hasAttachment => attachmentBytes != null && attachmentBytes!.isNotEmpty;
 
   int get attachmentCount {
     var count = hasAttachment ? 1 : 0;
@@ -127,8 +127,7 @@ class AddDocumentController extends ChangeNotifier {
       return null;
     }
     final suggested = expiryDate!.subtract(const Duration(days: 30));
-    if (issueDate != null &&
-        _dateOnly(suggested).isBefore(_dateOnly(issueDate!))) {
+    if (issueDate != null && _dateOnly(suggested).isBefore(_dateOnly(issueDate!))) {
       return null;
     }
     return suggested;
@@ -148,17 +147,14 @@ class AddDocumentController extends ChangeNotifier {
   }
 
   bool get canGoBack =>
-      ocrStatus != OcrUiStatus.processing &&
-      (step != AddDocumentStep.source || ocrStatus == OcrUiStatus.review);
+      ocrStatus != OcrUiStatus.processing && (step != AddDocumentStep.source || ocrStatus == OcrUiStatus.review);
 
   void loadDocument(RegistryDocument document) {
     mode = DocumentFormMode.edit;
     existingId = document.id;
     createdAt = document.createdAt;
     updatedAt = document.updatedAt;
-    renewalHistory = List<RenewalHistoryEntry>.unmodifiable(
-      document.renewalHistory,
-    );
+    renewalHistory = List<RenewalHistoryEntry>.unmodifiable(document.renewalHistory);
     schemaId = document.schemaId;
     countryCode = document.countryCode;
     name = document.name;
@@ -168,8 +164,7 @@ class AddDocumentController extends ChangeNotifier {
     documentNumber = document.documentNumber ?? '';
     issueDate = document.issueDate;
     expiryDate = document.expiryDate;
-    expiryDate =
-        (document.expiryDate.year >= 2099) ? null : document.expiryDate;
+    expiryDate = (document.expiryDate.year >= 2099) ? null : document.expiryDate;
     actionDate = document.actionDate;
     actionDateUserSet = document.actionDate != null;
     impact = document.impact;
@@ -182,9 +177,7 @@ class AddDocumentController extends ChangeNotifier {
     attachmentBytes = document.attachmentBytes;
     additionalImages = List.of(document.additionalImages);
     categoryLabel = document.categoryLabel ?? '';
-    dynamicFields = List<DocumentFieldValue>.unmodifiable(
-      document.dynamicFields,
-    );
+    dynamicFields = List<DocumentFieldValue>.unmodifiable(document.dynamicFields);
     additionalOpen = hasAdditionalDetails;
     identityExtrasOpen = hasIdentityExtras;
     step = AddDocumentStep.source;
@@ -290,12 +283,7 @@ class AddDocumentController extends ChangeNotifier {
       return false;
     }
     final next = schemaRegistry.byId(nextSchemaId);
-    return dynamicFields.any(
-      (field) =>
-          !field.isEmpty &&
-          !field.isCustom &&
-          !next.fieldIds.contains(field.fieldKey),
-    );
+    return dynamicFields.any((field) => !field.isEmpty && !field.isCustom && !next.fieldIds.contains(field.fieldKey));
   }
 
   void setSchemaId(String value, {bool discardIncompatible = false}) {
@@ -305,8 +293,7 @@ class AddDocumentController extends ChangeNotifier {
     final next = schemaRegistry.byId(value);
     schemaId = next.id;
     if (next.id == DocumentSchemaIds.genericOther) {
-      if (category == DocumentCategory.passport ||
-          category == DocumentCategory.idCard) {
+      if (category == DocumentCategory.passport || category == DocumentCategory.idCard) {
         category = DocumentCategory.other;
       } else {
         category ??= DocumentCategory.other;
@@ -432,11 +419,7 @@ class AddDocumentController extends ChangeNotifier {
     }
     category =
         DocumentCategory.values
-            .where(
-              (item) =>
-                  item.name.toLowerCase() ==
-                  value.replaceAll(' ', '').toLowerCase(),
-            )
+            .where((item) => item.name.toLowerCase() == value.replaceAll(' ', '').toLowerCase())
             .firstOrNull ??
         DocumentCategory.other;
     final matching = schemaRegistry
@@ -496,10 +479,7 @@ class AddDocumentController extends ChangeNotifier {
     final isCustomTarget = dynamicFields.any((f) => f.id == id && f.isCustom);
     dynamicFields = [
       for (final field in dynamicFields)
-        if (field.id == id || (isCustomTarget && field.isCustom))
-          field.copyWith(customLabel: label)
-        else
-          field,
+        if (field.id == id || (isCustomTarget && field.isCustom)) field.copyWith(customLabel: label) else field,
     ];
     notifyListeners();
   }
@@ -507,10 +487,7 @@ class AddDocumentController extends ChangeNotifier {
   void toggleDynamicFieldSensitive(String id) {
     dynamicFields = [
       for (final field in dynamicFields)
-        if (field.id == id && field.canBeSensitive)
-          field.copyWith(sensitive: !field.sensitive)
-        else
-          field,
+        if (field.id == id && field.canBeSensitive) field.copyWith(sensitive: !field.sensitive) else field,
     ];
     notifyListeners();
   }
@@ -632,10 +609,7 @@ class AddDocumentController extends ChangeNotifier {
     ocrResult = null;
     notifyListeners();
     try {
-      final result = await recognizeDocumentImages(ocr, [
-        attachmentBytes!,
-        ...additionalImages,
-      ]);
+      final result = await recognizeDocumentImages(ocr, [attachmentBytes!, ...additionalImages]);
       if (generation != _ocrGeneration) {
         return;
       }
@@ -697,11 +671,7 @@ class AddDocumentController extends ChangeNotifier {
     changeOcrSchema(preferred);
     final current = ocrResult;
     if (current != null) {
-      ocrResult = current.copyWith(
-        classification: current.classification.copyWith(
-          countryCode: countryCode,
-        ),
-      );
+      ocrResult = current.copyWith(classification: current.classification.copyWith(countryCode: countryCode));
       notifyListeners();
     }
   }
@@ -712,9 +682,7 @@ class AddDocumentController extends ChangeNotifier {
         if (field.id == id)
           field.copyWith(
             value: value,
-            confidence: value.trim().isEmpty
-                ? OcrConfidence.notDetected
-                : OcrConfidence.high,
+            confidence: value.trim().isEmpty ? OcrConfidence.notDetected : OcrConfidence.high,
           )
         else
           field,
@@ -764,12 +732,10 @@ class AddDocumentController extends ChangeNotifier {
     if (current == null) {
       return;
     }
-    final nextName = (current.documentTypeLabel != null &&
+    final nextName =
+        (current.documentTypeLabel != null &&
             current.documentTypeLabel!.trim().isNotEmpty &&
-            current.documentTypeLabel !=
-                _fallbackNameForSchema(
-                  schemaRegistry.byId(current.classification.schemaId),
-                ))
+            current.documentTypeLabel != _fallbackNameForSchema(schemaRegistry.byId(current.classification.schemaId)))
         ? current.documentTypeLabel
         : _fallbackNameForSchema(schema);
     ocrResult = current.copyWith(
@@ -803,8 +769,7 @@ class AddDocumentController extends ChangeNotifier {
     final nextDynamic = <DocumentFieldValue>[];
     for (final field in ocrFields) {
       final definition = schema.fieldById(field.fieldKey);
-      final binding =
-          definition?.binding ?? _fallbackBindingFor(field.fieldKey);
+      final binding = definition?.binding ?? _fallbackBindingFor(field.fieldKey);
       final value = field.value.trim();
       switch (binding) {
         case DocumentBaseBinding.title:
@@ -861,18 +826,16 @@ class AddDocumentController extends ChangeNotifier {
       DocumentSchemaIds.genericPassport => 'Passport',
       DocumentSchemaIds.franceNationalId => 'Carte Nationale d\'Identité',
       DocumentSchemaIds.uaeEmiratesId => 'Emirates ID',
-      _ => categoryLabel.trim().isNotEmpty
-          ? categoryLabel.trim()
-          : (schema.category != DocumentCategory.other
-              ? schema.category.name
-              : 'Document'),
+      _ =>
+        categoryLabel.trim().isNotEmpty
+            ? categoryLabel.trim()
+            : (schema.category != DocumentCategory.other ? schema.category.name : 'Document'),
     };
   }
 
   DocumentBaseBinding _fallbackBindingFor(String fieldKey) {
     return switch (fieldKey) {
-      DocumentFieldKeys.fullName ||
-      DocumentFieldKeys.name => DocumentBaseBinding.owner,
+      DocumentFieldKeys.fullName || DocumentFieldKeys.name => DocumentBaseBinding.owner,
       DocumentFieldKeys.documentNumber ||
       DocumentFieldKeys.idNumber ||
       DocumentFieldKeys.aadhaarNumber ||
@@ -905,13 +868,7 @@ class AddDocumentController extends ChangeNotifier {
       final monthToken = ymdMatch.group(2)!;
       final day = int.tryParse(ymdMatch.group(3)!);
       final month = int.tryParse(monthToken) ?? _monthFromName(monthToken);
-      if (year != null &&
-          month != null &&
-          day != null &&
-          day >= 1 &&
-          day <= 31 &&
-          month >= 1 &&
-          month <= 12) {
+      if (year != null && month != null && day != null && day >= 1 && day <= 31 && month >= 1 && month <= 12) {
         return DateTime(year, month, day);
       }
     }
@@ -920,10 +877,7 @@ class AddDocumentController extends ChangeNotifier {
       unicode: true,
     ).firstMatch(value);
     if (match == null) {
-      final mdyMatch = RegExp(
-        r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})$',
-        unicode: true,
-      ).firstMatch(value);
+      final mdyMatch = RegExp(r'^(\p{L}{2,})[./\-\s,]+(\d{1,2})[./\-\s,]+(\d{2,4})$', unicode: true).firstMatch(value);
       if (mdyMatch != null) {
         final monthToken = mdyMatch.group(1)!;
         final day = int.tryParse(mdyMatch.group(2)!);
@@ -1037,36 +991,26 @@ class AddDocumentController extends ChangeNotifier {
     return nameError == null && categoryError == null;
   }
 
-  bool get hasDateErrors =>
-      expiryError != null || issueDateError != null || actionDateError != null;
+  bool get hasDateErrors => expiryError != null || issueDateError != null || actionDateError != null;
 
   bool validateDates(AppLocalizations l10n) => _validateDates(l10n);
 
   bool _validateDates(AppLocalizations l10n) {
     expiryError = expiryDate == null ? l10n.errorRequired : null;
     final isScanned = hasAttachment || ocrConfirmed;
-    expiryError =
-        (!isScanned && expiryDate == null) ? l10n.errorRequired : null;
+    expiryError = (!isScanned && expiryDate == null) ? l10n.errorRequired : null;
     issueDateError = null;
     actionDateError = null;
-    if (issueDate != null &&
-        expiryDate != null &&
-        _dateOnly(issueDate!).isAfter(_dateOnly(expiryDate!))) {
+    if (issueDate != null && expiryDate != null && _dateOnly(issueDate!).isAfter(_dateOnly(expiryDate!))) {
       issueDateError = l10n.errorIssueAfterExpiry;
     }
-    if (actionDate != null &&
-        issueDate != null &&
-        _dateOnly(actionDate!).isBefore(_dateOnly(issueDate!))) {
+    if (actionDate != null && issueDate != null && _dateOnly(actionDate!).isBefore(_dateOnly(issueDate!))) {
       actionDateError = l10n.errorActionBeforeIssue;
-    } else if (actionDate != null &&
-        expiryDate != null &&
-        _dateOnly(actionDate!).isAfter(_dateOnly(expiryDate!))) {
+    } else if (actionDate != null && expiryDate != null && _dateOnly(actionDate!).isAfter(_dateOnly(expiryDate!))) {
       actionDateError = l10n.errorActionAfterExpiry;
     }
     notifyListeners();
-    return expiryError == null &&
-        issueDateError == null &&
-        actionDateError == null;
+    return expiryError == null && issueDateError == null && actionDateError == null;
   }
 
   bool _validateRenewal(AppLocalizations l10n) {
@@ -1164,9 +1108,7 @@ class AddDocumentController extends ChangeNotifier {
     if (!validate(l10n)) {
       if (nameError != null || categoryError != null) {
         step = AddDocumentStep.identity;
-      } else if (expiryError != null ||
-          issueDateError != null ||
-          actionDateError != null) {
+      } else if (expiryError != null || issueDateError != null || actionDateError != null) {
         step = AddDocumentStep.dates;
       } else if (impactError != null) {
         step = AddDocumentStep.renewal;
@@ -1219,8 +1161,7 @@ class AddDocumentController extends ChangeNotifier {
     );
   }
 
-  DateTime _dateOnly(DateTime date) =>
-      DateTime(date.year, date.month, date.day);
+  DateTime _dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
   String? _optional(String value) {
     final trimmed = value.trim();
