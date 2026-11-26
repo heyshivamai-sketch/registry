@@ -316,16 +316,17 @@ class _SubscriptionsHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          l10n.subscriptionsEyebrow,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: colorScheme.tertiary,
+            letterSpacing: 0.4,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Row(
           children: [
-            Expanded(
-              child: Text(
-                l10n.subscriptionsEyebrow,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.tertiary,
-                ),
-              ),
-            ),
+            const Spacer(),
             Semantics(
               button: true,
               label: isCalendarView ? 'List view' : 'Calendar view',
@@ -625,7 +626,12 @@ class _MonthlyCostCard extends StatelessWidget {
             key: totals.length == 1
                 ? ValueKey<String>('monthly-total-${totals.first.code}')
                 : const ValueKey<String>('monthly-cost-headline'),
-            style: theme.textTheme.headlineMedium,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontSize: 28,
+              height: 1.12,
+              fontWeight: FontWeight.w700,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
           ),
           const SizedBox(height: AppSpacing.xxs),
           Text(l10n.estimatedMonthlyCost, style: theme.textTheme.titleSmall),

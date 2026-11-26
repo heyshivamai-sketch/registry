@@ -28,9 +28,9 @@ class HomeFirstVisit extends StatelessWidget {
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontSize: 26,
-            height: 1.15,
+            height: 1.18,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.6,
+            letterSpacing: Directionality.of(context) == TextDirection.rtl ? 0 : -0.35,
           ),
         ),
         const SizedBox(height: AppSpacing.sm),

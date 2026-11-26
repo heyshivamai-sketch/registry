@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_shadows.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/attention_entrance.dart';
+import '../../../core/widgets/paper_wallet_engraving.dart';
 import '../../../core/widgets/registry_primary_button.dart';
 import '../../../core/widgets/registry_surface.dart';
 import '../../../l10n/app_localizations.dart';
@@ -214,46 +217,51 @@ class _Hero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brand = AppBrandColors.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: AppRadius.cardBorder,
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.tertiary.withValues(alpha: 0.22),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
-          ),
-        ],
+        boxShadow: AppShadows.pulse(context),
         gradient: LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [const Color(0xFF171D49), theme.colorScheme.tertiary],
+          colors: [brand.heroStart, brand.heroEnd],
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: ClipRRect(
+        borderRadius: AppRadius.cardBorder,
+        child: Stack(
           children: [
-            const Row(
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xFFFFE8AD), shape: BoxShape.circle),
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Icon(Icons.auto_awesome_rounded, size: 32, color: Color(0xFF6A4510)),
-                  ),
-                ),
-                Spacer(),
-                ExcludeSemantics(child: RegistryHeroPassStack(icon: Icons.verified_user_outlined)),
-              ],
+            const Positioned.fill(
+              child: PaperWalletEngraving(opacity: 0.13),
             ),
-            const SizedBox(height: 12),
-            Text(l10n.localProEyebrow, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              l10n.localProHeadline,
-              style: theme.textTheme.headlineMedium?.copyWith(color: theme.colorScheme.onPrimary),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(color: Color(0xFFFDF3DC), shape: BoxShape.circle),
+                        child: Padding(
+                          padding: EdgeInsets.all(14),
+                          child: Icon(Icons.auto_awesome_rounded, size: 28, color: Color(0xFF734A00)),
+                        ),
+                      ),
+                      Spacer(),
+                      ExcludeSemantics(child: RegistryHeroPassStack(icon: Icons.verified_user_outlined)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(l10n.localProEyebrow, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.localProHeadline,
+                    style: theme.textTheme.headlineMedium?.copyWith(color: theme.colorScheme.onPrimary),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,74 +1,74 @@
 import 'package:flutter/material.dart';
 
-/// Semantic colour tokens for Registry Aura.
+/// Semantic colour tokens for Regiday Paper Wallet.
 ///
 /// Screens and widgets should consume [ThemeData] / [AppStatusColors] /
 /// [AppBrandColors] rather than these values directly.
 abstract final class AppColors {
   static const Color midnight = Color(0xFF111936);
-  static const Color deepNavy = Color(0xFF23366C);
-  static const Color violet = Color(0xFF6558F5);
-  static const Color aqua = Color(0xFF42D8B7);
-  static const Color coral = Color(0xFFFF675D);
-  static const Color amber = Color(0xFFE9AA27);
+  static const Color deepNavy = Color(0xFF20264F);
+  static const Color violet = Color(0xFF343C78);
+  static const Color aqua = Color(0xFF2F9E8F);
+  static const Color coral = Color(0xFFC63D35);
+  static const Color amber = Color(0xFFB5780A);
 
   static const Color primary = midnight;
   static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color primaryContainer = Color(0xFFE8E6FF);
-  static const Color onPrimaryContainer = Color(0xFF1B1658);
+  static const Color primaryContainer = Color(0xFFECEAEF);
+  static const Color onPrimaryContainer = Color(0xFF20264F);
 
-  static const Color indigo = violet;
-  static const Color indigoContainer = Color(0xFFE8E6FF);
+  static const Color indigo = Color(0xFF343C78);
+  static const Color indigoContainer = Color(0xFFECEAF4);
 
-  static const Color secondary = Color(0xFF1AA392);
+  static const Color secondary = Color(0xFF186B5E);
   static const Color onSecondary = Color(0xFFFFFFFF);
-  static const Color secondaryContainer = Color(0xFFD8F8F1);
-  static const Color onSecondaryContainer = Color(0xFF053830);
+  static const Color secondaryContainer = Color(0xFFE3F3EE);
+  static const Color onSecondaryContainer = Color(0xFF0A473D);
 
   static const Color background = Color(0xFFF7F4EF);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceContainer = Color(0xFFEEF0F7);
+  static const Color surface = Color(0xFFFFFCF7);
+  static const Color surfaceContainer = Color(0xFFF1EDE5);
   static const Color onSurface = midnight;
-  static const Color onSurfaceVariant = Color(0xFF66718B);
+  static const Color onSurfaceVariant = Color(0xFF566078);
   static const Color outline = Color(0xFFE4E0D8);
-  static const Color outlineVariant = Color(0xFFE8E4DC);
-  static const Color mintSurface = Color(0xFFE8F6F0);
-  static const Color lavenderSurface = Color(0xFFECE8FB);
-  static const Color inputFill = Color(0xFFF3F1FB);
-  static const Color inputBorder = Color(0xFFDCD7EE);
-  static const Color inputFocus = Color(0xFF6558F5);
+  static const Color outlineVariant = Color(0xFFE4E0D8);
+  static const Color mintSurface = Color(0xFFEDF5F1);
+  static const Color lavenderSurface = Color(0xFFEFEDF5);
+  static const Color inputFill = Color(0xFFFFFCF7);
+  static const Color inputBorder = Color(0xFFDAD4C9);
+  static const Color inputFocus = Color(0xFF20264F);
 
-  static const Color heroStart = Color(0xFF18224F);
-  static const Color heroEnd = Color(0xFF4F5CE8);
-  static const Color heroHighlight = Color(0xFF7B86FF);
-  static const Color countdownFill = Color(0xFF263D79);
-  static const Color countdownRing = Color(0xFF7FE1D1);
-  static const Color addStart = Color(0xFF796CFF);
-  static const Color addEnd = Color(0xFF4A58D6);
+  static const Color heroStart = Color(0xFF20264F);
+  static const Color heroEnd = Color(0xFF343C78);
+  static const Color heroHighlight = Color(0xFF6B74B8);
+  static const Color countdownFill = Color(0xFF252D5C);
+  static const Color countdownRing = Color(0xFF7AD6C4);
+  static const Color addStart = Color(0xFF2B346E);
+  static const Color addEnd = Color(0xFF1A2044);
 
   static const Color urgent = coral;
-  static const Color urgentContainer = Color(0xFFFFE8E5);
-  static const Color onUrgentContainer = Color(0xFF9F302B);
+  static const Color urgentContainer = Color(0xFFFDECEB);
+  static const Color onUrgentContainer = Color(0xFF8F231E);
 
   static const Color warning = amber;
-  static const Color warningContainer = Color(0xFFFFF3D4);
-  static const Color onWarningContainer = Color(0xFF8A5A00);
+  static const Color warningContainer = Color(0xFFFDF3DC);
+  static const Color onWarningContainer = Color(0xFF734A00);
 
-  static const Color success = Color(0xFF086B59);
-  static const Color successContainer = Color(0xFFDFF8F2);
-  static const Color onSuccessContainer = Color(0xFF086B59);
+  static const Color success = Color(0xFF0D6E5B);
+  static const Color successContainer = Color(0xFFE3F5EE);
+  static const Color onSuccessContainer = Color(0xFF0A5446);
 
-  static const Color expired = Color(0xFF5F6B7A);
-  static const Color expiredContainer = Color(0xFFEEF1F4);
-  static const Color onExpiredContainer = Color(0xFF2F3742);
+  static const Color expired = Color(0xFF596475);
+  static const Color expiredContainer = Color(0xFFECEAE4);
+  static const Color onExpiredContainer = Color(0xFF2E3542);
 
-  static const Color darkBackground = Color(0xFF0C1024);
+  static const Color darkBackground = Color(0xFF0E1226);
   static const Color darkSurface = Color(0xFF171C36);
   static const Color darkSurfaceContainer = Color(0xFF22284A);
-  static const Color darkOnSurface = Color(0xFFE8EAF4);
-  static const Color darkOnSurfaceVariant = Color(0xFF9AA3B8);
-  static const Color darkOutline = Color(0xFF2C3454);
-  static const Color darkOutlineVariant = Color(0xFF2C3454);
+  static const Color darkOnSurface = Color(0xFFEFECE6);
+  static const Color darkOnSurfaceVariant = Color(0xFFA3ABC0);
+  static const Color darkOutline = Color(0xFF2D3557);
+  static const Color darkOutlineVariant = Color(0xFF2D3557);
 }
 
 @immutable
@@ -116,31 +116,31 @@ class AppBrandColors extends ThemeExtension<AppBrandColors> {
     heroHighlight: AppColors.heroHighlight,
     countdownFill: AppColors.countdownFill,
     countdownRing: AppColors.countdownRing,
-    addStart: Color(0xFF5B63F5),
-    addEnd: Color(0xFF4A53E6),
-    dock: Color(0xF7FFFCF8),
-    dockForeground: Color(0xFF8D8798),
-    dockSelected: Color(0xFF4F57E8),
+    addStart: AppColors.addStart,
+    addEnd: AppColors.addEnd,
+    dock: Color(0xFAFFFCF7),
+    dockForeground: Color(0xFF6B7285),
+    dockSelected: Color(0xFF20264F),
     mintSurface: AppColors.mintSurface,
     lavenderSurface: AppColors.lavenderSurface,
   );
 
   static const AppBrandColors dark = AppBrandColors(
-    heroStart: Color(0xFF101633),
-    heroEnd: Color(0xFF2A3A72),
-    indigo: Color(0xFF9AABFF),
-    violet: Color(0xFF9A8CFF),
+    heroStart: Color(0xFF151B3B),
+    heroEnd: Color(0xFF283166),
+    indigo: Color(0xFF9FA8E8),
+    violet: Color(0xFFA7B0F0),
     aqua: Color(0xFF6EE7CB),
-    heroHighlight: Color(0xFF9A8CFF),
-    countdownFill: Color(0xFF1C2C5C),
-    countdownRing: Color(0xFF7FE1D1),
-    addStart: Color(0xFF9A8CFF),
-    addEnd: Color(0xFF4A58D6),
-    dock: Color(0xF21C2038),
+    heroHighlight: Color(0xFF8E98DF),
+    countdownFill: Color(0xFF1C2652),
+    countdownRing: Color(0xFF7AD6C4),
+    addStart: Color(0xFF424E96),
+    addEnd: Color(0xFF262F63),
+    dock: Color(0xF5171C36),
     dockForeground: Color(0xFFAEB5CF),
-    dockSelected: Color(0xFFB4BBFF),
-    mintSurface: Color(0xFF1C3D36),
-    lavenderSurface: Color(0xFF2A2848),
+    dockSelected: Color(0xFFD5DCFF),
+    mintSurface: Color(0xFF1B3630),
+    lavenderSurface: Color(0xFF25284A),
   );
 
   static AppBrandColors of(BuildContext context) {

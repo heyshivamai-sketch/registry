@@ -4,10 +4,10 @@ import '../../../app/navigation/app_routes.dart';
 import '../../../app/registry_dependencies.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_shadows.dart';
-import '../../../core/widgets/attention_entrance.dart';
+import '../../../app/theme/app_typography.dart';
+import '../../../core/widgets/paper_wallet_engraving.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/registry_item.dart';
-import 'registry_hero_pass_stack.dart';
 
 class PriorityHeroCard extends StatelessWidget {
   const PriorityHeroCard({super.key, this.item, this.upcomingItem, this.now});
@@ -44,49 +44,21 @@ class PriorityHeroCard extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(22),
         boxShadow: AppShadows.pulse(context),
-        gradient: LinearGradient(colors: [brand.heroStart, brand.heroEnd]),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [brand.heroStart, brand.heroEnd],
+        ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(22),
         child: Stack(
           children: [
-            PositionedDirectional(
-              end: -8,
-              top: -12,
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        brand.heroHighlight.withValues(alpha: 0.35),
-                        brand.heroHighlight.withValues(alpha: 0),
-                      ],
-                    ),
-                  ),
-                  child: const SizedBox(width: 140, height: 140),
-                ),
-              ),
+            const Positioned.fill(
+              child: PaperWalletEngraving(opacity: 0.13),
             ),
-            if (highlighted != null)
-              PositionedDirectional(
-                end: -10,
-                bottom: -15,
-                child: IgnorePointer(
-                  child: AttentionEntrance(
-                    child: Opacity(
-                      opacity: 0.65,
-                      child: Transform.scale(
-                        scale: 0.85,
-                        alignment: AlignmentDirectional.bottomEnd,
-                        child: RegistryHeroPassStack(icon: highlighted.icon),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
               child: content,
@@ -117,63 +89,82 @@ class _AttentionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          l10n.actionNeeded.toUpperCase(),
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: const Color(0xFFFF9B94),
-            letterSpacing: 1.2,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          item.heroTitle(l10n),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: onHero,
-            fontSize: 19,
-            height: 1.2,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 4),
         Row(
           children: [
-            const Icon(
-              Icons.calendar_today_outlined,
-              size: 13,
-              color: Color(0xFFD5DBF2),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: onHero.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: Icon(item.icon, size: 16, color: onHero),
+              ),
             ),
-            const SizedBox(width: 5),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
-                item.heroExplanation(l10n, now: now),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: const Color(0xFFD5DBF2),
-                  fontSize: 12,
+                l10n.actionNeeded.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: const Color(0xFFFFB4AC),
+                  letterSpacing: isRtl ? 0 : 1.1,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w700,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         const SizedBox(height: 10),
+        Text(
+          item.heroTitle(l10n),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.serif(
+            context,
+            fontSize: 19,
+            height: 1.18,
+            color: onHero,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            const Icon(
+              Icons.calendar_today_outlined,
+              size: 13,
+              color: Color(0xFFDCE1F4),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                item.heroExplanation(l10n, now: now),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: const Color(0xFFDCE1F4),
+                  fontSize: 12.5,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
         FilledButton(
           key: const ValueKey<String>('hero-review'),
           onPressed: () => AppRoutes.openRegistryItem(context, item),
           style: FilledButton.styleFrom(
-            backgroundColor: onHero,
+            backgroundColor: const Color(0xFFFFFCF7),
             foregroundColor: theme.colorScheme.primary,
-            minimumSize: const Size(0, 36),
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            textStyle: theme.textTheme.labelMedium?.copyWith(
+            minimumSize: const Size(48, 42),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            textStyle: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
             shape: const StadiumBorder(),
@@ -186,10 +177,10 @@ class _AttentionContent extends StatelessWidget {
                 Text(l10n.reviewAction),
                 const SizedBox(width: 6),
                 Icon(
-                  Directionality.of(context) == TextDirection.rtl
+                  isRtl
                       ? Icons.arrow_back_rounded
                       : Icons.arrow_forward_rounded,
-                  size: 15,
+                  size: 16,
                 ),
               ],
             ),
@@ -221,31 +212,32 @@ class _CalmContent extends StatelessWidget {
       children: [
         Text(
           l10n.homeCalmTitle,
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: onHero,
+          style: AppTypography.serif(
+            context,
             fontSize: 18,
             height: 1.2,
-            fontWeight: FontWeight.w700,
+            color: onHero,
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           l10n.homeCalmMessage,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: const Color(0xFFD5DBF2),
+            color: const Color(0xFFDCE1F4),
+            fontSize: 12.5,
           ),
         ),
         if (upcomingItem != null) ...[
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
           FilledButton(
             key: const ValueKey<String>('hero-view-upcoming'),
             onPressed: () => AppRoutes.openHorizon90Day(context),
             style: FilledButton.styleFrom(
-              backgroundColor: onHero,
+              backgroundColor: const Color(0xFFFFFCF7),
               foregroundColor: theme.colorScheme.primary,
-              minimumSize: const Size(0, 36),
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              textStyle: theme.textTheme.labelMedium?.copyWith(
+              minimumSize: const Size(48, 42),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              textStyle: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
               shape: const StadiumBorder(),

@@ -34,6 +34,18 @@ void main() {
         );
       await loader.load();
     }
+    final loraLoader = FontLoader('Lora')
+      ..addFont(
+        File('assets/fonts/Lora-SemiBold.ttf')
+            .readAsBytes()
+            .then((bytes) => ByteData.sublistView(bytes)),
+      )
+      ..addFont(
+        File('assets/fonts/Lora-Bold.ttf')
+            .readAsBytes()
+            .then((bytes) => ByteData.sublistView(bytes)),
+      );
+    await loraLoader.load();
   });
   for (final width in [320.0, 390.0, 768.0, 1024.0]) {
     for (final scale in [1.0, 1.8]) {

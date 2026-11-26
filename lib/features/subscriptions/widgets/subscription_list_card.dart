@@ -78,7 +78,7 @@ class SubscriptionListCard extends StatelessWidget {
                     RegistryIconBadge(
                       icon: SubscriptionCopy.iconFor(subscription.category),
                       size: 43,
-                      background: const Color(0xFFF0EFFF),
+                      background: colorScheme.primaryContainer,
                       foreground: colorScheme.onPrimaryContainer,
                     ),
                     const SizedBox(width: 10),
@@ -114,6 +114,7 @@ class SubscriptionListCard extends StatelessWidget {
                             '${MoneyFormat.format(subscription.amount, locale)} ${SubscriptionCopy.cycleSuffix(l10n, subscription.billingCycle)}',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontSize: 13,
+                              fontFeatures: const [FontFeature.tabularFigures()],
                             ),
                           ),
                           const SizedBox(height: 4),

@@ -104,19 +104,19 @@ class RegistryCallout extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = switch (tone) {
       RegistryCalloutTone.privacy => (
-        background: const Color(0xFFE9FAF6),
-        foreground: const Color(0xFF146A5D),
-        muted: const Color(0xFF146A5D),
+        background: const Color(0xFFEDF5F1),
+        foreground: const Color(0xFF0A5446),
+        muted: const Color(0xFF1F5B4F),
       ),
       RegistryCalloutTone.tip => (
-        background: const Color(0xFFF0EFFF),
-        foreground: const Color(0xFF4B4594),
-        muted: const Color(0xFF68708B),
+        background: const Color(0xFFEFEDF5),
+        foreground: const Color(0xFF20264F),
+        muted: const Color(0xFF4F5770),
       ),
       RegistryCalloutTone.warning => (
-        background: const Color(0xFFFFF2EF),
-        foreground: const Color(0xFF8E3934),
-        muted: const Color(0xFF8E3934),
+        background: const Color(0xFFFDECEB),
+        foreground: const Color(0xFF8F231E),
+        muted: const Color(0xFF8F231E),
       ),
     };
 

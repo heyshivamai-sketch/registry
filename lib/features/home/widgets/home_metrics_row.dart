@@ -56,7 +56,15 @@ class HomeMetricsRow extends StatelessWidget {
                   const ExcludeSemantics(child: RegistryDocumentStack(size: RegistryDocumentStackSize.tile)),
                 ],
               ),
-              Text('$documentCount', style: Theme.of(context).textTheme.headlineMedium),
+              Text(
+                '$documentCount',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontSize: 28,
+                  height: 1.1,
+                  fontWeight: FontWeight.w700,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
               Text(l10n.homeDocumentsTile, style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
@@ -106,9 +114,13 @@ class _OverviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Material(
       color: background,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.metric)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.metric),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.metric),

@@ -29,7 +29,9 @@ class DocumentListCard extends StatelessWidget {
     final expiryDate = RegistryDateFormatter.dayMonthYear(document.expiryDate, locale);
     final registryStatus = DocumentStatus.resolve(document);
     final accent = registryStatus.accent(statusColors);
-    final fill = registryStatus == RegistryStatus.urgent ? const Color(0xFFFFF8F7) : colorScheme.surfaceContainerLowest;
+    final fill = registryStatus == RegistryStatus.urgent
+        ? const Color(0xFFFEF6F5)
+        : colorScheme.surfaceContainerLowest;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -57,7 +59,7 @@ class DocumentListCard extends StatelessWidget {
                     RegistryIconBadge(
                       icon: DocumentIcons.forCategory(document.category),
                       size: 43,
-                      background: const Color(0xFFF0EFFF),
+                      background: colorScheme.primaryContainer,
                       foreground: colorScheme.onPrimaryContainer,
                     ),
                     const SizedBox(width: 10),

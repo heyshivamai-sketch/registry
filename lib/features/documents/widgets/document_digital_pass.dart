@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_shadows.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_typography.dart';
+import '../../../core/widgets/paper_wallet_engraving.dart';
 import '../../../core/widgets/registry_status_chip.dart';
 import '../../../core/widgets/registry_surface.dart';
 import '../../../l10n/app_localizations.dart';
@@ -31,15 +34,18 @@ class DocumentDigitalPass extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final brand = AppBrandColors.of(context);
     final locale = l10n.localeName;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     final status = DocumentStatus.resolve(document);
     final category = DocumentCopy.category(l10n, document.category);
     final country = DocumentCopy.country(l10n, document.countryCode);
     const onHero = Colors.white;
+    const subtleInk = Color(0xFFC8CFE8);
     final expiry = RegistryDateFormatter.dayMonthYear(document.expiryDate, locale);
 
     final content = Padding(
-      padding: EdgeInsets.all(compact ? 14 : (large ? 19 : 17)),
+      padding: EdgeInsets.all(compact ? 16 : (large ? 20 : 18)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -48,7 +54,7 @@ class DocumentDigitalPass extends StatelessWidget {
             children: [
               RegistryIconBadge(
                 icon: DocumentIcons.forCategory(document.category),
-                size: 43,
+                size: 42,
                 background: onHero.withValues(alpha: 0.14),
                 foreground: onHero,
               ),
@@ -66,43 +72,51 @@ class DocumentDigitalPass extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: compact ? 12 : 20),
+          SizedBox(height: compact ? 14 : 20),
           Wrap(
             spacing: 6,
             children: [
               Text(
-                country,
+                country.toUpperCase(),
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: const Color(0xFFAEB9DB),
-                  letterSpacing: 1.4,
+                  color: subtleInk,
+                  letterSpacing: isRtl ? 0 : 1.1,
                   fontSize: 10,
                 ),
               ),
-              Text('·', style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFFAEB9DB))),
+              Text('·', style: theme.textTheme.labelSmall?.copyWith(color: subtleInk)),
               Text(
-                category,
+                category.toUpperCase(),
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: const Color(0xFFAEB9DB),
-                  letterSpacing: 1.4,
+                  color: subtleInk,
+                  letterSpacing: isRtl ? 0 : 1.1,
                   fontSize: 10,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
           Text(
             document.name,
-            style: theme.textTheme.headlineMedium?.copyWith(color: onHero, fontSize: 24, height: 1.15),
+            style: AppTypography.serif(
+              context,
+              fontSize: compact ? 22 : 25,
+              height: 1.15,
+              color: onHero,
+            ),
           ),
           if (_present(document.ownerName)) ...[
-            const SizedBox(height: 3),
+            const SizedBox(height: 4),
             Text(
               document.ownerName!,
-              style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFCCD3EB), fontSize: 12),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: const Color(0xFFDCE1F4),
+                fontSize: 12.5,
+              ),
             ),
           ],
           if (showExpiry && document.hasExpiry) ...[
-            SizedBox(height: compact ? 16 : 26),
+            SizedBox(height: compact ? 16 : 24),
             Wrap(
               spacing: AppSpacing.md,
               runSpacing: AppSpacing.sm,
@@ -116,7 +130,7 @@ class DocumentDigitalPass extends StatelessWidget {
                       document.maskedDocumentNumber,
                       style: theme.textTheme.titleSmall?.copyWith(
                         color: onHero,
-                        letterSpacing: 1.6,
+                        letterSpacing: 1.4,
                         fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
@@ -126,16 +140,20 @@ class DocumentDigitalPass extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        l10n.pulseStartByEyebrow,
+                        l10n.pulseStartByEyebrow.toUpperCase(),
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: const Color(0xFFAEB9DB),
-                          letterSpacing: 0.8,
+                          color: subtleInk,
+                          letterSpacing: isRtl ? 0 : 0.8,
                           fontSize: 10,
                         ),
                       ),
                       Text(
                         RegistryDateFormatter.dayMonthYear(document.displayActionDate, locale),
-                        style: theme.textTheme.titleSmall?.copyWith(color: onHero, fontSize: 13),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: onHero,
+                          fontSize: 13,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
                       ),
                     ],
                   ),
@@ -143,14 +161,21 @@ class DocumentDigitalPass extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      l10n.pulseExpiresEyebrow,
+                      l10n.pulseExpiresEyebrow.toUpperCase(),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: const Color(0xFFAEB9DB),
-                        letterSpacing: 0.8,
+                        color: subtleInk,
+                        letterSpacing: isRtl ? 0 : 0.8,
                         fontSize: 10,
                       ),
                     ),
-                    Text(expiry, style: theme.textTheme.titleSmall?.copyWith(color: onHero, fontSize: 13)),
+                    Text(
+                      expiry,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: onHero,
+                        fontSize: 13,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -168,33 +193,18 @@ class DocumentDigitalPass extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.passRadius),
           boxShadow: AppShadows.pulse(context),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF141D43), Color(0xFF283E79)],
+            colors: [brand.heroStart, brand.heroEnd],
           ),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppSpacing.passRadius),
           child: Stack(
             children: [
-              Positioned(
-                right: -30,
-                top: -40,
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          const Color(0xFF7F74FF).withValues(alpha: 0.55),
-                          const Color(0xFF7F74FF).withValues(alpha: 0),
-                        ],
-                      ),
-                    ),
-                    child: const SizedBox(width: 200, height: 200),
-                  ),
-                ),
+              const Positioned.fill(
+                child: PaperWalletEngraving(opacity: 0.14),
               ),
               content,
             ],

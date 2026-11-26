@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>The Registry</string>
+	<string>Regiday</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -52,11 +52,11 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Registry uses Face ID, Touch ID, or your device passcode to hide records until you unlock the app. This does not encrypt the registry database.</string>
+	<string>Regiday uses Face ID, Touch ID, or your device passcode to hide records until you unlock the app. This does not encrypt the registry database.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Registry uses the camera so you can photograph a document to keep with this draft on your device.</string>
+	<string>Regiday uses the camera so you can photograph a document to keep with this draft on your device.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Registry uses your photo library so you can attach an existing document image. Processing is intended to stay on this device.</string>
+	<string>Regiday uses your photo library so you can attach an existing document image. Processing is intended to stay on this device.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

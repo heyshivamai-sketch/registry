@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Regiday</title>
+    <meta
+      name="description"
+      content="Privacy Policy for Regiday, the local-first personal registry for documents, subscriptions, and reminders."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/regiday-mark.svg" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../">
+          <img
+            class="brand-mark"
+            src="../assets/regiday-mark.svg"
+            alt=""
+            width="34"
+            height="34"
+          />
+          <span class="brand-name">Regiday</span>
+        </a>
+        <nav class="nav-links" aria-label="Legal navigation">
+          <a href="../">Home</a>
+          <a href="../terms/">Terms &amp; Conditions</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="legal-main">
+      <div class="container">
+        <article class="legal-card">
+          <p class="eyebrow">Legal · Draft for owner review</p>
+          <h1>Privacy Policy</h1>
+          <p class="footer-meta">Last updated: November 26, 2026</p>
+
+          <div class="owner-notice">
+            <strong>Owner review required before publication:</strong> Please
+            confirm and fill in the operator legal name, verified support email,
+            and applicable privacy jurisdiction below before publishing this
+            page live.
+          </div>
+
+          <h2>1. Local-first by design</h2>
+          <p>
+            Regiday is built as a local-first mobile application. There is no
+            Regiday user account, no cloud document database, and no background
+            sync of your personal records to Regiday servers.
+          </p>
+
+          <h2>2. Data stored on your device</h2>
+          <ul>
+            <li>
+              <strong>Documents &amp; subscriptions:</strong> Stored locally in
+              an on-device SQLite database inside the app's private storage,
+              including names, dates, renewal history, custom fields, and
+              reminder preferences.
+            </li>
+            <li>
+              <strong>Document photos &amp; attachments:</strong> Stored in
+              on-device app storage and referenced by your local database.
+            </li>
+            <li>
+              <strong>Preferences &amp; lock state:</strong> App lock preference,
+              onboarding state, and local store entitlement status are stored in
+              device preferences.
+            </li>
+          </ul>
+
+          <h2>3. Optional network features</h2>
+          <ul>
+            <li>
+              <strong>AI Document Scanning (optional, user-initiated):</strong>
+              When Firebase AI Scan is configured and you explicitly tap
+              <em>Scan all images</em>, the selected document images are sent to
+              Google Gemini through Firebase AI Logic (protected by Firebase App
+              Check) solely to extract fields for your review. Choosing or
+              attaching an image does not send it automatically, and extracted
+              fields are never saved without your confirmation.
+            </li>
+            <li>
+              <strong>Gmail Subscription Detection (optional):</strong> If you
+              choose to connect Gmail, Regiday requests read-only access to
+              search billing receipts and processes detection on-device. You can
+              disconnect Gmail at any time.
+            </li>
+            <li>
+              <strong>App Store Billing (Regiday Pro, when enabled):</strong>
+              In builds where one-time purchases are enabled, Google Play
+              Billing or Apple StoreKit handles purchase and restore checks. No
+              registry records are sent to the store.
+            </li>
+            <li>
+              <strong>Advertising (when enabled in free builds):</strong> In
+              ads-off QA builds, the Mobile Ads SDK is not started and no
+              advertising ID permission is declared. In future free builds with
+              ads enabled, Google Mobile Ads and User Messaging Platform (UMP)
+              consent choices apply; no registry record content is shared with
+              ad networks.
+            </li>
+          </ul>
+
+          <h2>4. Device permissions</h2>
+          <ul>
+            <li>
+              <strong>Camera &amp; Photo Library:</strong> Used only when you
+              choose to attach or scan a document image.
+            </li>
+            <li>
+              <strong>Notifications:</strong> Used to schedule local on-device
+              reminders for upcoming expiry, renewal, and payment dates.
+            </li>
+            <li>
+              <strong>Biometrics / Device Passcode:</strong> Used only if you
+              enable App Lock to hide records behind your device authenticator.
+              App Lock hides records in the UI and app switcher; it does not
+              encrypt the local SQLite database.
+            </li>
+          </ul>
+
+          <h2>5. Encrypted backups (.rgry)</h2>
+          <p>
+            You may export an AES-256 password-encrypted <code>.rgry</code>
+            backup file to a location you choose. Regiday does not store your
+            backup password and cannot recover a lost backup file or password.
+          </p>
+
+          <h2>6. Contact &amp; operator details</h2>
+          <p>
+            Operator: <strong>[Owner to confirm: Shivam Agrawal / legal entity name]</strong><br />
+            Support contact: <strong>[Owner to confirm: verified support email]</strong>
+          </p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="footer-meta">Regiday · Local-first personal registry</p>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="../">Home</a>
+          <a href="./">Privacy Policy</a>
+          <a href="../terms/">Terms &amp; Conditions</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

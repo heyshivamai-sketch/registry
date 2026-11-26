@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_motion.dart';
@@ -113,11 +111,15 @@ class RegistryAuraNavigationDock extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [brand.addStart, brand.addEnd],
               ),
+              border: Border.all(
+                color: colorScheme.surfaceContainerLowest,
+                width: 2,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: brand.dockSelected.withValues(alpha: 0.34),
-                  blurRadius: 18,
-                  offset: const Offset(0, 8),
+                  color: brand.dockSelected.withValues(alpha: 0.26),
+                  blurRadius: 14,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
@@ -150,67 +152,57 @@ class RegistryAuraNavigationDock extends StatelessWidget {
           clipBehavior: Clip.none,
           alignment: Alignment.bottomCenter,
           children: [
-            ClipRRect(
-              borderRadius: AppRadius.dockBorder,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: brand.dock,
-                    borderRadius: AppRadius.dockBorder,
-                    border: Border(
-                      top: BorderSide(
-                        color: colorScheme.outline.withValues(alpha: 0.8),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: brand.dock,
+                borderRadius: AppRadius.dockBorder,
+                border: Border.all(color: colorScheme.outline),
+                boxShadow: AppShadows.dock(context),
+              ),
+              child: SizedBox(
+                height: AppSpacing.dockHeight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: destination(
+                          index: 0,
+                          icon: Icons.home_outlined,
+                          selectedIcon: Icons.home_rounded,
+                          label: l10n.navHome,
+                          key: const ValueKey<String>('nav-home'),
+                        ),
                       ),
-                    ),
-                    boxShadow: AppShadows.dock(context),
-                  ),
-                  child: SizedBox(
-                    height: AppSpacing.dockHeight,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: destination(
-                              index: 0,
-                              icon: Icons.home_outlined,
-                              selectedIcon: Icons.home_rounded,
-                              label: l10n.navHome,
-                              key: const ValueKey<String>('nav-home'),
-                            ),
-                          ),
-                          Expanded(
-                            child: destination(
-                              index: 1,
-                              icon: Icons.description_outlined,
-                              selectedIcon: Icons.description_rounded,
-                              label: l10n.navDocuments,
-                              key: const ValueKey<String>('nav-documents'),
-                            ),
-                          ),
-                          const SizedBox(width: 58),
-                          Expanded(
-                            child: destination(
-                              index: 2,
-                              icon: Icons.account_balance_wallet_outlined,
-                              selectedIcon: Icons.account_balance_wallet,
-                              label: l10n.navSubscriptions,
-                              key: const ValueKey<String>('nav-subscriptions'),
-                            ),
-                          ),
-                          Expanded(
-                            child: destination(
-                              index: 3,
-                              icon: Icons.person_outline,
-                              selectedIcon: Icons.person,
-                              label: l10n.navProfile,
-                              key: const ValueKey<String>('nav-profile'),
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: destination(
+                          index: 1,
+                          icon: Icons.description_outlined,
+                          selectedIcon: Icons.description_rounded,
+                          label: l10n.navDocuments,
+                          key: const ValueKey<String>('nav-documents'),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 58),
+                      Expanded(
+                        child: destination(
+                          index: 2,
+                          icon: Icons.account_balance_wallet_outlined,
+                          selectedIcon: Icons.account_balance_wallet,
+                          label: l10n.navSubscriptions,
+                          key: const ValueKey<String>('nav-subscriptions'),
+                        ),
+                      ),
+                      Expanded(
+                        child: destination(
+                          index: 3,
+                          icon: Icons.person_outline,
+                          selectedIcon: Icons.person,
+                          label: l10n.navProfile,
+                          key: const ValueKey<String>('nav-profile'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

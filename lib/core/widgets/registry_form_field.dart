@@ -355,7 +355,7 @@ class RegistryWizardProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accent = theme.colorScheme.tertiary;
-    const track = Color(0xFFE4E1F2);
+    final track = theme.colorScheme.outlineVariant;
     return Row(
       children: [
         Expanded(
@@ -367,22 +367,13 @@ class RegistryWizardProgress extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(99),
                     child: SizedBox(
-                      height: 5.5,
+                      height: 5,
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
+                        duration: const Duration(milliseconds: 220),
                         curve: Curves.easeOutCubic,
                         decoration: BoxDecoration(
                           color: i < current ? accent : track,
                           borderRadius: BorderRadius.circular(99),
-                          boxShadow: i == current - 1
-                              ? [
-                                  BoxShadow(
-                                    color: accent.withValues(alpha: 0.35),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 1),
-                                  ),
-                                ]
-                              : null,
                         ),
                       ),
                     ),

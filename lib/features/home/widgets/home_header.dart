@@ -36,11 +36,10 @@ class HomeHeader extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxs),
               Text(
                 l10n.homeTitle,
-                style: theme.textTheme.headlineMedium?.copyWith(
+                style: AppTypography.serif(
+                  context,
                   fontSize: 30,
-                  height: 1.05,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.9,
+                  height: 1.08,
                 ),
               ),
             ],
