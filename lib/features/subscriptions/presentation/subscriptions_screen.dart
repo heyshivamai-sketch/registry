@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app/navigation/app_routes.dart';
 import '../../../app/registry_dependencies.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/registry_empty_state.dart';
 import '../../../core/widgets/registry_primary_button.dart';
@@ -316,138 +317,51 @@ class _SubscriptionsHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.subscriptionsEyebrow,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: colorScheme.tertiary,
-            letterSpacing: 0.4,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
         Row(
           children: [
-            const Spacer(),
-            Semantics(
-              button: true,
-              label: isCalendarView ? 'List view' : 'Calendar view',
-              child: Material(
-                color: isCalendarView
-                    ? colorScheme.primaryContainer
-                    : colorScheme.surfaceContainerLowest,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(
-                    color: isCalendarView
-                        ? colorScheme.primary
-                        : colorScheme.outlineVariant,
-                  ),
-                ),
-                child: InkWell(
-                  key: const ValueKey<String>('subscriptions-calendar-toggle'),
-                  onTap: onToggleView,
-                  borderRadius: BorderRadius.circular(15),
-                  child: SizedBox(
-                    width: AppSpacing.minTapTarget,
-                    height: AppSpacing.minTapTarget,
-                    child: Icon(
-                      isCalendarView
-                          ? Icons.view_list_rounded
-                          : Icons.calendar_month_outlined,
-                      color: isCalendarView
-                          ? colorScheme.onPrimaryContainer
-                          : colorScheme.onSurface,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.subscriptionsEyebrow,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                      letterSpacing: 0.4,
                     ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.xs),
-            Semantics(
-              button: true,
-              label: l10n.cancelledSubscriptionsTitle,
-              child: Material(
-                color: colorScheme.surfaceContainerLowest,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(color: colorScheme.outlineVariant),
-                ),
-                child: InkWell(
-                  key: const ValueKey<String>('subscriptions-cancelled-button'),
-                  onTap: () => AppRoutes.openCancelledSubscriptions(context),
-                  borderRadius: BorderRadius.circular(15),
-                  child: SizedBox(
-                    width: AppSpacing.minTapTarget,
-                    height: AppSpacing.minTapTarget,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          Icons.event_busy_outlined,
-                          color: colorScheme.onSurface,
-                        ),
-                        if (cancelledCount > 0)
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: colorScheme.error,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
+                  const SizedBox(height: 2),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      l10n.subscriptionsTitle,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: theme.textTheme.headlineMedium,
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            const SizedBox(width: AppSpacing.xs),
-            Semantics(
-              button: true,
-              label: l10n.discoverSubscriptions,
-              child: Material(
-                color: colorScheme.surfaceContainerLowest,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(color: colorScheme.outlineVariant),
-                ),
-                child: InkWell(
-                  key: const ValueKey<String>('subscriptions-discover'),
-                  onTap: () => AppRoutes.openDetectedSubscriptions(context),
-                  borderRadius: BorderRadius.circular(15),
-                  child: SizedBox(
-                    width: AppSpacing.minTapTarget,
-                    height: AppSpacing.minTapTarget,
-                    child: Icon(
-                      Icons.auto_awesome_outlined,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.xs),
+            const SizedBox(width: AppSpacing.sm),
             Semantics(
               button: true,
               label: l10n.notificationsButton,
               child: Material(
                 color: colorScheme.surfaceContainerLowest,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                shape: CircleBorder(
                   side: BorderSide(color: colorScheme.outlineVariant),
                 ),
                 child: InkWell(
                   onTap: () => AppRoutes.openNotifications(context),
-                  borderRadius: BorderRadius.circular(15),
-                  child: SizedBox(
+                  customBorder: const CircleBorder(),
+                  child: const SizedBox(
                     width: AppSpacing.minTapTarget,
                     height: AppSpacing.minTapTarget,
                     child: Icon(
                       Icons.notifications_none_rounded,
-                      color: colorScheme.onSurface,
+                      size: 21,
                     ),
                   ),
                 ),
@@ -455,29 +369,92 @@ class _SubscriptionsHeader extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.xxs),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: AlignmentDirectional.centerStart,
-          child: Text(
-            l10n.subscriptionsTitle,
-            maxLines: 1,
-            softWrap: false,
-            style: theme.textTheme.headlineMedium,
+        const SizedBox(height: AppSpacing.md),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(
+            children: [
+              // Clear List / Calendar segmented toggle
+              Semantics(
+                button: true,
+                label: isCalendarView ? 'List view' : 'Calendar view',
+                child: Material(
+                  color: AppColors.surfaceContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                    side: BorderSide(color: colorScheme.outlineVariant),
+                  ),
+                  child: InkWell(
+                    key: const ValueKey<String>(
+                      'subscriptions-calendar-toggle',
+                    ),
+                    onTap: onToggleView,
+                    borderRadius: BorderRadius.circular(999),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _HeaderSegment(
+                            icon: Icons.view_list_rounded,
+                            label: 'List',
+                            selected: !isCalendarView,
+                          ),
+                          _HeaderSegment(
+                            icon: Icons.calendar_month_rounded,
+                            label: 'Calendar',
+                            selected: isCalendarView,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              // Discover pill
+              _HeaderActionPill(
+                key: const ValueKey<String>('subscriptions-discover'),
+                icon: Icons.auto_awesome_outlined,
+                label: 'Discover',
+                semanticLabel: l10n.discoverSubscriptions,
+                iconColor: AppColors.deepNavy,
+                onTap: () => AppRoutes.openDetectedSubscriptions(context),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              // Cancelled pill with optional count badge
+              _HeaderActionPill(
+                key: const ValueKey<String>('subscriptions-cancelled-button'),
+                icon: Icons.event_busy_outlined,
+                label: 'Cancelled',
+                semanticLabel: l10n.cancelledSubscriptionsTitle,
+                badgeCount: cancelledCount,
+                iconColor: cancelledCount > 0
+                    ? colorScheme.error
+                    : AppColors.onSurfaceVariant,
+                onTap: () => AppRoutes.openCancelledSubscriptions(context),
+              ),
+            ],
           ),
         ),
         if (savedCount > 0) ...[
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l10n.subscriptionsSavedSummary(savedCount),
-            style: theme.textTheme.titleSmall,
-          ),
-          Text(
-            l10n.subscriptionsActiveSummary(activeCount),
-            style: theme.textTheme.bodySmall,
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${l10n.subscriptionsSavedSummary(savedCount)} · ${l10n.subscriptionsActiveSummary(activeCount)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
           if (cancelledCount > 0) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 4),
             InkWell(
               key: const ValueKey<String>('subscriptions-cancelled-link'),
               onTap: () => AppRoutes.openCancelledSubscriptions(context),
@@ -513,6 +490,127 @@ class _SubscriptionsHeader extends StatelessWidget {
           ],
         ],
       ],
+    );
+  }
+}
+
+class _HeaderSegment extends StatelessWidget {
+  const _HeaderSegment({
+    required this.icon,
+    required this.label,
+    required this.selected,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: selected ? AppColors.deepNavy : Colors.transparent,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 15,
+            color: selected ? Colors.white : AppColors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: selected ? Colors.white : AppColors.onSurfaceVariant,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderActionPill extends StatelessWidget {
+  const _HeaderActionPill({
+    required this.icon,
+    required this.label,
+    required this.semanticLabel,
+    required this.iconColor,
+    required this.onTap,
+    this.badgeCount = 0,
+    super.key,
+  });
+
+  final IconData icon;
+  final String label;
+  final String semanticLabel;
+  final Color iconColor;
+  final VoidCallback onTap;
+  final int badgeCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Semantics(
+      button: true,
+      label: semanticLabel,
+      child: Material(
+        color: colorScheme.surfaceContainerLowest,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(999),
+          side: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(999),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 15, color: iconColor),
+                const SizedBox(width: 5),
+                Text(
+                  label,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (badgeCount > 0) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.errorContainer,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '$badgeCount',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.error,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

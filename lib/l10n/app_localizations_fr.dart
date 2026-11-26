@@ -87,7 +87,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeGreeting => 'Restez en avance sur l’essentiel';
 
   @override
-  String get homeTitle => 'Votre registre';
+  String get homeTitle => 'Regiday';
 
   @override
   String get notificationsButton => 'Notifications';
@@ -100,7 +100,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les rappels restent sur cet appareil. Il n’y a pas de messagerie sur un serveur.';
 
   @override
-  String get searchPlaceholder => 'Rechercher dans votre registre';
+  String get searchPlaceholder => 'Rechercher dans Regiday';
 
   @override
   String get searchClear => 'Effacer la recherche';
@@ -235,7 +235,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sectionComingUp => 'À venir';
 
   @override
-  String get sectionRegistrySnapshot => 'Aperçu du registre';
+  String get sectionRegistrySnapshot => 'Aperçu Regiday';
 
   @override
   String sectionItemCount(int count) {
@@ -363,7 +363,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'Vos dossiers restent privés sur cet appareil. Regiday Pro est une mise à niveau unique et ne synchronise ni les documents ni les abonnements.';
+      'Vos documents et abonnements restent privés sur cet appareil.';
 
   @override
   String get profileButton => 'Ouvrir le profil';
@@ -373,7 +373,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get addDocumentMessage =>
-      'Ajoutez des images pour l’analyse IA facultative ou saisissez les informations manuellement. Les documents et pièces jointes restent sur cet appareil.';
+      'Scannez vos photos ou saisissez les détails manuellement. Tout reste sur cet appareil.';
 
   @override
   String get addSubscriptionTitle => 'Ajouter un abonnement';
@@ -445,7 +445,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get attachmentPrivacy =>
-      'Stockée sur cet appareil. Envoyée à Gemini via Firebase AI Logic uniquement lorsque vous lancez l’analyse.';
+      'Enregistrée sur cet appareil. Analysée uniquement lorsque vous lancez le scan.';
 
   @override
   String get replaceAttachmentTitle => 'Remplacer la photo';
@@ -538,7 +538,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'Enregistré avec ce document. Regiday demande à cet appareil une notification locale à 9:00 dans votre fuseau horaire pour chaque date sélectionnée encore à venir. Le système peut la remettre plus tard. L’enregistrement reste possible si les notifications sont refusées.';
+      'Regiday envoie des rappels locaux à 9:00 aux dates choisies.';
 
   @override
   String get reminderOnActionDate => 'Le jour de l’action';
@@ -890,11 +890,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ocrPrivacy =>
-      'Les images sont envoyées à Gemini via Firebase AI Logic uniquement lorsque vous lancez l’analyse. Rien n’est enregistré avant votre confirmation.';
+      'Les images ne sont analysées que lorsque vous lancez un scan. Rien n’est enregistré avant votre confirmation.';
 
   @override
   String get ocrReviewPrivacy =>
-      'Les résultats Gemini ne sont enregistrés qu’après vérification, confirmation et enregistrement final.';
+      'Vérifiez les détails scannés avant d’enregistrer.';
 
   @override
   String get scanAgain => 'Scanner à nouveau';
@@ -904,7 +904,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ocrProcessingMessage =>
-      'Gemini lit toutes les images du document via Firebase AI Logic. Vous pouvez annuler et saisir les informations manuellement.';
+      'Lecture du document… Vous pouvez annuler et saisir les détails manuellement.';
 
   @override
   String get ocrCancel => 'Annuler le scan';
@@ -1168,8 +1168,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vérifiez les valeurs mises en avant avant de continuer.';
 
   @override
-  String get ocrProcessingHint =>
-      'Gemini lit les images via Firebase AI Logic.';
+  String get ocrProcessingHint => 'Lecture des images du document…';
 
   @override
   String get horizonOpenCalendar => 'Ouvrir le calendrier';
@@ -1809,20 +1808,20 @@ class AppLocalizationsFr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count rappels locaux sont planifiés sur cet appareil.',
-      one: '1 rappel local est planifié sur cet appareil.',
-      zero: 'Aucun rappel local n’est planifié sur cet appareil.',
+      other: '$count rappels planifiés.',
+      one: '1 rappel planifié.',
+      zero: 'Aucun rappel planifié.',
     );
     return '$_temp0';
   }
 
   @override
   String get notificationsPermissionOff =>
-      'Les notifications sont désactivées. Les choix de rappel restent enregistrés avec chaque dossier, et rien n’est planifié tant que vous ne les activez pas dans les réglages du système.';
+      'Les notifications sont désactivées. Activez-les pour recevoir des rappels.';
 
   @override
   String get notificationsLimits =>
-      'Les rappels restent sur cet appareil. Il n’y a pas de serveur ni de messagerie dans le nuage. Regiday demande 9:00 dans votre fuseau horaire actuel, y compris l’heure d’été, mais Android peut remettre ce rappel plus tard. Android restaure les rappels planifiés après un redémarrage normal, et les abandonne après un arrêt forcé jusqu’à ce que vous rouvriez Regiday. iOS peut conserver les rappels locaux en attente après un redémarrage, jusqu’à 64. Regiday en planifie au plus 64, les plus proches d’abord.';
+      'Les rappels fonctionnent localement sur votre appareil à 9:00. Aucun serveur requis.';
 
   @override
   String notificationsOmittedCount(int count) {
@@ -1913,7 +1912,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'Exportez un fichier de sauvegarde chiffré, ou remplacez le registre de cet appareil à partir d’une sauvegarde. Le fichier est chiffré avec un mot de passe que vous choisissez. Regiday ne conserve pas ce mot de passe, et cela ne chiffre pas la base du registre déjà présente sur cet appareil.';
+      'Exportez ou restaurez une sauvegarde chiffrée. Gardez votre mot de passe en lieu sûr : Regiday ne le stocke pas.';
 
   @override
   String get backupExportAction => 'Exporter une sauvegarde';
@@ -2080,7 +2079,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'Demandez la biométrie ou le code de cet appareil avant que Regiday n’affiche vos enregistrements. Le verrouillage masque les enregistrements dans le sélecteur d’applications. Il ne chiffre pas la base du registre.';
+      'Utilisez la biométrie ou votre code pour verrouiller Regiday et masquer l’écran dans le sélecteur d’apps.';
 
   @override
   String get appLockEnabled => 'Le verrouillage est activé';
@@ -2470,15 +2469,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get firebaseAiScanPrivacy =>
-      'En appuyant sur Scanner toutes les images, vos images sont envoyées à Gemini via Firebase AI Logic. Vérifiez chaque champ avant d’enregistrer.';
+      'Les images sont analysées uniquement lorsque vous appuyez sur Scanner. Vérifiez chaque champ avant d’enregistrer.';
 
   @override
   String get firebaseAiScanProcessing =>
-      'Gemini lit toutes les images via Firebase AI Logic. Vous pouvez annuler et saisir les détails manuellement.';
+      'Lecture du document… Vous pouvez annuler et saisir les détails manuellement.';
 
   @override
   String get firebaseAiScanUnavailable =>
-      'Le scan par IA est indisponible car Firebase n’est pas configuré. Vous pouvez ajouter des images et saisir tous les détails manuellement.';
+      'Le scan IA n’est pas disponible pour le moment. Vous pouvez ajouter des photos et saisir les détails manuellement.';
 
   @override
   String get discoverSubscriptions => 'Découvrir des abonnements';

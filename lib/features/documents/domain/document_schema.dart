@@ -1,4 +1,5 @@
 import 'registry_document.dart';
+import 'world_countries.dart';
 
 enum DocumentFieldInputType { text, number, multiline, date }
 
@@ -86,7 +87,7 @@ abstract final class DocumentCountryCodes {
   static const uae = 'AE';
   static const other = 'XX';
 
-  static const all = [generic, india, france, uae, other];
+  static List<String> get all => WorldCountries.allCodes;
 }
 
 abstract final class DocumentFieldKeys {

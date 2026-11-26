@@ -85,7 +85,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeGreeting => 'Stay ahead of what matters';
 
   @override
-  String get homeTitle => 'Your Registry';
+  String get homeTitle => 'Regiday';
 
   @override
   String get notificationsButton => 'Notifications';
@@ -98,7 +98,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reminders stay on this device. There is no server or cloud messaging.';
 
   @override
-  String get searchPlaceholder => 'Search your registry';
+  String get searchPlaceholder => 'Search Regiday';
 
   @override
   String get searchClear => 'Clear search';
@@ -151,13 +151,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get summaryNext90Days => 'Next 90 days';
 
   @override
-  String get snapshotDocumentsHint => 'Records in your registry';
+  String get snapshotDocumentsHint => 'Saved in Regiday';
 
   @override
   String get snapshotSubscriptionsHint => 'Plans you are tracking';
 
   @override
-  String get snapshotNext90Hint => 'Across your registry';
+  String get snapshotNext90Hint => 'In Regiday';
 
   @override
   String snapshotDocumentsSupporting(int count) {
@@ -232,7 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionComingUp => 'Coming up';
 
   @override
-  String get sectionRegistrySnapshot => 'Registry snapshot';
+  String get sectionRegistrySnapshot => 'Regiday overview';
 
   @override
   String sectionItemCount(int count) {
@@ -359,7 +359,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileMessage =>
-      'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.';
+      'Your documents and subscriptions stay private on this device.';
 
   @override
   String get profileButton => 'Open profile';
@@ -369,7 +369,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addDocumentMessage =>
-      'Add images for optional AI scanning or enter details manually. Records and attachments stay on this device.';
+      'Scan photos or enter details manually. Everything stays on your device.';
 
   @override
   String get addSubscriptionTitle => 'Add subscription';
@@ -440,7 +440,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attachmentPrivacy =>
-      'Stored on this device. Sent to Gemini through Firebase AI Logic only when you tap Scan all images.';
+      'Saved on this device. Images are scanned only when you tap Scan.';
 
   @override
   String get replaceAttachmentTitle => 'Replace photo';
@@ -532,7 +532,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.';
+      'Regiday sends local reminders at 9:00 AM on the dates you pick.';
 
   @override
   String get reminderOnActionDate => 'On action date';
@@ -878,11 +878,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ocrPrivacy =>
-      'Images are sent to Gemini through Firebase AI Logic only when you start a scan. Nothing is saved until you confirm.';
+      'Images are scanned only when you tap Scan. Nothing is saved until you confirm.';
 
   @override
-  String get ocrReviewPrivacy =>
-      'Gemini results are not saved until you review, confirm and complete Save.';
+  String get ocrReviewPrivacy => 'Review the scanned details before saving.';
 
   @override
   String get scanAgain => 'Scan again';
@@ -892,7 +891,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ocrProcessingMessage =>
-      'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter details manually.';
+      'Reading your document… You can cancel and enter details manually.';
 
   @override
   String get ocrCancel => 'Cancel scan';
@@ -1153,8 +1152,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrReviewHint => 'Review highlighted values before continuing.';
 
   @override
-  String get ocrProcessingHint =>
-      'Gemini is reading the images through Firebase AI Logic.';
+  String get ocrProcessingHint => 'Reading your document images…';
 
   @override
   String get horizonOpenCalendar => 'Open calendar';
@@ -1192,7 +1190,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentStatusLabel => 'Status';
 
   @override
-  String get homeEmptyTitle => 'Your registry is empty';
+  String get homeEmptyTitle => 'Regiday is empty';
 
   @override
   String get homeEmptyMessage =>
@@ -1284,7 +1282,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get estimatedMonthlyDisclaimer =>
-      'A normalized estimate for active plans. It is not actual spending or payments already made.';
+      'Estimated monthly total for active plans.';
 
   @override
   String estimatedMonthlyMultiple(int count) {
@@ -1383,8 +1381,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionReviewIntroTitle => 'Ready to track';
 
   @override
-  String get subscriptionReviewIntro =>
-      'Confirm the plan before adding it to your Registry.';
+  String get subscriptionReviewIntro => 'Confirm before adding to Regiday.';
 
   @override
   String get saveSubscription => 'Save subscription';
@@ -1446,7 +1443,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionRemindersHelper =>
-      'Saved with this plan. Seven and one day before follow the decide-by date, or the payment date when decide-by is empty. Charge day follows the payment date. Each one is requested for 9:00 in your time zone only while that time is still ahead. The system may deliver it later. You can save if notifications are off.';
+      'Local reminders at 9:00 AM before your decide-by or payment date.';
 
   @override
   String get subscriptionReminder7Days => '7 days before';
@@ -1787,20 +1784,20 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count local reminders are scheduled on this device.',
-      one: '1 local reminder is scheduled on this device.',
-      zero: 'No local reminders are scheduled on this device.',
+      other: '$count reminders scheduled.',
+      one: '1 reminder scheduled.',
+      zero: 'No reminders scheduled yet.',
     );
     return '$_temp0';
   }
 
   @override
   String get notificationsPermissionOff =>
-      'Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.';
+      'Notifications are off. Turn them on to get reminders.';
 
   @override
   String get notificationsLimits =>
-      'Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.';
+      'Reminders run locally on your device at 9:00 AM. No server or cloud needed.';
 
   @override
   String notificationsOmittedCount(int count) {
@@ -1889,7 +1886,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.';
+      'Export or restore an encrypted backup file. Keep your password safe—Regiday does not store it.';
 
   @override
   String get backupExportAction => 'Export backup';
@@ -1950,14 +1947,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String backupPreview(int documents, int subscriptions, int attachments) {
-    return 'This backup contains $documents documents, $subscriptions subscriptions, and $attachments images. Replacing this device\'s registry removes the records stored here and puts this backup in their place. Records are not merged.';
+    return 'This backup has $documents documents, $subscriptions subscriptions, and $attachments images. Restoring replaces your current records.';
   }
 
   @override
-  String get backupReplaceAction => 'Replace this device\'s registry';
+  String get backupReplaceAction => 'Replace data on this device';
 
   @override
-  String get backupReplaceTitle => 'Replace this device\'s registry?';
+  String get backupReplaceTitle => 'Replace data on this device?';
 
   @override
   String get backupReplaceBody =>
@@ -1976,7 +1973,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backupPhaseChecking => 'Checking the backup…';
 
   @override
-  String get backupPhaseRestoring => 'Replacing this device\'s registry…';
+  String get backupPhaseRestoring => 'Restoring backup…';
 
   @override
   String get backupExportSaved => 'Backup saved.';
@@ -2005,16 +2002,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'There is not enough free space to save this backup. No backup file was saved.';
 
   @override
-  String get backupExportTooLarge =>
-      'This registry is too large to export in one backup. No backup file was saved.';
+  String get backupExportTooLarge => 'Too much data to export in one backup.';
 
   @override
   String get backupExportFailed =>
       'The backup could not be created. No backup file was saved.';
 
   @override
-  String get backupImportReplaced =>
-      'This device\'s registry was replaced from the backup.';
+  String get backupImportReplaced => 'Backup restored on this device.';
 
   @override
   String get backupImportCancelled => 'Import cancelled.';
@@ -2051,7 +2046,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'Ask for this device\'s biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.';
+      'Use biometrics or your device passcode to lock Regiday and hide screens in the app switcher.';
 
   @override
   String get appLockEnabled => 'App lock is on';
@@ -2435,15 +2430,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get firebaseAiScanPrivacy =>
-      'When you tap Scan all images, your document images are sent to Gemini through Firebase AI Logic. Review every field before saving.';
+      'Images are scanned only when you tap Scan all images. Review every field before saving.';
 
   @override
   String get firebaseAiScanProcessing =>
-      'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter the details manually.';
+      'Reading your document… You can cancel and enter details manually.';
 
   @override
   String get firebaseAiScanUnavailable =>
-      'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.';
+      'AI scan isn\'t available right now. You can still attach photos and enter details manually.';
 
   @override
   String get discoverSubscriptions => 'Discover Subscriptions';

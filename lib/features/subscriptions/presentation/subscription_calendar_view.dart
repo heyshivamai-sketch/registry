@@ -3,7 +3,10 @@ import 'package:intl/intl.dart';
 
 import '../../../app/navigation/app_routes.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_shadows.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_typography.dart';
+import '../../../core/widgets/paper_wallet_engraving.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/money.dart';
 import '../domain/registry_subscription.dart';
@@ -44,6 +47,17 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
   void _nextMonth() {
     setState(() {
       _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1);
+    });
+  }
+
+  void _jumpToToday() {
+    setState(() {
+      _focusedMonth = DateTime(widget.now.year, widget.now.month);
+      _selectedDate = DateTime(
+        widget.now.year,
+        widget.now.month,
+        widget.now.day,
+      );
     });
   }
 
@@ -89,369 +103,301 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
 
   List<RegistrySubscription> _getSubscriptionsForDay(DateTime date) {
     return widget.subscriptions
-        .where((sub) => sub.isActive && _isSubscriptionDueOn(sub, date))
+        .where((sub) => _isSubscriptionDueOn(sub, date))
         .toList();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+  ({
+    Map<String, int> totalByCurrency,
+    Map<String, int> upcomingByCurrency,
+    int dueCount,
+  }) _calculateMonthlyTotals() {
+    final daysInMonth = DateTime(
+      _focusedMonth.year,
+      _focusedMonth.month + 1,
+      0,
+    ).day;
+    final today = DateTime(widget.now.year, widget.now.month, widget.now.day);
 
-    final year = _focusedMonth.year;
-    final month = _focusedMonth.month;
-    final firstDayOfMonth = DateTime(year, month);
-    final daysInCurrentMonth = DateTime(year, month + 1, 0).day;
-    final prevMonthLastDay = DateTime(year, month, 0).day;
+    final totalMap = <String, int>{};
+    final upcomingMap = <String, int>{};
+    var dueCount = 0;
 
-    // Monday = 1, Sunday = 7
-    final leadingDays = firstDayOfMonth.weekday - 1;
-    final totalCells = ((leadingDays + daysInCurrentMonth) / 7).ceil() * 7;
-
-    final monthName = DateFormat.MMMM(l10n.localeName).format(_focusedMonth);
-    final isCurrentYear = _focusedMonth.year == widget.now.year;
-    final monthTitle = isCurrentYear ? monthName : '$monthName $year';
-
-    // Calculate monthly total and upcoming total
-    var totalCents = 0;
-    var upcomingCents = 0;
-    var activeBillsCount = 0;
-    String currencySymbol = '';
-
-    for (var day = 1; day <= daysInCurrentMonth; day++) {
-      final date = DateTime(year, month, day);
-      final daySubs = _getSubscriptionsForDay(date);
-      activeBillsCount += daySubs.length;
-      for (final sub in daySubs) {
-        if (currencySymbol.isEmpty) {
-          currencySymbol = sub.amount.currencyCode;
-        }
-        totalCents += sub.amount.minorUnits;
-        final isUpcoming = date.isAfter(widget.now) ||
-            (date.year == widget.now.year &&
-                date.month == widget.now.month &&
-                date.day == widget.now.day);
-        if (isUpcoming) {
-          upcomingCents += sub.amount.minorUnits;
+    for (var day = 1; day <= daysInMonth; day++) {
+      final date = DateTime(_focusedMonth.year, _focusedMonth.month, day);
+      final dueSubs = _getSubscriptionsForDay(date);
+      for (final sub in dueSubs) {
+        dueCount++;
+        final currency = sub.amount.currencyCode;
+        final amount = sub.amount.minorUnits;
+        totalMap[currency] = (totalMap[currency] ?? 0) + amount;
+        if (!date.isBefore(today)) {
+          upcomingMap[currency] = (upcomingMap[currency] ?? 0) + amount;
         }
       }
     }
 
-    final fallbackCurrency = widget.subscriptions
-            .where((sub) => sub.isActive)
-            .firstOrNull
-            ?.amount
-            .currencyCode ??
-        'INR';
-    final effectiveCurrency =
-        currencySymbol.isEmpty ? fallbackCurrency : currencySymbol;
-
-    final totalMoney = Money(
-      minorUnits: totalCents,
-      currencyCode: effectiveCurrency,
+    return (
+      totalByCurrency: totalMap,
+      upcomingByCurrency: upcomingMap,
+      dueCount: dueCount,
     );
-    final upcomingMoney = Money(
-      minorUnits: upcomingCents,
-      currencyCode: effectiveCurrency,
-    );
+  }
 
-    final isViewingCurrentMonth = _focusedMonth.year == widget.now.year &&
-        _focusedMonth.month == widget.now.month;
+  String _formatTotalsMap(Map<String, int> totals, String locale) {
+    if (totals.isEmpty) {
+      final defaultCurrency = widget.subscriptions.isNotEmpty
+          ? widget.subscriptions.first.amount.currencyCode
+          : 'INR';
+      return MoneyFormat.format(
+        Money(minorUnits: 0, currencyCode: defaultCurrency),
+        locale,
+      );
+    }
+    return totals.entries
+        .map(
+          (e) => MoneyFormat.format(
+            Money(minorUnits: e.value, currencyCode: e.key),
+            locale,
+          ),
+        )
+        .join(' + ');
+  }
+
+  bool get _isShowingCurrentMonth =>
+      _focusedMonth.year == widget.now.year &&
+      _focusedMonth.month == widget.now.month;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toLanguageTag();
+
+    final totals = _calculateMonthlyTotals();
+    final totalText = _formatTotalsMap(totals.totalByCurrency, locale);
+    final upcomingText = _formatTotalsMap(totals.upcomingByCurrency, locale);
+
+    final selectedDate =
+        _selectedDate ??
+        DateTime(widget.now.year, widget.now.month, widget.now.day);
+    final selectedSubs = _getSubscriptionsForDay(selectedDate);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // 1. Month Header & Navigation
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-          child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        monthTitle,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
-                          color: AppColors.midnight,
-                          fontSize: 22,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    if (activeBillsCount > 0) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFECE8FB),
+        _CalendarHeroHeader(
+          focusedMonth: _focusedMonth,
+          locale: locale,
+          totalText: totalText,
+          upcomingText: upcomingText,
+          dueCount: totals.dueCount,
+          showTodayButton: !_isShowingCurrentMonth,
+          onPrev: _prevMonth,
+          onNext: _nextMonth,
+          onPickMonth: _pickMonth,
+          onJumpToday: _jumpToToday,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _CalendarGridCard(
+          focusedMonth: _focusedMonth,
+          today: DateTime(widget.now.year, widget.now.month, widget.now.day),
+          selectedDate: selectedDate,
+          getSubscriptionsForDay: _getSubscriptionsForDay,
+          onSelectDate: (date) => setState(() => _selectedDate = date),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _SelectedDayAgendaCard(
+          selectedDate: selectedDate,
+          subscriptions: selectedSubs,
+          locale: locale,
+        ),
+      ],
+    );
+  }
+}
+
+class _CalendarHeroHeader extends StatelessWidget {
+  const _CalendarHeroHeader({
+    required this.focusedMonth,
+    required this.locale,
+    required this.totalText,
+    required this.upcomingText,
+    required this.dueCount,
+    required this.showTodayButton,
+    required this.onPrev,
+    required this.onNext,
+    required this.onPickMonth,
+    required this.onJumpToday,
+  });
+
+  final DateTime focusedMonth;
+  final String locale;
+  final String totalText;
+  final String upcomingText;
+  final int dueCount;
+  final bool showTodayButton;
+  final VoidCallback onPrev;
+  final VoidCallback onNext;
+  final VoidCallback onPickMonth;
+  final VoidCallback onJumpToday;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final monthName = DateFormat.MMMM(locale).format(focusedMonth);
+    final yearText = DateFormat.y(locale).format(focusedMonth);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.passRadius),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.heroStart, AppColors.heroEnd],
+        ),
+        boxShadow: AppShadows.pulse(context),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.passRadius),
+        child: Stack(
+          children: [
+            const Positioned.fill(
+              child: PaperWalletEngraving(opacity: 0.08),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.md + 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: onPickMonth,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.violet.withValues(alpha: 0.2),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    monthName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontFamily: AppTypography.serifFamily,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                          letterSpacing: -0.3,
+                                        ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.14),
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                  child: Text(
+                                    yearText,
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  size: 18,
+                                  color: Colors.white.withValues(alpha: 0.72),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        child: Text(
-                          '$activeBillsCount ${activeBillsCount == 1 ? "bill" : "bills"}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.violet,
+                      ),
+                      if (showTodayButton) ...[
+                        Material(
+                          color: Colors.white.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(999),
+                          child: InkWell(
+                            onTap: onJumpToday,
+                            borderRadius: BorderRadius.circular(999),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                'Today',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 6),
+                      ],
+                      _HeroNavButton(
+                        icon: Icons.chevron_left_rounded,
+                        tooltip: 'Previous month',
+                        onTap: onPrev,
+                      ),
+                      const SizedBox(width: 6),
+                      _HeroNavButton(
+                        icon: Icons.chevron_right_rounded,
+                        tooltip: 'Next month',
+                        onTap: onNext,
                       ),
                     ],
-                  ],
-                ),
-              ),
-              if (!isViewingCurrentMonth) ...[
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _focusedMonth =
-                          DateTime(widget.now.year, widget.now.month);
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    minimumSize: const Size(0, 32),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text(
-                    'Today',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.violet,
-                      fontSize: 12,
+                  const SizedBox(height: AppSpacing.md),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
                     ),
-                  ),
-                ),
-                const SizedBox(width: 4),
-              ],
-              _RoundIconButton(
-                icon: Icons.calendar_today_outlined,
-                onPressed: _pickMonth,
-              ),
-              const SizedBox(width: 6),
-              _RoundIconButton(
-                icon: Icons.chevron_left_rounded,
-                onPressed: _prevMonth,
-              ),
-              const SizedBox(width: 6),
-              _RoundIconButton(
-                icon: Icons.chevron_right_rounded,
-                onPressed: _nextMonth,
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: AppSpacing.xs),
-
-        // 2. Weekdays Header
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F3FB),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              for (final day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'])
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      day,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
-                        color: (day == 'Sa' || day == 'Su')
-                            ? AppColors.violet
-                            : colorScheme.onSurfaceVariant,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.14),
                       ),
                     ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
-        // 3. Calendar Grid (individual card tiles matching Registry Aura theme)
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          itemCount: totalCells,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 5,
-            crossAxisSpacing: 5,
-            childAspectRatio: 0.86,
-          ),
-          itemBuilder: (context, index) {
-            DateTime cellDate;
-            bool isCurrentMonthDay = true;
-
-            if (index < leadingDays) {
-              final prevDay = prevMonthLastDay - (leadingDays - 1 - index);
-              cellDate = DateTime(year, month - 1, prevDay);
-              isCurrentMonthDay = false;
-            } else if (index >= leadingDays + daysInCurrentMonth) {
-              final nextDay = index - (leadingDays + daysInCurrentMonth) + 1;
-              cellDate = DateTime(year, month + 1, nextDay);
-              isCurrentMonthDay = false;
-            } else {
-              final day = index - leadingDays + 1;
-              cellDate = DateTime(year, month, day);
-            }
-
-            final daySubs = isCurrentMonthDay
-                ? _getSubscriptionsForDay(cellDate)
-                : <RegistrySubscription>[];
-            final isToday = cellDate.year == widget.now.year &&
-                cellDate.month == widget.now.month &&
-                cellDate.day == widget.now.day;
-            final isSelected = _selectedDate != null &&
-                cellDate.year == _selectedDate!.year &&
-                cellDate.month == _selectedDate!.month &&
-                cellDate.day == _selectedDate!.day;
-
-            return _CalendarDayCell(
-              date: cellDate,
-              isCurrentMonth: isCurrentMonthDay,
-              isToday: isToday,
-              subscriptions: daySubs,
-              isSelected: isSelected,
-              onTap: isCurrentMonthDay
-                  ? () => _onDayTapped(cellDate, daySubs)
-                  : null,
-            );
-          },
-        ),
-
-        const SizedBox(height: AppSpacing.sm),
-
-        // 4. Executive Summary Card (Total & Upcoming)
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: colorScheme.outlineVariant, width: 1.1),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.03),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFECE8FB),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance_wallet_rounded,
-                                size: 14,
-                                color: AppColors.violet,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Total',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            MoneyFormat.format(totalMoney, l10n.localeName),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.4,
-                              color: AppColors.midnight,
-                              fontSize: 18,
-                            ),
+                        Expanded(
+                          child: _HeroStatColumn(
+                            label: 'Total',
+                            value: totalText,
+                            caption: dueCount == 0
+                                ? 'No bills this month'
+                                : dueCount == 1
+                                    ? '1 renewal'
+                                    : '$dueCount renewals',
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 1,
-                    height: 38,
-                    color: colorScheme.outlineVariant,
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFDFF8F2),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Icon(
-                                Icons.upcoming_rounded,
-                                size: 14,
-                                color: Color(0xFF086B59),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Upcoming',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+                        Container(
+                          width: 1,
+                          height: 36,
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          color: Colors.white.withValues(alpha: 0.18),
                         ),
-                        const SizedBox(height: 6),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            MoneyFormat.format(upcomingMoney, l10n.localeName),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.4,
-                              color: AppColors.midnight,
-                              fontSize: 18,
-                            ),
+                        Expanded(
+                          child: _HeroStatColumn(
+                            label: 'Upcoming',
+                            value: upcomingText,
+                            caption: 'Remaining this month',
                           ),
                         ),
                       ],
@@ -459,236 +405,7 @@ class _SubscriptionCalendarViewState extends State<SubscriptionCalendarView> {
                   ),
                 ],
               ),
-              if (totalCents > 0) ...[
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: SizedBox(
-                    height: 5,
-                    child: Row(
-                      children: [
-                        if (totalCents - upcomingCents > 0)
-                          Expanded(
-                            flex: totalCents - upcomingCents,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF086B59),
-                              ),
-                            ),
-                          ),
-                        if (upcomingCents > 0)
-                          Expanded(
-                            flex: upcomingCents,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: AppColors.violet,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-
-        // 5. Selected Day Subscriptions Drawer
-        if (_selectedDate != null) ...[
-          const SizedBox(height: AppSpacing.sm),
-          _DaySubscriptionsDrawer(
-            date: _selectedDate!,
-            subscriptions: _getSubscriptionsForDay(_selectedDate!),
-            now: widget.now,
-          ),
-        ],
-      ],
-    );
-  }
-
-  void _onDayTapped(DateTime date, List<RegistrySubscription> subs) {
-    setState(() {
-      _selectedDate = date;
-    });
-  }
-}
-
-class _CalendarDayCell extends StatelessWidget {
-  const _CalendarDayCell({
-    required this.date,
-    required this.isCurrentMonth,
-    required this.isToday,
-    required this.subscriptions,
-    this.isSelected = false,
-    this.onTap,
-  });
-
-  final DateTime date;
-  final bool isCurrentMonth;
-  final bool isToday;
-  final bool isSelected;
-  final List<RegistrySubscription> subscriptions;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final hasSubs = subscriptions.isNotEmpty;
-
-    final Color? cellColor;
-    final Gradient? gradient;
-    final Color textColor;
-    Border? border;
-    List<BoxShadow>? shadows;
-
-    if (hasSubs) {
-      // Signature Registry Aura dark midnight/navy gradient
-      cellColor = null;
-      gradient = const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFF141D43), Color(0xFF283E79)],
-      );
-      textColor = Colors.white;
-      if (isSelected) {
-        border = Border.all(color: Colors.white, width: 2);
-        shadows = [
-          BoxShadow(
-            color: AppColors.violet.withValues(alpha: 0.45),
-            blurRadius: 8,
-            spreadRadius: 1,
-          ),
-        ];
-      } else {
-        shadows = [
-          BoxShadow(
-            color: const Color(0xFF141D43).withValues(alpha: 0.22),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ];
-      }
-    } else if (isCurrentMonth) {
-      cellColor = isSelected ? const Color(0xFFF3F0FC) : colorScheme.surface;
-      gradient = null;
-      textColor = AppColors.midnight;
-      if (isSelected) {
-        border = Border.all(color: AppColors.violet, width: 1.8);
-        shadows = [
-          BoxShadow(
-            color: AppColors.violet.withValues(alpha: 0.2),
-            blurRadius: 6,
-            spreadRadius: 1,
-          ),
-        ];
-      } else if (isToday) {
-        border = Border.all(
-          color: AppColors.violet.withValues(alpha: 0.75),
-          width: 1.4,
-        );
-      } else {
-        border = Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.7),
-          width: 0.9,
-        );
-      }
-    } else {
-      cellColor = Colors.transparent;
-      gradient = null;
-      textColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.35);
-    }
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(11),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        decoration: BoxDecoration(
-          color: cellColor,
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(11),
-          border: border,
-          boxShadow: shadows,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 3.5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Date number
-            Text(
-              '${date.day}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: hasSubs || isToday || isSelected
-                    ? FontWeight.w800
-                    : FontWeight.w600,
-                color: isToday && !hasSubs ? AppColors.violet : textColor,
-              ),
             ),
-            if (isToday && !hasSubs) ...[
-              const SizedBox(height: 1.5),
-              Center(
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: const BoxDecoration(
-                    color: AppColors.violet,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-            if (hasSubs) ...[
-              const Spacer(),
-              // Service brand badge (compact, high-contrast, fully theme matched)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 3,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
-                      blurRadius: 2,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    subscriptions.first.serviceName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 8.5,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF141D43),
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                ),
-              ),
-              if (subscriptions.length > 1) ...[
-                const SizedBox(height: 1),
-                Text(
-                  '+${subscriptions.length - 1} more',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-              const Spacer(),
-            ],
           ],
         ),
       ),
@@ -696,74 +413,364 @@ class _CalendarDayCell extends StatelessWidget {
   }
 }
 
-class _RoundIconButton extends StatelessWidget {
-  const _RoundIconButton({required this.icon, required this.onPressed});
+class _HeroNavButton extends StatelessWidget {
+  const _HeroNavButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
 
   final IconData icon;
-  final VoidCallback onPressed;
+  final String tooltip;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Material(
-      color: colorScheme.surface,
-      shape: CircleBorder(
-        side: BorderSide(color: colorScheme.outlineVariant, width: 1.1),
-      ),
-      clipBehavior: Clip.antiAlias,
-      elevation: 0.5,
-      shadowColor: colorScheme.shadow.withValues(alpha: 0.05),
-      child: InkWell(
-        onTap: onPressed,
-        child: SizedBox(
-          width: 36,
-          height: 36,
-          child: Icon(icon, size: 18, color: AppColors.midnight),
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.14),
+        shape: const CircleBorder(),
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: SizedBox(
+            width: 34,
+            height: 34,
+            child: Icon(icon, size: 20, color: Colors.white),
+          ),
         ),
       ),
     );
   }
 }
 
-class _DaySubscriptionsDrawer extends StatelessWidget {
-  const _DaySubscriptionsDrawer({
-    required this.date,
-    required this.subscriptions,
-    required this.now,
+class _HeroStatColumn extends StatelessWidget {
+  const _HeroStatColumn({
+    required this.label,
+    required this.value,
+    required this.caption,
   });
 
-  final DateTime date;
-  final List<RegistrySubscription> subscriptions;
-  final DateTime now;
+  final String label;
+  final String value;
+  final String caption;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: Colors.white.withValues(alpha: 0.72),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 3),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            value,
+            maxLines: 1,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          caption,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: Colors.white.withValues(alpha: 0.6),
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CalendarGridCard extends StatelessWidget {
+  const _CalendarGridCard({
+    required this.focusedMonth,
+    required this.today,
+    required this.selectedDate,
+    required this.getSubscriptionsForDay,
+    required this.onSelectDate,
+  });
+
+  final DateTime focusedMonth;
+  final DateTime today;
+  final DateTime selectedDate;
+  final List<RegistrySubscription> Function(DateTime) getSubscriptionsForDay;
+  final ValueChanged<DateTime> onSelectDate;
+
+  static const _weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final formattedDate = DateFormat.yMMMMd(l10n.localeName).format(date);
+
+    final firstOfMonth = DateTime(focusedMonth.year, focusedMonth.month);
+    final daysInMonth =
+        DateTime(focusedMonth.year, focusedMonth.month + 1, 0).day;
+    final leadingBlanks = firstOfMonth.weekday - 1;
+    final totalCells = ((leadingBlanks + daysInMonth + 6) ~/ 7) * 7;
+
+    final rows = <Widget>[];
+    for (var start = 0; start < totalCells; start += 7) {
+      final rowChildren = <Widget>[];
+      for (var col = 0; col < 7; col++) {
+        final index = start + col;
+        final dayOffset = index - leadingBlanks + 1;
+        if (dayOffset < 1 || dayOffset > daysInMonth) {
+          final overflowDate = DateTime(
+            focusedMonth.year,
+            focusedMonth.month,
+            dayOffset,
+          );
+          rowChildren.add(
+            Expanded(
+              child: SizedBox(
+                height: 54,
+                child: Center(
+                  child: Text(
+                    '${overflowDate.day}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.35),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          final date = DateTime(
+            focusedMonth.year,
+            focusedMonth.month,
+            dayOffset,
+          );
+          final isToday = date == today;
+          final isSelected = date == selectedDate;
+          final dueSubs = getSubscriptionsForDay(date);
+
+          rowChildren.add(
+            Expanded(
+              child: _CalendarDayCell(
+                date: date,
+                isToday: isToday,
+                isSelected: isSelected,
+                dueSubs: dueSubs,
+                onTap: () => onSelectDate(date),
+              ),
+            ),
+          );
+        }
+      }
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(children: rowChildren),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: colorScheme.outlineVariant),
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              for (final day in _weekdays)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+          ),
+          const SizedBox(height: 4),
+          ...rows,
+        ],
+      ),
+    );
+  }
+}
+
+class _CalendarDayCell extends StatelessWidget {
+  const _CalendarDayCell({
+    required this.date,
+    required this.isToday,
+    required this.isSelected,
+    required this.dueSubs,
+    required this.onTap,
+  });
+
+  final DateTime date;
+  final bool isToday;
+  final bool isSelected;
+  final List<RegistrySubscription> dueSubs;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hasSubs = dueSubs.isNotEmpty;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        curve: Curves.easeOutCubic,
+        height: 54,
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.deepNavy
+              : hasSubs
+                  ? AppColors.indigoContainer.withValues(alpha: 0.75)
+                  : isToday
+                      ? AppColors.surfaceContainer
+                      : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          border: isToday && !isSelected
+              ? Border.all(
+                  color: AppColors.deepNavy.withValues(alpha: 0.45),
+                  width: 1.2,
+                )
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '${date.day}',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: isSelected
+                    ? Colors.white
+                    : isToday
+                        ? AppColors.deepNavy
+                        : AppColors.midnight,
+                fontWeight: (isSelected || isToday || hasSubs)
+                    ? FontWeight.w700
+                    : FontWeight.w500,
+                fontSize: 13.5,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+            const SizedBox(height: 3),
+            if (hasSubs)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : AppColors.deepNavy.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  dueSubs.length == 1
+                      ? dueSubs.first.serviceName
+                      : '${dueSubs.first.serviceName} +${dueSubs.length - 1}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 8.5,
+                    height: 1.15,
+                    fontWeight: FontWeight.w700,
+                    color: isSelected ? Colors.white : AppColors.deepNavy,
+                  ),
+                ),
+              )
+            else if (isToday)
+              Container(
+                width: 4,
+                height: 4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected ? Colors.white : AppColors.deepNavy,
+                ),
+              )
+            else
+              const SizedBox(height: 4),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectedDayAgendaCard extends StatelessWidget {
+  const _SelectedDayAgendaCard({
+    required this.selectedDate,
+    required this.subscriptions,
+    required this.locale,
+  });
+
+  final DateTime selectedDate;
+  final List<RegistrySubscription> subscriptions;
+  final String locale;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final formattedDate = DateFormat.yMMMMd(locale).format(selectedDate);
 
     if (subscriptions.isEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFFF9F8FD),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorScheme.outlineVariant, width: 1.1),
+          color: colorScheme.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: colorScheme.outlineVariant),
+          boxShadow: AppShadows.card(context),
         ),
         child: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
-                color: const Color(0xFFDFF8F2),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.successContainer,
+                borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
-                Icons.check_circle_rounded,
-                size: 18,
-                color: Color(0xFF086B59),
+                Icons.check_rounded,
+                size: 20,
+                color: AppColors.success,
               ),
             ),
             const SizedBox(width: 12),
@@ -773,18 +780,15 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
                 children: [
                   Text(
                     'No subscriptions due on $formattedDate',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: AppColors.midnight,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 1),
+                  const SizedBox(height: 2),
                   Text(
-                    'No renewals scheduled for this day',
+                    'All clear for this day.',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontSize: 11,
+                      color: AppColors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -795,150 +799,157 @@ class _DaySubscriptionsDrawer extends StatelessWidget {
       );
     }
 
-    var dayTotalMinor = 0;
-    final dayCurrency = subscriptions.first.amount.currencyCode;
-    for (final sub in subscriptions) {
-      dayTotalMinor += sub.amount.minorUnits;
-    }
-    final dayTotalMoney = Money(
-      minorUnits: dayTotalMinor,
-      currencyCode: dayCurrency,
-    );
-
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outlineVariant, width: 1.1),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colorScheme.outlineVariant),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECE8FB),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.event_note_rounded,
-                  size: 16,
-                  color: AppColors.violet,
-                ),
-              ),
-              const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   'Due on $formattedDate',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.midnight,
                   ),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFECE8FB),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.indigoContainer,
+                  borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  MoneyFormat.format(dayTotalMoney, l10n.localeName),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.violet,
+                  subscriptions.length == 1
+                      ? '1 bill'
+                      : '${subscriptions.length} bills',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: AppColors.deepNavy,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          for (final sub in subscriptions) ...[
-            Material(
-              color: colorScheme.surfaceContainerLowest,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-                side: BorderSide(color: colorScheme.outlineVariant),
+          for (var i = 0; i < subscriptions.length; i++) ...[
+            if (i > 0)
+              Divider(
+                height: 16,
+                thickness: 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.6),
               ),
-              child: InkWell(
-                onTap: () => AppRoutes.openSubscriptionDetail(context, sub.id),
-                borderRadius: BorderRadius.circular(14),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 38,
-                        height: 38,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFECE8FB),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          SubscriptionCopy.iconFor(sub.category),
-                          size: 19,
-                          color: AppColors.violet,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              sub.serviceName,
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.midnight,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              SubscriptionCopy.cycle(l10n, sub.billingCycle),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        MoneyFormat.format(sub.amount, l10n.localeName),
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.midnight,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        size: 18,
-                        color: colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ],
-                  ),
+            _AgendaSubscriptionRow(
+              subscription: subscriptions[i],
+              cycleLabel: SubscriptionCopy.cycle(
+                l10n,
+                subscriptions[i].billingCycle,
+              ),
+              amountLabel: MoneyFormat.format(
+                subscriptions[i].amount,
+                locale,
+              ),
+              onTap: () => AppRoutes.openSubscriptionDetail(
+                context,
+                subscriptions[i].id,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _AgendaSubscriptionRow extends StatelessWidget {
+  const _AgendaSubscriptionRow({
+    required this.subscription,
+    required this.cycleLabel,
+    required this.amountLabel,
+    required this.onTap,
+  });
+
+  final RegistrySubscription subscription;
+  final String cycleLabel;
+  final String amountLabel;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final initial = subscription.serviceName.trim().isEmpty
+        ? 'S'
+        : subscription.serviceName.trim().substring(0, 1).toUpperCase();
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.indigoContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                initial,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: AppColors.deepNavy,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    subscription.serviceName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    cycleLabel,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              amountLabel,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: AppColors.onSurfaceVariant,
+            ),
           ],
-        ],
+        ),
       ),
     );
   }

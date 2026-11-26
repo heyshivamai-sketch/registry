@@ -10,7 +10,6 @@ import '../../../core/widgets/registry_section_header.dart';
 import '../../../core/widgets/registry_surface.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../app_lock/app_lock_controller.dart';
-import '../../entitlements/registry_plan.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
@@ -34,17 +33,6 @@ class ProfileScreen extends StatelessWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(l10n.backupImportReplaced)));
-  }
-
-  Future<void> _openCharges(BuildContext context) async {
-    final created = await AppRoutes.openImportCharges(context);
-    if (created <= 0 || !context.mounted) {
-      return;
-    }
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(l10n.csvCreated(created))));
   }
 
   @override
@@ -102,67 +90,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           const _AppLockSection(),
-          const SizedBox(height: AppSpacing.md),
-          RegistrySurface(
-            key: const ValueKey<String>('local-pro-section'),
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                RegistrySectionHeader(
-                  title: l10n.localProTitle,
-                  icon: Icons.workspace_premium_outlined,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                ListenableBuilder(
-                  listenable: RegistryDependencies.of(context).entitlements,
-                  builder: (context, _) {
-                    final plan = RegistryDependencies.of(
-                      context,
-                    ).entitlements.plan;
-                    return Text(
-                      plan == RegistryPlan.localPro
-                          ? l10n.localProCurrentPro
-                          : l10n.profilePlanFree,
-                      style: theme.textTheme.bodyMedium,
-                    );
-                  },
-                ),
-                const SizedBox(height: AppSpacing.md),
-                OutlinedButton(
-                  key: const ValueKey<String>('local-pro-open'),
-                  onPressed: () => AppRoutes.openLocalPro(context),
-                  child: Text(l10n.localProAction, textAlign: TextAlign.center),
-                ),
-              ],
-            ),
-          ),
           const _AdsPrivacySection(),
-          const SizedBox(height: AppSpacing.md),
-          RegistrySurface(
-            key: const ValueKey<String>('csv-import-section'),
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                RegistrySectionHeader(
-                  title: l10n.csvImportTitle,
-                  icon: Icons.table_chart_outlined,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(l10n.csvImportIntro, style: theme.textTheme.bodyMedium),
-                const SizedBox(height: AppSpacing.md),
-                OutlinedButton(
-                  key: const ValueKey<String>('csv-import-open'),
-                  onPressed: () => unawaited(_openCharges(context)),
-                  child: Text(
-                    l10n.csvImportAction,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -247,7 +247,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your Registry'**
+  /// **'Regiday'**
   String get homeTitle;
 
   /// No description provided for @notificationsButton.
@@ -271,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchPlaceholder.
   ///
   /// In en, this message translates to:
-  /// **'Search your registry'**
+  /// **'Search Regiday'**
   String get searchPlaceholder;
 
   /// No description provided for @searchClear.
@@ -367,7 +367,7 @@ abstract class AppLocalizations {
   /// No description provided for @snapshotDocumentsHint.
   ///
   /// In en, this message translates to:
-  /// **'Records in your registry'**
+  /// **'Saved in Regiday'**
   String get snapshotDocumentsHint;
 
   /// No description provided for @snapshotSubscriptionsHint.
@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @snapshotNext90Hint.
   ///
   /// In en, this message translates to:
-  /// **'Across your registry'**
+  /// **'In Regiday'**
   String get snapshotNext90Hint;
 
   /// No description provided for @snapshotDocumentsSupporting.
@@ -475,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @sectionRegistrySnapshot.
   ///
   /// In en, this message translates to:
-  /// **'Registry snapshot'**
+  /// **'Regiday overview'**
   String get sectionRegistrySnapshot;
 
   /// No description provided for @sectionItemCount.
@@ -691,7 +691,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileMessage.
   ///
   /// In en, this message translates to:
-  /// **'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.'**
+  /// **'Your documents and subscriptions stay private on this device.'**
   String get profileMessage;
 
   /// No description provided for @profileButton.
@@ -709,7 +709,7 @@ abstract class AppLocalizations {
   /// No description provided for @addDocumentMessage.
   ///
   /// In en, this message translates to:
-  /// **'Add images for optional AI scanning or enter details manually. Records and attachments stay on this device.'**
+  /// **'Scan photos or enter details manually. Everything stays on your device.'**
   String get addDocumentMessage;
 
   /// No description provided for @addSubscriptionTitle.
@@ -829,7 +829,7 @@ abstract class AppLocalizations {
   /// No description provided for @attachmentPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Stored on this device. Sent to Gemini through Firebase AI Logic only when you tap Scan all images.'**
+  /// **'Saved on this device. Images are scanned only when you tap Scan.'**
   String get attachmentPrivacy;
 
   /// No description provided for @replaceAttachmentTitle.
@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @remindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'Saved with this document. Regiday asks this device for a local notification at 9:00 in your time zone on each selected date that is still ahead. The system may deliver it later. You can save if notifications are off.'**
+  /// **'Regiday sends local reminders at 9:00 AM on the dates you pick.'**
   String get remindersHelper;
 
   /// No description provided for @reminderOnActionDate.
@@ -1657,13 +1657,13 @@ abstract class AppLocalizations {
   /// No description provided for @ocrPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Images are sent to Gemini through Firebase AI Logic only when you start a scan. Nothing is saved until you confirm.'**
+  /// **'Images are scanned only when you tap Scan. Nothing is saved until you confirm.'**
   String get ocrPrivacy;
 
   /// No description provided for @ocrReviewPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Gemini results are not saved until you review, confirm and complete Save.'**
+  /// **'Review the scanned details before saving.'**
   String get ocrReviewPrivacy;
 
   /// No description provided for @scanAgain.
@@ -1681,7 +1681,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrProcessingMessage.
   ///
   /// In en, this message translates to:
-  /// **'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter details manually.'**
+  /// **'Reading your document… You can cancel and enter details manually.'**
   String get ocrProcessingMessage;
 
   /// No description provided for @ocrCancel.
@@ -2149,7 +2149,7 @@ abstract class AppLocalizations {
   /// No description provided for @ocrProcessingHint.
   ///
   /// In en, this message translates to:
-  /// **'Gemini is reading the images through Firebase AI Logic.'**
+  /// **'Reading your document images…'**
   String get ocrProcessingHint;
 
   /// No description provided for @horizonOpenCalendar.
@@ -2221,7 +2221,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your registry is empty'**
+  /// **'Regiday is empty'**
   String get homeEmptyTitle;
 
   /// No description provided for @homeEmptyMessage.
@@ -2341,7 +2341,7 @@ abstract class AppLocalizations {
   /// No description provided for @estimatedMonthlyDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'A normalized estimate for active plans. It is not actual spending or payments already made.'**
+  /// **'Estimated monthly total for active plans.'**
   String get estimatedMonthlyDisclaimer;
 
   /// No description provided for @estimatedMonthlyMultiple.
@@ -2533,7 +2533,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionReviewIntro.
   ///
   /// In en, this message translates to:
-  /// **'Confirm the plan before adding it to your Registry.'**
+  /// **'Confirm before adding to Regiday.'**
   String get subscriptionReviewIntro;
 
   /// No description provided for @saveSubscription.
@@ -2647,7 +2647,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionRemindersHelper.
   ///
   /// In en, this message translates to:
-  /// **'Saved with this plan. Seven and one day before follow the decide-by date, or the payment date when decide-by is empty. Charge day follows the payment date. Each one is requested for 9:00 in your time zone only while that time is still ahead. The system may deliver it later. You can save if notifications are off.'**
+  /// **'Local reminders at 9:00 AM before your decide-by or payment date.'**
   String get subscriptionRemindersHelper;
 
   /// No description provided for @subscriptionReminder7Days.
@@ -3205,19 +3205,19 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsScheduledCount.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{No local reminders are scheduled on this device.} one{1 local reminder is scheduled on this device.} other{{count} local reminders are scheduled on this device.}}'**
+  /// **'{count, plural, =0{No reminders scheduled yet.} one{1 reminder scheduled.} other{{count} reminders scheduled.}}'**
   String notificationsScheduledCount(int count);
 
   /// No description provided for @notificationsPermissionOff.
   ///
   /// In en, this message translates to:
-  /// **'Notifications are off. Reminder choices stay saved with each record, and nothing is scheduled until you turn notifications on in system settings.'**
+  /// **'Notifications are off. Turn them on to get reminders.'**
   String get notificationsPermissionOff;
 
   /// No description provided for @notificationsLimits.
   ///
   /// In en, this message translates to:
-  /// **'Reminders stay on this device. There is no server or cloud messaging. Regiday asks for 9:00 in your current time zone, including daylight saving, but Android may deliver that reminder later. Android restores scheduled reminders after a normal restart, and drops them after a force stop until you open Regiday again. iOS can keep pending local reminders across a restart, up to 64. Regiday schedules at most 64, soonest first.'**
+  /// **'Reminders run locally on your device at 9:00 AM. No server or cloud needed.'**
   String get notificationsLimits;
 
   /// No description provided for @notificationsOmittedCount.
@@ -3337,7 +3337,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Export an encrypted backup or restore records from a backup file. Backups are encrypted with a password you set. Regiday does not store this password, and this does not encrypt the registry database already on this device.'**
+  /// **'Export or restore an encrypted backup file. Keep your password safe—Regiday does not store it.'**
   String get backupSectionBody;
 
   /// No description provided for @backupExportAction.
@@ -3451,19 +3451,19 @@ abstract class AppLocalizations {
   /// No description provided for @backupPreview.
   ///
   /// In en, this message translates to:
-  /// **'This backup contains {documents} documents, {subscriptions} subscriptions, and {attachments} images. Replacing this device\'s registry removes the records stored here and puts this backup in their place. Records are not merged.'**
+  /// **'This backup has {documents} documents, {subscriptions} subscriptions, and {attachments} images. Restoring replaces your current records.'**
   String backupPreview(int documents, int subscriptions, int attachments);
 
   /// No description provided for @backupReplaceAction.
   ///
   /// In en, this message translates to:
-  /// **'Replace this device\'s registry'**
+  /// **'Replace data on this device'**
   String get backupReplaceAction;
 
   /// No description provided for @backupReplaceTitle.
   ///
   /// In en, this message translates to:
-  /// **'Replace this device\'s registry?'**
+  /// **'Replace data on this device?'**
   String get backupReplaceTitle;
 
   /// No description provided for @backupReplaceBody.
@@ -3499,7 +3499,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupPhaseRestoring.
   ///
   /// In en, this message translates to:
-  /// **'Replacing this device\'s registry…'**
+  /// **'Restoring backup…'**
   String get backupPhaseRestoring;
 
   /// No description provided for @backupExportSaved.
@@ -3547,7 +3547,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupExportTooLarge.
   ///
   /// In en, this message translates to:
-  /// **'This registry is too large to export in one backup. No backup file was saved.'**
+  /// **'Too much data to export in one backup.'**
   String get backupExportTooLarge;
 
   /// No description provided for @backupExportFailed.
@@ -3559,7 +3559,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupImportReplaced.
   ///
   /// In en, this message translates to:
-  /// **'This device\'s registry was replaced from the backup.'**
+  /// **'Backup restored on this device.'**
   String get backupImportReplaced;
 
   /// No description provided for @backupImportCancelled.
@@ -3625,7 +3625,7 @@ abstract class AppLocalizations {
   /// No description provided for @appLockSectionBody.
   ///
   /// In en, this message translates to:
-  /// **'Ask for this device\'s biometrics or passcode before Regiday shows your records. App lock hides records in the app switcher. It does not encrypt the registry database.'**
+  /// **'Use biometrics or your device passcode to lock Regiday and hide screens in the app switcher.'**
   String get appLockSectionBody;
 
   /// No description provided for @appLockEnabled.
@@ -4243,19 +4243,19 @@ abstract class AppLocalizations {
   /// No description provided for @firebaseAiScanPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'When you tap Scan all images, your document images are sent to Gemini through Firebase AI Logic. Review every field before saving.'**
+  /// **'Images are scanned only when you tap Scan all images. Review every field before saving.'**
   String get firebaseAiScanPrivacy;
 
   /// No description provided for @firebaseAiScanProcessing.
   ///
   /// In en, this message translates to:
-  /// **'Gemini is reading all document images through Firebase AI Logic. You can cancel and enter the details manually.'**
+  /// **'Reading your document… You can cancel and enter details manually.'**
   String get firebaseAiScanProcessing;
 
   /// No description provided for @firebaseAiScanUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'AI Scan is unavailable because Firebase is not configured. You can still add images and enter all details manually.'**
+  /// **'AI scan isn\'t available right now. You can still attach photos and enter details manually.'**
   String get firebaseAiScanUnavailable;
 
   /// No description provided for @discoverSubscriptions.

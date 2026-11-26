@@ -2,6 +2,7 @@ import '../../../l10n/app_localizations.dart';
 import '../domain/document_field_value.dart';
 import '../domain/document_schema.dart';
 import '../domain/registry_document.dart';
+import '../domain/world_countries.dart';
 import 'add_document_controller.dart';
 
 abstract final class DocumentCopy {
@@ -49,7 +50,8 @@ abstract final class DocumentCopy {
       DocumentCountryCodes.india => l10n.countryIndia,
       DocumentCountryCodes.france => l10n.countryFrance,
       DocumentCountryCodes.uae => l10n.countryUae,
-      _ => l10n.countryOther,
+      DocumentCountryCodes.other => l10n.countryOther,
+      _ => WorldCountries.nameOf(code) ?? l10n.countryOther,
     };
   }
 

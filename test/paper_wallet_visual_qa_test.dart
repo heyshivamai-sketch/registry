@@ -192,6 +192,14 @@ void main() {
     expect(tester.takeException(), isNull);
     await saveScreenshot(tester, 'subscriptions_wallet', folder: 'paper_wallet', pixelRatio: 2.0);
 
+    // Subscriptions calendar view
+    await tester.tap(
+      find.byKey(const ValueKey<String>('subscriptions-calendar-toggle')),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await saveScreenshot(tester, 'subscriptions_calendar', folder: 'paper_wallet', pixelRatio: 2.0);
+
     // Quick Add -> Add Document
     await tester.tap(find.byKey(const ValueKey<String>('home-fab')));
     await tester.pumpAndSettle();

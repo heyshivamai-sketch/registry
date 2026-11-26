@@ -85,7 +85,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeGreeting => 'ابقَ سابقًا لما يهم';
 
   @override
-  String get homeTitle => 'سجلك';
+  String get homeTitle => 'Regiday';
 
   @override
   String get notificationsButton => 'الإشعارات';
@@ -98,7 +98,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'تبقى التذكيرات على هذا الجهاز. لا توجد رسائل عبر خادم.';
 
   @override
-  String get searchPlaceholder => 'ابحث في سجلك';
+  String get searchPlaceholder => 'ابحث في Regiday';
 
   @override
   String get searchClear => 'مسح البحث';
@@ -234,7 +234,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sectionComingUp => 'القادم';
 
   @override
-  String get sectionRegistrySnapshot => 'لمحة عن السجل';
+  String get sectionRegistrySnapshot => 'نظرة عامة على Regiday';
 
   @override
   String sectionItemCount(int count) {
@@ -360,8 +360,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileTitle => 'الملف الشخصي';
 
   @override
-  String get profileMessage =>
-      'تبقى سجلاتك خاصة على هذا الجهاز. Regiday Pro ترقية لمرة واحدة ولا يزامن المستندات أو الاشتراكات.';
+  String get profileMessage => 'تبقى مستنداتك واشتراكاتك خاصة على هذا الجهاز.';
 
   @override
   String get profileButton => 'فتح الملف الشخصي';
@@ -371,7 +370,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addDocumentMessage =>
-      'أضف صورًا للمسح الاختياري بالذكاء الاصطناعي أو أدخل التفاصيل يدويًا. تبقى السجلات والمرفقات على هذا الجهاز.';
+      'امسح الصور أو أدخل التفاصيل يدويًا. كل شيء يبقى على جهازك.';
 
   @override
   String get addSubscriptionTitle => 'إضافة اشتراك';
@@ -444,7 +443,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get attachmentPrivacy =>
-      'تُحفظ الصورة على هذا الجهاز، ولا تُرسل إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح.';
+      'تُحفظ على هذا الجهاز وتُمسح فقط عند الضغط على مسح.';
 
   @override
   String get replaceAttachmentTitle => 'استبدال الصورة';
@@ -535,7 +534,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get remindersHelper =>
-      'يُحفظ مع هذا المستند. يطلب Regiday من هذا الجهاز إشعارًا محليًا في الساعة 9:00 بتوقيتك المحلي لكل تاريخ محدد لم يمر بعد. قد يسلّمه النظام لاحقًا. يمكنك الحفظ إذا كانت الإشعارات متوقفة.';
+      'يرسل Regiday تذكيرات محلية الساعة 9:00 صباحًا في التواريخ التي تختارها.';
 
   @override
   String get reminderOnActionDate => 'في تاريخ الإجراء';
@@ -880,11 +879,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ocrPrivacy =>
-      'لا تُرسل الصور إلى Gemini عبر Firebase AI Logic إلا عند بدء المسح. لا يُحفظ شيء حتى تؤكد.';
+      'تُمسح الصور فقط عند الضغط على مسح. لا يُحفظ شيء حتى تؤكد.';
 
   @override
-  String get ocrReviewPrivacy =>
-      'لا تُحفظ نتائج Gemini حتى تراجعها وتؤكدها وتكمل الحفظ.';
+  String get ocrReviewPrivacy => 'راجع التفاصيل الممسوحة قبل الحفظ.';
 
   @override
   String get scanAgain => 'مسح مرة أخرى';
@@ -894,7 +892,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ocrProcessingMessage =>
-      'يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
+      'جاري قراءة المستند… يمكنك الإلغاء والإدخال يدويًا.';
 
   @override
   String get ocrCancel => 'إلغاء المسح';
@@ -1157,7 +1155,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ocrReviewHint => 'راجع القيم المميّزة قبل المتابعة.';
 
   @override
-  String get ocrProcessingHint => 'يقرأ Gemini الصور عبر Firebase AI Logic.';
+  String get ocrProcessingHint => 'جاري قراءة صور المستند…';
 
   @override
   String get horizonOpenCalendar => 'فتح التقويم';
@@ -1789,20 +1787,20 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count تذكيرات محلية مجدولة على هذا الجهاز.',
-      one: 'تذكير محلي واحد مجدول على هذا الجهاز.',
-      zero: 'لا توجد تذكيرات محلية مجدولة على هذا الجهاز.',
+      other: '$count تذكيرات مجدولة.',
+      one: 'تذكير واحد مجدول.',
+      zero: 'لا توجد تذكيرات مجدولة.',
     );
     return '$_temp0';
   }
 
   @override
   String get notificationsPermissionOff =>
-      'الإشعارات متوقفة. تبقى خيارات التذكير محفوظة مع كل سجل، ولا يُجدول شيء حتى تُفعَّل الإشعارات من إعدادات النظام.';
+      'الإشعارات متوقفة. فعّلها للحصول على التذكيرات.';
 
   @override
   String get notificationsLimits =>
-      'تبقى التذكيرات على هذا الجهاز. لا يوجد خادم ولا رسائل سحابية. يطلب التطبيق الساعة 9:00 بتوقيتك الحالي، بما في ذلك التوقيت الصيفي، لكن أندرويد قد يسلّم التذكير لاحقًا. يستعيد أندرويد التذكيرات المجدولة بعد إعادة التشغيل العادية، ويسقطها بعد الإيقاف الإجباري إلى أن تفتح التطبيق مرة أخرى. يمكن لـ iOS الاحتفاظ بالتذكيرات المحلية المنتظرة بعد إعادة التشغيل، حتى 64. يجدول التطبيق 64 على الأكثر، الأقرب أولًا.';
+      'تعمل التذكيرات محليًا على جهازك الساعة 9:00 صباحًا بدون خادم.';
 
   @override
   String notificationsOmittedCount(int count) {
@@ -1889,7 +1887,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backupSectionBody =>
-      'صدّر ملف نسخة احتياطية مشفّرًا، أو استبدل سجل هذا الجهاز من نسخة احتياطية. يُشفَّر الملف بكلمة مرور تختارها. لا يحفظ Regiday كلمة المرور، وهذا لا يشفّر قاعدة السجل الموجودة بالفعل على هذا الجهاز.';
+      'صدّر أو استعد نسخة احتياطية مشفّرة. احتفظ بكلمة مرورك بأمان — لا يحفظها Regiday.';
 
   @override
   String get backupExportAction => 'تصدير نسخة احتياطية';
@@ -2050,7 +2048,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appLockSectionBody =>
-      'اطلب بصمة هذا الجهاز أو رمزه قبل أن يعرض Regiday سجلاتك. يخفي القفل السجلات في مبدّل التطبيقات. وهو لا يشفّر قاعدة السجل.';
+      'استخدم البصمة أو رمز الجهاز لقفل Regiday وإخفاء الشاشات في مبدّل التطبيقات.';
 
   @override
   String get appLockEnabled => 'قفل التطبيق مفعّل';
@@ -2424,15 +2422,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get firebaseAiScanPrivacy =>
-      'عند الضغط على مسح جميع الصور، تُرسل صور المستند إلى Gemini عبر Firebase AI Logic. راجع كل حقل قبل الحفظ.';
+      'تُمسح الصور فقط عند الضغط على مسح جميع الصور. راجع كل حقل قبل الحفظ.';
 
   @override
   String get firebaseAiScanProcessing =>
-      'يقرأ Gemini جميع صور المستند عبر Firebase AI Logic. يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
+      'جاري قراءة المستند… يمكنك الإلغاء وإدخال التفاصيل يدويًا.';
 
   @override
   String get firebaseAiScanUnavailable =>
-      'المسح بالذكاء الاصطناعي غير متاح لأن Firebase غير مُهيّأ. يمكنك إضافة الصور وإدخال جميع التفاصيل يدويًا.';
+      'المسح الذكي غير متاح الآن. يمكنك إرفاق الصور وإدخال التفاصيل يدويًا.';
 
   @override
   String get discoverSubscriptions => 'اكتشاف الاشتراكات';

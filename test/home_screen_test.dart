@@ -118,7 +118,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(HomeHeader), findsOneWidget);
-    expect(find.text('Your Registry'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
     expect(find.byType(HomeFirstVisit), findsOneWidget);
     expect(find.text('Add your first document'), findsOneWidget);
     expect(find.text('Add a subscription'), findsOneWidget);
@@ -610,7 +610,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       find.text(
-        'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.',
+        'Your documents and subscriptions stay private on this device.',
       ),
       findsOneWidget,
     );
@@ -619,7 +619,7 @@ void main() {
   testWidgets('Arabic Home stays RTL', (tester) async {
     await tester.pumpWidget(_app(locale: const Locale('ar')));
     await tester.pumpAndSettle();
-    expect(find.text('سجلك'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
     expect(
       Directionality.of(tester.element(find.byType(AppShell))),
       TextDirection.rtl,
@@ -629,7 +629,7 @@ void main() {
   testWidgets('French Home uses first-visit copy', (tester) async {
     await tester.pumpWidget(_app(locale: const Locale('fr')));
     await tester.pumpAndSettle();
-    expect(find.text('Votre registre'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
     expect(find.text('Ajouter votre premier document'), findsOneWidget);
   });
 

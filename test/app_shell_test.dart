@@ -26,7 +26,7 @@ void main() {
 
     expect(find.byType(AppShell), findsOneWidget);
     expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.text('Your Registry'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
     expect(find.byType(RegistryAuraNavigationDock), findsOneWidget);
   });
 
@@ -45,7 +45,7 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey<String>('nav-home')));
     await tester.pumpAndSettle();
-    expect(find.text('Your Registry'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
   });
 
   testWidgets('Profile icon opens Profile placeholder', (tester) async {
@@ -58,7 +58,7 @@ void main() {
     expect(find.byType(ProfileScreen), findsWidgets);
     expect(
       find.text(
-        'Your records stay private on this device. Regiday Pro is a one-time upgrade and does not sync documents or subscriptions.',
+        'Your documents and subscriptions stay private on this device.',
       ),
       findsOneWidget,
     );
@@ -172,7 +172,7 @@ void main() {
     await tester.pumpWidget(_app(locale: const Locale('ar')));
     await tester.pumpAndSettle();
 
-    expect(find.text('سجلك'), findsOneWidget);
+    expect(find.text('Regiday'), findsOneWidget);
     expect(
       Directionality.of(tester.element(find.byType(AppShell))),
       TextDirection.rtl,
