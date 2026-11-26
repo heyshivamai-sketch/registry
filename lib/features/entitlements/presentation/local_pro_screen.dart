@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../app/navigation/app_routes.dart';
 import '../../../app/registry_dependencies.dart';
 import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_spacing.dart';
@@ -193,6 +194,31 @@ class _LocalProScreenState extends State<LocalProScreen> {
         key: const ValueKey<String>('local-pro-restore'),
         onPressed: _busy ? null : () => unawaited(_run((localPro) => localPro.restore())),
         child: Text(l10n.localProRestore, textAlign: TextAlign.center),
+      ),
+      const SizedBox(height: AppSpacing.md),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: () => AppRoutes.openTermsAndConditions(context),
+            child: Text(
+              l10n.termsTitle,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Text('•', style: TextStyle(color: theme.colorScheme.outline)),
+          TextButton(
+            onPressed: () => AppRoutes.openPrivacyPolicy(context),
+            child: Text(
+              l10n.privacyPolicyTitle,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
       ),
     ];
   }

@@ -2570,4 +2570,88 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get candidateIgnored =>
       'Marchand ignoré. Registry ne détectera plus ce marchand.';
+
+  @override
+  String get legalSectionTitle => 'Mentions légales et confidentialité';
+
+  @override
+  String get legalSectionBody =>
+      'Consultez notre politique de confidentialité et nos conditions d\'utilisation. Registry est conçu en local d\'abord pour garder vos données entre vos mains.';
+
+  @override
+  String get privacyPolicyTitle => 'Politique de confidentialité';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Découvrez comment Registry protège vos dossiers personnels sur votre appareil.';
+
+  @override
+  String get termsTitle => 'Conditions d\'utilisation';
+
+  @override
+  String get termsSubtitle =>
+      'Conditions générales, responsabilités de l\'utilisateur et directives.';
+
+  @override
+  String get legalLastUpdated => 'Dernière mise à jour : Novembre 2026';
+
+  @override
+  String get privacyHighlightLocalTitle => 'Coffre-fort 100% local';
+
+  @override
+  String get privacyHighlightLocalBody =>
+      'Vos documents, abonnements, historiques de renouvellement, notes et photos restent sur cet appareil. Registry ne dispose d\'aucune base de données centrale ni de compte.';
+
+  @override
+  String get privacyHighlightAiTitle => 'Numérisation IA privée de documents';
+
+  @override
+  String get privacyHighlightAiBody =>
+      'Les photos de documents ne sont transmises à Google Gemini via Firebase AI Logic que lorsque vous appuyez sur Scanner toutes les images. Les données sont traitées uniquement pour extraire les champs pour vérification et ne sont jamais enregistrées à distance par Registry.';
+
+  @override
+  String get privacyHighlightGmailTitle =>
+      'Détection des reçus sur l\'appareil';
+
+  @override
+  String get privacyHighlightGmailBody =>
+      'La connexion à Gmail offre un accès en lecture seule pour rechercher localement les e-mails de facturation. Vos e-mails ne sont jamais envoyés à une IA ou à des serveurs externes.';
+
+  @override
+  String get privacyHighlightBackupTitle =>
+      'Sauvegardes chiffrées sous votre contrôle';
+
+  @override
+  String get privacyHighlightBackupBody =>
+      'Vos sauvegardes exportées .rgry sont chiffrées avec votre mot de passe. Aucun double n\'existant dans le cloud, vous êtes le seul garant de vos données.';
+
+  @override
+  String get termsHighlightPersonalTitle =>
+      'Licence d\'utilisation personnelle';
+
+  @override
+  String get termsHighlightPersonalBody =>
+      'Registry vous accorde une licence personnelle pour gérer vos documents et renouvellements. Vous demeurez l\'unique propriétaire et responsable de vos données.';
+
+  @override
+  String get termsHighlightResponsibilityTitle =>
+      'Responsabilité des sauvegardes';
+
+  @override
+  String get termsHighlightResponsibilityBody =>
+      'Registry n\'ayant ni serveur cloud ni récupération de compte, vous êtes seul responsable d\'effectuer des sauvegardes régulières et de mémoriser votre mot de passe.';
+
+  @override
+  String get termsHighlightAiDisclaimerTitle => 'Assistance IA et vérification';
+
+  @override
+  String get termsHighlightAiDisclaimerBody =>
+      'La numérisation de documents est un outil d\'assistance basé sur l\'IA. Vous devez vérifier toutes les dates, numéros et informations extraites avant d\'enregistrer.';
+
+  @override
+  String get termsHighlightAsIsTitle => 'Clause de non-responsabilité';
+
+  @override
+  String get termsHighlightAsIsBody =>
+      'L\'application est fournie \'en l\'état\' et \'selon disponibilité\' sans garantie d\'un service ininterrompu ou de livraison infaillible des notifications.';
 }

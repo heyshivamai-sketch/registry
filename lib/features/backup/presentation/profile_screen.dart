@@ -141,6 +141,8 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: AppSpacing.md),
+          const _LegalSection(),
 
           const _AdsPrivacySection(),
           // Import charges from CSV section (commented out)
@@ -170,7 +172,6 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -180,6 +181,94 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle)),
       body: body,
+    );
+  }
+}
+
+class _LegalSection extends StatelessWidget {
+  const _LegalSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return RegistrySurface(
+      key: const ValueKey<String>('legal-section'),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          RegistrySectionHeader(
+            title: l10n.legalSectionTitle,
+            icon: Icons.policy_outlined,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(l10n.legalSectionBody, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: AppSpacing.sm),
+          Material(
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                ListTile(
+                  key: const ValueKey<String>('privacy-policy-tile'),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.privacy_tip_outlined,
+                      size: 20,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  title: Text(l10n.privacyPolicyTitle, style: theme.textTheme.titleSmall),
+                  subtitle: Text(
+                    l10n.privacyPolicySubtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => AppRoutes.openPrivacyPolicy(context),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  key: const ValueKey<String>('terms-conditions-tile'),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.gavel_outlined,
+                      size: 20,
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
+                  title: Text(l10n.termsTitle, style: theme.textTheme.titleSmall),
+                  subtitle: Text(
+                    l10n.termsSubtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => AppRoutes.openTermsAndConditions(context),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

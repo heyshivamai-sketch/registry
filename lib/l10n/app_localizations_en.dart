@@ -2535,4 +2535,85 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get candidateIgnored =>
       'Merchant ignored. Registry will not detect this merchant again.';
+
+  @override
+  String get legalSectionTitle => 'Legal & Privacy';
+
+  @override
+  String get legalSectionBody =>
+      'Review our privacy policies and terms of service. Registry is built local-first to keep your data in your hands.';
+
+  @override
+  String get privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Learn how Registry safeguards your personal records on your device.';
+
+  @override
+  String get termsTitle => 'Terms & Conditions';
+
+  @override
+  String get termsSubtitle =>
+      'Terms of service, user responsibilities, and guidelines.';
+
+  @override
+  String get legalLastUpdated => 'Last updated: November 2026';
+
+  @override
+  String get privacyHighlightLocalTitle => '100% Local-First Vault';
+
+  @override
+  String get privacyHighlightLocalBody =>
+      'Your documents, subscription details, renewal histories, notes, and photos reside on this device. Registry operates no central cloud databases or accounts.';
+
+  @override
+  String get privacyHighlightAiTitle => 'Private AI Document Scanning';
+
+  @override
+  String get privacyHighlightAiBody =>
+      'Document images are transmitted to Google Gemini via Firebase AI Logic only when you tap Scan all images. The data is processed solely to extract fields for your review and is never stored remotely by Registry.';
+
+  @override
+  String get privacyHighlightGmailTitle => 'On-Device Receipt Detection';
+
+  @override
+  String get privacyHighlightGmailBody =>
+      'Connecting Gmail grants restricted read-only access to scan billing emails locally on your device. Your email content is never transmitted to external AI or servers.';
+
+  @override
+  String get privacyHighlightBackupTitle => 'User-Controlled Encrypted Backups';
+
+  @override
+  String get privacyHighlightBackupBody =>
+      'Your exported .rgry archives are encrypted with your password. Because no cloud copy exists, you hold sole custody of your backups.';
+
+  @override
+  String get termsHighlightPersonalTitle => 'Personal Vault License';
+
+  @override
+  String get termsHighlightPersonalBody =>
+      'Registry grants a personal, revocable license to manage your documents and renewals. You remain the sole owner and custodian of your data.';
+
+  @override
+  String get termsHighlightResponsibilityTitle =>
+      'Backup & Custody Responsibility';
+
+  @override
+  String get termsHighlightResponsibilityBody =>
+      'Because Registry has no cloud servers or account recovery, you are solely responsible for creating regular backups and remembering your password.';
+
+  @override
+  String get termsHighlightAiDisclaimerTitle => 'AI Assistance & Verification';
+
+  @override
+  String get termsHighlightAiDisclaimerBody =>
+      'Document scanning is an assistive convenience powered by AI. You must verify all dates, identifiers, and extracted fields before saving.';
+
+  @override
+  String get termsHighlightAsIsTitle => 'Service Disclaimer';
+
+  @override
+  String get termsHighlightAsIsBody =>
+      'The application is provided on an \'as-is\' and \'as-available\' basis without warranties of uninterrupted service or guaranteed notification delivery.';
 }

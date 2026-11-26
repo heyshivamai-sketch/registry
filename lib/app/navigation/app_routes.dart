@@ -3,13 +3,15 @@ import '../../features/backup/presentation/export_backup_screen.dart';
 import '../../features/backup/presentation/import_backup_screen.dart';
 import '../../features/backup/presentation/profile_screen.dart';
 import '../../features/csv_import/presentation/import_charges_screen.dart';
-import '../../features/entitlements/presentation/local_pro_screen.dart';
 import '../../features/documents/presentation/add_document_screen.dart';
 import '../../features/documents/presentation/document_detail_screen.dart';
+import '../../features/entitlements/presentation/local_pro_screen.dart';
 import '../../features/home/data/registry_item.dart';
 import '../../features/home/presentation/attention_list_screen.dart';
 import '../../features/home/presentation/catalog_item_detail_screen.dart';
 import '../../features/home/presentation/horizon_90_day_screen.dart';
+import '../../features/legal/presentation/privacy_policy_screen.dart';
+import '../../features/legal/presentation/terms_and_conditions_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
 import '../../features/subscriptions/domain/detected_subscription.dart';
 import '../../features/subscriptions/presentation/add_subscription_screen.dart';
@@ -21,6 +23,18 @@ import '../../features/subscriptions/presentation/subscription_detail_screen.dar
 import '../../l10n/app_localizations.dart';
 
 abstract final class AppRoutes {
+  static Future<void> openPrivacyPolicy(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const PrivacyPolicyScreen()),
+    );
+  }
+
+  static Future<void> openTermsAndConditions(BuildContext context) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const TermsAndConditionsScreen()),
+    );
+  }
+
   static Future<void> openProfile(BuildContext context) {
     return Navigator.of(
       context,

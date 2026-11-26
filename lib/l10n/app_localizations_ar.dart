@@ -2524,4 +2524,86 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get candidateIgnored =>
       'تم تجاهل التاجر. لن يكتشف Registry هذا التاجر مرة أخرى.';
+
+  @override
+  String get legalSectionTitle => 'الشروط القانونية والخصوصية';
+
+  @override
+  String get legalSectionBody =>
+      'راجع سياسة الخصوصية وشروط الخدمة. تم تصميم Registry ليعمل محلياً بالكامل لحفظ بياناتك بين يديك.';
+
+  @override
+  String get privacyPolicyTitle => 'سياسة الخصوصية';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'تعرف على كيفية حماية Registry لسجلاتك الشخصية على جهازك.';
+
+  @override
+  String get termsTitle => 'الشروط والأحكام';
+
+  @override
+  String get termsSubtitle =>
+      'شروط الخدمة ومسؤوليات المستخدم وإرشادات الاستخدام.';
+
+  @override
+  String get legalLastUpdated => 'آخر تحديث: نوفمبر 2026';
+
+  @override
+  String get privacyHighlightLocalTitle => 'خزينة محلية بالكامل 100%';
+
+  @override
+  String get privacyHighlightLocalBody =>
+      'مستنداتك، تفاصيل اشتراكاتك، تواريخ التجديد، ملاحظاتك وصورك تبقى على هذا الجهاز. لا يمتلك Registry أي خوادم سحابية مركزية أو حسابات مستخدمين.';
+
+  @override
+  String get privacyHighlightAiTitle =>
+      'مسح المستندات بالذكاء الاصطناعي بخصوصية';
+
+  @override
+  String get privacyHighlightAiBody =>
+      'تُرسل صور المستندات إلى Google Gemini عبر Firebase AI Logic فقط عند الضغط على مسح جميع الصور. تُعالج البيانات حصرياً لاستخراج الحقول لمراجعتها ولا تُحفظ عن بُعد بواسطة Registry.';
+
+  @override
+  String get privacyHighlightGmailTitle => 'كشف الفواتير على الجهاز';
+
+  @override
+  String get privacyHighlightGmailBody =>
+      'ربط Gmail يمنح إذناً للقراءة فقط للبحث في رسائل الفواتير محلياً على جهازك. لا يتم إرسال محتوى بريدك مطلقاً إلى أي خوادم أو ذكاء اصطناعي خارجي.';
+
+  @override
+  String get privacyHighlightBackupTitle => 'نسخ احتياطية مشفرة تحت تحكمك';
+
+  @override
+  String get privacyHighlightBackupBody =>
+      'ملفات النسخ الاحتياطي rgry. مشفرة بكلمة مرورك. نظراً لعدم وجود نسخ سحابية، فأنت المسؤول الوحيد عن حفظ بياناتك.';
+
+  @override
+  String get termsHighlightPersonalTitle => 'ترخيص الاستخدام الشخصي';
+
+  @override
+  String get termsHighlightPersonalBody =>
+      'يمنحك Registry ترخيصاً شخصياً لإدارة مستنداتك وتجديداتك. تظل المالك والمسؤول الوحيد عن بياناتك.';
+
+  @override
+  String get termsHighlightResponsibilityTitle => 'مسؤولية النسخ الاحتياطي';
+
+  @override
+  String get termsHighlightResponsibilityBody =>
+      'نظراً لأن Registry لا يحتوي على خوادم سحابية أو استعادة حسابات، فأنت المسؤول الوحيد عن إنشاء نسخ احتياطية دورية وتذكر كلمة المرور.';
+
+  @override
+  String get termsHighlightAiDisclaimerTitle =>
+      'مساعدة الذكاء الاصطناعي والتحقق';
+
+  @override
+  String get termsHighlightAiDisclaimerBody =>
+      'مسح المستندات هو أداة مساعدة مدعومة بالذكاء الاصطناعي. يجب عليك مراجعة جميع التواريخ والأرقام والحقول المستخرجة قبل الحفظ.';
+
+  @override
+  String get termsHighlightAsIsTitle => 'إخلاء المسؤولية';
+
+  @override
+  String get termsHighlightAsIsBody =>
+      'يتم توفير التطبيق \'كما هو\' و\'حسب توفره\' دون أي ضمانات بشأن عدم انقطاع الخدمة أو ضمان تسليم الإشعارات في كل الأوقات.';
 }

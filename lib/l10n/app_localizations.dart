@@ -4413,6 +4413,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Merchant ignored. Registry will not detect this merchant again.'**
   String get candidateIgnored;
+
+  /// No description provided for @legalSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal & Privacy'**
+  String get legalSectionTitle;
+
+  /// No description provided for @legalSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Review our privacy policies and terms of service. Registry is built local-first to keep your data in your hands.'**
+  String get legalSectionBody;
+
+  /// No description provided for @privacyPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicyTitle;
+
+  /// No description provided for @privacyPolicySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how Registry safeguards your personal records on your device.'**
+  String get privacyPolicySubtitle;
+
+  /// No description provided for @termsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsTitle;
+
+  /// No description provided for @termsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of service, user responsibilities, and guidelines.'**
+  String get termsSubtitle;
+
+  /// No description provided for @legalLastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: November 2026'**
+  String get legalLastUpdated;
+
+  /// No description provided for @privacyHighlightLocalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'100% Local-First Vault'**
+  String get privacyHighlightLocalTitle;
+
+  /// No description provided for @privacyHighlightLocalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents, subscription details, renewal histories, notes, and photos reside on this device. Registry operates no central cloud databases or accounts.'**
+  String get privacyHighlightLocalBody;
+
+  /// No description provided for @privacyHighlightAiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Private AI Document Scanning'**
+  String get privacyHighlightAiTitle;
+
+  /// No description provided for @privacyHighlightAiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Document images are transmitted to Google Gemini via Firebase AI Logic only when you tap Scan all images. The data is processed solely to extract fields for your review and is never stored remotely by Registry.'**
+  String get privacyHighlightAiBody;
+
+  /// No description provided for @privacyHighlightGmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On-Device Receipt Detection'**
+  String get privacyHighlightGmailTitle;
+
+  /// No description provided for @privacyHighlightGmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting Gmail grants restricted read-only access to scan billing emails locally on your device. Your email content is never transmitted to external AI or servers.'**
+  String get privacyHighlightGmailBody;
+
+  /// No description provided for @privacyHighlightBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'User-Controlled Encrypted Backups'**
+  String get privacyHighlightBackupTitle;
+
+  /// No description provided for @privacyHighlightBackupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your exported .rgry archives are encrypted with your password. Because no cloud copy exists, you hold sole custody of your backups.'**
+  String get privacyHighlightBackupBody;
+
+  /// No description provided for @termsHighlightPersonalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Vault License'**
+  String get termsHighlightPersonalTitle;
+
+  /// No description provided for @termsHighlightPersonalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry grants a personal, revocable license to manage your documents and renewals. You remain the sole owner and custodian of your data.'**
+  String get termsHighlightPersonalBody;
+
+  /// No description provided for @termsHighlightResponsibilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Custody Responsibility'**
+  String get termsHighlightResponsibilityTitle;
+
+  /// No description provided for @termsHighlightResponsibilityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Because Registry has no cloud servers or account recovery, you are solely responsible for creating regular backups and remembering your password.'**
+  String get termsHighlightResponsibilityBody;
+
+  /// No description provided for @termsHighlightAiDisclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistance & Verification'**
+  String get termsHighlightAiDisclaimerTitle;
+
+  /// No description provided for @termsHighlightAiDisclaimerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Document scanning is an assistive convenience powered by AI. You must verify all dates, identifiers, and extracted fields before saving.'**
+  String get termsHighlightAiDisclaimerBody;
+
+  /// No description provided for @termsHighlightAsIsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Disclaimer'**
+  String get termsHighlightAsIsTitle;
+
+  /// No description provided for @termsHighlightAsIsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The application is provided on an \'as-is\' and \'as-available\' basis without warranties of uninterrupted service or guaranteed notification delivery.'**
+  String get termsHighlightAsIsBody;
 }
 
 class _AppLocalizationsDelegate
