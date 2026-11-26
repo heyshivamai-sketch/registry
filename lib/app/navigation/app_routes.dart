@@ -15,7 +15,6 @@ import 'package:the_registry/features/subscriptions/domain/detected_subscription
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/cancelled_subscriptions_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
-import 'package:the_registry/features/subscriptions/presentation/gmail_connect_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_calendar_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscription_detail_screen.dart';
 import 'package:the_registry/l10n/app_localizations.dart';
@@ -107,7 +106,8 @@ abstract final class AppRoutes {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => AddSubscriptionScreen(initialCandidate: initialCandidate),
+        builder: (_) =>
+            AddSubscriptionScreen(initialCandidate: initialCandidate),
       ),
     );
     final didSave = saved ?? false;
@@ -124,14 +124,6 @@ abstract final class AppRoutes {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const DetectedSubscriptionsScreen(),
-      ),
-    );
-  }
-
-  static Future<void> openGmailConnect(BuildContext context) {
-    return Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const GmailConnectScreen(),
       ),
     );
   }

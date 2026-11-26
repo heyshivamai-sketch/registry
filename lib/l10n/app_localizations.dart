@@ -4342,41 +4342,11 @@ abstract class AppLocalizations {
   /// **'Add to Regiday'**
   String get addToResiday;
 
-  /// No description provided for @connectGmailTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Gmail Subscription Detection'**
-  String get connectGmailTitle;
-
-  /// No description provided for @connectGmailButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect Gmail'**
-  String get connectGmailButton;
-
-  /// No description provided for @connectFromGmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect from Gmail'**
-  String get connectFromGmail;
-
-  /// No description provided for @disconnectGmailButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Disconnect'**
-  String get disconnectGmailButton;
-
   /// No description provided for @scanNewEmails.
   ///
   /// In en, this message translates to:
   /// **'Scan New Emails'**
   String get scanNewEmails;
-
-  /// No description provided for @gmailConnectedAs.
-  ///
-  /// In en, this message translates to:
-  /// **'Connected as: {email}'**
-  String gmailConnectedAs(String email);
 
   /// No description provided for @lastScan.
   ///
@@ -4389,18 +4359,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Searching billing emails...'**
   String get scanningEmails;
-
-  /// No description provided for @gmailScanSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan complete. Found {count} detected subscriptions.'**
-  String gmailScanSuccess(int count);
-
-  /// No description provided for @gmailPrivacyNotice.
-  ///
-  /// In en, this message translates to:
-  /// **'Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.'**
-  String get gmailPrivacyNotice;
 
   /// No description provided for @candidateAddedSuccess.
   ///

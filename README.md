@@ -24,7 +24,6 @@ A modern, privacy-first personal registry and smart wallet for documents, subscr
 ### 💳 Intelligent Subscription Management & Discovery
 - **Recurring Cycle Tracking**: Track weekly, monthly, quarterly, and annual subscriptions with renewal calendars and spending summaries.
 - **Bank Statement CSV Ingestion**: Import transaction statements to discover recurring charges. Employs merchant normalization (stripping processor prefixes like `UPI/`, `POS-`, `STRIPE*`, `RAZORPAY*`), interval cadence scoring, and intelligent false-positive filtering (excluding rent, utilities, and grocery runs).
-- **Gmail Subscription Detection**: Perform on-device, read-only OAuth scans to detect subscription receipts, renewal notices, and trial periods.
 - **Unified Discovery Engine**: Consolidate candidates across sources with duplicate suppression and one-tap addition.
 
 ### ⏰ Reliable Local Reminders
@@ -76,7 +75,7 @@ lib/
 │   ├── home/             # Dashboard, summary cards, and quick actions
 │   ├── onboarding/       # First-run guided setup flow
 │   ├── reminders/        # Local reminder scheduling and notification coordinator
-│   └── subscriptions/    # Subscription tracker, Gmail detector, and discovery engine
+│   └── subscriptions/    # Subscription tracker and discovery engine
 ├── l10n/                 # Localization templates (.arb) and generated localization delegates
 └── main.dart             # App entry point
 ```

@@ -2527,24 +2527,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addToResiday => 'Ajouter à Regiday';
 
   @override
-  String get connectGmailTitle => 'Détection d\'abonnements Gmail';
-
-  @override
-  String get connectGmailButton => 'Connecter Gmail';
-
-  @override
-  String get connectFromGmail => 'Connecter depuis Gmail';
-
-  @override
-  String get disconnectGmailButton => 'Déconnecter';
-
-  @override
   String get scanNewEmails => 'Rechercher de nouveaux e-mails';
-
-  @override
-  String gmailConnectedAs(String email) {
-    return 'Connecté en tant que : $email';
-  }
 
   @override
   String lastScan(String time) {
@@ -2553,15 +2536,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get scanningEmails => 'Recherche des e-mails de facturation...';
-
-  @override
-  String gmailScanSuccess(int count) {
-    return 'Analyse terminée. $count abonnements détectés trouvés.';
-  }
-
-  @override
-  String get gmailPrivacyNotice =>
-      'Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l\'appareil et n\'est jamais envoyé à des serveurs ou à une IA externe.';
 
   @override
   String get candidateAddedSuccess => 'Abonnement ajouté avec succès.';

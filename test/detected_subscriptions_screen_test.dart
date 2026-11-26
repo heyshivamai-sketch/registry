@@ -20,7 +20,6 @@ import 'package:the_registry/features/reminders/data/memory_reminder_scheduler.d
 import 'package:the_registry/features/reminders/domain/local_reminder_scheduler.dart';
 import 'package:the_registry/features/reminders/reminder_coordinator.dart';
 import 'package:the_registry/features/subscriptions/data/detected_subscription_repository.dart';
-import 'package:the_registry/features/subscriptions/data/gmail_client_gateway.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/detected_subscription.dart';
 import 'package:the_registry/features/subscriptions/domain/gmail_subscription_detection_service.dart';
@@ -35,22 +34,6 @@ import 'support/fake_date_picker_service.dart';
 import 'support/fake_document_ocr_service.dart';
 import 'support/fake_image_picker_service.dart';
 import 'support/phase2_fakes.dart';
-
-class FakeGmailGateway implements GmailClientGateway {
-  @override
-  Future<String?> getCurrentUserEmail() async => 'user@gmail.com';
-
-  @override
-  Future<List<GmailRawMessage>> searchBillingEmails(
-      {DateTime? since, int maxResults = 50}) async =>
-      const [];
-
-  @override
-  Future<String?> signIn() async => 'user@gmail.com';
-
-  @override
-  Future<void> signOut() async {}
-}
 
 Widget buildTestScreen({
   required InMemorySubscriptionRepository subscriptions,
@@ -106,7 +89,6 @@ Widget buildTestScreen({
     ads: AdsController(config: AdsConfig.off, plan: localPro),
     csvFiles: const PlatformCsvFileGateway(),
     discovery: discovery,
-    gmailClient: FakeGmailGateway(),
     child: const MaterialApp(
       locale: Locale('en'),
       localizationsDelegates: [

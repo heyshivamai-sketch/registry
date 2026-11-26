@@ -57,16 +57,7 @@ class _DetectedSubscriptionsScreenState
     final deps = RegistryDependencies.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.detectedSubscriptionsTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.mail_outline),
-            tooltip: l10n.connectGmailTitle,
-            onPressed: () => AppRoutes.openGmailConnect(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(l10n.detectedSubscriptionsTitle)),
       body: SafeArea(
         child: ListenableBuilder(
           listenable: deps.discovery,
@@ -83,14 +74,6 @@ class _DetectedSubscriptionsScreenState
                         title: l10n.detectedSubscriptionsTitle,
                         message: l10n.detectedSubscriptionsEmpty,
                         icon: Icons.auto_awesome,
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      RegistryPrimaryButton(
-                        key: const ValueKey<String>(
-                          'detected-empty-connect-gmail',
-                        ),
-                        label: l10n.connectGmailButton,
-                        onPressed: () => AppRoutes.openGmailConnect(context),
                       ),
                     ],
                   ),
@@ -199,7 +182,10 @@ class _DetectedCandidateCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 if (isAdded) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFDFF8F2),
                       borderRadius: BorderRadius.circular(4),
@@ -279,7 +265,10 @@ class _DetectedCandidateCard extends StatelessWidget {
               Container(
                 key: ValueKey<String>('candidate-added-${candidate.id}'),
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFDFF8F2),
                   borderRadius: BorderRadius.circular(12),

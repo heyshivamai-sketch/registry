@@ -795,19 +795,7 @@
   },
   "notASubscription": "Ignorer",
   "addToResiday": "Ajouter à Regiday",
-  "connectGmailTitle": "Détection d'abonnements Gmail",
-  "connectGmailButton": "Connecter Gmail",
-  "connectFromGmail": "Connecter depuis Gmail",
-  "disconnectGmailButton": "Déconnecter",
   "scanNewEmails": "Rechercher de nouveaux e-mails",
-  "gmailConnectedAs": "Connecté en tant que : {email}",
-  "@gmailConnectedAs": {
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
   "lastScan": "Dernière analyse : {time}",
   "@lastScan": {
     "placeholders": {
@@ -817,15 +805,6 @@
     }
   },
   "scanningEmails": "Recherche des e-mails de facturation...",
-  "gmailScanSuccess": "Analyse terminée. {count} abonnements détectés trouvés.",
-  "@gmailScanSuccess": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "gmailPrivacyNotice": "Regiday nécessite un accès en lecture seule pour rechercher les reçus de facturation. Le contenu de vos e-mails est analysé sur l'appareil et n'est jamais envoyé à des serveurs ou à une IA externe.",
   "candidateAddedSuccess": "Abonnement ajouté avec succès.",
   "candidateIgnored": "Marchand ignoré. Regiday ne détectera plus ce marchand."
 }

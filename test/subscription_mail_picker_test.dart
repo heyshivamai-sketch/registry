@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_registry/app/app.dart';
@@ -13,6 +15,8 @@ import 'package:the_registry/features/subscriptions/domain/subscription_discover
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_controller.dart';
 import 'package:the_registry/features/subscriptions/presentation/add_subscription_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/detected_subscriptions_screen.dart';
+import 'package:the_registry/features/subscriptions/presentation/subscriptions_screen.dart';
+import 'package:the_registry/app/navigation/app_routes.dart';
 
 import 'support/fake_date_picker_service.dart';
 import 'support/fake_onboarding_repository.dart';
@@ -128,8 +132,13 @@ void main() {
         await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
         await tester.pumpAndSettle();
 
-        // 2. Tap Discover Subscriptions icon
-        await tester.tap(find.byKey(const ValueKey<String>('subscriptions-discover')));
+        // 2. Open the Detected Subscriptions screen (no Gmail/Discover entry
+        // point in v1, so navigate to it directly)
+        unawaited(
+          AppRoutes.openDetectedSubscriptions(
+            tester.element(find.byType(SubscriptionsScreen)),
+          ),
+        );
         await tester.pumpAndSettle();
 
         // 3. Verify Detected Subscriptions Screen displays the candidate with Gmail badge

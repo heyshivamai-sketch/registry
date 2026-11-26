@@ -34,9 +34,6 @@ dependencies:
   firebase_core: ^4.15.0
   firebase_ai: ^4.0.0
   firebase_app_check: ^0.4.8
-  google_sign_in: ^6.2.2
-  http: ^1.2.2
-  googleapis: ^13.2.0
 
 dev_dependencies:
   flutter_test:

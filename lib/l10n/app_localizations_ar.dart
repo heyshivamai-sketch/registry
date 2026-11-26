@@ -2480,24 +2480,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addToResiday => 'إضافة إلى Regiday';
 
   @override
-  String get connectGmailTitle => 'اكتشاف اشتراكات Gmail';
-
-  @override
-  String get connectGmailButton => 'ربط Gmail';
-
-  @override
-  String get connectFromGmail => 'ربط من Gmail';
-
-  @override
-  String get disconnectGmailButton => 'إلغاء الربط';
-
-  @override
   String get scanNewEmails => 'فحص الرسائل الجديدة';
-
-  @override
-  String gmailConnectedAs(String email) {
-    return 'متصل كـ: $email';
-  }
 
   @override
   String lastScan(String time) {
@@ -2506,15 +2489,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanningEmails => 'جاري البحث في رسائل الفواتير...';
-
-  @override
-  String gmailScanSuccess(int count) {
-    return 'اكتمل الفحص. تم العثور على $count اشتراكات مكتشفة.';
-  }
-
-  @override
-  String get gmailPrivacyNotice =>
-      'يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.';
 
   @override
   String get candidateAddedSuccess => 'تمت إضافة الاشتراك بنجاح.';

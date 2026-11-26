@@ -15,7 +15,6 @@ import '../features/entitlements/entitlement_service.dart';
 import '../features/entitlements/local_pro_entitlement.dart';
 import '../features/reminders/reminder_coordinator.dart';
 import '../features/subscriptions/data/detected_subscription_repository.dart';
-import '../features/subscriptions/data/gmail_client_gateway.dart';
 import '../features/subscriptions/data/in_memory_subscription_repository.dart';
 import '../features/subscriptions/domain/subscription_discovery_service.dart';
 import '../features/subscriptions/domain/subscription_repository.dart';
@@ -39,7 +38,6 @@ class RegistryDependencies extends InheritedWidget {
     required this.ads,
     required this.csvFiles,
     required this.discovery,
-    required this.gmailClient,
     required super.child,
   });
 
@@ -59,7 +57,6 @@ class RegistryDependencies extends InheritedWidget {
   final AdsController ads;
   final CsvFileGateway csvFiles;
   final SubscriptionDiscoveryService discovery;
-  final GmailClientGateway gmailClient;
 
   static RegistryDependencies of(BuildContext context) {
     final scope = maybeOf(context);
@@ -88,8 +85,7 @@ class RegistryDependencies extends InheritedWidget {
         localPro != oldWidget.localPro ||
         ads != oldWidget.ads ||
         csvFiles != oldWidget.csvFiles ||
-        discovery != oldWidget.discovery ||
-        gmailClient != oldWidget.gmailClient;
+        discovery != oldWidget.discovery;
   }
 }
 
@@ -97,13 +93,10 @@ DetectedSubscriptionRepository createDefaultDetectedSubscriptionRepository() {
   return InMemoryDetectedSubscriptionRepository();
 }
 
-GmailClientGateway createDefaultGmailClient() {
-  return GoogleApiGmailGateway();
-}
-
 SubscriptionDiscoveryService createDefaultDiscoveryService(
-    DetectedSubscriptionRepository detected,
-    SubscriptionRepository subscriptions,) {
+  DetectedSubscriptionRepository detected,
+  SubscriptionRepository subscriptions,
+) {
   return SubscriptionDiscoveryService(
     detectedRepository: detected,
     subscriptionRepository: subscriptions,

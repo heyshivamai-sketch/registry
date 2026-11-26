@@ -795,19 +795,7 @@
   },
   "notASubscription": "تجاهل",
   "addToResiday": "إضافة إلى Regiday",
-  "connectGmailTitle": "اكتشاف اشتراكات Gmail",
-  "connectGmailButton": "ربط Gmail",
-  "connectFromGmail": "ربط من Gmail",
-  "disconnectGmailButton": "إلغاء الربط",
   "scanNewEmails": "فحص الرسائل الجديدة",
-  "gmailConnectedAs": "متصل كـ: {email}",
-  "@gmailConnectedAs": {
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
   "lastScan": "آخر فحص: {time}",
   "@lastScan": {
     "placeholders": {
@@ -817,15 +805,6 @@
     }
   },
   "scanningEmails": "جاري البحث في رسائل الفواتير...",
-  "gmailScanSuccess": "اكتمل الفحص. تم العثور على {count} اشتراكات مكتشفة.",
-  "@gmailScanSuccess": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "gmailPrivacyNotice": "يتطلب Regiday إمكانية الوصول للقراءة فقط للبحث في إيصالات الفواتير. تتم معالجة محتوى رسائلك على جهازك فقط ولا يتم إرسالها أبداً إلى خوادم أو ذكاء اصطناعي خارجي.",
   "candidateAddedSuccess": "تمت إضافة الاشتراك بنجاح.",
   "candidateIgnored": "تم تجاهل التاجر. لن يكتشف Regiday هذا التاجر مرة أخرى."
 }

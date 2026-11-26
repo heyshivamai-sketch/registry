@@ -33,7 +33,6 @@ import '../features/reminders/data/notification_prompt_store.dart';
 import '../features/reminders/domain/local_reminder_scheduler.dart';
 import '../features/reminders/reminder_coordinator.dart';
 import '../features/subscriptions/data/detected_subscription_repository.dart';
-import '../features/subscriptions/data/gmail_client_gateway.dart';
 import '../features/subscriptions/data/in_memory_subscription_repository.dart';
 import '../features/subscriptions/domain/subscription_discovery_service.dart';
 import '../features/subscriptions/domain/subscription_repository.dart';
@@ -67,14 +66,12 @@ class RegistryApp extends StatefulWidget {
     this.adsPlatform,
     this.csvFiles,
     this.detectedSubscriptionRepository,
-    this.gmailClientGateway,
   });
 
   final OnboardingRepository onboardingRepository;
   final DocumentRepository? documentRepository;
   final SubscriptionRepository? subscriptionRepository;
   final DetectedSubscriptionRepository? detectedSubscriptionRepository;
-  final GmailClientGateway? gmailClientGateway;
   final ImagePickerService? imagePickerService;
   final DatePickerService? datePickerService;
   final DocumentOcrService? documentOcrService;
@@ -161,9 +158,7 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       widget.csvFiles ?? const PlatformCsvFileGateway();
   late final DetectedSubscriptionRepository _detectedSubscriptions =
       widget.detectedSubscriptionRepository ??
-          createDefaultDetectedSubscriptionRepository();
-  late final GmailClientGateway _gmailClient =
-      widget.gmailClientGateway ?? createDefaultGmailClient();
+      createDefaultDetectedSubscriptionRepository();
   late final SubscriptionDiscoveryService _discovery =
       createDefaultDiscoveryService(_detectedSubscriptions, _subscriptions);
   late final EntitlementService _entitlements = EntitlementService(
@@ -282,7 +277,6 @@ class _RegistryAppState extends State<RegistryApp> with WidgetsBindingObserver {
       ads: _ads,
       csvFiles: _csvFiles,
       discovery: _discovery,
-      gmailClient: _gmailClient,
       child: MaterialApp(
         onGenerateTitle: (context) => 'Regiday',
         debugShowCheckedModeBanner: false,

@@ -1152,19 +1152,7 @@
   },
   "notASubscription": "Ignore",
   "addToResiday": "Add to Regiday",
-  "connectGmailTitle": "Gmail Subscription Detection",
-  "connectGmailButton": "Connect Gmail",
-  "connectFromGmail": "Connect from Gmail",
-  "disconnectGmailButton": "Disconnect",
   "scanNewEmails": "Scan New Emails",
-  "gmailConnectedAs": "Connected as: {email}",
-  "@gmailConnectedAs": {
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
   "lastScan": "Last scan: {time}",
   "@lastScan": {
     "placeholders": {
@@ -1174,15 +1162,6 @@
     }
   },
   "scanningEmails": "Searching billing emails...",
-  "gmailScanSuccess": "Scan complete. Found {count} detected subscriptions.",
-  "@gmailScanSuccess": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "gmailPrivacyNotice": "Regiday requires read-only access to search billing receipts. Your email contents are processed on-device and never sent to external AI or servers.",
   "candidateAddedSuccess": "Subscription added successfully.",
   "candidateIgnored": "Merchant ignored. Regiday will not detect this merchant again."
 }

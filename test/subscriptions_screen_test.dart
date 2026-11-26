@@ -5,7 +5,6 @@ import 'package:the_registry/core/time/clock.dart';
 import 'package:the_registry/features/documents/data/in_memory_document_repository.dart';
 import 'package:the_registry/features/subscriptions/data/in_memory_subscription_repository.dart';
 import 'package:the_registry/features/subscriptions/domain/registry_subscription.dart';
-import 'package:the_registry/features/subscriptions/presentation/gmail_connect_screen.dart';
 import 'package:the_registry/features/subscriptions/presentation/subscriptions_screen.dart';
 
 import 'support/fake_onboarding_repository.dart';
@@ -34,130 +33,95 @@ void main() {
     subscriptions = InMemorySubscriptionRepository();
   });
 
-  testWidgets(
-    'empty state shows Add Subscription and Connect from Gmail just below it, tapping navigates to GmailConnectScreen',
-    (tester) async {
-      tester.view.physicalSize = const Size(412, 1600);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  Future<void> openSubscriptions(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(412, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-      await tester.pumpWidget(app());
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
+    await tester.pumpAndSettle();
+  }
 
-      await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
-      await tester.pumpAndSettle();
+  void expectNoGmailEntryPoints() {
+    expect(find.textContaining('Gmail'), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-connect-gmail')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-connect-gmail-bottom')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(
+        const ValueKey<String>('subscriptions-connect-gmail-calendar'),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-discover')),
+      findsNothing,
+    );
+  }
 
-      expect(find.byType(SubscriptionsScreen), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey<String>('subscriptions-empty')),
-        findsOneWidget,
-      );
+  testWidgets('empty state offers Add Subscription and no Gmail entry point', (
+    tester,
+  ) async {
+    await openSubscriptions(tester);
 
-      final addBtn = find.byKey(const ValueKey<String>('subscriptions-add'));
-      final gmailBtn =
-          find.byKey(const ValueKey<String>('subscriptions-connect-gmail'));
+    expect(find.byType(SubscriptionsScreen), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-empty')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-add')),
+      findsOneWidget,
+    );
+    expectNoGmailEntryPoints();
+  });
 
-      expect(addBtn, findsOneWidget);
-      expect(gmailBtn, findsOneWidget);
-      expect(find.text('Connect from Gmail'), findsOneWidget);
-
-      // Verify Connect from Gmail is rendered below Add Subscription button
-      final addOffset = tester.getBottomLeft(addBtn);
-      final gmailOffset = tester.getTopLeft(gmailBtn);
-      expect(gmailOffset.dy, greaterThan(addOffset.dy));
-
-      // Tap Connect from Gmail and verify it opens GmailConnectScreen
-      await tester.tap(gmailBtn);
-      await tester.pumpAndSettle();
-
-      expect(find.byType(GmailConnectScreen), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    'list with subscriptions shows Connect from Gmail below Add Subscription button at bottom',
-    (tester) async {
-      tester.view.physicalSize = const Size(412, 1600);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-
-      final netflix = sampleSubscription(
+  testWidgets('list with subscriptions has no Gmail entry point', (
+    tester,
+  ) async {
+    await subscriptions.save(
+      sampleSubscription(
         id: 'sub-netflix',
         serviceName: 'Netflix',
         lifecycle: SubscriptionLifecycle.active,
-      );
-      await subscriptions.save(netflix);
+      ),
+    );
 
-      await tester.pumpWidget(app());
-      await tester.pumpAndSettle();
+    await openSubscriptions(tester);
 
-      await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
-      await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-empty')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-add')),
+      findsOneWidget,
+    );
+    expectNoGmailEntryPoints();
+  });
 
-      expect(
-        find.byKey(const ValueKey<String>('subscriptions-empty')),
-        findsNothing,
-      );
+  testWidgets('calendar view has Add Subscription and no Gmail entry point', (
+    tester,
+  ) async {
+    await openSubscriptions(tester);
 
-      final addBtn = find.byKey(const ValueKey<String>('subscriptions-add'));
-      final gmailBottomBtn = find.byKey(
-        const ValueKey<String>('subscriptions-connect-gmail-bottom'),
-      );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('subscriptions-calendar-toggle')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(addBtn, findsOneWidget);
-      expect(gmailBottomBtn, findsOneWidget);
-      expect(find.text('Connect from Gmail'), findsOneWidget);
-
-      final addOffset = tester.getBottomLeft(addBtn);
-      final gmailOffset = tester.getTopLeft(gmailBottomBtn);
-      expect(gmailOffset.dy, greaterThan(addOffset.dy));
-
-      await tester.tap(gmailBottomBtn);
-      await tester.pumpAndSettle();
-
-      expect(find.byType(GmailConnectScreen), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    'calendar view shows Connect from Gmail below Add Subscription button',
-    (tester) async {
-      tester.view.physicalSize = const Size(412, 1600);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-
-      await tester.pumpWidget(app());
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byKey(const ValueKey<String>('nav-subscriptions')));
-      await tester.pumpAndSettle();
-
-      // Switch to calendar view
-      await tester.tap(
-        find.byKey(const ValueKey<String>('subscriptions-calendar-toggle')),
-      );
-      await tester.pumpAndSettle();
-
-      final addCalendarBtn =
-          find.byKey(const ValueKey<String>('subscriptions-add-calendar'));
-      final gmailCalendarBtn = find.byKey(
-        const ValueKey<String>('subscriptions-connect-gmail-calendar'),
-      );
-
-      expect(addCalendarBtn, findsOneWidget);
-      expect(gmailCalendarBtn, findsOneWidget);
-
-      final addOffset = tester.getBottomLeft(addCalendarBtn);
-      final gmailOffset = tester.getTopLeft(gmailCalendarBtn);
-      expect(gmailOffset.dy, greaterThan(addOffset.dy));
-
-      await tester.tap(gmailCalendarBtn);
-      await tester.pumpAndSettle();
-
-      expect(find.byType(GmailConnectScreen), findsOneWidget);
-    },
-  );
+    expect(
+      find.byKey(const ValueKey<String>('subscriptions-add-calendar')),
+      findsOneWidget,
+    );
+    expectNoGmailEntryPoints();
+  });
 }

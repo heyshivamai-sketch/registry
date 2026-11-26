@@ -119,27 +119,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    key: const ValueKey<String>('subscriptions-connect-gmail-calendar'),
-                    onPressed: () => AppRoutes.openGmailConnect(context),
-                    icon: const Icon(Icons.mail_outline_rounded, size: 20),
-                    label: Text(l10n.connectFromGmail),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.primary,
-                      minimumSize: const Size(AppSpacing.minTapTarget, 48),
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                        width: 1.5,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: AppSpacing.xxl),
               ] else ...[
                 RegistryAuraSearchField(
@@ -172,39 +151,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     title: l10n.subscriptionsEmptyTitle,
                     message: l10n.subscriptionsEmptyMessage,
                     illustration: const RegistrySubscriptionIllustration(),
-                    action: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: RegistryPrimaryButton(
-                            key: const ValueKey<String>('subscriptions-add'),
-                            label: l10n.addSubscription,
-                            onPressed: () => AppRoutes.openAddSubscription(context),
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            key: const ValueKey<String>('subscriptions-connect-gmail'),
-                            onPressed: () => AppRoutes.openGmailConnect(context),
-                            icon: const Icon(Icons.mail_outline_rounded, size: 20),
-                            label: Text(l10n.connectFromGmail),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Theme.of(context).colorScheme.primary,
-                              minimumSize: const Size(AppSpacing.minTapTarget, 48),
-                              side: BorderSide(
-                                color: Theme.of(context).colorScheme.outlineVariant,
-                                width: 1.5,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    action: SizedBox(
+                      width: double.infinity,
+                      child: RegistryPrimaryButton(
+                        key: const ValueKey<String>('subscriptions-add'),
+                        label: l10n.addSubscription,
+                        onPressed: () => AppRoutes.openAddSubscription(context),
+                      ),
                     ),
                   )
                 else if (visible.isEmpty)
@@ -255,27 +208,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         ),
                       ),
                       child: Text(l10n.addSubscription),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      key: const ValueKey<String>('subscriptions-connect-gmail-bottom'),
-                      onPressed: () => AppRoutes.openGmailConnect(context),
-                      icon: const Icon(Icons.mail_outline_rounded, size: 20),
-                      label: Text(l10n.connectFromGmail),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.primary,
-                        minimumSize: const Size(AppSpacing.minTapTarget, 45),
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.outlineVariant,
-                          width: 1.2,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
                     ),
                   ),
                   SizedBox(
@@ -359,10 +291,7 @@ class _SubscriptionsHeader extends StatelessWidget {
                   child: const SizedBox(
                     width: AppSpacing.minTapTarget,
                     height: AppSpacing.minTapTarget,
-                    child: Icon(
-                      Icons.notifications_none_rounded,
-                      size: 21,
-                    ),
+                    child: Icon(Icons.notifications_none_rounded, size: 21),
                   ),
                 ),
               ),
@@ -411,16 +340,6 @@ class _SubscriptionsHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              // Discover pill
-              _HeaderActionPill(
-                key: const ValueKey<String>('subscriptions-discover'),
-                icon: Icons.auto_awesome_outlined,
-                label: 'Discover',
-                semanticLabel: l10n.discoverSubscriptions,
-                iconColor: AppColors.deepNavy,
-                onTap: () => AppRoutes.openDetectedSubscriptions(context),
               ),
               const SizedBox(width: AppSpacing.xs),
               // Cancelled pill with optional count badge
