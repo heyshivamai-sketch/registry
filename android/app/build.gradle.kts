@@ -1,4 +1,5 @@
 import java.util.Base64
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -53,12 +54,22 @@ val admobReleaseProblem: String? =
         else -> null
     }
 
-// Release signing: see docs/qa/regiday_branding_and_phone_builds.md. The
-// keystore and its password stay outside the repository and are handed in by
-// tool/android/build_release_qa_apk.sh.
-val releaseKeystore = providers.environmentVariable("REGIDAY_KEYSTORE").orNull
-val releaseKeyAlias = providers.environmentVariable("REGIDAY_KEY_ALIAS").orNull
-val releaseKeystorePassword = providers.environmentVariable("REGIDAY_KEYSTORE_PASSWORD").orNull
+// Release signing: loads from key.properties (Play Console upload key) or
+// falls back to environment variables (CI / QA builds).
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties()
+if (keyPropertiesFile.exists()) {
+    keyProperties.load(keyPropertiesFile.inputStream())
+}
+
+val releaseKeystore = keyProperties.getProperty("storeFile")
+    ?: providers.environmentVariable("REGIDAY_KEYSTORE").orNull
+val releaseKeyAlias = keyProperties.getProperty("keyAlias")
+    ?: providers.environmentVariable("REGIDAY_KEY_ALIAS").orNull
+val releaseKeystorePassword = keyProperties.getProperty("storePassword")
+    ?: providers.environmentVariable("REGIDAY_KEYSTORE_PASSWORD").orNull
+val releaseKeyPassword = keyProperties.getProperty("keyPassword")
+    ?: releaseKeystorePassword
 val hasReleaseSigning =
     !releaseKeystore.isNullOrBlank() &&
         !releaseKeyAlias.isNullOrBlank() &&
@@ -93,10 +104,9 @@ android {
         if (hasReleaseSigning) {
             create("release") {
                 storeFile = file(releaseKeystore!!)
-                storeType = "pkcs12"
                 storePassword = releaseKeystorePassword
                 keyAlias = releaseKeyAlias
-                keyPassword = releaseKeystorePassword
+                keyPassword = releaseKeyPassword
             }
         }
     }
