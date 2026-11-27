@@ -1,4 +1,4 @@
-package com.ventrovatech.residay
+package com.ventrovatech.regiday
 
 import java.io.ByteArrayOutputStream
 import java.io.IOException

@@ -1,4 +1,4 @@
-package com.ventrovatech.residay
+package com.ventrovatech.regiday
 
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity

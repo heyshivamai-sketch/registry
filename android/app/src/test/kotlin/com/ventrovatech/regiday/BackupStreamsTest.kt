@@ -1,4 +1,4 @@
-package com.ventrovatech.residay
+package com.ventrovatech.regiday
 
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals

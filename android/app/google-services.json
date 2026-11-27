@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:359772476439:android:65d093975f351d49bf3852",
         "android_client_info": {
-          "package_name": "com.ventrovatech.residay"
+          "package_name": "com.ventrovatech.regiday"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "359772476439-eigkjg03jer0thsg5t2ja5kmsciimtav.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ventrovatech.residay",
+            "package_name": "com.ventrovatech.regiday",
             "certificate_hash": "8e14e824b535c1f7b77749bd0dba2cbacff64419"
           }
         },

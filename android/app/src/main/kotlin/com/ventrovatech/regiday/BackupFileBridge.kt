@@ -1,4 +1,4 @@
-package com.ventrovatech.residay
+package com.ventrovatech.regiday
 
 import android.app.Activity
 import android.content.ContentResolver

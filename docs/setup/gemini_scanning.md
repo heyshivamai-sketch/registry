@@ -32,7 +32,7 @@ date, stay empty for the user to confirm or enter manually.
    Firebase options unchanged. Select or register this app identifier when
    prompted:
 
-   - Android package: `com.ventrovatech.residay`
+   - Android package: `com.ventrovatech.regiday`
 
    The command generates the Android options in `lib/firebase_options.dart`,
    `android/app/google-services.json`, and the Android FlutterFire metadata from
